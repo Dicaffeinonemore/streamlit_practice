@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STREET FIST - 벨트스크롤 액션</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0b14; color: #fff;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  #wrap { position: relative; width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16 / 9;
+    container-type: size; background: #000; box-shadow: 0 0 40px #000; }
+  canvas { width: 100%; height: 100%; display: block; image-rendering: auto; }
+
+  .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center; background: rgba(8, 6, 20, .86); font-size: 2cqw; }
+  .screen.show { display: flex; }
+  .screen h1 { font-size: 9cqw; margin: 0; letter-spacing: .5cqw; color: #ffd23f;
+    text-shadow: 0 0 2cqw #ff6a00, .5cqw .5cqw 0 #c0392b; font-style: italic; }
+  .screen h2 { font-size: 4cqw; margin: 0 0 2cqw; color: #ffd23f; }
+  .screen p { margin: .6cqw 0; color: #cfd2ff; }
+  .btn { margin-top: 2.5cqw; padding: 1.2cqw 5cqw; font-size: 2.6cqw; font-weight: bold; cursor: pointer;
+    border: .3cqw solid #ffd23f; background: #c0392b; color: #fff; border-radius: 1cqw; font-family: inherit; }
+  .btn:hover { background: #e74c3c; transform: scale(1.05); }
+  .blink { animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+
+  .grid { display: grid; grid-template-columns: auto auto; gap: 1.2cqw 3cqw; align-items: center; text-align: left; }
+  .keys { display: flex; gap: .6cqw; align-items: center; justify-content: flex-end; }
+  .cap { min-width: 3.4cqw; height: 3.4cqw; line-height: 3.4cqw; padding: 0 .6cqw; text-align: center;
+    background: #2b2d4a; border: .2cqw solid #6b6fb0; border-bottom-width: .5cqw; border-radius: .7cqw;
+    font-weight: bold; font-size: 1.8cqw; transition: .08s; }
+  .cap.on { background: #ffd23f; color: #222; transform: translateY(.3cqw); border-bottom-width: .2cqw; }
+  .or { color: #8a8fd0; font-size: 1.5cqw; }
+  .desc b { color: #ffd23f; }
+  .tips { margin-top: 1.8cqw; font-size: 1.6cqw; color: #aab; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c" width="960" height="540"></canvas>
+
+  <!-- 타이틀 -->
+  <div class="screen show" id="title">
+    <h1>STREET FIST</h1>
+    <p style="font-size:2.2cqw">3 STAGES · BELT-SCROLL ACTION</p>
+    <button class="btn" id="btnStart">시작</button>
+    <p class="blink" style="margin-top:2cqw;font-size:1.6cqw">Enter 키로도 시작할 수 있어요</p>
+  </div>
+
+  <!-- 키 튜토리얼 -->
+  <div class="screen" id="tutorial">
+    <h2>조작 방법</h2>
+    <div class="grid">
+      <div class="keys"><span class="cap" data-k="ArrowLeft KeyA">←</span><span class="cap" data-k="ArrowRight KeyD">→</span>
+        <span class="or">또는</span><span class="cap" data-k="KeyA">A</span><span class="cap" data-k="KeyD">D</span></div>
+      <div class="desc"><b>좌우 이동</b> — 오른쪽(→)으로 진행하세요</div>
+
+      <div class="keys"><span class="cap" data-k="ArrowUp KeyW">↑</span><span class="cap" data-k="ArrowDown KeyS">↓</span>
+        <span class="or">또는</span><span class="cap" data-k="KeyW">W</span><span class="cap" data-k="KeyS">S</span></div>
+      <div class="desc"><b>위/아래 이동</b> — 적과 줄(깊이)을 맞추세요</div>
+
+      <div class="keys"><span class="cap" data-k="Space" style="min-width:9cqw">SPACE</span></div>
+      <div class="desc"><b>점프</b></div>
+
+      <div class="keys"><span class="cap" data-k="KeyJ">J</span><span class="or">또는</span><span class="cap" data-k="KeyZ">Z</span></div>
+      <div class="desc"><b>공격</b> — 연타하면 3연 콤보! 공중에서는 다이빙 킥</div>
+
+      <div class="keys"><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="Escape">ESC</span></div>
+      <div class="desc"><b>일시정지</b></div>
+    </div>
+    <div class="tips">
+      🧪 물약 = 체력 회복 &nbsp;·&nbsp; 🛢 통을 부수면 아이템 &nbsp;·&nbsp; ⭐ 파워업 = 공격력 UP<br>
+      적 머리 위 <b style="color:#ff5252">!</b> = 공격 예고 &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진
+    </div>
+    <p style="margin-top:1.2cqw;font-size:1.5cqw">키를 눌러 위 버튼이 반응하는지 연습해보세요.</p>
+    <button class="btn" id="btnGo">게임 시작</button>
+  </div>
+
+  <div class="screen" id="pause"><h2>일시정지</h2><p>P 또는 ESC 로 계속하기</p></div>
+
+  <div class="screen" id="clear">
+    <h2 id="clearTitle">STAGE CLEAR!</h2>
+    <p id="clearInfo"></p>
+    <button class="btn" id="btnNext">다음 스테이지</button>
+  </div>
+
+  <div class="screen" id="over">
+    <h1 style="font-size:7cqw;color:#ff5252">GAME OVER</h1>
+    <p id="overInfo"></p>
+    <button class="btn" id="btnRetry">다시 도전</button>
+    <button class="btn" id="btnToTitle" style="margin-top:1cqw;background:#2b2d4a">타이틀로</button>
+  </div>
+
+  <div class="screen" id="ending">
+    <h1 style="font-size:6cqw">ALL CLEAR!</h1>
+    <p>모든 스테이지를 클리어했습니다. 축하합니다!</p>
+    <p id="endInfo" style="font-size:2.6cqw;color:#ffd23f"></p>
+    <button class="btn" id="btnEndTitle">타이틀로</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
