@@ -52,11 +52,11 @@ const ET = {
            h: 96, s: 1, hw: 18 },
   brute: { name: '기사', sprite: 'knight', hp: 100, spd: 0.9, dmg: 16, range: 68, wind: 44, act: 12, rec: 44, kb: 6, score: 300, kd: true,
            h: 100, s: 1, hw: 22 },
-  boss1: { name: '도살자 고라스', sprite: 'boss1', boss: true, hp: 320, spd: 1.15, dmg: 16, range: 90, wind: 26, act: 12, rec: 34, score: 2000, kd: true,
+  boss1: { name: '도살자 고라스', sprite: 'boss1', boss: true, hp: 260, spd: 1.05, dmg: 12, range: 62, wind: 40, act: 12, rec: 42, score: 2000, kd: true,
            h: 148, s: 1, hw: 34, moves: ['charge'] },
-  boss2: { name: '까마귀 마녀 모르그라', sprite: 'boss2', boss: true, hp: 480, spd: 1.3, dmg: 18, range: 90, wind: 24, act: 12, rec: 30, score: 3500, kd: true,
+  boss2: { name: '까마귀 마녀 모르그라', sprite: 'boss2', boss: true, hp: 380, spd: 1.2, dmg: 13, range: 64, wind: 36, act: 12, rec: 38, score: 3500, kd: true,
            h: 148, s: 1, hw: 28, moves: ['charge', 'slam'] },
-  boss3: { name: '황금왕 오렐리온', sprite: 'boss3', boss: true, hp: 700, spd: 1.4, dmg: 20, range: 100, wind: 22, act: 12, rec: 26, score: 6000, kd: true,
+  boss3: { name: '황금왕 오렐리온', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, dmg: 15, range: 68, wind: 34, act: 12, rec: 34, score: 6000, kd: true,
            h: 152, s: 1, hw: 34, moves: ['charge', 'slam'] },
 };
 
@@ -94,6 +94,8 @@ const STAGES = [
 ];
 
 // 플레이어 공격 데이터 (on~off 틱 동안 판정)
+const SP_MAX = 100;           // 필살기 게이지: 적을 때릴수록 차오른다
+const GROGGY_TICKS = 300;     // 보스 기절 시간 (5초 = 300틱)
 const ATK = {
   c1:  { dur: 20, on: 4, off: 10, reach: 54, dmg: 10, kd: false },
   c2:  { dur: 20, on: 4, off: 10, reach: 54, dmg: 11, kd: false },
@@ -111,7 +113,7 @@ let tick = 0, hitStop = 0, shake = 0, bannerT = 0, clearT = 0, goT = 0, stageSta
 function newPlayer(score = 0) {
   return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, queue: false, hitSet: new Set(),
-    inv: 0, flash: 0, buff: 0, score, walk: false };
+    inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0 };
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
@@ -178,7 +180,7 @@ function mkEnemy(type, x, y) {
   const d = ET[type];
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
     st: 'chase', t: 0, wait: rand(0, 40), atkCd: rand(20, 60), pat: null, hitSet: null, inv: 0, flash: 0, shown: 0,
-    boss: !!d.boss, nextKd: d.hp * 0.75, walk: false, recT: d.rec, remove: false };
+    boss: !!d.boss, nextKd: d.hp * 0.75, gr: 0, grMax: d.hp >= 500 ? 130 : 110, grT: 0, walk: false, recT: d.rec, remove: false };
 }
 
 // ---------------------------------------------------------------- 이펙트 / 아이템
@@ -222,7 +224,7 @@ function startAtk(n) {
 
 function hurtPlayer(dmg, dir, kd) {
   const p = player;
-  if (p.inv > 0 || p.st === 'down' || p.st === 'dead') return false;
+  if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special') return false;
   p.hp -= dmg; p.flash = 8; p.combo = 0; p.queue = false;
   hitStop = Math.max(hitStop, 4); shake = Math.max(shake, 6);
   floatText(p.x, p.y - p.z - 110, dmg, '#ff5252');
@@ -240,12 +242,38 @@ function playerStrike(A) {
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
   for (const e of enemies) {
     if (e.st === 'dead' || e.st === 'down' || e.inv > 0 || p.hitSet.has(e)) continue;
-    if (inReach(p, e, A.reach, 24, 55)) { p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd); }
+    if (inReach(p, e, A.reach, 24, 55)) {
+      p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd);
+      p.sp = Math.min(SP_MAX, p.sp + (A.kd ? 8 : 5));
+    }
   }
   for (const b of barrels) {
     if (b.dead || p.hitSet.has(b)) continue;
     if (inReach(p, b, A.reach, 24, 55)) { p.hitSet.add(b); damageBarrel(b); }
   }
+}
+
+// 필살기 "회전 참격": 주변 360도를 3연속으로 벤다. 시전 중 무적.
+const SPECIAL = { dur: 46, pulses: [12, 22, 32], dmg: 14, lastDmg: 24, reachX: 140, ytol: 60 };
+function startSpecial() {
+  const p = player;
+  p.st = 'special'; p.t = 0; p.sp = 0; p.vz = 5; p.vx = 0;
+  beep(220, .35, 'sawtooth', 0.06);
+  rings.push({ x: p.x, y: p.y, r: 10, life: 24, col: '255,236,120' });
+  shake = Math.max(shake, 6);
+}
+function specialPulse(last) {
+  const p = player, mul = p.buff > 0 ? 1.5 : 1;
+  const dmg = Math.round((last ? SPECIAL.lastDmg : SPECIAL.dmg) * mul);
+  for (const e of enemies) {
+    if (e.st === 'dead' || e.st === 'down' || e.inv > 0) continue;
+    if (Math.abs(e.x - p.x) < SPECIAL.reachX + e.hw && Math.abs(e.y - p.y) < SPECIAL.ytol) damageEnemy(e, dmg, last);
+  }
+  for (const b of barrels) {
+    if (!b.dead && Math.abs(b.x - p.x) < SPECIAL.reachX && Math.abs(b.y - p.y) < SPECIAL.ytol) damageBarrel(b);
+  }
+  rings.push({ x: p.x, y: p.y, r: 20, life: 24, col: '255,236,120' });
+  beep(last ? 150 : 300, .12, 'square', 0.06);
 }
 
 function damageBarrel(b) {
@@ -280,6 +308,7 @@ function updPlayer() {
       p.walk = !!(ax || ay);
       if (p.comboT > 0) p.comboT--;
       if (hit('Space') && p.z === 0) { p.vz = 9.6; beep(500, .1, 'triangle'); }
+      if (hit('KeyK', 'KeyX') && p.sp >= SP_MAX) { startSpecial(); break; }
       if (hit('KeyJ', 'KeyZ')) {
         if (p.z > 0) startAtk('air');
         else startAtk(p.comboT > 0 && p.combo < 2 ? p.combo + 1 : 0);
@@ -304,6 +333,11 @@ function updPlayer() {
       }
       break;
     }
+    case 'special':
+      p.t++;
+      if (SPECIAL.pulses.includes(p.t)) specialPulse(p.t === SPECIAL.pulses[SPECIAL.pulses.length - 1]);
+      if (p.t >= SPECIAL.dur) { p.st = 'free'; p.inv = 30; p.comboT = 0; p.combo = 0; }
+      break;
     case 'hurt':
       p.t++; p.x += p.vx; p.vx *= 0.85;
       if (p.t > 16) { p.st = 'free'; }
@@ -352,6 +386,8 @@ function heal(n) {
 // ---------------------------------------------------------------- 적
 function damageEnemy(e, dmg, kd) {
   const p = player;
+  const stunned = e.st === 'stun';
+  if (stunned) dmg = Math.round(dmg * 1.5);           // 기절 중에는 추가 피해
   e.hp -= dmg; e.flash = 6; e.shown = 240;
   hitStop = Math.max(hitStop, kd ? 6 : 3);
   beep(kd ? 140 : 210, .07, 'sawtooth');
@@ -365,7 +401,15 @@ function damageEnemy(e, dmg, kd) {
     if (e.boss) { shake = 20; hitStop = 16; }
     return;
   }
-  if (e.boss) {                                   // 보스: 슈퍼아머, 체력 25% 단위로 다운
+  if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
+    if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
+    e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
+    if (e.gr >= e.grMax) {
+      e.st = 'stun'; e.t = 0; e.pat = null; e.vx = 0; e.z = 0; e.vz = 0;
+      shake = 16; hitStop = 10; beep(90, .5, 'sawtooth', 0.07);
+      floatText(e.x, e.y - e.z - e.d.h - 40, 'GROGGY!', '#ffe14d');
+      return;
+    }
     if (e.hp <= e.nextKd) {
       e.nextKd -= e.max * 0.25;
       e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 3; e.pat = null;
@@ -401,6 +445,7 @@ function updEnemy(e) {
   if (e.shown > 0) e.shown--;
   if (e.atkCd > 0) e.atkCd--;
   e.walk = false;
+  if (e.boss && e.st !== 'stun') { if (e.grT > 0) e.grT--; else if (e.gr > 0) e.gr = Math.max(0, e.gr - 0.2); }   // 그로기 자연 회복
   const dx = p.x - e.x, dy = p.y - e.y;
 
   switch (e.st) {
@@ -414,6 +459,10 @@ function updEnemy(e) {
     case 'hurt':
       e.x += e.vx; e.vx *= 0.85;
       if (e.t > (e.boss ? 10 : 18)) { e.st = 'chase'; e.t = 0; e.wait = rand(0, 12); }
+      break;
+
+    case 'stun':                                    // 5초간 기절
+      if (e.t >= GROGGY_TICKS) { e.st = 'rec'; e.t = 0; e.recT = 30; e.gr = 0; e.grT = 0; e.atkCd = rand(30, 60); }
       break;
 
     case 'rec':
@@ -617,6 +666,7 @@ function drawChar(e, o) {
   else {
     ctx.translate(Math.round(o.dx || 0), Math.round(o.dy || 0));
     if (o.lean) ctx.rotate(o.lean);
+    if (o.spin) { ctx.translate(0, -H * 0.5); ctx.rotate(o.spin); ctx.translate(0, H * 0.5); }
   }
   if (o.aura) {
     ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';
@@ -644,6 +694,7 @@ function playerLook() {
   o.blink = p.inv > 0 && p.st === 'free';
   o.lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
   if (p.st === 'hurt' || (p.st === 'down' && !o.lying)) { o.lean = -0.2; o.flash = true; }
+  if (p.st === 'special') { o.spin = (p.t / SPECIAL.dur) * Math.PI * 6; o.frame = 1; o.aura = true; }
   if (p.st === 'atk') {
     const A = ATK[p.atk];
     if (p.atk === 'air') { o.lean = 0.45; o.fx = 44; }
@@ -664,6 +715,7 @@ function enemyLook(e) {
   o.lying = (e.st === 'down' || e.st === 'dead') && e.z === 0;
   if (e.st === 'dead' && e.t > (e.boss ? 90 : 35)) o.blink = true;
   if (e.st === 'hurt' || ((e.st === 'down' || e.st === 'dead') && !o.lying)) o.lean = -0.2;
+  if (e.st === 'stun') { o.lean = Math.sin(tick * 0.15) * 0.12 - 0.05; o.frame = 0; }
   if (e.st === 'wind') {                                   // 공격 예고: 뒤로 젖히며 번쩍
     const k = Math.min(1, e.t / 12);
     o.lean = -0.14 * k; o.dx = -7 * k;
@@ -723,13 +775,16 @@ function outlineText(txt, x, y, col = '#fff', font = 'bold 14px sans-serif', ali
 function drawHUD() {
   const p = player;
   // 플레이어 패널
-  ctx.fillStyle = 'rgba(0,0,0,.55)'; rect(10, 10, 270, 74);
+  ctx.fillStyle = 'rgba(0,0,0,.55)'; rect(10, 10, 270, 96);
   outlineText('PLAYER', 20, 30, '#ffd23f', 'bold 15px sans-serif', 'left');
   drawBar(20, 38, 200, 16, p.hp / p.max, hpColor(p.hp / p.max));
   outlineText(`${p.hp}/${p.max}`, 226, 51, '#fff', 'bold 12px sans-serif', 'left');
-  outlineText('LIFE', 20, 76, '#fff', 'bold 12px sans-serif', 'left');
-  for (let i = 0; i < p.lives; i++) { ctx.fillStyle = '#ff4d6d'; circle(66 + i * 20, 72, 7); }
-  if (p.buff > 0) { drawBar(150, 66, 100, 8, p.buff / 900, '#ffe14d'); outlineText('POWER', 150, 63, '#ffe14d', 'bold 10px sans-serif', 'left'); }
+  const spFull = p.sp >= SP_MAX;
+  drawBar(20, 60, 200, 8, p.sp / SP_MAX, spFull && Math.floor(tick / 8) % 2 ? '#fff6a8' : '#35b6ff');
+  outlineText(spFull ? 'K : 필살기!' : 'SP', 226, 69, spFull ? '#ffe14d' : '#8fd4ff', 'bold 12px sans-serif', 'left');
+  outlineText('LIFE', 20, 96, '#fff', 'bold 12px sans-serif', 'left');
+  for (let i = 0; i < p.lives; i++) { ctx.fillStyle = '#ff4d6d'; circle(66 + i * 20, 92, 7); }
+  if (p.buff > 0) { drawBar(150, 88, 100, 8, p.buff / 900, '#ffe14d'); outlineText('POWER', 150, 85, '#ffe14d', 'bold 10px sans-serif', 'left'); }
   outlineText(`SCORE ${String(p.score).padStart(7, '0')}`, W - 16, 28, '#fff', 'bold 18px monospace', 'right');
   outlineText(`${stage.name}  ${stage.title}`, W - 16, 50, '#ffd23f', 'bold 14px sans-serif', 'right');
 
@@ -741,6 +796,16 @@ function drawHUD() {
     drawBar(bx, 36, bw, 16, boss.hp / boss.max, '#e53935');
     ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 1;
     for (const f of [0.25, 0.5, 0.75]) { ctx.beginPath(); ctx.moveTo(bx + bw * f, 36); ctx.lineTo(bx + bw * f, 52); ctx.stroke(); }
+    // 그로기 게이지 (가득 차면 5초 기절, 기절 중에는 남은 시간이 줄어든다)
+    if (boss.st !== 'dead') {
+      if (boss.st === 'stun') {
+        drawBar(bx, 56, bw, 8, 1 - boss.t / GROGGY_TICKS, Math.floor(tick / 6) % 2 ? '#ffe14d' : '#ff9800');
+        outlineText(`GROGGY  ${((GROGGY_TICKS - boss.t) / 60).toFixed(1)}s  (받는 피해 x1.5)`, W / 2, 80, '#ffe14d', 'bold 13px sans-serif');
+      } else {
+        drawBar(bx, 56, bw, 8, boss.gr / boss.grMax, '#ffb300');
+        outlineText('GROGGY', bx - 8, 64, '#ffcc66', 'bold 11px sans-serif', 'right');
+      }
+    }
   }
 
   // GO 화살표
@@ -754,6 +819,12 @@ function drawEnemyOverlay(e) {
     const bw = 44;
     drawBar(sx - bw / 2, top - 20, bw, 6, e.hp / e.max, hpColor(e.hp / e.max));
     if (e.shown > 0) outlineText(e.d.name, sx, top - 26, '#ddd', 'bold 10px sans-serif');
+  }
+  if (e.st === 'stun') {
+    for (let i = 0; i < 4; i++) {
+      const a = tick * 0.12 + i * Math.PI / 2;
+      ctx.fillStyle = '#ffe14d'; circle(sx + Math.cos(a) * 34, top + 8 + Math.sin(a) * 9, 5);
+    }
   }
   if (e.st === 'wind' && e.t > 2) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
 }
@@ -773,7 +844,7 @@ function render() {
 
     // 충격파 링
     for (const r of rings) {
-      ctx.strokeStyle = `rgba(255,200,120,${r.life / 24})`; ctx.lineWidth = 5;
+      ctx.strokeStyle = `rgba(${r.col || '255,200,120'},${r.life / 24})`; ctx.lineWidth = 5;
       ctx.beginPath(); ctx.ellipse(r.x - camX, r.y, r.r, r.r * 0.3, 0, 0, Math.PI * 2); ctx.stroke();
     }
     for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
