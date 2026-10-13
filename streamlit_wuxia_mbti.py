@@ -1,4 +1,4 @@
-"""죽림무협 MBTI - 무협 세계관으로 성향을 살펴보는 Streamlit 앱.
+"""나의 무협 MBTI는? - 무협 세계관으로 성향을 살펴보는 Streamlit 앱.
 
 실행:
     streamlit run streamlit_wuxia_mbti.py
@@ -10,7 +10,7 @@ import base64
 
 import streamlit as st
 
-st.set_page_config(page_title="죽림무협 MBTI", page_icon="🎋", layout="centered")
+st.set_page_config(page_title="나의 무협 MBTI는?", page_icon="🎋", layout="centered")
 
 
 # ---------------------------------------------------------------------------
