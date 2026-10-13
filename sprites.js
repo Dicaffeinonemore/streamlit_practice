@@ -4,55 +4,15 @@
 //  각 스프라이트는 fn(r, f, ci) 로 정의: r = 사각형 채우기, f = 프레임(0/1), ci = 원 채우기
 //  w,h = 원본 픽셀 크기 / ax = 몸 중심 x / gy = 발바닥 y / sh = 그림자 반폭
 //  모두 오른쪽을 바라보는 방향으로 그려져 있고, 게임에서 좌우 반전한다.
+//  흑기사와 보스 3명은 무기와 앞팔이 없는 몸통만 그린다 (팔·무기는 motion.js 가 포즈에 맞춰 따로 그림)
 // =====================================================================
 (function (global) {
-  const OUTLINE = [13, 11, 20, 255];
   const SPRITES = {};
-
-  function mk(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
-
-  // 스프라이트 한 프레임을 캔버스에 그리고 1px 외곽선을 자동으로 입힌다
-  function build(spr, f) {
-    const c = mk(spr.w, spr.h), x = c.getContext('2d');
-    const r = (a, b, w, h, col) => { x.fillStyle = col; x.fillRect(a, b, w, h); };
-    const ci = (cx, cy, rad, col) => {
-      x.fillStyle = col;
-      for (let j = -rad; j <= rad; j++) {
-        const hw = Math.floor(Math.sqrt(rad * rad - j * j) + 0.5);
-        x.fillRect(cx - hw, cy + j, hw * 2 + 1, 1);
-      }
-    };
-    spr.fn(r, f | 0, ci);
-    const W = spr.w, H = spr.h, id = x.getImageData(0, 0, W, H), d = id.data, out = new Uint8ClampedArray(d);
-    const A = (i, j) => i >= 0 && j >= 0 && i < W && j < H && d[(j * W + i) * 4 + 3] > 0;
-    for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
-      if (!A(i, j) && (A(i + 1, j) || A(i - 1, j) || A(i, j + 1) || A(i, j - 1))) {
-        const k = (j * W + i) * 4;
-        out[k] = OUTLINE[0]; out[k + 1] = OUTLINE[1]; out[k + 2] = OUTLINE[2]; out[k + 3] = 255;
-      }
-    }
-    x.putImageData(new ImageData(out, W, H), 0, 0);
-    return c;
-  }
-
-  // 프레임 / 피격 플래시(흰색) 캐시
-  const cache = {};
-  function getSprite(id, frame, flash) {
-    const key = id + ':' + (frame | 0) + (flash ? 'f' : '');
-    if (cache[key]) return cache[key];
-    let c = build(SPRITES[id], frame);
-    if (flash) {
-      const f = mk(c.width, c.height), g = f.getContext('2d');
-      g.drawImage(c, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#fff'; g.fillRect(0, 0, f.width, f.height);
-      c = f;
-    }
-    return (cache[key] = c);
-  }
 
   // ===== 주인공 : 흑기사 =====
   SPRITES.player = { w: 40, h: 48, ax: 21, gy: 47, sh: 11, fn(r, f, ci) {
     const b = f, D = '#1a1a24', M = '#2c2c3a', L = '#4a4a62', H = '#7a7a9a', R = '#b3202a', RD = '#6e1220',
-      G = '#c9a24a', S = '#d3dae6', SD = '#8b95a8', GL = '#ff3a4a';
+      G = '#c9a24a', GL = '#ff3a4a';
     r(7, 17 + b, 7, 20, RD); r(5, 24 + b, 6, 18, RD); r(4, 36 + b, 6, 7, R); r(3, 41 + b, 3, 4, RD); r(8, 40 + b, 3, 3, RD);
     r(15, 34, 5, 11, M); r(15, 34, 2, 11, L); r(22, 34, 5, 11, M); r(25, 34, 2, 11, D);
     r(15, 38, 5, 3, L); r(22, 38, 5, 3, L); r(16, 38, 2, 1, H); r(23, 38, 2, 1, H);
@@ -67,12 +27,7 @@
     r(24, 7 + b, 5, 10, M); r(22, 11 + b, 7, 2, D); r(23, 11 + b, 5, 1, GL);
     r(26, 14 + b, 2, 1, D); r(26, 16 + b, 2, 1, D); r(15, 12 + b, 3, 6, D);
     r(17, 3 + b, 8, 3, M); r(19, 0 + b, 5, 5, R); r(14, 1 + b, 6, 4, R); r(10, 3 + b, 6, 3, RD); r(7, 5 + b, 5, 3, RD);
-    r(27, 22 + b, 4, 6, M); r(29, 27 + b, 4, 7, M); r(25, 15 + b, 8, 8, M); r(25, 15 + b, 8, 2, L); r(26, 16 + b, 3, 1, H);
-    r(31, 12 + b, 2, 4, H);
-    r(33, 7 + b, 3, 24, S); r(33, 8 + b, 1, 22, '#f2f5fa'); r(35, 8 + b, 1, 22, SD); r(34, 5 + b, 1, 2, S);
-    r(30, 31 + b, 9, 2, G); r(30, 31 + b, 9, 1, '#e8c86a');
-    r(33, 33 + b, 3, 5, RD); r(33, 38 + b, 3, 2, G);
-    r(32, 33 + b, 5, 4, D);
+    r(25, 15 + b, 8, 8, M); r(25, 15 + b, 8, 2, L); r(26, 16 + b, 3, 1, H);   // 어깨 갑옷 (팔과 검은 따로 그림)
   } };
 
   // ===== 보병 =====
@@ -139,7 +94,7 @@
   // ===== 보스 1 : 도살자 고라스 =====
   SPRITES.boss1 = { w: 68, h: 74, ax: 34, gy: 71, sh: 20, fn(r, f, ci) {
     const b = f, sk = '#c98e6a', skD = '#9a6446', skL = '#e0aa84', iron = '#6a7080', ironD = '#3e4352', ironL = '#9aa2b4',
-      LT = '#5a3a24', AP = '#6a4a30', blade = '#b8c0cc', bone = '#e8e0cc', red = '#8a1a1a';
+      LT = '#5a3a24', AP = '#6a4a30', bone = '#e8e0cc', red = '#8a1a1a';
     r(20, 50, 11, 18, '#4a3a2e'); r(36, 50, 11, 18, '#3a2e24'); r(18, 64, 14, 7, LT); r(36, 64, 15, 7, LT);
     r(18, 64, 14, 1, '#7a5a3a'); r(36, 64, 15, 1, '#7a5a3a'); r(22, 54, 3, 6, '#2a2018');
     r(14, 22 + b, 40, 28, sk); r(14, 22 + b, 5, 28, skD); r(16, 25 + b, 14, 9, skL); r(32, 25 + b, 14, 9, '#d79c78');
@@ -158,12 +113,7 @@
     r(34, 16 + b, 1, 5, ironD); r(36, 16 + b, 1, 5, ironD); r(38, 16 + b, 1, 5, ironD); r(40, 16 + b, 1, 5, ironD);
     r(25, 19 + b, 16, 2, ironD);
     r(26, 21 + b, 14, 2, skD);
-    r(50, 24 + b, 11, 9, sk); r(52, 31 + b, 9, 15, sk); r(52, 31 + b, 2, 15, skD); r(51, 40 + b, 10, 3, '#d8d0b8');
-    r(56, 46 + b, 4, 9, LT); r(55, 54 + b, 6, 2, ironD);
-    r(52, 4 + b, 15, 36, blade); r(52, 4 + b, 4, 36, iron); r(66, 4 + b, 1, 36, '#eef2f8'); r(52, 4 + b, 15, 2, '#d6dde8');
-    r(58, 11 + b, 3, 3, ironD); r(58, 18 + b, 3, 3, ironD); r(64, 14 + b, 2, 2, ironD); r(64, 25 + b, 2, 2, ironD); r(63, 32 + b, 3, 2, ironD);
-    r(52, 38 + b, 15, 2, ironD); r(61, 28 + b, 2, 8, red);
-    r(54, 44 + b, 8, 8, '#7a5a3a'); r(54, 44 + b, 8, 2, '#a07a52');
+    r(50, 24 + b, 11, 9, sk); r(50, 24 + b, 3, 9, skD);   // 오른 어깨 (팔과 식칼은 따로 그림)
   } };
 
   // ===== 보스 2 : 까마귀 마녀 모르그라 =====
@@ -186,19 +136,14 @@
     r(25, 14 + b, 3, 2, GR); r(26, 14 + b, 1, 1, '#eaffea');
     r(30, 14 + b, 8, 3, bone); r(36, 16 + b, 6, 2, bone); r(40, 17 + b, 4, 1, bone); r(43, 18 + b, 2, 1, bone); r(30, 14 + b, 8, 1, '#fff');
     r(16, 4 + b, 4, 8, BK); r(14, 8 + b, 4, 6, BK2); r(36, 6 + b, 4, 3, BK);
-    r(46, 14 + b, 2, 56, '#5a4030'); r(46, 14 + b, 1, 56, '#7a5a40');
-    r(42, 9 + b, 2, 8, G); r(50, 9 + b, 2, 8, G); r(43, 15 + b, 8, 2, G);
-    ci(47, 8 + b, 6, GRD); ci(47, 8 + b, 4, GR); ci(47, 8 + b, 2, '#eaffea');
-    r(46, 0 + b, 2, 2, GR); r(53, 3 + b, 2, 2, GR); r(40, 2 + b, 2, 2, GR);
-    r(38, 28 + b, 7, 9, P); r(38, 28 + b, 2, 9, PD); r(42, 35 + b, 5, 4, sk);
+    r(37, 27 + b, 6, 6, P); r(37, 27 + b, 2, 6, PD);   // 오른 어깨 (팔과 지팡이는 따로 그림)
     r(10, 28 + b, 7, 9, P); r(8, 34 + b, 4, 4, sk); r(5, 30 + b, 2, 2, GR); r(8, 25 + b, 2, 2, GR); r(3, 36 + b, 2, 2, GRD);
-    r(2, 8 + b, 7, 4, BK); r(0, 6 + b, 4, 3, BK2); r(9, 9 + b, 3, 1, bone); r(7, 9 + b, 1, 1, '#ff5a2a'); r(4, 12 + b, 4, 1, BK); r(1, 11 + b, 2, 1, BK2);
   } };
 
   // ===== 보스 3 : 황금왕 오렐리온 =====
   SPRITES.boss3 = { w: 68, h: 76, ax: 34, gy: 72, sh: 19, fn(r, f, ci) {
     const b = f, G = '#d4a437', GL = '#f3d26a', GD = '#8a6a1c', GDD = '#5a4210', R = '#9a1c2c', RD = '#5e0f1a',
-      FL = '#ff7a1a', FY = '#ffd23a', S = '#c8d0dc', SD = '#6a7488', LT = '#3a2a1a';
+      FL = '#ff7a1a', FY = '#ffd23a';
     r(6, 24 + b, 14, 46, RD); r(3, 44 + b, 12, 26, R); r(1, 62 + b, 6, 9, RD); r(12, 60 + b, 5, 10, R); r(6, 24 + b, 3, 40, '#7a1424');
     r(22, 54, 10, 12, G); r(35, 54, 10, 12, GD); r(22, 54, 3, 12, GL); r(22, 59, 10, 3, GL); r(35, 59, 10, 3, G);
     r(20, 66, 13, 6, GDD); r(35, 66, 14, 6, GDD); r(20, 66, 13, 1, GD); r(35, 66, 14, 1, GD);
@@ -218,14 +163,14 @@
     r(25, 1 - fh + 2 + b, 3, 4 + fh, FL); r(29, 0 + b + 1 - fh, 3, 6 + fh, FY); r(34, 1 + b + fh, 3, 5 - fh, FL); r(38, 0 + b + 2 - fh, 3, 5 + fh, FY); r(41, 3 + b, 2, 3, FL);
     r(30, 2 + b, 1, 3, '#fff'); r(39, 3 + b, 1, 2, '#fff');
     r(45, 17 + b, 15, 14, G); r(45, 17 + b, 15, 2, GL); r(46, 19 + b, 4, 1, '#fff3b8'); r(47, 11 + b, 3, 6, GL); r(53, 10 + b, 3, 7, GL); r(58, 14 + b, 2, 4, GL);
-    r(49, 31 + b, 9, 12, GD); r(49, 31 + b, 3, 12, G);
-    r(53, 2 + b, 7, 40, S); r(53, 2 + b, 1, 40, '#f2f5fa'); r(59, 2 + b, 1, 40, SD); r(56, 6 + b, 1, 32, '#9aa4b8'); r(55, 0 + b, 3, 2, S);
-    r(45, 42 + b, 23, 3, GL); r(45, 42 + b, 23, 1, '#fff3b8'); r(45, 40 + b, 3, 5, G); r(65, 40 + b, 3, 5, G);
-    r(55, 45 + b, 3, 11, LT); r(54, 56 + b, 5, 3, G);
-    r(52, 44 + b, 8, 8, GDD); r(52, 44 + b, 8, 2, GD);
-    r(63, 20 + b, 2, 2, FL); r(65, 28 + b, 2, 2, FY); r(61, 8 + b, 2, 2, FL);
+  } };
+
+  // ===== 까마귀 (마녀의 소환수) =====
+  SPRITES.raven = { w: 12, h: 8, ax: 6, gy: 7, sh: 3, fn(r, f) {
+    const BK = '#1a1a24', B2 = '#34344a';
+    r(3, 3, 6, 3, BK); r(8, 2, 3, 2, BK); r(11, 3, 1, 1, '#d8d0b8'); r(9, 2, 1, 1, '#ff5a2a'); r(0, 4, 3, 1, B2);
+    if (f) { r(2, 0, 4, 3, BK); r(1, 1, 2, 2, B2); } else { r(2, 6, 4, 2, BK); r(1, 6, 2, 2, B2); }
   } };
 
   global.SPRITES = SPRITES;
-  global.getSprite = getSprite;
 })(window);

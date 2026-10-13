@@ -34,11 +34,23 @@
   .or { color: #8a8fd0; font-size: 1.5cqw; }
   .desc b { color: #ffd23f; }
   .tips { margin-top: 1.8cqw; font-size: 1.6cqw; color: #aab; line-height: 1.7; }
+
+  /* 필살기 컷인: 붉은 띠가 왼쪽에서 들어와 오른쪽으로 빠진다 */
+  #cutin { position: absolute; left: 0; right: 0; top: 30%; pointer-events: none; opacity: 0; line-height: 1; overflow: hidden; }
+  #cutin span { display: block; margin: 0 auto; width: fit-content; padding: .2em .8em; color: #fff; font-weight: 700;
+    font-size: 6cqw; letter-spacing: .3em; white-space: nowrap; text-shadow: 0 0 1.2cqw #ff3a4a, .3cqw .3cqw 0 #1a0408;
+    background: linear-gradient(90deg, transparent, rgba(214,32,58,.85) 18%, rgba(214,32,58,.85) 82%, transparent); }
+  #cutin small { display: block; text-align: center; font-size: 1.3cqw; letter-spacing: .4em; color: #ffd0d6; margin-top: .8cqw; font-weight: bold; }
+  #cutin.show { animation: cut 1.5s steps(15) forwards; }
+  @keyframes cut { 0% { opacity: 0; transform: translateX(-30%); } 10%, 78% { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: translateX(30%); } }
+  @media (prefers-reduced-motion: reduce) { #cutin.show { animation-duration: .01s; } }
 </style>
 </head>
 <body>
 <div id="wrap">
   <canvas id="c" width="960" height="540"></canvas>
+  <div id="cutin" aria-hidden="true"><span>흑월참</span><small>DARK MOON SLASH</small></div>
 
   <!-- 타이틀 -->
   <div class="screen show" id="title">
@@ -64,17 +76,17 @@
       <div class="desc"><b>점프</b></div>
 
       <div class="keys"><span class="cap" data-k="KeyJ">J</span><span class="or">또는</span><span class="cap" data-k="KeyZ">Z</span></div>
-      <div class="desc"><b>공격</b> — 연타하면 3연 콤보! 공중에서는 다이빙 킥</div>
+      <div class="desc"><b>공격</b> — 연타하면 3연 콤보! 3타 참격은 검기를 날린다 · 공중에서는 내려찍기</div>
 
       <div class="keys"><span class="cap" data-k="KeyK">K</span><span class="or">또는</span><span class="cap" data-k="KeyX">X</span></div>
-      <div class="desc"><b>필살기</b> — 적을 때려 SP 게이지를 채우면 사용! (회전 참격, 무적)</div>
+      <div class="desc"><b>필살기 흑월참</b> — SP 게이지가 차면 사용! 돌진 4연 베기 + 도약 내려찍기 (무적)</div>
 
       <div class="keys"><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="Escape">ESC</span></div>
       <div class="desc"><b>일시정지</b></div>
     </div>
     <div class="tips">
       🧪 물약 = 체력 회복 &nbsp;·&nbsp; 🛢 통을 부수면 아이템 &nbsp;·&nbsp; ⭐ 파워업 = 공격력 UP<br>
-      보스는 맞을수록 <b style="color:#ffb300">그로기 게이지</b>가 차고, 가득 차면 5초간 기절 &nbsp;·&nbsp; 적 머리 위 <b style="color:#ff5252">!</b> = 공격 예고 &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진
+      보스는 맞을수록 <b style="color:#ffb300">그로기 게이지</b>가 차고, 가득 차면 5초간 기절 &nbsp;·&nbsp; 적 머리 위 <b style="color:#ff5252">!</b> · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기) &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진
     </div>
     <p style="margin-top:1.2cqw;font-size:1.5cqw">키를 눌러 위 버튼이 반응하는지 연습해보세요.</p>
     <button class="btn" id="btnGo">게임 시작</button>
@@ -104,6 +116,7 @@
 </div>
 <script src="sprites.js"></script>
 <script src="backgrounds.js"></script>
+<script src="motion.js"></script>
 <script src="game.js"></script>
 </body>
 </html>
