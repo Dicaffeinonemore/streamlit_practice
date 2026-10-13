@@ -1,7 +1,8 @@
 'use strict';
 // =====================================================================
 //  모션 / 이펙트 엔진 (흑기사 보스전 모션 패치)
-//  - 도트를 픽셀 버퍼(Layer)에 직접 찍는다. 좌표 1칸 = 원본 도트 1px (게임에서 2배 확대)
+//  - 도트를 픽셀 버퍼(Layer)에 직접 찍는다. 좌표 1칸 = 원본 도트 1px
+//  - 도트 키트(Mk): 파트별 모양만 그리면 5단계 음영을 자동으로 입힌다 (흑기사·보스·배경 소품)
 //  - 흑기사와 보스는 "무기 없는 몸통 스프라이트 + 움직이는 팔 + 따로 그리는 무기"로 합성하고,
 //    시간(ms)을 넣으면 무기 각도·손 위치·몸 기울기를 돌려주는 포즈 함수로 공격 모션을 만든다.
 //  - 이펙트 함수는 모두 Layer 에 직접 그리는 순수 함수. 바닥 기준선(gy)은 인자로 받는다(2.5D 깊이 대응).
@@ -12,10 +13,10 @@
   function rgb(c) { let v = HC[c]; if (!v) { const n = parseInt(c.slice(1), 16); v = HC[c] = [(n >> 16) & 255, (n >> 8) & 255, n & 255]; } return v; }
 
   class Layer {
-    constructor(w, h) { this.w = w; this.h = h; this.d = new Uint8ClampedArray(w * h * 4); }
+    constructor(w, h) { this.w = w; this.h = h; this.ox = 0; this.d = new Uint8ClampedArray(w * h * 4); }   // ox: 그릴 때 x 에서 빼는 값 (넓은 배경 층용)
     clear() { this.d.fill(0); }
     put(x, y, c, a) {
-      x = Math.round(x); y = Math.round(y);
+      x = Math.round(x) - this.ox; y = Math.round(y);
       if (x < 0 || y < 0 || x >= this.w || y >= this.h) return;
       const i = (y * this.w + x) * 4, v = rgb(c), d = this.d;
       if (a === undefined || a >= 1) { d[i] = v[0]; d[i + 1] = v[1]; d[i + 2] = v[2]; d[i + 3] = 255; }
@@ -57,7 +58,7 @@
 
   // src 를 dst 에 그린다. o = { flip, lean(머리 쪽 기울기 px), crouch(무릎 굽힘 px), split(굽힘 경계 줄), flash, wash, washA }
   function blit(src, dst, x, y, o) {
-    o = o || {}; x = Math.round(x); y = Math.round(y);
+    o = o || {}; x = Math.round(x) - (dst.ox || 0); y = Math.round(y);
     const sp = o.split || 0, cr = o.crouch ? Math.round(o.crouch) : 0, wv = o.wash ? rgb(o.wash) : null, k = o.washA || 0;
     for (let j = 0; j < src.h; j++) {
       const dy = y + j + ((cr && j < sp) ? cr : 0); if (dy < 0 || dy >= dst.h) continue;
@@ -74,12 +75,107 @@
     }
   }
 
+
+  // ---------------------------------------------------------------- 도트 키트 (Mk)
+  // 모양(마스크)만 파트별로 그리면 왼쪽 위 광원 기준 5단계 음영을 자동으로 입힌다.
+  // 파트는 등록 순서가 곧 앞뒤 순서(나중이 앞). 앞 파트가 드리운 그림자와 가장자리 하이라이트까지 계산한다
+  const RAMP = {
+    steel: ['#14141d', '#202033', '#31314f', '#4a4b78', '#7b7fb4'],
+    steelD: ['#0f0f16', '#191927', '#26263c', '#383858', '#55577e'],
+    leather: ['#1a120d', '#2c1d14', '#46301f', '#654630', '#8a6444'],
+    cloth: ['#34091a', '#5e1224', '#8e1d2f', '#bb2e3f', '#e75a62'],
+    cape: ['#1c0912', '#35101c', '#561828', '#7c2234', '#a02e42'],
+    gold: ['#47310e', '#78561a', '#b08a2a', '#dcb444', '#fff0a2'],
+    purple: ['#150a24', '#2a1640', '#43266a', '#6a3f9c', '#9a6cc8'],
+    feather: ['#07070b', '#101018', '#1c1c2a', '#32324a', '#52527a'],
+    skin: ['#6a3a2a', '#9a5e44', '#c98e6a', '#e0aa84', '#f4c8a4'],
+    bsteel: ['#0a0a0d', '#15151a', '#22222a', '#383842', '#8c8e9c'],     // 흑철 (가장자리가 은빛으로 빛남)
+    bsteelD: ['#070709', '#0f0f13', '#18181e', '#2a2a32', '#55565f'],
+    crimson: ['#14040a', '#2c0810', '#481018', '#661a22', '#86262c'],    // 핏빛 망토
+    rag: ['#0c0a0a', '#181414', '#262020', '#3a302c', '#564840'],        // 해진 천
+    ash: ['#2a2224', '#4a3c3a', '#6e5a54', '#8e7a70', '#b09a8e'],        // 잿빛 피부
+    rust: ['#140c08', '#2a1a10', '#45301e', '#6a4a30', '#9a7a58'],       // 녹슨 철
+    ghost: ['#0a0e14', '#141c26', '#22303e', '#344a5c', '#56708a'],      // 망령의 천
+    tgold: ['#1e1606', '#3e2e0c', '#6a5216', '#9a7a24', '#d0b050'],      // 바랜 금
+    obsid: ['#08060a', '#140c14', '#24141e', '#3e1e2a', '#7a3040'],      // 흑요석 갑옷
+    purpleD: ['#0c0614', '#1a0c28', '#2c1642', '#43266a', '#6a3f9c'],
+  };
+  const RAMPX = {
+    wood: ['#2a1a10', '#42281a', '#5e3c26', '#80553a', '#a67650'],
+    hay: ['#6a5a1e', '#8e7a2c', '#b89c3c', '#d8be58', '#f0dc82'],
+    stone: ['#1c1a24', '#2c2a38', '#403d50', '#5c5870', '#807c98'],
+    iron: ['#14141a', '#22222c', '#34343f', '#4e4e5e', '#7a7a8e'],
+    bone: ['#6a6250', '#948a74', '#bdb298', '#ddd3ba', '#f4ecd6'],
+  };
+  class Mk {
+    constructor(w, h) { this.w = w; this.h = h; this.tx = 0; this.ty = 0; this.id = new Uint8Array(w * h); this.parts = [null]; }
+    part(ramp, base, occ) { this.parts.push({ ramp, base: base == null ? 2 : base, occ: occ !== false }); return this.parts.length - 1; }
+    px(x, y, p) { if (x < 0 || y < 0 || x >= this.w || y >= this.h) return; this.id[y * this.w + x] = p; }
+    rect(p, x, y, w, h) { x = Math.round(x + this.tx); y = Math.round(y + this.ty); for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.px(x + i, y + j, p); }
+    ell(p, cx, cy, rx, ry) {
+      cx += this.tx; cy += this.ty;
+      for (let y = Math.floor(cy - ry - 1); y <= Math.ceil(cy + ry + 1); y++) for (let x = Math.floor(cx - rx - 1); x <= Math.ceil(cx + rx + 1); x++) {
+        const u = (x + 0.5 - cx) / rx, v = (y + 0.5 - cy) / ry; if (u * u + v * v <= 1) this.px(x, y, p);
+      }
+    }
+    poly(p, pts) {
+      const tx = this.tx, ty = this.ty; pts = pts.map(q => [q[0] + tx, q[1] + ty]);
+      let y0 = 1e9, y1 = -1e9; pts.forEach(q => { y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); });
+      const n = pts.length;
+      for (let y = Math.floor(y0); y <= Math.ceil(y1); y++) {
+        const yc = y + 0.5, xs = [];
+        for (let i = 0; i < n; i++) {
+          const a = pts[i], b = pts[(i + 1) % n];
+          if ((a[1] <= yc && b[1] > yc) || (b[1] <= yc && a[1] > yc)) xs.push(a[0] + (yc - a[1]) / (b[1] - a[1]) * (b[0] - a[0]));
+        }
+        xs.sort((a, b) => a - b);
+        for (let k = 0; k + 1 < xs.length; k += 2) for (let x = Math.ceil(xs[k] - 0.5); x <= Math.floor(xs[k + 1] - 0.5); x++) this.px(x, y, p);
+      }
+    }
+    cap(p, x0, y0, x1, y1, r) {                    // 끝이 둥근 막대 (팔다리)
+      x0 += this.tx; x1 += this.tx; y0 += this.ty; y1 += this.ty;
+      const minx = Math.floor(Math.min(x0, x1) - r - 1), maxx = Math.ceil(Math.max(x0, x1) + r + 1);
+      const miny = Math.floor(Math.min(y0, y1) - r - 1), maxy = Math.ceil(Math.max(y0, y1) + r + 1);
+      const dx = x1 - x0, dy = y1 - y0, l2 = dx * dx + dy * dy || 1;
+      for (let y = miny; y <= maxy; y++) for (let x = minx; x <= maxx; x++) {
+        let t = ((x + 0.5 - x0) * dx + (y + 0.5 - y0) * dy) / l2; t = t < 0 ? 0 : (t > 1 ? 1 : t);
+        const ex = x0 + dx * t - (x + 0.5), ey = y0 + dy * t - (y + 0.5); if (ex * ex + ey * ey <= r * r) this.px(x, y, p);
+      }
+    }
+    // 음영을 계산해 L 에 찍는다 (L 의 같은 좌표에)
+    shadeInto(L, ox, oy) {
+      ox = ox || 0; oy = oy || 0;
+      const w = this.w, h = this.h, id = this.id, parts = this.parts;
+      const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? 0 : id[y * w + x];
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const p = id[y * w + x]; if (!p) continue;
+        const P = parts[p];
+        let dl = 7, dd = 7, k;
+        for (k = 1; k <= 6; k++) { const q = at(x - k, y - k); if (q === 0 || q < p) { dl = k; break; } }
+        for (k = 1; k <= 6; k++) { const q = at(x + k, y + k); if (q === 0 || q < p) { dd = k; break; } }
+        const t = dd - dl;
+        let v = P.base + (t >= 4 ? 2 : (t >= 2 ? 1 : (t <= -4 ? -2 : (t <= -2 ? -1 : 0))));
+        if (P.occ) { const a = at(x - 1, y), b = at(x, y - 1), c = at(x - 1, y - 1); if (a > p || b > p || c > p) v -= 1; }
+        L.put(x + ox, y + oy, P.ramp[v < 0 ? 0 : (v > 4 ? 4 : v)]);
+      }
+    }
+  }
+  // 두 관절 IK: 엉덩이(hx,hy) → 발목(fx,fy), 무릎은 앞(+x)으로 굽힌다
+  function ik2(hx, hy, fx, fy, l1, l2) {
+    let dx = fx - hx, dy = fy - hy, d = Math.hypot(dx, dy); const mx = l1 + l2 - 0.05;
+    if (d > mx) { fx = hx + dx / d * mx; fy = hy + dy / d * mx; dx = fx - hx; dy = fy - hy; d = mx; }
+    if (d < 1) d = 1;
+    const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d), hh = Math.sqrt(Math.max(0, l1 * l1 - a * a)), vx = dx / d, vy = dy / d;
+    return { k: [hx + vx * a + vy * hh, hy + vy * a - vx * hh], f: [fx, fy] };
+  }
+
   // sprites.js 의 도트 정의를 픽셀 버퍼로 굽는다 (프레임별 캐시). 외곽선·음영은 합성 후 shade() 가 입힌다
   const CACHE = {};
   function sprite(id, f) {
     const k = id + ':' + (f | 0); if (CACHE[k]) return CACHE[k];
     const s = global.SPRITES[id], L = new Layer(s.w, s.h);
-    s.fn((x, y, w, h, c) => L.rect(x, y, w, h, c), f | 0, (cx, cy, r, c) => L.disc(cx, cy, r, c));
+    if (s.build) s.build(L, f | 0);                 // 도트 키트로 만든 스프라이트 (프레임 표)
+    else s.fn((x, y, w, h, c) => L.rect(x, y, w, h, c), f | 0, (cx, cy, r, c) => L.disc(cx, cy, r, c));
     return (CACHE[k] = L);
   }
   function spriteShaded(id, f) {                   // 이펙트 레이어에 바로 찍는 작은 스프라이트용 (까마귀 등)
@@ -178,10 +274,11 @@
     }
   }
   // 까마귀 마녀 모르그라: 초록 불꽃 구슬, 순간이동 고리
-  function orb(L, x, y, vx, vy, t) {
-    const m = Math.hypot(vx, vy) || 1, ux = vx / m, uy = vy / m;
-    for (let k = 1; k <= 6; k++) L.put(x - ux * k * 2, y - uy * k * 2 + Math.sin(t * 0.02 + k) * 0.8, k < 3 ? '#7dff7a' : '#2a6a3a');
-    L.disc(Math.round(x), Math.round(y), 3, '#2a6a3a'); L.disc(Math.round(x), Math.round(y), 2, '#7dff7a'); L.put(x, y, '#eaffea');
+  const ORB_PAL = { green: ['#7dff7a', '#2a6a3a', '#eaffea'], blue: ['#7ad8ff', '#1e4a6a', '#eaf8ff'], fire: ['#ff8a2a', '#8a1a10', '#fff0c0'] };
+  function orb(L, x, y, vx, vy, t, pal) {
+    const m = Math.hypot(vx, vy) || 1, ux = vx / m, uy = vy / m, P = ORB_PAL[pal] || ORB_PAL.green;
+    for (let k = 1; k <= 6; k++) L.put(x - ux * k * 2, y - uy * k * 2 + Math.sin(t * 0.02 + k) * 0.8, k < 3 ? P[0] : P[1]);
+    L.disc(Math.round(x), Math.round(y), 3, P[1]); L.disc(Math.round(x), Math.round(y), 2, P[0]); L.put(x, y, P[2]);
   }
   function teleportRing(L, x, y, p) {
     const r = Math.round(4 + 22 * p);
@@ -256,26 +353,44 @@
   }
 
   // ---------------------------------------------------------------- 인물 합성: 몸통 + 팔 + 무기 + 궤적
-  // sh = 어깨 위치(스프라이트 안), split = 이 줄 위로만 웅크림 적용, th = 팔 두께
+  // sh = 어깨 위치(스프라이트 안), split = 이 줄 위로만 웅크림 적용, th = 팔 두께, arm = 팔 색(밝은 → 어두운),
+  // elb = 팔꿈치 장식 색(null 이면 없음), over = 팔 위에 덧그리는 어깨 덮개 스프라이트, ov = 어깨 기준 덮개 위치
+  // back = 양손잡이: 뒤쪽 어깨(sh)에서 손잡이의 at 지점까지 뒷팔을 몸 뒤에 그린다
   const FIG = {
-    player: { w: 40, h: 48, sh: [29, 23], split: 34, arm: ['#4a4a62', '#2c2c3a'], th: 4, hand: '#c9a24a', wpn: 'sword' },
-    boss1: { w: 68, h: 74, sh: [55, 29], split: 50, arm: ['#c98e6a', '#9a6446'], th: 7, hand: '#d8d0b8', wpn: 'cleaver' },
-    boss2: { w: 60, h: 74, sh: [40, 30], split: 40, arm: ['#6e4294', '#4a2a6a'], th: 5, hand: '#c9b8d8', wpn: 'staff' },
-    boss3: { w: 68, h: 76, sh: [53, 27], split: 52, arm: ['#d4a437', '#8a6a1c'], th: 6, hand: '#f3d26a', wpn: 'greatsword' },
+    player: { w: 52, h: 58, sh: [31, 22], split: 36, arm: ['#8c8e9c', '#383842', '#15151a'], elb: '#55565f', th: 5, hand: ['#15151a', '#8c8e9c'], wpn: 'darkblade', over: 'pauld', ov: [7, 7],
+      back: { sh: [21, 22], at: 5, arm: ['#55565f', '#22222a', '#0a0a0d'] } },
+    boss1: { w: 68, h: 74, sh: [55, 29], split: 50, arm: ['#b09a8e', '#8e7a70', '#4a3c3a'], elb: null, th: 7, hand: '#d8d0b8', wpn: 'cleaver', over: 'pauld1', ov: [9, 7] },
+    boss2: { w: 60, h: 74, sh: [40, 30], split: 40, arm: ['#9a6cc8', '#6a3f9c', '#43266a'], elb: null, th: 5, hand: '#c9b8d8', wpn: 'staff', over: 'mant2', ov: [8, 6] },
+    boss3: { w: 68, h: 76, sh: [53, 27], split: 52, arm: ['#d0b050', '#9a7a24', '#3e2e0c'], elb: '#d0b050', th: 6, hand: '#9a7a24', wpn: 'greatsword', over: 'pauld3', ov: [10, 8] },
+    boss4: { w: 68, h: 76, sh: [52, 28], split: 52, arm: ['#9a7a58', '#6a4a30', '#2a1a10'], elb: '#c8c0b0', th: 6, hand: '#d8d0c0', wpn: 'rustblade', over: 'pauld4', ov: [10, 8],
+      back: { sh: [18, 28], at: 6, arm: ['#6a4a30', '#45301e', '#140c08'] } },
+    boss5: { w: 84, h: 88, sh: [62, 32], split: 60, arm: ['#7a3040', '#3e1e2a', '#140c14'], elb: '#ff5a1a', th: 8, hand: '#24141e', wpn: 'scythe', over: 'pauld5', ov: [12, 10] },
   };
   const WPN = {
     sword: { grip: 5, len: 22, w: 3, guard: 7, gc: '#c9a24a', hc: '#6e1220', bl: ['#8b95a8', '#f2f5fa', '#d3dae6'] },
     cleaver: { grip: 7, len: 26, w: 12, guard: 0, hc: '#5a3a24', bl: ['#6a7080', '#b8c0cc', '#eef2f8'], blunt: true },
     greatsword: { grip: 9, len: 38, w: 6, guard: 17, gc: '#f3d26a', hc: '#3a2a1a', bl: ['#6a7488', '#c8d0dc', '#f2f5fa'] },
+    // 흑기사의 대검: 검은 칼날, 은빛 날, 가운데 붉은 홈, 양손 손잡이
+    darkblade: { grip: 9, len: 34, w: 6, guard: 11, gc: '#383842', hc: '#2a1418', bl: ['#c8ccd8', '#1c1c24', '#c8ccd8'], fuller: '#c81e2a', pommel: '#55565f' },
+    // 망령 기사단장의 녹슨 대검 (이 빠진 날)
+    rustblade: { grip: 10, len: 40, w: 8, guard: 15, gc: '#45301e', hc: '#1a120c', bl: ['#45301e', '#8a6a4a', '#b8a080'], notch: true },
   };
-  function thick(L, x0, y0, x1, y1, c, t) {
-    const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0)) * 2), o = t >> 1;
-    for (let i = 0; i <= n; i++) { const u = i / n; L.rect(Math.round(x0 + (x1 - x0) * u - o), Math.round(y0 + (y1 - y0) * u - o), t, t, c); }
+  function thick(L, x0, y0, x1, y1, c, t, ox, oy) {
+    const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0)) * 2), o = t >> 1; ox = ox || 0; oy = oy || 0;
+    for (let i = 0; i <= n; i++) { const u = i / n; L.rect(Math.round(x0 + (x1 - x0) * u - o + ox), Math.round(y0 + (y1 - y0) * u - o + oy), t, t, c); }
   }
-  function drawArm(L, sx, sy, hx, hy, cols, th) {
+  // 팔: 어깨 → 팔꿈치(앞으로 살짝 굽음) → 손. 색이 3개면 그늘·본색·하이라이트 3단으로 칠한다
+  function drawArm(L, sx, sy, hx, hy, cols, th, elb) {
     const dx = hx - sx, dy = hy - sy, len = Math.hypot(dx, dy) || 1;
     let nx = -dy / len, ny = dx / len; if (ny < 0) { nx = -nx; ny = -ny; }
     const bend = Math.min(5, len * 0.25), ex = (sx + hx) / 2 + nx * bend, ey = (sy + hy) / 2 + ny * bend;
+    if (cols.length > 2) {
+      thick(L, sx, sy, ex, ey, cols[2], th); thick(L, ex, ey, hx, hy, cols[2], th);
+      thick(L, sx, sy, ex, ey, cols[1], th - 1, -1, -1); thick(L, ex, ey, hx, hy, cols[1], th - 1, -1, -1);
+      thick(L, sx, sy, ex, ey, cols[0], 1, -1, -1); thick(L, ex, ey, hx, hy, cols[0], 1, -1, -1);
+      if (elb !== null) L.rect(Math.round(ex) - 1, Math.round(ey) - 1, 3, 2, elb || '#b08a2a');
+      return;
+    }
     thick(L, sx, sy, ex, ey, cols[1], th); thick(L, ex, ey, hx, hy, cols[1], th);
     thick(L, sx, sy - 1, ex, ey - 1, cols[0], th - 2); thick(L, ex, ey - 1, hx, hy - 1, cols[0], th - 2);
   }
@@ -292,8 +407,20 @@
       L.disc(Math.round(ox), Math.round(oy), 5, '#2a6a3a'); L.disc(Math.round(ox), Math.round(oy), 3, '#7dff7a'); L.put(ox, oy, '#eaffea');
       return [ox, oy];
     }
-    const w = WPN[kind];
-    for (let u = -3; u < w.grip; u += 0.5) for (let v = -1; v <= 1; v += 0.5) put(u, v, o.red ? '#6e1220' : w.hc);
+    if (kind === 'scythe') {                       // 마왕의 큰 낫: 긴 자루 끝에 뒤로 휜 날
+      for (let u = -16; u < 46; u += 0.5) for (let v = -1; v <= 1; v += 0.5) put(u, v, v < 0 ? '#3e1e2a' : '#140c14');
+      for (let v = -2; v <= 2; v += 0.5) { put(44, v, '#7a3040'); put(-16, v, '#7a3040'); }
+      for (let k = 0; k <= 1; k += 0.02) {
+        const bu = 46 - 24 * Math.pow(k, 1.3), bv = -(3 + 22 * Math.sin(k * Math.PI / 2)), hw = 3.2 * (1 - k) + 0.6;
+        for (let d = -hw; d <= hw; d += 0.5) put(bu - d * 0.4, bv + d, d < -hw + 1 ? '#ff7a4a' : (d > hw - 1 ? '#3a0a0a' : (o.red ? '#ff5a6a' : '#8a1a20')));
+      }
+      return [hx + ux * 46, hy + uy * 46];
+    }
+    const w = WPN[kind], dark = kind === 'darkblade';
+    const g0 = dark ? -6 : -3;                       // 양손 대검은 손잡이가 길다
+    for (let u = g0; u < w.grip; u += 0.5) for (let v = -1; v <= 1; v += 0.5) put(u, v, o.red ? '#6e1220' : (((kind === 'sword' || dark) && Math.floor(u) % 2 === 0) ? '#5a1a22' : w.hc));
+    if (w.pommel) { for (let v = -1.5; v <= 1.5; v += 0.5) { put(g0 - 0.5, v, w.pommel); put(g0 - 1.5, v * 0.7, w.pommel); } put(g0 - 1, -1, '#c8ccd8'); }
+    if (kind === 'sword') { for (let v = -1; v <= 1; v += 0.5) put(-3.5, v, '#dcb444'); put(-4, 0, '#fff0a2'); }   // 손잡이 감개 + 금 폼멜
     if (w.guard) for (let v = -w.guard / 2; v <= w.guard / 2; v += 0.5) { put(w.grip, v, w.gc); put(w.grip + 1, v, w.gc); }
     const b0 = w.grip + (w.guard ? 2 : 0.5), b1 = b0 + w.len;
     for (let u = b0; u <= b1; u += 0.5) {
@@ -301,8 +428,10 @@
       if (!w.blunt) { const tp = (b1 - u) / (w.len * 0.22); if (tp < 1) half = Math.max(0.5, half * tp); }
       for (let v = -half; v <= half; v += 0.5) {
         let c = v < -half * 0.35 ? w.bl[0] : (v > half * 0.35 ? w.bl[2] : w.bl[1]);
+        if (dark) c = Math.abs(v) > half - 1 ? w.bl[0] : (Math.abs(v) < 0.6 && u > b0 + 2 && u < b1 - 6 ? w.fuller : w.bl[1]);   // 은빛 날 · 검은 몸 · 붉은 홈
         if (o.red) c = v < -half * 0.35 ? '#a01a30' : (v > half * 0.35 ? '#ff9aa6' : '#ff5a6a');
         if (kind === 'cleaver' && ((u - b0) % 9 < 1.2) && v < -half + 2.5) continue;   // 식칼 이빨 빠진 자국
+        if (w.notch && ((u - b0) % 11 < 1.5) && v > half - 2) continue;                // 녹슨 대검의 이 빠진 날
         put(u, v, c);
       }
     }
@@ -311,29 +440,53 @@
   }
   // 피규어 1체: 몸통(기울기·웅크림) → 팔 → 무기. 궤적은 음영 처리 뒤 drawTrail() 로 따로 그린다.
   // pose = { ang, hx, hy, lean, crouch, arc:[시작각, 현재각], arcR, arcCols, red }
-  // o = { f(프레임), leanW(월드 방향 추가 기울기), crouch, flash, wash, washA, noWeapon }
+  // o = { f(프레임), leanW(월드 방향 추가 기울기), crouch, flash, wash, washA, noWeapon, shOff:[앞쪽 x, 아래 y](프레임이 몸을 옮긴 만큼) }
   function drawFigure(L, id, cx, top, face, pose, o) {
-    o = o || {}; const F = FIG[id], sp = sprite(id, o.f || 0);
+    o = o || {}; const F = FIG[id], sp = sprite(id, o.f || 0), so = o.shOff || [0, 0];
     const lean = (pose.lean || 0) * face + (o.leanW || 0), cr = (pose.crouch || 0) + (o.crouch || 0);
-    blit(sp, L, cx - F.w / 2, top, { flip: face < 0, lean, crouch: cr, split: F.split, flash: o.flash, wash: o.wash, washA: o.wash ? (o.washA || 0.5) : 0 });
-    // 어깨 좌표 (몸 기울기·웅크림을 따라감)
-    const lx = face > 0 ? F.sh[0] : F.w - 1 - F.sh[0];
-    const sh = Math.round(lean * Math.pow(Math.max(0, 1 - F.sh[1] / (F.h - 1)), 1.2));
-    const sx = cx - F.w / 2 + lx + sh, sy = top + F.sh[1] + (cr && F.sh[1] < F.split ? cr : 0);
+    const bo = { flip: face < 0, lean, crouch: cr, split: F.split, flash: o.flash, wash: o.wash, washA: o.wash ? (o.washA || 0.5) : 0 };
+    // 어깨 좌표 (몸 기울기·웅크림·프레임 이동을 따라감)
+    const shoulder = (sx0, sy0) => {
+      const yy = sy0 + so[1], xx = face > 0 ? sx0 + so[0] : F.w - 1 - sx0 - so[0];
+      const shf = Math.round(lean * Math.pow(Math.max(0, 1 - yy / (F.h - 1)), 1.2));
+      return [cx - F.w / 2 + xx + shf, top + yy + (cr && yy < F.split ? cr : 0)];
+    };
+    const [sx, sy] = shoulder(F.sh[0], F.sh[1]);
     const hx = sx + (pose.hx || 0) * face, hy = sy + (pose.hy || 0);
+    if (F.back && !o.noWeapon) {                    // 양손잡이: 뒷팔은 몸에 가려지도록 먼저
+      const [bx, by] = shoulder(F.back.sh[0], F.back.sh[1]), ua = (pose.ang || 0) * RAD;
+      drawArm(L, bx, by, hx + Math.cos(ua) * face * F.back.at, hy - Math.sin(ua) * F.back.at, F.back.arm, F.th - 1, null);
+    }
+    blit(sp, L, cx - F.w / 2, top, bo);
     if (o.noWeapon) return { sh: [sx, sy], hand: [hx, hy], tip: [hx, hy], trail: null };
     let trail = null;
     if (pose.arc) {
       const cur = pose.arc[1], st = cur + (pose.arc[0] - cur) * Math.min(1, 100 / Math.max(1, Math.abs(pose.arc[0] - cur)));
       trail = { x: hx, y: hy, r: pose.arcR || 21, a0: face > 0 ? st : 180 - st, a1: face > 0 ? cur : 180 - cur,
-        cols: pose.arcCols || ['#ffffff', '#bfd4ff', '#7f98d8'] };
+        cols: pose.arcCols || ['#ffffff', '#bfd4ff', '#7f98d8'], fleck: pose.fleck };
     }
-    drawArm(L, sx, sy, hx, hy, F.arm, F.th);
+    drawArm(L, sx, sy, hx, hy, F.arm, F.th, F.elb);
+    if (F.over) {                                  // 어깨 덮개는 팔 위에
+      const ov = F.ov || [6, 6];
+      blit(sprite(F.over, 0), L, sx - ov[0], sy - ov[1], { flip: face < 0, flash: o.flash, wash: o.wash, washA: bo.washA });
+    }
     const tip = drawWeapon(L, F.wpn, hx, hy, pose.ang, face, { red: pose.red });
-    L.rect(Math.round(hx) - 1, Math.round(hy) - 1, 3, 3, F.hand);
+    if (Array.isArray(F.hand)) { L.rect(Math.round(hx) - 1, Math.round(hy) - 1, 3, 3, F.hand[0]); L.put(hx - 1, hy - 1, F.hand[1]); }
+    else L.rect(Math.round(hx) - 1, Math.round(hy) - 1, 3, 3, F.hand);
     return { sh: [sx, sy], hand: [hx, hy], tip, trail };
   }
-  function drawTrail(L, tr) { if (tr) crescent(L, tr.x, tr.y, tr.r, tr.a0, tr.a1, tr.cols, tr.cols.length); }
+  // 궤적: 겹친 초승달 + (흑기사) 궤적 바깥으로 튀는 붉은 핏방울
+  function drawTrail(L, tr) {
+    if (!tr) return;
+    crescent(L, tr.x, tr.y, tr.r, tr.a0, tr.a1, tr.cols, tr.cols.length);
+    if (tr.fleck) {
+      for (let i = 0; i < 14; i++) {
+        const a = (tr.a0 + (tr.a1 - tr.a0) * Math.random()) * RAD, r = tr.r + 1 + Math.random() * 6;
+        L.put(tr.x + Math.cos(a) * r, tr.y - Math.sin(a) * r, Math.random() < 0.6 ? tr.fleck : '#5a0a12');
+        if (Math.random() < 0.3) L.put(tr.x + Math.cos(a) * (r + 1), tr.y - Math.sin(a) * (r + 1), tr.fleck);
+      }
+    }
+  }
 
   // ---------------------------------------------------------------- 포즈 (시간 ms → 자세)
   // ang = 무기 각도(0 정면, 90 위, 음수 아래), hx/hy = 어깨 기준 손 위치(앞이 +x, 아래가 +y),
@@ -349,15 +502,15 @@
   }
   // 흑기사 3콤보 (예비 동작 wind → 휘두름 act → 회수 rec, ms)
   const HATK = [
-    { name: '일섬', wind: 90, act: 110, rec: 150, rad: 21 },
-    { name: '역일섬', wind: 70, act: 100, rec: 140, rad: 22 },
-    { name: '참격', wind: 180, act: 140, rec: 330, rad: 25 },
+    { name: '일섬', wind: 90, act: 110, rec: 150, rad: 30 },
+    { name: '역일섬', wind: 70, act: 100, rec: 140, rad: 30 },
+    { name: '참격', wind: 200, act: 140, rec: 340, rad: 36 },
   ];
-  const HR = { ang: 68, hx: 4, hy: 9, lean: 0, crouch: 0, jy: 0 };
+  const HR = { ang: -34, hx: 3, hy: 13, lean: 1, crouch: 1, jy: 0 };   // 기본 자세: 두 손으로 대검을 낮게, 칼끝은 앞 아래
   const HK = [
-    { w: { ang: 125, hx: -3, hy: -9, lean: -2, crouch: 0 }, s: { ang: -25, hx: 9, hy: 3, lean: 4, crouch: 1 } },
-    { w: { ang: -40, hx: 5, hy: 10, lean: 1, crouch: 2 }, s: { ang: 135, hx: 8, hy: -8, lean: 4, crouch: 0 } },
-    { w: { ang: 160, hx: -4, hy: -11, lean: -4, crouch: 1 }, s: { ang: -55, hx: 10, hy: 6, lean: 6, crouch: 2 } },
+    { w: { ang: 125, hx: -3, hy: -10, lean: -2, crouch: 0 }, s: { ang: -30, hx: 10, hy: 6, lean: 5, crouch: 2 } },   // 어깨 위에서 대각선으로
+    { w: { ang: -55, hx: 4, hy: 14, lean: 1, crouch: 3 }, s: { ang: 130, hx: 8, hy: -10, lean: 3, crouch: 0 } },      // 낮은 곳에서 위로
+    { w: { ang: 158, hx: -6, hy: -15, lean: -5, crouch: 0 }, s: { ang: -72, hx: 11, hy: 12, lean: 8, crouch: 4 } },  // 머리 위로 크게 들었다가 땅까지
   ];
   function heroAtk(ci, t) {
     const a = HATK[ci], K = HK[ci];
@@ -399,9 +552,11 @@
   }
 
   // 보스 기본 자세 / 궤적 색 / 궤적 반지름
-  const BR = { boss1: { ang: 118, hx: 3, hy: -6 }, boss2: { ang: 88, hx: 4, hy: 9 }, boss3: { ang: 84, hx: 6, hy: 5 } };
-  const BCOL = { boss1: ['#ffffff', '#ffe27a', '#f58c3b', '#a8501a'], boss2: ['#eaffea', '#7dff7a', '#2a6a3a'], boss3: ['#fff3b8', '#ffd23a', '#d4a437'] };
-  const BARC = { boss1: 30, boss2: 28, boss3: 42 };
+  const BR = { boss1: { ang: 118, hx: 3, hy: -6 }, boss2: { ang: 88, hx: 4, hy: 9 }, boss3: { ang: 84, hx: 6, hy: 5 },
+    boss4: { ang: -30, hx: 5, hy: 12 }, boss5: { ang: 100, hx: 4, hy: 2 } };
+  const BCOL = { boss1: ['#ffffff', '#ffe27a', '#f58c3b', '#a8501a'], boss2: ['#eaffea', '#7dff7a', '#2a6a3a'], boss3: ['#fff3b8', '#ffd23a', '#d4a437'],
+    boss4: ['#eaf8ff', '#7ad8ff', '#2a6a8a'], boss5: ['#fff0c0', '#ff7a1a', '#a01a14', '#4a0808'] };
+  const BARC = { boss1: 30, boss2: 28, boss3: 42, boss4: 44, boss5: 50 };
   function bossPoseAt(id, pat, t, p2) {
     const R = BR[id]; let r = mixP(R, R, 0);
     const arc = (x, a0) => { x.arc = [a0, x.ang]; return x; };
@@ -447,7 +602,7 @@
   }
 
   global.MO = {
-    Layer, blit, sprite, spriteShaded, shade, RAD, ease, lerp,
+    Layer, blit, sprite, spriteShaded, shade, RAD, ease, lerp, rng, rgb, Mk, RAMP, RAMPX, ik2,
     crescent, sparkBurst, aura, warn, shockwave, orb, teleportRing, goldWave, pillar, moon, slashLine, impactFx,
     FIG, drawFigure, drawTrail, mixP, HATK, HR, heroAtk, heroSpecial, BR, bossPoseAt,
   };
