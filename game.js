@@ -6,10 +6,15 @@ const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 const W = 960, H = 540;
 const GTOP = 340, GBOT = 500;          // 걸어 다닐 수 있는 바닥 영역(깊이)
+const MS = 1000 / 60;                  // 1틱(60fps) = 16.7ms. 공격 모션은 ms 단위로 만든다
+const SC = 2;                          // 도트 1칸 = 화면 2px (정수 배율이라 도트가 선명하게 유지됨)
 const $ = id => document.getElementById(id);
 const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+const every = (t, n) => Math.floor(t / n) !== Math.floor((t - MS) / n);   // ms 타이머가 n ms 경계를 막 넘었는가
+const { Layer, blit, sprite, RAD, ease, lerp, crescent, sparkBurst, aura, warn, shockwave, orb, teleportRing, goldWave, pillar,
+  moon, slashLine, impactFx, FIG, drawFigure, mixP, HATK, HR, heroAtk, heroSpecial, BR, bossPoseAt } = MO;
 
 // ---------------------------------------------------------------- 입력
 const keys = {}, pressed = {};
@@ -44,7 +49,8 @@ function beep(f, d = 0.08, type = 'square', v = 0.04) {
 }
 
 // ---------------------------------------------------------------- 데이터
-// 적 정의. wind=공격 예고, act=공격 판정 유지, rec=공격 후 경직
+// 적 정의. wind=공격 예고, act=공격 판정 유지, rec=공격 후 경직 (틱)
+// 보스는 pats 의 패턴(ms 단위 타임라인)으로 싸운다
 const ET = {
   grunt: { name: '보병', sprite: 'infantry', hp: 40, spd: 1.2, dmg: 8, range: 56, wind: 28, act: 10, rec: 30, kb: 3, score: 100,
            h: 96, s: 1, hw: 18 },
@@ -52,13 +58,15 @@ const ET = {
            h: 96, s: 1, hw: 18 },
   brute: { name: '기사', sprite: 'knight', hp: 100, spd: 0.9, dmg: 16, range: 68, wind: 44, act: 12, rec: 44, kb: 6, score: 300, kd: true,
            h: 100, s: 1, hw: 22 },
-  boss1: { name: '도살자 고라스', sprite: 'boss1', boss: true, hp: 260, spd: 1.05, dmg: 12, range: 62, wind: 40, act: 12, rec: 42, score: 2000, kd: true,
-           h: 148, s: 1, hw: 34, moves: ['charge'] },
-  boss2: { name: '까마귀 마녀 모르그라', sprite: 'boss2', boss: true, hp: 380, spd: 1.2, dmg: 13, range: 64, wind: 36, act: 12, rec: 38, score: 3500, kd: true,
-           h: 148, s: 1, hw: 28, moves: ['charge', 'slam'] },
-  boss3: { name: '황금왕 오렐리온', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, dmg: 15, range: 68, wind: 34, act: 12, rec: 34, score: 6000, kd: true,
-           h: 152, s: 1, hw: 34, moves: ['charge', 'slam'] },
+  boss1: { name: '도살자 고라스', sprite: 'boss1', boss: true, hp: 260, spd: 1.05, range: 62, score: 2000, kd: true,
+           h: 148, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진' } },
+  boss2: { name: '까마귀 마녀 모르그라', sprite: 'boss2', boss: true, hp: 380, spd: 1.2, range: 64, score: 3500, kd: true,
+           h: 148, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼' } },
+  boss3: { name: '황금왕 오렐리온', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, range: 68, score: 6000, kd: true,
+           h: 152, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '화염 기둥', charge: '왕의 돌진' } },
 };
+// 패턴 시작 후 이 시간(ms) 동안 머리 위에 ! 경고 표시
+const TELE = { slam: 650, sweep: 450, rage: 550, orbs: 500, ravens: 450, pillars: 700, charge: 450 };
 
 const STAGES = [
   { name: 'STAGE 1', title: '붉은 평원', theme: 'stage1', len: 3200, boss: 'boss1',
@@ -93,27 +101,31 @@ const STAGES = [
     ] },
 ];
 
-// 플레이어 공격 데이터 (on~off 틱 동안 판정)
+// 플레이어 3콤보: 예비 동작(wind) → 휘두름(act) → 회수(rec), ms. 휘두름 35% 지점부터 판정
 const SP_MAX = 100;           // 필살기 게이지: 적을 때릴수록 차오른다
 const GROGGY_TICKS = 300;     // 보스 기절 시간 (5초 = 300틱)
 const ATK = {
-  c1:  { dur: 20, on: 4, off: 10, reach: 54, dmg: 10, kd: false },
-  c2:  { dur: 20, on: 4, off: 10, reach: 54, dmg: 11, kd: false },
-  c3:  { dur: 30, on: 7, off: 14, reach: 68, dmg: 16, kd: true },
-  air: { dur: 0,  on: 0, off: 999, reach: 60, dmg: 14, kd: true },
+  c1:  { ...HATK[0], dmg: 10, reach: 70, kd: false, step: 8,  stop: 3, fx: 0 },   // 일섬: 위에서 대각선으로 내려 벤다
+  c2:  { ...HATK[1], dmg: 11, reach: 72, kd: false, step: 8,  stop: 3, fx: 1 },   // 역일섬: 아래에서 위로 올려 벤다
+  c3:  { ...HATK[2], dmg: 16, reach: 88, kd: true,  step: 16, stop: 7, fx: 2 },   // 참격: 크게 내려치고 푸른 검기 발사
+  air: { dmg: 14, reach: 64, kd: true, stop: 5, fx: 2 },
 };
+const LINK_MS = 420, BUF_MS = 220;      // 다음 타 연결 허용 시간 / 선입력 유지 시간
+// 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
+const SPECIAL = { dur: 2100, slash: 7, fin: 30 };
 
 // ---------------------------------------------------------------- 상태
 let scene = 'title';
 let stageIdx = 0, stage = null;
 let camX = 0, camLock = false, lockAt = 0, waveIdx = 0;
-let player = null, enemies = [], items = [], barrels = [], parts = [], texts = [], rings = [];
-let tick = 0, hitStop = 0, shake = 0, bannerT = 0, clearT = 0, goT = 0, stageStartScore = 0, nextId = 1;
+let player = null, enemies = [], items = [], barrels = [], parts = [], texts = [];
+let hazards = [], impacts = [], bursts = [], ghosts = [];   // 투사체·위험 지대 / 적중 이펙트 / 불꽃 / 잔상
+let tick = 0, hitStop = 0, shake = 0, flashT = 0, bannerT = 0, clearT = 0, goT = 0, stageStartScore = 0, nextId = 1;
 
 function newPlayer(score = 0) {
   return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
-    st: 'free', t: 0, atk: null, combo: 0, comboT: 0, queue: false, hitSet: new Set(),
-    inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0 };
+    st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
+    inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0, spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
@@ -151,8 +163,8 @@ function onKeyOnce(code) {
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i) {
   stageIdx = i; stage = STAGES[i];
-  camX = 0; camLock = false; waveIdx = 0; clearT = 0; goT = 0;
-  enemies = []; items = []; parts = []; texts = []; rings = [];
+  camX = 0; camLock = false; waveIdx = 0; clearT = 0; goT = 0; flashT = 0;
+  enemies = []; items = []; parts = []; texts = []; hazards = []; impacts = []; bursts = []; ghosts = [];
   barrels = stage.barrels.map(bx => ({ kind: 'barrel', x: bx, y: rand(GTOP + 30, GBOT - 10), z: 0, hw: 16,
     hp: 2, flash: 0, dead: false, t: 0 }));
   const p = player;
@@ -180,7 +192,9 @@ function mkEnemy(type, x, y) {
   const d = ET[type];
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
     st: 'chase', t: 0, wait: rand(0, 40), atkCd: rand(20, 60), pat: null, hitSet: null, inv: 0, flash: 0, shown: 0,
-    boss: !!d.boss, nextKd: d.hp * 0.75, gr: 0, grMax: d.hp >= 500 ? 130 : 110, grT: 0, walk: false, recT: d.rec, remove: false };
+    boss: !!d.boss, nextKd: d.hp * 0.75, gr: 0, grMax: d.hp >= 500 ? 130 : 110, grT: 0, walk: false, recT: d.rec || 30, remove: false,
+    hr: 9999, hdir: 1, hheavy: false,                                          // 피격 반동 (맞은 뒤 지난 ms, 방향, 강타 여부)
+    pt: 0, marks: {}, bdx: 0, bdy: 0, alpha: 1, wash: null, invuln: false, hot: false, last: null, tipX: null, tipH: 0 };   // 보스 패턴용
 }
 
 // ---------------------------------------------------------------- 이펙트 / 아이템
@@ -189,6 +203,11 @@ function sparks(x, y, z, n = 7, col = '#fff6a8') {
     parts.push({ x, y, z, vx: rand(-3, 3), vz: rand(1, 5), life: rand(14, 26), col });
 }
 function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life: 50 }); }
+// 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
+function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
+function burst(x, y, z, cols) { bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
+function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0 }); }
+function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
 function dropItem(type, x, y) {
   items.push({ kind: 'item', type, x, y, z: 0, vz: 5, vx: rand(-1, 1), life: 1500, t: 0 });
@@ -212,11 +231,12 @@ function inReach(a, t, reach, ytol, zt = 45) {
   const dx = (t.x - a.x) * a.face;
   return dx > -8 && dx < reach + (t.hw || 14) && Math.abs(t.y - a.y) < ytol && Math.abs(t.z - a.z) < zt;
 }
+function canHit(e) { return e.st !== 'dead' && e.st !== 'down' && e.inv <= 0 && !e.invuln; }
 
 // ---------------------------------------------------------------- 플레이어
 function startAtk(n) {
   const p = player;
-  p.st = 'atk'; p.t = 0; p.queue = false; p.hitSet = new Set();
+  p.st = 'atk'; p.t = 0; p.buf = 0; p.hitSet = new Set(); p.x0 = p.x; p.wave = false;
   if (n === 'air') { p.atk = 'air'; beep(420, .1, 'square'); return; }
   p.combo = n; p.atk = ['c1', 'c2', 'c3'][n];
   beep(260 + n * 70, .08, 'square');
@@ -225,10 +245,10 @@ function startAtk(n) {
 function hurtPlayer(dmg, dir, kd) {
   const p = player;
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special') return false;
-  p.hp -= dmg; p.flash = 8; p.combo = 0; p.queue = false;
-  hitStop = Math.max(hitStop, 4); shake = Math.max(shake, 6);
-  floatText(p.x, p.y - p.z - 110, dmg, '#ff5252');
-  sparks(p.x, p.y, p.z + 40, 8, '#ff8a80');
+  p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false;
+  hitStop = Math.max(hitStop, kd ? 6 : 4); shake = Math.max(shake, kd ? 12 : 7);
+  floatText(p.x, p.y - p.z - 110, dmg, '#ff5a6a');
+  impact(p.x - dir * 6, p.y, p.z + 56, kd ? 2 : 1, dir);
   beep(110, .15, 'sawtooth', 0.06);
   if (p.hp <= 0) {
     p.hp = 0; p.lives--; p.st = 'dead'; p.t = 0; p.vz = 6; p.vx = dir * 4; return true;
@@ -240,40 +260,73 @@ function hurtPlayer(dmg, dir, kd) {
 
 function playerStrike(A) {
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
+  let landed = false;
   for (const e of enemies) {
-    if (e.st === 'dead' || e.st === 'down' || e.inv > 0 || p.hitSet.has(e)) continue;
+    if (!canHit(e) || p.hitSet.has(e)) continue;
     if (inReach(p, e, A.reach, 24, 55)) {
-      p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd);
-      p.sp = Math.min(SP_MAX, p.sp + (A.kd ? 8 : 5));
+      p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd, A.fx);
+      p.sp = Math.min(SP_MAX, p.sp + (A.kd ? 8 : 5)); landed = true;
     }
   }
   for (const b of barrels) {
     if (b.dead || p.hitSet.has(b)) continue;
     if (inReach(p, b, A.reach, 24, 55)) { p.hitSet.add(b); damageBarrel(b); }
   }
+  if (landed) { hitStop = Math.max(hitStop, A.stop); if (A.fx === 2) shake = Math.max(shake, 8); }
+}
+// 참격 마무리에서 날아가는 푸른 검기
+function launchWave() {
+  const p = player;
+  hazards.push({ type: 'pwave', x: p.x + p.face * 44, y: p.y, h: p.z + 44, dir: p.face, age: 0 });
+  beep(520, .12, 'triangle', 0.05);
 }
 
-// 필살기 "회전 참격": 주변 360도를 3연속으로 벤다. 시전 중 무적.
-const SPECIAL = { dur: 46, pulses: [12, 22, 32], dmg: 14, lastDmg: 24, reachX: 140, ytol: 60 };
 function startSpecial() {
   const p = player;
-  p.st = 'special'; p.t = 0; p.sp = 0; p.vz = 5; p.vx = 0;
-  beep(220, .35, 'sawtooth', 0.06);
-  rings.push({ x: p.x, y: p.y, r: 10, life: 24, col: '255,236,120' });
-  shake = Math.max(shake, 6);
-}
-function specialPulse(last) {
-  const p = player, mul = p.buff > 0 ? 1.5 : 1;
-  const dmg = Math.round((last ? SPECIAL.lastDmg : SPECIAL.dmg) * mul);
+  p.st = 'special'; p.t = 0; p.sp = 0; p.vx = 0; p.combo = 0; p.buf = 0; p.spHits = 0; p.spFin = false;
+  // 목표: 바라보는 쪽에서 가장 가까운 적 (뒤쪽 적은 우선순위를 낮춘다)
+  let best = null, bd = 1e9;
   for (const e of enemies) {
-    if (e.st === 'dead' || e.st === 'down' || e.inv > 0) continue;
-    if (Math.abs(e.x - p.x) < SPECIAL.reachX + e.hw && Math.abs(e.y - p.y) < SPECIAL.ytol) damageEnemy(e, dmg, last);
+    if (e.st === 'dead' || Math.abs(e.x - p.x) > 420 || Math.abs(e.y - p.y) > 120) continue;
+    const d = Math.abs(e.x - p.x) + Math.abs(e.y - p.y) * 2 + ((e.x - p.x) * p.face < 0 ? 200 : 0);
+    if (d < bd) { bd = d; best = e; }
+  }
+  p.spTg = best;
+  if (best) p.face = best.x >= p.x ? 1 : -1;
+  p.spX = best ? best.x : p.x + p.face * 140; p.spY = best ? best.y : p.y;
+  p.spX0 = p.x; p.spY0 = p.y;
+  cutIn(); beep(220, .35, 'sawtooth', 0.06);
+}
+function updSpecial() {
+  const p = player, t = p.t * MS, f = p.face, tg = p.spTg;
+  if (tg && tg.st !== 'dead' && t < 1580) { p.spX = tg.x; p.spY = tg.y; }
+  if (t >= 450 && t < 620) {                                     // 돌진: 목표 앞까지 순간 이동하며 붉은 잔상
+    const u = ease((t - 450) / 150);
+    p.x = lerp(p.spX0, p.spX - f * 52, u); p.y = lerp(p.spY0, p.spY, u);
+    if (every(t, 26)) ghost(p.x, p.y, p.z, 'player', f, '#ff3a4a', 240);
+  }
+  for (let k = 0; k < 4; k++) {                                  // 4연 베기: 각 베기의 스윙 중간에 적중
+    const st = 620 + k * 160;
+    if (t >= st + 40 && t < st + 120) p.x += f * 3 * SC * MS / 80;
+    if (t >= st + 80 && p.spHits <= k) { p.spHits = k + 1; specialHit(false, k); }
+  }
+  if (t >= 1580 && !p.spFin) { p.spFin = true; specialHit(true, 4); }   // 도약 내려찍기
+  if (t >= SPECIAL.dur) { p.st = 'free'; p.inv = 24; p.comboT = 0; p.combo = 0; p.spTg = null; }
+}
+function specialHit(last, k) {
+  const p = player, f = p.face, mul = p.buff > 0 ? 1.5 : 1;
+  const dmg = Math.round((last ? SPECIAL.fin : SPECIAL.slash) * mul), rx = last ? 110 : 80, ry = last ? 60 : 44;
+  let any = false;
+  for (const e of enemies) {
+    if (!canHit(e)) continue;
+    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1); any = true; }
   }
   for (const b of barrels) {
-    if (!b.dead && Math.abs(b.x - p.x) < SPECIAL.reachX && Math.abs(b.y - p.y) < SPECIAL.ytol) damageBarrel(b);
+    if (!b.dead && Math.abs(b.x - p.spX) < rx && Math.abs(b.y - p.spY) < ry) damageBarrel(b);
   }
-  rings.push({ x: p.x, y: p.y, r: 20, life: 24, col: '255,236,120' });
-  beep(last ? 150 : 300, .12, 'square', 0.06);
+  if (!any) impact(p.spX - f * 12, p.spY, 72 + (k === 1 ? 16 : (k === 0 ? 4 : -8)), last ? 2 : 1, f);
+  if (last) { flashT = 240; shake = Math.max(shake, 18); hitStop = Math.max(hitStop, 6); beep(150, .3, 'sawtooth', 0.07); }
+  else { shake = Math.max(shake, 6); beep(320 + k * 40, .08, 'square', 0.05); }
 }
 
 function damageBarrel(b) {
@@ -287,6 +340,7 @@ function updPlayer() {
   if (p.inv > 0) p.inv--;
   if (p.flash > 0) p.flash--;
   if (p.buff > 0) p.buff--;
+  if (p.buf > 0) p.buf -= MS;
   p.walk = false;
 
   // 중력
@@ -306,6 +360,7 @@ function updPlayer() {
       p.x += ax * sp; p.y += ay * sp * 0.75;
       if (ax) p.face = ax;
       p.walk = !!(ax || ay);
+      p.t++;
       if (p.comboT > 0) p.comboT--;
       if (hit('Space') && p.z === 0) { p.vz = 9.6; beep(500, .1, 'triangle'); }
       if (hit('KeyK', 'KeyX') && p.sp >= SP_MAX) { startSpecial(); break; }
@@ -317,40 +372,43 @@ function updPlayer() {
     }
     case 'atk': {
       const A = ATK[p.atk];
+      p.t++;
       if (p.atk === 'air') {
-        p.t++; p.x += p.face * 2.6;
+        p.x += p.face * 2.6;
         playerStrike(A);
-        if (p.z <= 0 && p.vz === 0) { p.st = 'free'; p.comboT = 0; p.combo = 0; }
-      } else {
-        p.t++;
-        if (p.t <= A.on) p.x += p.face * 1.4;
-        if (p.t >= A.on && p.t <= A.off) playerStrike(A);
-        if (hit('KeyJ', 'KeyZ') && p.t >= A.on) p.queue = true;
-        if (p.t >= A.dur) {
-          if (p.queue && p.combo < 2) startAtk(p.combo + 1);
-          else { p.st = 'free'; p.comboT = 14; }
-        }
+        if (p.z <= 0 && p.vz === 0) { p.st = 'free'; p.t = 0; p.comboT = 0; p.combo = 0; }
+        break;
+      }
+      const t = p.t * MS, hitAt = A.wind + A.act;
+      if (t >= A.wind && t < hitAt + MS) p.x = p.x0 + A.step * p.face * ease((t - A.wind) / A.act);   // 휘두르며 한 걸음
+      if (t >= A.wind + A.act * 0.35 && t < hitAt + 30) playerStrike(A);
+      if (hit('KeyJ', 'KeyZ')) p.buf = BUF_MS;
+      if (p.combo === 2 && !p.wave && t >= A.wind + A.act * 0.6) { p.wave = true; launchWave(); }
+      if (p.buf > 0 && p.combo < 2 && t >= hitAt + A.rec * 0.45) { startAtk(p.combo + 1); break; }
+      if (t >= hitAt + A.rec) {
+        p.st = 'free'; p.t = 0;
+        p.comboT = p.combo < 2 ? Math.round(LINK_MS / MS) : 0;
+        if (p.combo === 2) p.combo = 0;
       }
       break;
     }
     case 'special':
       p.t++;
-      if (SPECIAL.pulses.includes(p.t)) specialPulse(p.t === SPECIAL.pulses[SPECIAL.pulses.length - 1]);
-      if (p.t >= SPECIAL.dur) { p.st = 'free'; p.inv = 30; p.comboT = 0; p.combo = 0; }
+      updSpecial();
       break;
     case 'hurt':
       p.t++; p.x += p.vx; p.vx *= 0.85;
-      if (p.t > 16) { p.st = 'free'; }
+      if (p.t > 16) { p.st = 'free'; p.t = 0; }
       break;
     case 'down':
       p.t++; p.x += p.vx; p.vx *= 0.96;
-      if (p.t > 55 && p.z === 0) { p.st = 'free'; p.inv = 100; }
+      if (p.t > 55 && p.z === 0) { p.st = 'free'; p.t = 0; p.inv = 100; }
       break;
     case 'dead':
       p.t++; p.x += p.vx; p.vx *= 0.96;
       if (p.t > 100) {
         if (p.lives > 0) {                      // 리스폰
-          p.st = 'free'; p.hp = p.max; p.inv = 150; p.z = 0; p.vz = 0;
+          p.st = 'free'; p.t = 0; p.hp = p.max; p.inv = 150; p.z = 0; p.vz = 0;
           p.x = camX + 100; p.y = 420;
         } else {
           scene = 'over';
@@ -384,35 +442,43 @@ function heal(n) {
 }
 
 // ---------------------------------------------------------------- 적
-function damageEnemy(e, dmg, kd) {
+// kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
+function damageEnemy(e, dmg, kd, kind = 0) {
   const p = player;
   const stunned = e.st === 'stun';
   if (stunned) dmg = Math.round(dmg * 1.5);           // 기절 중에는 추가 피해
   e.hp -= dmg; e.flash = 6; e.shown = 240;
   hitStop = Math.max(hitStop, kd ? 6 : 3);
   beep(kd ? 140 : 210, .07, 'sawtooth');
-  sparks(e.x, e.y, e.z + e.d.h * e.d.s * 0.6);
-  floatText(e.x, e.y - e.z - e.d.h * e.d.s - 14, dmg);
-  const dir = p.x <= e.x ? 1 : -1;
+  const dir = p.x <= e.x ? 1 : -1, hz = e.z + SPRITES[e.d.sprite].gy * SC * 0.55;
+  e.hr = 0; e.hdir = dir; e.hheavy = kind >= 2;
+  impact(e.x - dir * e.hw * 0.6, e.y, hz, kind, dir);
+  burst(e.x - dir * e.hw * 0.5, e.y, hz, kind === 2 ? ['#ffffff', '#9cc3ff', '#6a7cc0'] : undefined);
+  floatText(e.x, e.y - e.z - e.d.h * e.d.s - 14, dmg, '#ffe27a');
 
   if (e.hp <= 0) {
-    e.hp = 0; e.st = 'dead'; e.t = 0; e.vz = 6; e.vx = dir * 5; e.pat = null;
+    e.hp = 0; e.st = 'dead'; e.t = 0; e.pat = null;
     p.score += e.d.score; dropFrom(e);
-    if (e.boss) { shake = 20; hitStop = 16; }
+    if (e.boss) {                                  // 보스는 그 자리에서 무너진다
+      resetBossFx(e); e.vx = 0; e.vz = 0; shake = 20; hitStop = 16; flashT = 200;
+      hazards = hazards.filter(z => z.type === 'pwave');
+    } else { e.vz = 6; e.vx = dir * 5; }
     return;
   }
   if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
     if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
     e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
     if (e.gr >= e.grMax) {
-      e.st = 'stun'; e.t = 0; e.pat = null; e.vx = 0; e.z = 0; e.vz = 0;
+      resetBossFx(e);
+      e.st = 'stun'; e.t = 0; e.vx = 0; e.z = 0; e.vz = 0;
       shake = 16; hitStop = 10; beep(90, .5, 'sawtooth', 0.07);
       floatText(e.x, e.y - e.z - e.d.h - 40, 'GROGGY!', '#ffe14d');
       return;
     }
     if (e.hp <= e.nextKd) {
       e.nextKd -= e.max * 0.25;
-      e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 3; e.pat = null;
+      resetBossFx(e);
+      e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 3;
       if (e.type === 'boss3') { spawnAdds(); }
     } else if (e.st === 'chase' || e.st === 'rec') { e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
@@ -435,7 +501,176 @@ function startAttack(e, pat) {
   e.face = player.x >= e.x ? 1 : -1;
   beep(pat === 'swing' ? 90 : 70, .12, 'triangle', 0.03);
 }
-function enraged(e) { return e.boss && e.type === 'boss3' && e.hp < e.max * 0.5; }
+
+// ---------------------------------------------------------------- 보스 패턴
+// 고라스: 내려찍기(충격파) / 휩쓸기 / 돌진(분노)
+// 모르그라: 순간이동 / 녹염 탄막 / 까마귀 떼
+// 오렐리온: 삼연 검기 / 화염 기둥 / 왕의 돌진(분노)
+// 체력 절반 이하(2페이즈)에서는 탄 수가 늘고 쿨타임이 짧아진다
+function phase2(e) { return e.hp < e.max * 0.5; }
+function resetBossFx(e) { e.pat = null; e.bdx = 0; e.bdy = 0; e.alpha = 1; e.wash = null; e.invuln = false; e.hot = false; }
+function pickPat(e, adx, ady, p2) {
+  const near = adx < (e.type === 'boss1' ? 110 : 130) && ady < 34;   // 고라스 휩쓸기 사거리 ≈ 108px
+  let ch = null;
+  if (e.type === 'boss1') {
+    if (near) ch = ['sweep', 'sweep', 'slam', p2 ? 'rage' : 'slam'];
+    else if (adx < 460 && Math.random() < 0.6) ch = p2 ? ['slam', 'rage', 'rage'] : ['slam', 'slam', 'rage'];
+  } else if (e.type === 'boss2') {
+    ch = adx < 110 ? ['teleport', 'teleport', 'orbs'] : ['orbs', 'orbs', 'ravens', 'ravens', 'teleport'];
+  } else if (near) ch = ['slash3', 'pillars', 'slash3', p2 ? 'charge' : 'pillars'];
+  else if (Math.random() < 0.6) ch = ['pillars', 'slash3', p2 ? 'charge' : 'pillars', p2 ? 'charge' : 'slash3'];
+  if (!ch) return null;                            // 멀면 조금 더 다가간 뒤 다시 고른다
+  const fresh = ch.filter(c => c !== e.last), list = fresh.length ? fresh : ch;
+  return list[Math.floor(Math.random() * list.length)];
+}
+function startPat(e, pat) {
+  resetBossFx(e);
+  e.st = 'pat'; e.pat = pat; e.pt = 0; e.marks = {}; e.last = pat;
+  e.face = player.x >= e.x ? 1 : -1;
+  beep(70, .12, 'triangle', 0.03);
+}
+function endPat(e, next) {
+  resetBossFx(e);
+  e.st = 'chase'; e.t = 0; e.wait = 0;
+  e.atkCd = Math.round((700 + Math.random() * 600) * (phase2(e) ? 0.7 : 1) / MS);
+  if (next) startPat(e, next);
+}
+function bossChase(e) {
+  const p = player, d = e.d, dx = p.x - e.x, dy = p.y - e.y, adx = Math.abs(dx);
+  e.face = dx >= 0 ? 1 : -1;
+  if (p.st === 'dead') return;
+  const attackers = enemies.reduce((n, o) => n + ((o !== e && (o.st === 'wind' || o.st === 'act' || o.st === 'pat')) ? 1 : 0), 0);
+  const can = attackers < 3 && p.st !== 'down' && e.atkCd <= 0;
+  let tx, ty = p.y;
+  if (d.keepAway) tx = adx < 120 ? e.x - e.face * 60 : (adx > 200 ? p.x - e.face * 170 : e.x);   // 마녀는 거리를 둔다
+  else if (can || adx < 220) tx = p.x - e.face * (d.range - 14);
+  else { tx = p.x - e.face * (150 + (e.id % 3) * 35); ty = p.y + ((e.id % 2) ? 34 : -34); }
+  const mx = tx - e.x, my = ty - e.y, dist = Math.hypot(mx, my), spd = d.spd * (phase2(e) ? 1.25 : 1);
+  if (dist > 4) { e.x += mx / dist * spd; e.y += my / dist * spd * 0.8; e.walk = true; }
+  if (can) {
+    const pat = pickPat(e, adx, Math.abs(dy), phase2(e));
+    if (pat) startPat(e, pat); else e.atkCd = 12;
+  }
+}
+function bossTip(e) { return e.tipX !== null ? [e.tipX, e.tipH] : [e.x + e.face * 28, 130]; }
+function alignY(e, k) { e.y += clamp(player.y - e.y, -k, k); }   // 근접 패턴 예비 동작 중 깊이 맞추기
+
+function runPat(e) {
+  const p = player, t = e.pt, m = e.marks, p2 = phase2(e), f = e.face;
+  switch (e.pat) {
+    case 'slam': {                                 // 식칼을 들어 올렸다가 내려꽂고, 양쪽으로 충격파
+      if (t < 650) e.bdy = -Math.round(7 * Math.min(1, t / 450));
+      else if (!m.a) { m.a = 1; e.bdy = 0; slamImpact(e); }
+      if (p2 && t >= 950 && !m.b) { m.b = 1; slamImpact(e); }
+      if (t >= (p2 ? 1500 : 1150)) endPat(e);
+      break;
+    }
+    case 'sweep': {                                // 뒤로 크게 젖힌 식칼을 앞으로 휩쓸기
+      if (t < 450) { e.bdx = -Math.round(3 * Math.min(1, t / 200)); alignY(e, 1.4); }
+      else if (t < 680) {
+        const u = (t - 450) / 230; e.bdx = Math.round(-3 + 9 * u); e.hot = u > 0.2 && u < 0.85;
+        if (!m.s) { m.s = 1; shake = Math.max(shake, 8); beep(80, .2, 'sawtooth', 0.05); }
+        if (e.hot && !m.h && inReach(e, p, 92, 26, 70) && hurtPlayer(12, f, false)) m.h = 1;
+      } else { e.bdx = Math.round(6 * (1 - Math.min(1, (t - 680) / 300))); e.hot = false; }
+      if (t >= 1150) endPat(e);
+      break;
+    }
+    case 'rage': case 'charge': {                  // 붉게(금빛으로) 번쩍이며 기를 모은 뒤 잔상을 남기며 돌진
+      const rage = e.pat === 'rage', wind = rage ? 550 : 450, end = rage ? 1250 : 1010;
+      if (t < wind) { e.wash = Math.floor(t / (rage ? 90 : 80)) % 2 ? (rage ? '#ff2a2a' : '#ffe27a') : null; e.bdx = rage ? Math.round(Math.sin(t * 0.06)) : 0; alignY(e, 1.6); }
+      else if (t < end) {
+        e.wash = null; e.bdx = 0; e.hot = true;
+        e.x += f * (rage ? 170 : 270) * SC / 1000 * MS;
+        if (every(t, rage ? 50 : 35)) ghost(e.x, e.y, e.z, e.d.sprite, f, rage ? '#ff5a2a' : '#ffd23a', 260);
+        if (rage && every(t, 50)) burst(e.x - f * 32, e.y, 4, ['#a8864a', '#a8864a', '#6a4a28']);
+        if (!m.h && Math.abs(p.x - e.x) < 44 && Math.abs(p.y - e.y) < 26 && p.z < 60 && hurtPlayer(rage ? 16 : 18, f, true)) m.h = 1;
+      } else e.hot = false;
+      if (t >= (rage ? 1900 : 1700)) endPat(e);
+      break;
+    }
+    case 'teleport': {                             // 깃털 속으로 사라졌다가 플레이어 곁에 나타남
+      e.invuln = t < 520;
+      if (t < 250) { e.alpha = 1 - t / 250; if (!m.r1) { m.r1 = 1; hazards.push({ type: 'ring', x: e.x, y: e.y, h: 68, age: 0 }); } }
+      else {
+        if (!m.mv) {
+          m.mv = 1; const side = p.x - camX > W / 2 ? -1 : 1;
+          e.x = clamp(p.x + side * rand(104, 132), camX + 40, camX + W - 40); e.y = clamp(p.y + rand(-20, 20), GTOP + 10, GBOT);
+          e.face = p.x >= e.x ? 1 : -1;
+          hazards.push({ type: 'ring', x: e.x, y: e.y, h: 68, age: 0 });
+        }
+        e.alpha = clamp((t - 250) / 250, 0, 1);
+      }
+      if (t >= 620) endPat(e, Math.random() < 0.75 ? 'orbs' : null);
+      break;
+    }
+    case 'orbs': {                                 // 지팡이를 휘둘러 녹색 불꽃 구슬을 부채꼴로 발사
+      e.bdy = -Math.round(2 * Math.min(1, t / 300));
+      const n = p2 ? 7 : 5, spread = p2 ? [-30, -20, -10, 0, 10, 20, 30] : [-24, -12, 0, 12, 24];
+      if (t < 500 && every(t, 60)) { const o = bossTip(e); burst(o[0], e.y, o[1], ['#eaffea', '#7dff7a', '#2a6a3a']); }
+      for (let k = 0; k < n; k++) {
+        if (t >= 500 + k * 110 && !m['o' + k]) {
+          m['o' + k] = 1;
+          const o = bossTip(e), ang = Math.atan2(p.y - e.y, p.x - o[0]) + spread[k] * RAD, v = (p2 ? 88 : 78) * SC / 1000 * MS;
+          const flight = Math.max(10, Math.hypot(p.x - o[0], p.y - e.y) / v);
+          hazards.push({ type: 'orb', x: o[0], y: e.y, h: o[1], vx: Math.cos(ang) * v, vy: Math.sin(ang) * v, vh: (48 - o[1]) / flight, age: 0 });
+          beep(600 - k * 30, .05, 'triangle', 0.03);
+        }
+      }
+      if (t >= 500 + n * 110 + 450) endPat(e);
+      break;
+    }
+    case 'ravens': {                               // 까마귀를 풀어놓고 한꺼번에 급강하
+      e.bdy = -Math.round(2 * Math.min(1, t / 300));
+      const n = p2 ? 7 : 5;
+      if (t >= 450 && !m.a) {
+        m.a = 1;
+        for (let i = 0; i < n; i++) {
+          const th = rand(220, 250);
+          hazards.push({ type: 'raven', x: clamp(p.x + (i - (n - 1) / 2) * 48, camX + 20, camX + W - 20),
+            y: clamp(p.y + rand(-24, 24), GTOP + 10, GBOT), h: th + 60, th, age: 0, launch: 600 + i * 170, st: 'in', vx: 0, vy: 0, vh: 0 });
+        }
+        beep(300, .25, 'sawtooth', 0.04);
+      }
+      if (t >= 450 + n * 170 + 500) endPat(e);
+      break;
+    }
+    case 'slash3': {                               // 대검을 내리벤 뒤 되베고, 벨 때마다 황금 검기
+      const n = p2 ? 4 : 3, gap = p2 ? 340 : 420;
+      for (let k = 0; k < n; k++) {
+        const s = k * gap;
+        if (t >= s && t < s + 260) {
+          e.bdy = -1; alignY(e, 1);
+          if (every(t, 50)) { const o = bossTip(e); burst(o[0], e.y, o[1], ['#fff3b8', '#ffd23a', '#d4a437']); }
+        }
+        if (t >= s + 260 && !m['s' + k]) {
+          m['s' + k] = 1; e.bdy = 0; e.x += f * 10;
+          hazards.push({ type: 'wave', x: e.x + f * 52, y: e.y, h: 52, dir: f, v: (p2 ? 150 : 125) * SC / 1000, age: 0 });
+          shake = Math.max(shake, 5); beep(240, .12, 'sawtooth', 0.04);
+        }
+      }
+      if (t >= (n - 1) * gap + 260 + 420) endPat(e);
+      break;
+    }
+    case 'pillars': {                              // 대검을 높이 들었다가 땅에 찍으면 붉은 표식 자리에 불기둥
+      e.bdy = -Math.round(3 * Math.min(1, t / 400));
+      const xs = p2 ? [0, -52, 52, -104, 104] : [0, -60, 60];
+      if (t >= 300 && !m.a) {
+        m.a = 1;
+        xs.forEach((o, i) => hazards.push({ type: 'pillar', x: clamp(p.x + o, camX + 20, camX + W - 20), y: p.y, age: 0, delay: 620 + i * 100, life: 650, hit: false }));
+      }
+      if (t >= 920 && !m.b) { m.b = 1; shake = Math.max(shake, 8); }
+      if (t >= 300 + 620 + xs.length * 100 + 700) endPat(e);
+      break;
+    }
+  }
+}
+function slamImpact(e) {
+  const p = player;
+  shake = Math.max(shake, 16); hitStop = Math.max(hitStop, 4); beep(70, .3, 'sawtooth', 0.08);
+  for (const d of [-1, 1]) hazards.push({ type: 'shock', x: e.x + d * 20, y: e.y, dir: d, age: 0, hit: false });
+  burst(e.x + e.face * 30, e.y, 4, ['#fff0c0', '#f6b25a', '#a8864a']);
+  if (Math.abs(p.x - e.x) < 70 && Math.abs(p.y - e.y) < 26 && p.z < 30) hurtPlayer(14, Math.sign(p.x - e.x) || 1, true);
+}
 
 function updEnemy(e) {
   const p = player, d = e.d;
@@ -444,15 +679,26 @@ function updEnemy(e) {
   if (e.inv > 0) e.inv--;
   if (e.shown > 0) e.shown--;
   if (e.atkCd > 0) e.atkCd--;
+  e.hr += MS;
   e.walk = false;
   if (e.boss && e.st !== 'stun') { if (e.grT > 0) e.grT--; else if (e.gr > 0) e.gr = Math.max(0, e.gr - 0.2); }   // 그로기 자연 회복
+  if (e.st === 'pat') {
+    e.pt += MS; runPat(e);
+    e.x = clamp(e.x, camX - 70, camX + W + 70); e.y = clamp(e.y, GTOP + 10, GBOT);
+    return;
+  }
+  if (e.boss && e.st === 'dead') {                 // 무너지며 불꽃이 튄다
+    if (e.t < 84 && e.t % 4 === 0) burst(e.x + rand(-30, 30), e.y, rand(10, 130), ['#ffffff', '#ffe27a', '#f58c3b']);
+    if (e.t > 120) e.remove = true;
+    return;
+  }
   const dx = p.x - e.x, dy = p.y - e.y;
 
   switch (e.st) {
     case 'down': case 'dead':
       e.x += e.vx; e.z += e.vz; e.vz -= 0.5; e.vx *= 0.97;
       if (e.z <= 0) { e.z = 0; e.vz = 0; e.vx *= 0.7; }
-      if (e.st === 'dead') { if (e.t > (e.boss ? 120 : 65)) e.remove = true; }
+      if (e.st === 'dead') { if (e.t > 65) e.remove = true; }
       else if (e.t > 60 && e.z === 0) { e.st = 'rec'; e.t = 0; e.inv = 45; e.recT = 20; }
       break;
 
@@ -472,16 +718,6 @@ function updEnemy(e) {
     case 'wind': {
       if (e.pat === 'swing') {
         if (e.t >= d.wind) { e.st = 'act'; e.t = 0; e.hitSet = new Set(); }
-      } else if (e.pat === 'charge') {
-        e.face = dx >= 0 ? 1 : -1;
-        e.y += clamp(dy, -1.6, 1.6);                // 돌진 전 깊이 맞추기
-        if (e.t >= 42) { e.st = 'act'; e.t = 0; e.hitSet = new Set(); }
-      } else if (e.pat === 'slam') {
-        if (e.t >= 26) {
-          e.st = 'act'; e.t = 0; e.vz = 12;
-          e.vx = e.face * clamp(Math.abs(dx) / 40, 1, 7);
-          e.vy = clamp(dy / 40, -2, 2);
-        }
       }
       break;
     }
@@ -491,50 +727,25 @@ function updEnemy(e) {
         if (e.t <= d.act && !e.hitSet.has(p) && inReach(e, p, d.range + 8, 20, 55)) {
           if (hurtPlayer(d.dmg, e.face, !!d.kd)) e.hitSet.add(p);
         }
-        if (e.t > d.act + 2) { e.st = 'rec'; e.t = 0; e.recT = enraged(e) ? d.rec * 0.6 : d.rec; e.atkCd = rand(15, 45); }
-      } else if (e.pat === 'charge') {
-        e.x += e.face * 8;
-        if (!e.hitSet.has(p) && inReach(e, p, 40, 26, 55)) {
-          if (hurtPlayer(d.dmg + 6, e.face, true)) e.hitSet.add(p);
-        }
-        if (e.t > 34 || e.x < camX - 20 || e.x > camX + W + 20) {
-          e.st = 'rec'; e.t = 0; e.recT = 55; e.atkCd = rand(40, 80);
-        }
-      } else if (e.pat === 'slam') {
-        e.x += e.vx; e.y += e.vy; e.z += e.vz; e.vz -= 0.6;
-        if (e.z <= 0 && e.t > 3) {
-          e.z = 0; e.vz = 0; shake = 16; hitStop = 4; beep(70, .3, 'sawtooth', 0.08);
-          rings.push({ x: e.x, y: e.y, r: 10, life: 24 });
-          if (Math.abs(p.x - e.x) < 120 && Math.abs(p.y - e.y) < 38 && p.z < 35)
-            hurtPlayer(d.dmg + 8, Math.sign(p.x - e.x) || 1, true);
-          e.st = 'rec'; e.t = 0; e.recT = 55; e.atkCd = rand(40, 80);
-        }
+        if (e.t > d.act + 2) { e.st = 'rec'; e.t = 0; e.recT = d.rec; e.atkCd = rand(15, 45); }
       }
       break;
     }
 
     case 'chase': {
+      if (e.boss) { bossChase(e); break; }
       if (p.st === 'dead') break;
       if (e.wait > 0) { e.wait--; break; }
       e.face = dx >= 0 ? 1 : -1;
-      const attackers = enemies.reduce((n, o) => n + ((o !== e && (o.st === 'wind' || o.st === 'act')) ? 1 : 0), 0);
-      const can = attackers < (e.boss ? 3 : 2) && p.st !== 'down' && e.atkCd <= 0;
+      const attackers = enemies.reduce((n, o) => n + ((o !== e && (o.st === 'wind' || o.st === 'act' || o.st === 'pat')) ? 1 : 0), 0);
+      const can = attackers < 2 && p.st !== 'down' && e.atkCd <= 0;
       const side = dx >= 0 ? 1 : -1;
       // 추적 목표: 공격 가능하면 플레이어 코앞, 아니면 거리를 두고 맴돈다
       const tx = can ? p.x - side * (d.range - 14) : p.x - side * (150 + (e.id % 3) * 35);
       const ty = can ? p.y : p.y + ((e.id % 2) ? 34 : -34);
       const mx = tx - e.x, my = ty - e.y, dist = Math.hypot(mx, my);
-      const spd = d.spd * (enraged(e) ? 1.4 : 1);
-      if (dist > 4) { e.x += mx / dist * spd; e.y += my / dist * spd * 0.8; e.walk = true; }
-
-      if (can) {
-        if (e.boss) {
-          const adx = Math.abs(dx), r = Math.random();
-          if (adx > 220 && d.moves.includes('charge') && r < 0.025) { startAttack(e, 'charge'); break; }
-          if (adx > 110 && adx < 340 && d.moves.includes('slam') && r > 0.975) { startAttack(e, 'slam'); break; }
-        }
-        if (Math.abs(dx) < d.range && Math.abs(dy) < 14) startAttack(e, 'swing');
-      }
+      if (dist > 4) { e.x += mx / dist * d.spd; e.y += my / dist * d.spd * 0.8; e.walk = true; }
+      if (can && Math.abs(dx) < d.range && Math.abs(dy) < 14) startAttack(e, 'swing');
       break;
     }
   }
@@ -547,8 +758,70 @@ function updEnemy(e) {
       if (Math.abs(ox) < 30 && Math.abs(oy) < 12) { e.x += Math.sign(ox || 1) * 0.6; e.y += Math.sign(oy || 1) * 0.4; }
     }
   }
-  if (e.st !== 'act' || e.pat !== 'charge') e.x = clamp(e.x, camX - 70, camX + W + 70);
+  e.x = clamp(e.x, camX - 70, camX + W + 70);
   e.y = clamp(e.y, GTOP + 10, GBOT);
+}
+
+// ---------------------------------------------------------------- 투사체 · 위험 지대
+// 보스 공격은 깊이(y)가 맞아야 맞는다. 충격파는 점프로 넘을 수 있다
+function updHazards() {
+  const p = player, off = z => z.x < camX - 60 || z.x > camX + W + 60;
+  for (const z of hazards) {
+    z.age += MS;
+    switch (z.type) {
+      case 'shock': {
+        const fx = z.x + z.dir * z.age * 0.32;
+        if (!z.hit && Math.abs(fx - p.x) < 12 && Math.abs(p.y - z.y) < 24 && p.z < 14 && hurtPlayer(14, z.dir, true)) z.hit = true;
+        if (z.age > 1100) z.dead = true;
+        break;
+      }
+      case 'orb':
+        z.x += z.vx; z.y += z.vy; z.h = Math.max(36, z.h + z.vh);
+        if (Math.abs(z.x - p.x) < 14 && Math.abs(z.y - p.y) < 16 && Math.abs(z.h - (p.z + 48)) < 44 && hurtPlayer(8, Math.sign(z.vx) || 1, false)) z.dead = true;
+        if (z.age > 3500 || off(z) || z.y < GTOP - 40 || z.y > GBOT + 40) z.dead = true;
+        break;
+      case 'wave':
+        z.x += z.dir * z.v * MS;
+        if (Math.abs(z.x - p.x) < 20 && Math.abs(z.y - p.y) < 24 && p.z < 70 && hurtPlayer(10, z.dir, false)) z.dead = true;
+        if (z.age > 1700 || off(z)) z.dead = true;
+        break;
+      case 'raven':
+        if (z.st === 'in') {
+          z.h = Math.max(z.th, z.h - 0.12 * MS);
+          if (z.age >= z.launch) {
+            const ax = p.x - z.x, ay = p.y - z.y, ah = (p.z + 44) - z.h, mm = Math.hypot(ax, ay, ah) || 1, v = 98 * SC / 1000 * MS;
+            z.st = 'dive'; z.vx = ax / mm * v; z.vy = ay / mm * v; z.vh = ah / mm * v;
+          }
+        } else {
+          z.x += z.vx; z.y += z.vy; z.h += z.vh;
+          if (Math.abs(z.x - p.x) < 18 && Math.abs(z.y - p.y) < 18 && Math.abs(z.h - (p.z + 44)) < 34 && hurtPlayer(7, Math.sign(z.vx) || 1, false)) z.dead = true;
+          if (z.h <= 0 || off(z)) z.dead = true;
+        }
+        break;
+      case 'pillar': {
+        const pr = (z.age - z.delay) / z.life;
+        if (pr >= 0 && !z.boom) { z.boom = true; shake = Math.max(shake, 6); beep(90, .2, 'sawtooth', 0.05); }
+        if (pr > 0.12 && pr < 0.85 && !z.hit && Math.abs(z.x - p.x) < 18 && Math.abs(z.y - p.y) < 18 && p.z < 90 &&
+          hurtPlayer(14, Math.sign(p.x - z.x) || 1, true)) z.hit = true;
+        if (z.age > z.delay + z.life) z.dead = true;
+        break;
+      }
+      case 'ring':
+        if (z.age > 420) z.dead = true;
+        break;
+      case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
+        z.x += z.dir * 110 * SC / 1000 * MS;
+        for (const e of enemies) {
+          if (!canHit(e) || Math.abs(e.x - z.x) > e.hw || Math.abs(e.y - z.y) > 26) continue;
+          damageEnemy(e, Math.round(8 * (p.buff > 0 ? 1.5 : 1)), false, 1);
+          p.sp = Math.min(SP_MAX, p.sp + 4); z.dead = true; break;
+        }
+        if (z.age > 900) z.dead = true;
+        break;
+      }
+    }
+  }
+  hazards = hazards.filter(z => !z.dead);
 }
 
 // ---------------------------------------------------------------- 메인 업데이트
@@ -559,6 +832,7 @@ function update() {
     return;
   }
   if (scene !== 'play') return;
+  if (flashT > 0) flashT -= MS;
   if (hitStop > 0) { hitStop--; return; }
   if (shake > 0) shake *= 0.85;
 
@@ -580,6 +854,7 @@ function update() {
 
   enemies.forEach(updEnemy);
   enemies = enemies.filter(e => !e.remove);
+  updHazards();
 
   // 스테이지 클리어 판정 (보스 사망)
   if (clearT === 0 && waveIdx >= waves.length && !camLock && enemies.length === 0) clearT = 1;
@@ -595,13 +870,17 @@ function update() {
   }
   items = items.filter(i => !i.gone);
 
-  // 파티클 / 텍스트
+  // 파티클 / 텍스트 / 이펙트
   for (const q of parts) { q.x += q.vx; q.z += q.vz; q.vz -= 0.4; q.vx *= 0.95; q.life--; if (q.z < 0) { q.z = 0; q.vz *= -0.4; } }
   parts = parts.filter(q => q.life > 0);
   for (const t of texts) { t.y -= 0.7; t.life--; }
   texts = texts.filter(t => t.life > 0);
-  for (const r of rings) { r.r += 6; r.life--; }
-  rings = rings.filter(r => r.life > 0);
+  for (const a of impacts) a.age += MS;
+  impacts = impacts.filter(a => a.age < 450);
+  for (const s of bursts) s.age += MS;
+  bursts = bursts.filter(s => s.age < 400);
+  for (const g of ghosts) g.age += MS;
+  ghosts = ghosts.filter(g => g.age < g.life);
   if (goT > 0) goT--;
 }
 
@@ -650,83 +929,189 @@ function drawBG(theme) {
   for (let x = -(camX % 90); x < W; x += 90) { ctx.beginPath(); ctx.moveTo(x, GTOP); ctx.lineTo(x - 30, H); ctx.stroke(); }
 }
 
-const SPR_SCALE = 2;   // 도트 1칸 = 화면 2px (정수 배율이라 도트가 선명하게 유지됨)
+// ---------------------------------------------------------------- 캐릭터: 픽셀 버퍼에 합성한 뒤 2배로 확대해 찍는다
+// 버퍼에는 무기와 궤적이 들어갈 여백을 둔다 (좌우 PADX, 위 PADT, 아래 PADB)
+const PADX = 64, PADT = 60, PADB = 24;
+const layerPool = {};
+function layerFor(w, h) {
+  const k = w + 'x' + h; let o = layerPool[k];
+  if (!o) { const L = new Layer(w, h); o = layerPool[k] = { L, img: new ImageData(L.d, w, h) }; } else o.L.clear();
+  return o;
+}
+const scratch = document.createElement('canvas'); scratch.width = 256; scratch.height = 224;
+const sctx = scratch.getContext('2d');
 
-function drawChar(e, o) {
-  const S = SPRITES[o.sprite], sc = SPR_SCALE;
-  const sx = Math.round(e.x - camX), sy = Math.round(e.y);
-  const H = S.gy * sc;
-  ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(sx, sy, S.sh * sc * (1 - Math.min(e.z, 150) / 300), 6 * sc * 0.7, 0, 0, Math.PI * 2); ctx.fill();
-  if (o.blink && Math.floor(tick / 4) % 2) return;
-
-  ctx.save();
-  ctx.translate(sx, sy - Math.round(e.z)); ctx.scale(e.face, 1);
-  if (o.lying) { ctx.translate(H * 0.5, -8); ctx.rotate(-Math.PI / 2); }
-  else {
-    ctx.translate(Math.round(o.dx || 0), Math.round(o.dy || 0));
-    if (o.lean) ctx.rotate(o.lean);
-    if (o.spin) { ctx.translate(0, -H * 0.5); ctx.rotate(o.spin); ctx.translate(0, H * 0.5); }
+// 피규어 1체를 버퍼에 그린다. pose 가 있으면 몸통+팔+무기 합성, 없으면 스프라이트만 (잡몹/잔상)
+// o = { f, lean(앞 +), leanW(월드 방향), crouch, dx, dy(도트), flash, wash, washA, noWeapon, swing(잡몹 궤적 반지름), eyes }
+function figure(id, face, pose, o) {
+  const S = SPRITES[id], P = layerFor(S.w + PADX * 2, S.h + PADT + PADB), L = P.L;
+  const cx = L.w / 2 + Math.round(o.dx || 0), top = PADT + Math.round((o.dy || 0) + (pose ? (pose.jy || 0) + (pose.dy || 0) : 0));
+  let res = null;
+  if (pose && FIG[id]) res = drawFigure(L, id, cx, top, face, pose, o);
+  else blit(sprite(id, o.f), L, cx - S.w / 2, top, { flip: face < 0, lean: (o.lean || 0) * face + (o.leanW || 0), crouch: o.crouch,
+    split: S.h - 14, flash: o.flash, wash: o.wash, washA: o.washA });
+  if (o.swing) crescent(L, cx + face * 8, top + 22, o.swing, face > 0 ? 115 : 65, face > 0 ? -40 : 220, ['#ffffff', '#bfd4ff', '#7f98d8']);
+  if (o.eyes && pose) {                            // 필살기 중 투구 속 붉은 눈빛
+    const sh = Math.round((pose.lean || 0) * face * Math.pow(1 - 12 / 47, 1.2)), ex = cx - 20 + (face > 0 ? 25 : 14) + sh;
+    const ey = top + 12 + Math.round(pose.crouch || 0);
+    L.put(ex, ey, '#ff3a4a'); L.put(ex + face, ey, '#ff7a88');
   }
-  if (o.aura) {
-    ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';
-    ctx.beginPath(); ctx.ellipse(0, -H * 0.5, S.sh * sc * 1.5, H * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
-  }
-  ctx.imageSmoothingEnabled = false;
-  const img = getSprite(o.sprite, o.frame, o.flash);
-  ctx.drawImage(img, -S.ax * sc, -S.gy * sc, S.w * sc, S.h * sc);
-
-  if (o.fx) {                                                                                       // 타격 이펙트
-    ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.arc(o.fx * 0.35, -H * 0.55, o.fx * 0.62, -1.0, 1.0); ctx.stroke();
-  }
+  return { P, ax: L.w / 2, ay: PADT + S.gy, res };
+}
+// 버퍼를 발밑 기준점 (sx, sy) 에 찍는다. lying: 뒤로 눕힌다
+function present(F, sx, sy, alpha, lying, face, gy) {
+  const L = F.P.L;
+  sctx.putImageData(F.P.img, 0, 0);
+  ctx.save(); ctx.imageSmoothingEnabled = false;
+  if (alpha < 1) ctx.globalAlpha = Math.max(0, alpha);
+  ctx.translate(Math.round(sx), Math.round(sy));
+  if (lying) { ctx.scale(face, 1); ctx.translate(gy * SC * 0.5, -8); ctx.rotate(-Math.PI / 2); ctx.scale(face, 1); }
+  ctx.drawImage(scratch, 0, 0, L.w, L.h, -F.ax * SC, -F.ay * SC, L.w * SC, L.h * SC);
   ctx.restore();
 }
-
-// 도트 스프라이트는 프레임이 2장(0/1)뿐이라 기울임/돌진 이동으로 동작을 표현한다
+function drawShadow(sx, y, sh, z) {
+  ctx.fillStyle = 'rgba(0,0,0,.35)';
+  ctx.beginPath(); ctx.ellipse(sx, y, sh * SC * (1 - Math.min(z, 150) / 300), 6 * SC * 0.7, 0, 0, Math.PI * 2); ctx.fill();
+}
 function idleFrame(walk) { return Math.floor(tick / (walk ? 10 : 30)) % 2; }
 
-function playerLook() {
-  const p = player, o = { sprite: 'player' };
-  o.walk = p.walk; o.flash = p.flash > 0; o.aura = p.buff > 0;
-  o.frame = idleFrame(p.walk);
-  if (p.walk && p.z === 0) o.dy = -Math.abs(Math.sin(tick * 0.3)) * 3;
-  o.blink = p.inv > 0 && p.st === 'free';
-  o.lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
-  if (p.st === 'hurt' || (p.st === 'down' && !o.lying)) { o.lean = -0.2; o.flash = true; }
-  if (p.st === 'special') { o.spin = (p.t / SPECIAL.dur) * Math.PI * 6; o.frame = 1; o.aura = true; }
-  if (p.st === 'atk') {
-    const A = ATK[p.atk];
-    if (p.atk === 'air') { o.lean = 0.45; o.fx = 44; }
-    else {
-      const a = p.t < A.on ? p.t / A.on : p.t <= A.off ? 1 : Math.max(0, 1 - (p.t - A.off) / 10);
-      const big = p.atk === 'c3';
-      o.dx = a * (big ? 16 : 9); o.lean = a * (big ? 0.3 : 0.16); o.frame = 1;
-      if (p.t >= A.on && p.t <= A.off) o.fx = A.reach;
+function playerPose(lying) {
+  const p = player, t = p.t * MS;
+  switch (p.st) {
+    case 'atk':
+      if (p.atk === 'air') {                       // 공중 내려찍기
+        const r = mixP(HR, { ang: -50, hx: 10, hy: 6, lean: 6, crouch: 0 }, ease(t / 90));
+        r.arc = [130, r.ang]; r.arcR = 22; return r;
+      }
+      return heroAtk(p.combo, t);
+    case 'special': return heroSpecial(t);
+    case 'hurt': { const a = Math.max(0, 1 - p.t / 16); return { ang: 205, hx: -2, hy: 9, lean: -6.3 * a, crouch: 2.1 * a }; }
+    case 'down': case 'dead':
+      return lying ? { ang: 235, hx: -2, hy: 12, lean: -12, crouch: 5 } : { ang: 205, hx: -2, hy: 9, lean: -9, crouch: 3 };
+    default:
+      if (p.z > 0) return { ang: 100, hx: 2, hy: 3, lean: 1, crouch: 0 };
+      return { ang: 68, hx: 4, hy: 9, lean: p.walk ? 2 : 0, crouch: p.walk && Math.floor(tick * MS / 130) % 2 ? 1 : 0 };
+  }
+}
+function drawPlayer() {
+  const p = player, S = SPRITES.player, sx = p.x - camX, sp = p.st === 'special';
+  drawShadow(sx, p.y, S.sh, p.z);
+  if (p.inv > 0 && p.st === 'free' && Math.floor(tick / 4) % 2) return;
+  if (p.buff > 0) {                                // 파워업 오라
+    const Hh = S.gy * SC;
+    ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';
+    ctx.beginPath(); ctx.ellipse(sx, p.y - p.z - Hh * 0.5, S.sh * SC * 1.5, Hh * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+  }
+  const lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
+  const pose = playerPose(lying);
+  const F = figure('player', p.face, pose, {
+    f: p.st === 'free' && !p.walk ? idleFrame(false) : 0,
+    wash: p.flash > 0 ? '#ffffff' : (sp ? '#ff3a4a' : null), washA: p.flash > 0 ? 0.75 : 0.3,
+    eyes: sp && p.t * MS < 1500 });
+  const bob = p.walk && p.z === 0 && p.st === 'free' ? -Math.abs(Math.sin(tick * 0.3)) * 3 : 0;
+  present(F, sx, p.y - p.z + bob, 1, lying, p.face, S.gy);
+}
+
+function drawEnemy(e) {
+  const d = e.d, S = SPRITES[d.sprite], sx = e.x - camX;
+  drawShadow(sx, e.y, S.sh, e.z);
+  if (e.st === 'dead' && !e.boss && e.t > 35 && Math.floor(tick / 4) % 2) return;
+  const lying = !(e.boss && e.st === 'dead') && (e.st === 'down' || e.st === 'dead') && e.z === 0;
+  const o = { f: idleFrame(e.walk), dx: 0 };
+  let pose = null, alpha = 1;
+  // 피격 반동: 맞은 쪽 반대로 꺾였다가 흔들리며 돌아오고, 잠깐 무릎이 굽는다
+  if (e.hr < 600 && e.st !== 'dead') {
+    const osc = Math.cos(e.hr * 0.03) * Math.exp(-e.hr / 200);
+    o.leanW = e.hdir * (e.hheavy ? 8 : 4.5) * osc; o.dx = e.hdir * (e.hheavy ? 3 : 1.5) * Math.exp(-e.hr / 160);
+    if (e.hr < 130) o.crouch = e.hheavy ? 2 : 1;
+  }
+  if (e.flash > 0) { o.wash = '#ffffff'; o.washA = 0.7; }
+  if (e.boss) {
+    const id = d.sprite;
+    pose = mixP(BR[id], BR[id], 0);
+    if (e.st === 'pat') {
+      pose = bossPoseAt(id, e.pat, e.pt, phase2(e));
+      o.dx += e.bdx * e.face; o.dy = e.bdy; alpha = e.alpha;
+      if (e.wash && !o.wash) { o.wash = e.wash; o.washA = 0.5; }
+      if (alpha < 0.6) o.noWeapon = true;
+    } else if (e.st === 'stun') {                  // 기절: 무기를 떨군 채 비틀거림
+      o.leanW = (o.leanW || 0) + Math.sin(tick * MS * 0.012) * 2.5 - e.face * 2; o.crouch = Math.max(o.crouch || 0, 1);
+      pose = mixP(BR[id], { ang: -25, hx: 3, hy: 11, lean: -2 }, 1);
+    } else if (e.st === 'dead') {                  // 쓰러짐: 하얗게 깜빡이며 무너지고 사라진다
+      const t = e.t * MS;
+      o.leanW = e.hdir * Math.min(14, t * 0.012); o.crouch = Math.min(6, Math.round(t * 0.006));
+      pose = mixP(BR[id], { ang: -35, hx: 2, hy: 11, lean: -3 }, 1);
+      alpha = t < 900 ? 1 : Math.max(0, 1 - (t - 900) / 900);
+      if (t < 900 && Math.floor(t / 70) % 2 === 0) { o.wash = '#ffffff'; o.washA = 0.7; }
+    } else if (e.st === 'down') pose = mixP(BR[id], { ang: -35, hx: 2, hy: 11, lean: -3 }, 1);
+  } else {
+    if (e.st === 'hurt' || ((e.st === 'down' || e.st === 'dead') && !lying)) o.lean = -5;
+    if (e.st === 'wind') {                         // 공격 예고: 뒤로 젖히며 번쩍
+      const k = Math.min(1, e.t / 12);
+      o.lean = -6 * k; o.dx -= 3.5 * k * e.face;
+      if (e.t > 6 && Math.floor(e.t / 4) % 2) { o.wash = '#ffffff'; o.washA = 0.6; }
+    }
+    if (e.st === 'act' && e.pat === 'swing') { o.f = 1; o.lean = 6; o.dx += 7 * e.face; o.swing = Math.round(d.range * 0.3); }
+  }
+  const bob = e.walk && e.z === 0 ? -Math.abs(Math.sin(tick * 0.3 + e.id)) * 3 : 0;
+  const F = figure(d.sprite, e.face, pose, o);
+  if (F.res) { e.tipX = e.x + (F.res.tip[0] - F.ax) * SC; e.tipH = e.z - bob + (F.ay - F.res.tip[1]) * SC; }   // 지팡이 끝 = 탄막 발사 위치
+  present(F, sx, e.y - e.z + bob, alpha, lying, e.face, S.gy);
+}
+function drawGhost(g) {
+  const F = figure(g.id, g.face, null, { lean: g.id === 'player' ? 6 : 7, wash: g.wash, washA: 0.55 });
+  present(F, g.x - camX, g.y - g.z, (g.id === 'player' ? 0.4 : 0.35) * (1 - g.age / g.life), false, g.face, 0);
+}
+
+// ---------------------------------------------------------------- 이펙트 레이어 (화면 절반 해상도 = 도트 1칸)
+const FXW = W / SC, FXH = H / SC;
+const fxCanvas = document.createElement('canvas'); fxCanvas.width = FXW; fxCanvas.height = FXH;
+const fxCtx = fxCanvas.getContext('2d');
+function mkFx() { const L = new Layer(FXW, FXH); return { L, img: new ImageData(L.d, FXW, FXH) }; }
+const fxGround = mkFx(), fxTop = mkFx();       // 캐릭터 뒤(바닥 표식·충격파) / 캐릭터 앞(투사체·적중 이펙트)
+const fxX = x => (x - camX) / SC, fxY = (y, h) => (y - (h || 0)) / SC;
+function presentFx(F) { fxCtx.putImageData(F.img, 0, 0); ctx.imageSmoothingEnabled = false; ctx.drawImage(fxCanvas, 0, 0, W, H); }
+
+function drawGroundFx(L) {
+  for (const z of hazards) {
+    if (z.type === 'shock') shockwave(L, fxX(z.x + z.dir * z.age * 0.32), z.age, z.dir, fxY(z.y));
+    else if (z.type === 'pillar' && z.age < z.delay) warn(L, fxX(z.x), 22, z.age, fxY(z.y));
+  }
+  for (const e of enemies) if (e.st === 'pat' && e.pat === 'slam' && e.pt < 650) warn(L, fxX(e.x), 70, e.pt, fxY(e.y));
+}
+function drawTopFx(L) {
+  for (const z of hazards) {
+    const x = fxX(z.x);
+    if (z.type === 'orb') orb(L, x, fxY(z.y, z.h), z.vx, z.vy - z.vh, z.age);
+    else if (z.type === 'wave') goldWave(L, x, fxY(z.y, z.h), z.dir);
+    else if (z.type === 'raven') blit(sprite('raven', Math.floor(z.age / 90) % 2), L, x - 6, fxY(z.y, z.h) - 4, { flip: z.st === 'dive' ? z.vx < 0 : z.x > player.x });
+    else if (z.type === 'pillar' && z.age >= z.delay) pillar(L, x, z.age, (z.age - z.delay) / z.life, fxY(z.y));
+    else if (z.type === 'ring') teleportRing(L, x, fxY(z.y, z.h), z.age / 420);
+    else if (z.type === 'pwave') {
+      const y = fxY(z.y, z.h);
+      for (let k = 0; k < 3; k++) L.arc(x - z.dir * k * 4, y, 11, (z.dir > 0 ? -58 : 122) * RAD, (z.dir > 0 ? 58 : 238) * RAD, k ? '#7f98d8' : '#ffffff', 2, 1 - k * 0.25);
     }
   }
-  return o;
-}
-function enemyLook(e) {
-  const d = e.d, o = { sprite: d.sprite };
-  o.walk = e.walk; o.flash = e.flash > 0;
-  o.frame = idleFrame(e.walk);
-  if (e.walk && e.z === 0) o.dy = -Math.abs(Math.sin(tick * 0.3 + e.id)) * 3;
-  o.lying = (e.st === 'down' || e.st === 'dead') && e.z === 0;
-  if (e.st === 'dead' && e.t > (e.boss ? 90 : 35)) o.blink = true;
-  if (e.st === 'hurt' || ((e.st === 'down' || e.st === 'dead') && !o.lying)) o.lean = -0.2;
-  if (e.st === 'stun') { o.lean = Math.sin(tick * 0.15) * 0.12 - 0.05; o.frame = 0; }
-  if (e.st === 'wind') {                                   // 공격 예고: 뒤로 젖히며 번쩍
-    const k = Math.min(1, e.t / 12);
-    o.lean = -0.14 * k; o.dx = -7 * k;
-    if (e.t > 6 && Math.floor(e.t / 4) % 2) o.flash = true;
+  for (const e of enemies) {                       // 황금왕 2페이즈: 왕관에서 불티
+    if (e.type === 'boss3' && phase2(e) && e.st !== 'dead')
+      for (let i = 0; i < 5; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 16, fxY(e.y, e.z + 138) - Math.random() * 12, Math.random() < 0.5 ? '#ffd23a' : '#ff7a1a');
   }
-  if (e.st === 'act') {
-    if (e.pat === 'swing') { o.lean = 0.16; o.dx = 14; o.frame = 1; o.fx = d.range * 0.8; }
-    else if (e.pat === 'charge') { o.lean = 0.3; o.dx = 6; o.frame = 1; }
-    else if (e.pat === 'slam') { o.lean = 0.25; o.frame = 1; }
+  const p = player;
+  if (p.st === 'special') {
+    const sp = p.t * MS, f = p.face, px = fxX(p.x), py = fxY(p.y, p.z);
+    if (sp < 640) aura(L, px, py - 2, sp, '#ff3a4a', '#ff9aa6');
+    if (sp >= 450 && sp < 620 && Math.floor(sp / 24) % 2 === 0) {
+      for (let i = 0; i < 4; i++) L.line(px - f * (12 + i * 5), py - 34 + i * 8, px - f * (26 + i * 7), py - 34 + i * 8, '#ff9aa6');
+    }
+    const cx = fxX(p.spX), cy = fxY(p.spY, 68), AN = [-40, 40, 0, -18];
+    for (let k = 0; k < 4; k++) {                  // 4연 베기의 붉은 베기 선
+      const age = sp - (700 + k * 160), u = Math.cos(AN[k] * RAD) * f, v = Math.sin(AN[k] * RAD);
+      if (age >= 0 && age <= 220) slashLine(L, cx - u * 30, cy + v * 30, cx + u * 30, cy - v * 30, Math.min(1, age / 50));
+    }
+    if (sp >= 1570 && sp < 1950) moon(L, cx, cy, Math.round(lerp(8, 32, ease((sp - 1570) / 220))), (sp - 1570) / 380, f < 0);
   }
-  return o;
+  for (const a of impacts) impactFx(L, fxX(a.x), fxY(a.y, a.z), a.age, a.kind, a.dir, a.seed);
+  for (const s of bursts) sparkBurst(L, fxX(s.x), fxY(s.y, s.z), s.age, s.seed, s.cols);
 }
 
 function drawBarrel(b) {
@@ -781,7 +1166,7 @@ function drawHUD() {
   outlineText(`${p.hp}/${p.max}`, 226, 51, '#fff', 'bold 12px sans-serif', 'left');
   const spFull = p.sp >= SP_MAX;
   drawBar(20, 60, 200, 8, p.sp / SP_MAX, spFull && Math.floor(tick / 8) % 2 ? '#fff6a8' : '#35b6ff');
-  outlineText(spFull ? 'K : 필살기!' : 'SP', 226, 69, spFull ? '#ffe14d' : '#8fd4ff', 'bold 12px sans-serif', 'left');
+  outlineText(spFull ? 'K : 흑월참!' : 'SP', 226, 69, spFull ? '#ffe14d' : '#8fd4ff', 'bold 12px sans-serif', 'left');
   outlineText('LIFE', 20, 96, '#fff', 'bold 12px sans-serif', 'left');
   for (let i = 0; i < p.lives; i++) { ctx.fillStyle = '#ff4d6d'; circle(66 + i * 20, 92, 7); }
   if (p.buff > 0) { drawBar(150, 88, 100, 8, p.buff / 900, '#ffe14d'); outlineText('POWER', 150, 85, '#ffe14d', 'bold 10px sans-serif', 'left'); }
@@ -804,6 +1189,7 @@ function drawHUD() {
       } else {
         drawBar(bx, 56, bw, 8, boss.gr / boss.grMax, '#ffb300');
         outlineText('GROGGY', bx - 8, 64, '#ffcc66', 'bold 11px sans-serif', 'right');
+        if (boss.st === 'pat') outlineText(boss.d.pats[boss.pat], W / 2, 82, '#ffb0b8', 'bold 14px sans-serif');   // 사용 중인 기술 이름
       }
     }
   }
@@ -826,7 +1212,8 @@ function drawEnemyOverlay(e) {
       ctx.fillStyle = '#ffe14d'; circle(sx + Math.cos(a) * 34, top + 8 + Math.sin(a) * 9, 5);
     }
   }
-  if (e.st === 'wind' && e.t > 2) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
+  const warnNow = (e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < (TELE[e.pat] || 0) && Math.floor(e.pt / 110) % 2 === 0);
+  if (warnNow) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
 }
 
 function render() {
@@ -834,24 +1221,30 @@ function render() {
   if (shake > 0.5) ctx.translate(rand(-shake, shake) * 0.5, rand(-shake, shake) * 0.5);
   drawBG(stage ? stage.theme : 'stage1');
   if (stage) {
-    // y 순서로 정렬해서 그린다
+    fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
+    const sp = player.st === 'special' ? player.t * MS : -1;
+    // y 순서로 정렬해서 그린다 (필살기 중에는 흑기사와 그 잔상만 어둠 위에 따로 그림)
     const list = [];
     barrels.forEach(b => list.push({ y: b.y, f: () => drawBarrel(b) }));
     items.forEach(i => list.push({ y: i.y, f: () => drawItem(i) }));
-    enemies.forEach(e => list.push({ y: e.y, f: () => { drawChar(e, enemyLook(e)); } }));
-    list.push({ y: player.y, f: () => drawChar(player, playerLook()) });
+    enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemy(e) }));
+    ghosts.forEach(g => { if (sp < 0 || g.id !== 'player') list.push({ y: g.y - 0.5, f: () => drawGhost(g) }); });
+    if (sp < 0) list.push({ y: player.y, f: drawPlayer });
     list.sort((a, b) => a.y - b.y).forEach(l => l.f());
-
-    // 충격파 링
-    for (const r of rings) {
-      ctx.strokeStyle = `rgba(${r.col || '255,200,120'},${r.life / 24})`; ctx.lineWidth = 5;
-      ctx.beginPath(); ctx.ellipse(r.x - camX, r.y, r.r, r.r * 0.3, 0, 0, Math.PI * 2); ctx.stroke();
+    if (sp >= 0) {                                 // 흑월참: 배경과 적을 어둡게
+      const k = sp < 200 ? 1 - 0.65 * (sp / 200) : (sp > 1900 ? 0.35 + 0.65 * ((sp - 1900) / 200) : 0.35);
+      ctx.fillStyle = `rgba(16,2,8,${(1 - k).toFixed(3)})`; rect(-40, -40, W + 80, H + 80);
+      ghosts.forEach(g => { if (g.id === 'player') drawGhost(g); });
+      drawPlayer();
     }
+
     for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
+    fxTop.L.clear(); drawTopFx(fxTop.L); presentFx(fxTop);
     enemies.forEach(drawEnemyOverlay);
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }
   ctx.restore();
+  if (flashT > 0) { ctx.fillStyle = `rgba(255,255,255,${Math.min(0.9, flashT / 220 * 0.9).toFixed(3)})`; rect(0, 0, W, H); }
   if (stage && player) drawHUD();
 
   if (scene === 'intro') {
@@ -872,10 +1265,9 @@ function renderIdle() {   // 타이틀/튜토리얼 뒤 배경
 
 // ---------------------------------------------------------------- 루프
 let last = 0, acc = 0;
-const STEP = 1000 / 60;
 function loop(t) {
   acc += Math.min(100, t - last); last = t;
-  while (acc >= STEP) { update(); acc -= STEP; for (const k in pressed) delete pressed[k]; }
+  while (acc >= MS) { update(); acc -= MS; for (const k in pressed) delete pressed[k]; }
   if (scene === 'title' || scene === 'tutorial') { ctx.clearRect(0, 0, W, H); const sv = stage; renderIdle(); stage = sv; }
   else render();
   requestAnimationFrame(loop);

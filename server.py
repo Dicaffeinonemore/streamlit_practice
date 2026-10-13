@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["sprites.js", "backgrounds.js", "game.js"]
+SCRIPTS = ["sprites.js", "backgrounds.js", "motion.js", "game.js"]
 
 
 def in_streamlit() -> bool:
