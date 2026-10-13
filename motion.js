@@ -74,14 +74,49 @@
     }
   }
 
-  // sprites.js 의 도트 정의를 픽셀 버퍼로 굽고 1px 외곽선을 입힌다 (프레임별 캐시)
+  // sprites.js 의 도트 정의를 픽셀 버퍼로 굽는다 (프레임별 캐시). 외곽선·음영은 합성 후 shade() 가 입힌다
   const CACHE = {};
   function sprite(id, f) {
     const k = id + ':' + (f | 0); if (CACHE[k]) return CACHE[k];
     const s = global.SPRITES[id], L = new Layer(s.w, s.h);
     s.fn((x, y, w, h, c) => L.rect(x, y, w, h, c), f | 0, (cx, cy, r, c) => L.disc(cx, cy, r, c));
-    L.outline('#0d0b14');
     return (CACHE[k] = L);
+  }
+  function spriteShaded(id, f) {                   // 이펙트 레이어에 바로 찍는 작은 스프라이트용 (까마귀 등)
+    const k = id + ':s' + (f | 0); if (CACHE[k]) return CACHE[k];
+    const src = sprite(id, f), L = new Layer(src.w + 2, src.h + 2);
+    blit(src, L, 1, 1); shade(L);
+    return (CACHE[k] = L);
+  }
+
+  // 아케이드 도트 마감: 왼쪽 위에서 빛이 드는 가장자리 하이라이트, 오른쪽 아래 2단 그늘,
+  // 그리고 맞닿은 색을 아주 어둡게 한 "색 외곽선"(셀아웃). 몸통·팔·무기를 합성한 뒤 통째로 입힌다
+  const OUT = [13, 11, 20];
+  function shade(L) {
+    const w = L.w, h = L.h, d = L.d, a = new Uint8Array(w * h);
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (d[(y * w + x) * 4 + 3]) { a[y * w + x] = 1; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    }
+    if (x1 < 0) return;
+    const on = (x, y) => x >= 0 && y >= 0 && x < w && y < h && a[y * w + x] === 1;
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+      if (!a[y * w + x]) continue;
+      const i = (y * w + x) * 4;
+      let k = 0;
+      if (!on(x, y - 1) || !on(x - 1, y)) k = 0.22;
+      else if (!on(x, y + 1) || !on(x + 1, y)) k = -0.3;
+      else if (!on(x, y + 2) || !on(x + 2, y)) k = -0.13;
+      if (k > 0) { d[i] += (255 - d[i]) * k; d[i + 1] += (255 - d[i + 1]) * k; d[i + 2] += (255 - d[i + 2]) * k; }
+      else if (k < 0) { d[i] *= 1 + k; d[i + 1] *= 1 + k; d[i + 2] *= 1 + k; }
+    }
+    for (let y = Math.max(0, y0 - 1); y <= Math.min(h - 1, y1 + 1); y++) for (let x = Math.max(0, x0 - 1); x <= Math.min(w - 1, x1 + 1); x++) {
+      if (a[y * w + x]) continue;
+      const n = on(x + 1, y) ? y * w + x + 1 : on(x - 1, y) ? y * w + x - 1 : on(x, y + 1) ? (y + 1) * w + x : on(x, y - 1) ? (y - 1) * w + x : -1;
+      if (n < 0) continue;
+      const i = (y * w + x) * 4, j = n * 4;
+      d[i] = OUT[0] + d[j] * 0.2; d[i + 1] = OUT[1] + d[j + 1] * 0.2; d[i + 2] = OUT[2] + d[j + 2] * 0.2; d[i + 3] = 255;
+    }
   }
   function rng(seed) { let s = seed >>> 0; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
 
@@ -274,7 +309,7 @@
     put(b1, 0, '#ffffff');
     return [hx + ux * b1, hy + uy * b1];
   }
-  // 피규어 1체: 몸통(기울기·웅크림) → 궤적 → 팔 → 무기.
+  // 피규어 1체: 몸통(기울기·웅크림) → 팔 → 무기. 궤적은 음영 처리 뒤 drawTrail() 로 따로 그린다.
   // pose = { ang, hx, hy, lean, crouch, arc:[시작각, 현재각], arcR, arcCols, red }
   // o = { f(프레임), leanW(월드 방향 추가 기울기), crouch, flash, wash, washA, noWeapon }
   function drawFigure(L, id, cx, top, face, pose, o) {
@@ -286,17 +321,19 @@
     const sh = Math.round(lean * Math.pow(Math.max(0, 1 - F.sh[1] / (F.h - 1)), 1.2));
     const sx = cx - F.w / 2 + lx + sh, sy = top + F.sh[1] + (cr && F.sh[1] < F.split ? cr : 0);
     const hx = sx + (pose.hx || 0) * face, hy = sy + (pose.hy || 0);
-    if (o.noWeapon) return { sh: [sx, sy], hand: [hx, hy], tip: [hx, hy] };
+    if (o.noWeapon) return { sh: [sx, sy], hand: [hx, hy], tip: [hx, hy], trail: null };
+    let trail = null;
     if (pose.arc) {
       const cur = pose.arc[1], st = cur + (pose.arc[0] - cur) * Math.min(1, 100 / Math.max(1, Math.abs(pose.arc[0] - cur)));
-      const w0 = face > 0 ? st : 180 - st, w1 = face > 0 ? cur : 180 - cur, cols = pose.arcCols || ['#ffffff', '#bfd4ff', '#7f98d8'];
-      crescent(L, hx, hy, pose.arcR || 21, w0, w1, cols, cols.length);
+      trail = { x: hx, y: hy, r: pose.arcR || 21, a0: face > 0 ? st : 180 - st, a1: face > 0 ? cur : 180 - cur,
+        cols: pose.arcCols || ['#ffffff', '#bfd4ff', '#7f98d8'] };
     }
     drawArm(L, sx, sy, hx, hy, F.arm, F.th);
     const tip = drawWeapon(L, F.wpn, hx, hy, pose.ang, face, { red: pose.red });
     L.rect(Math.round(hx) - 1, Math.round(hy) - 1, 3, 3, F.hand);
-    return { sh: [sx, sy], hand: [hx, hy], tip };
+    return { sh: [sx, sy], hand: [hx, hy], tip, trail };
   }
+  function drawTrail(L, tr) { if (tr) crescent(L, tr.x, tr.y, tr.r, tr.a0, tr.a1, tr.cols, tr.cols.length); }
 
   // ---------------------------------------------------------------- 포즈 (시간 ms → 자세)
   // ang = 무기 각도(0 정면, 90 위, 음수 아래), hx/hy = 어깨 기준 손 위치(앞이 +x, 아래가 +y),
@@ -410,8 +447,8 @@
   }
 
   global.MO = {
-    Layer, blit, sprite, RAD, ease, lerp,
+    Layer, blit, sprite, spriteShaded, shade, RAD, ease, lerp,
     crescent, sparkBurst, aura, warn, shockwave, orb, teleportRing, goldWave, pillar, moon, slashLine, impactFx,
-    FIG, drawFigure, mixP, HATK, HR, heroAtk, heroSpecial, BR, bossPoseAt,
+    FIG, drawFigure, drawTrail, mixP, HATK, HR, heroAtk, heroSpecial, BR, bossPoseAt,
   };
 })(window);
