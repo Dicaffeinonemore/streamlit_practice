@@ -46,22 +46,22 @@ function beep(f, d = 0.08, type = 'square', v = 0.04) {
 // ---------------------------------------------------------------- 데이터
 // 적 정의. wind=공격 예고, act=공격 판정 유지, rec=공격 후 경직
 const ET = {
-  grunt: { name: '불량배', hp: 40, spd: 1.2, dmg: 8, range: 48, wind: 28, act: 10, rec: 30, kb: 3, score: 100,
-           h: 62, s: 1, col: '#c0392b', pants: '#34495e', skin: '#f0b27a', hair: '#2c2c2c' },
-  rogue: { name: '날쌘돌이', hp: 28, spd: 2.1, dmg: 6, range: 44, wind: 16, act: 8, rec: 20, kb: 2, score: 150,
-           h: 58, s: 0.95, col: '#8e44ad', pants: '#2c3e50', skin: '#f5cba7', hair: '#f1c40f' },
-  brute: { name: '거한', hp: 100, spd: 0.9, dmg: 16, range: 62, wind: 44, act: 12, rec: 44, kb: 6, score: 300, kd: true,
-           h: 70, s: 1.25, wide: 1.5, col: '#d35400', pants: '#5d4037', skin: '#e59866', hair: '#111' },
-  boss1: { name: '철권 두목 "맥스"', boss: true, hp: 320, spd: 1.15, dmg: 16, range: 74, wind: 26, act: 12, rec: 34, score: 2000, kd: true,
-           h: 70, s: 1.55, wide: 1.4, col: '#1f2d3d', pants: '#111', skin: '#d7a47a', hair: '#7f8c8d', crown: '#c0392b', moves: ['charge'] },
-  boss2: { name: '항구의 폭군 "레이"', boss: true, hp: 480, spd: 1.3, dmg: 18, range: 78, wind: 24, act: 12, rec: 30, score: 3500, kd: true,
-           h: 70, s: 1.6, wide: 1.4, col: '#0e6655', pants: '#17202a', skin: '#c68e63', hair: '#f39c12', crown: '#f1c40f', moves: ['charge', 'slam'] },
-  boss3: { name: '마왕 "드라칸"', boss: true, hp: 700, spd: 1.4, dmg: 20, range: 84, wind: 22, act: 12, rec: 26, score: 6000, kd: true,
-           h: 70, s: 1.75, wide: 1.5, col: '#4a148c', pants: '#1a0a2e', skin: '#a1887f', hair: '#e74c3c', crown: '#ff1744', moves: ['charge', 'slam'] },
+  grunt: { name: '보병', sprite: 'infantry', hp: 40, spd: 1.2, dmg: 8, range: 56, wind: 28, act: 10, rec: 30, kb: 3, score: 100,
+           h: 96, s: 1, hw: 18 },
+  rogue: { name: '창병', sprite: 'spearman', hp: 28, spd: 2.0, dmg: 6, range: 78, wind: 18, act: 8, rec: 22, kb: 2, score: 150,
+           h: 96, s: 1, hw: 18 },
+  brute: { name: '기사', sprite: 'knight', hp: 100, spd: 0.9, dmg: 16, range: 68, wind: 44, act: 12, rec: 44, kb: 6, score: 300, kd: true,
+           h: 100, s: 1, hw: 22 },
+  boss1: { name: '도살자 고라스', sprite: 'boss1', boss: true, hp: 320, spd: 1.15, dmg: 16, range: 90, wind: 26, act: 12, rec: 34, score: 2000, kd: true,
+           h: 148, s: 1, hw: 34, moves: ['charge'] },
+  boss2: { name: '까마귀 마녀 모르그라', sprite: 'boss2', boss: true, hp: 480, spd: 1.3, dmg: 18, range: 90, wind: 24, act: 12, rec: 30, score: 3500, kd: true,
+           h: 148, s: 1, hw: 28, moves: ['charge', 'slam'] },
+  boss3: { name: '황금왕 오렐리온', sprite: 'boss3', boss: true, hp: 700, spd: 1.4, dmg: 20, range: 100, wind: 22, act: 12, rec: 26, score: 6000, kd: true,
+           h: 152, s: 1, hw: 34, moves: ['charge', 'slam'] },
 };
 
 const STAGES = [
-  { name: 'STAGE 1', title: '네온 거리', theme: 'city', len: 3200, boss: 'boss1',
+  { name: 'STAGE 1', title: '붉은 평원', theme: 'stage1', len: 3200, boss: 'boss1',
     barrels: [520, 1100, 1650, 2100],
     waves: [
       { at: 400,  e: [['grunt', 1], ['grunt', 1]] },
@@ -70,7 +70,7 @@ const STAGES = [
       { at: 1900, e: [['grunt', 1], ['grunt', -1], ['brute', 1]] },
       { at: 2240, e: [['boss1', 1], ['grunt', -1]], boss: true },
     ] },
-  { name: 'STAGE 2', title: '항구 창고', theme: 'harbor', len: 3600, boss: 'boss2',
+  { name: 'STAGE 2', title: '진흙의 야영지', theme: 'stage2', len: 3600, boss: 'boss2',
     barrels: [450, 950, 1500, 2000, 2400],
     waves: [
       { at: 400,  e: [['grunt', 1], ['rogue', 1], ['rogue', -1]] },
@@ -80,7 +80,7 @@ const STAGES = [
       { at: 2250, e: [['grunt', 1], ['grunt', 1], ['rogue', -1], ['brute', -1]] },
       { at: 2640, e: [['boss2', 1], ['rogue', -1], ['rogue', -1]], boss: true },
     ] },
-  { name: 'STAGE 3', title: '마왕성', theme: 'castle', len: 4000, boss: 'boss3',
+  { name: 'STAGE 3', title: '불타는 성채', theme: 'stage3', len: 4000, boss: 'boss3',
     barrels: [500, 900, 1400, 1900, 2400, 2800],
     waves: [
       { at: 400,  e: [['rogue', 1], ['rogue', 1], ['grunt', -1], ['grunt', -1]] },
@@ -95,10 +95,10 @@ const STAGES = [
 
 // 플레이어 공격 데이터 (on~off 틱 동안 판정)
 const ATK = {
-  c1:  { dur: 20, on: 4, off: 10, reach: 46, dmg: 10, kd: false },
-  c2:  { dur: 20, on: 4, off: 10, reach: 46, dmg: 11, kd: false },
-  c3:  { dur: 30, on: 7, off: 14, reach: 60, dmg: 16, kd: true },
-  air: { dur: 0,  on: 0, off: 999, reach: 52, dmg: 14, kd: true },
+  c1:  { dur: 20, on: 4, off: 10, reach: 54, dmg: 10, kd: false },
+  c2:  { dur: 20, on: 4, off: 10, reach: 54, dmg: 11, kd: false },
+  c3:  { dur: 30, on: 7, off: 14, reach: 68, dmg: 16, kd: true },
+  air: { dur: 0,  on: 0, off: 999, reach: 60, dmg: 14, kd: true },
 };
 
 // ---------------------------------------------------------------- 상태
@@ -109,7 +109,7 @@ let player = null, enemies = [], items = [], barrels = [], parts = [], texts = [
 let tick = 0, hitStop = 0, shake = 0, bannerT = 0, clearT = 0, goT = 0, stageStartScore = 0, nextId = 1;
 
 function newPlayer(score = 0) {
-  return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 14, hp: 100, max: 100, lives: 3,
+  return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, queue: false, hitSet: new Set(),
     inv: 0, flash: 0, buff: 0, score, walk: false };
 }
@@ -176,7 +176,7 @@ function spawnWave(w) {
 }
 function mkEnemy(type, x, y) {
   const d = ET[type];
-  return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: 14 * d.s, hp: d.hp, max: d.hp,
+  return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
     st: 'chase', t: 0, wait: rand(0, 40), atkCd: rand(20, 60), pat: null, hitSet: null, inv: 0, flash: 0, shown: 0,
     boss: !!d.boss, nextKd: d.hp * 0.75, walk: false, recT: d.rec, remove: false };
 }
@@ -225,7 +225,7 @@ function hurtPlayer(dmg, dir, kd) {
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead') return false;
   p.hp -= dmg; p.flash = 8; p.combo = 0; p.queue = false;
   hitStop = Math.max(hitStop, 4); shake = Math.max(shake, 6);
-  floatText(p.x, p.y - p.z - 80, dmg, '#ff5252');
+  floatText(p.x, p.y - p.z - 110, dmg, '#ff5252');
   sparks(p.x, p.y, p.z + 40, 8, '#ff8a80');
   beep(110, .15, 'sawtooth', 0.06);
   if (p.hp <= 0) {
@@ -578,145 +578,102 @@ function finishStage() {
 function rect(x, y, w, h) { ctx.fillRect(x, y, w, h); }
 function circle(x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
 
-function layer(par, w, fn) {
-  const off = camX * par, first = Math.floor(off / w);
-  for (let n = first; n <= first + Math.ceil(W / w) + 1; n++) fn(n * w - off, n);
-}
+// 중세 도트 배경: 192x84 원본을 5배 확대해 좌우를 뒤집어 이어 붙이며 느리게 스크롤(원경)
+const BG_SCALE = 5, BG_W = 192 * BG_SCALE;
+const BG_Y = GTOP - 57 * BG_SCALE;          // 그림 속 바닥선이 걸을 수 있는 영역 위쪽에 오도록 맞춤
 
 function drawBG(theme) {
-  const sky = ctx.createLinearGradient(0, 0, 0, GTOP);
-  let ground = ['#3c3c52', '#26263a'], line = 'rgba(255,255,255,.07)';
-  if (theme === 'city') { sky.addColorStop(0, '#140a30'); sky.addColorStop(.6, '#5b2a86'); sky.addColorStop(1, '#ff6a88'); }
-  else if (theme === 'harbor') { sky.addColorStop(0, '#07263d'); sky.addColorStop(1, '#4a90b8'); ground = ['#5a5545', '#3a372c']; }
-  else { sky.addColorStop(0, '#12040a'); sky.addColorStop(1, '#5a1230'); ground = ['#3a2a3a', '#20141f']; }
-  ctx.fillStyle = sky; rect(0, 0, W, GTOP);
-
-  if (theme === 'city') {
-    ctx.fillStyle = '#2a1b4d';
-    layer(0.2, 70, (x, n) => { const h = 60 + hash(n) * 120; rect(x, GTOP - h, 66, h); });
-    layer(0.5, 130, (x, n) => {
-      const h = 90 + hash(n + 9) * 100;
-      ctx.fillStyle = '#3b2766'; rect(x, GTOP - h, 120, h);
-      ctx.fillStyle = 'rgba(255,220,120,.55)';
-      for (let i = 0; i < 4; i++) for (let j = 0; j < Math.floor(h / 28); j++)
-        if (hash(n * 13 + i * 7 + j) > 0.45) rect(x + 12 + i * 27, GTOP - h + 10 + j * 28, 14, 14);
-      if (hash(n + 3) > 0.55) {
-        const c = ['#ff2e9a', '#2effe6', '#ffe14d'][Math.abs(n) % 3];
-        ctx.shadowColor = c; ctx.shadowBlur = 14; ctx.fillStyle = c; rect(x + 18, GTOP - h - 16, 70, 12); ctx.shadowBlur = 0;
-      }
-    });
-  } else if (theme === 'harbor') {
-    ctx.fillStyle = '#2f6f93'; rect(0, GTOP - 70, W, 70);                  // 바다
-    ctx.fillStyle = '#1d3b52';
-    layer(0.15, 300, (x, n) => { rect(x + 100, GTOP - 190, 14, 190); rect(x + 40, GTOP - 190, 220, 10); rect(x + 230, GTOP - 190, 6, 60); });
-    const pal = ['#c0392b', '#2471a3', '#d68910', '#1e8449', '#7d3c98'];
-    layer(0.5, 118, (x, n) => {
-      const rows = 1 + Math.floor(hash(n + 5) * 2);
-      for (let r = 0; r < rows; r++) {
-        ctx.fillStyle = pal[Math.floor(hash(n * 3 + r) * pal.length)]; rect(x, GTOP - 50 * (r + 1), 112, 48);
-        ctx.fillStyle = 'rgba(0,0,0,.22)'; for (let k = 8; k < 112; k += 14) rect(x + k, GTOP - 50 * (r + 1), 3, 48);
-      }
-    });
-  } else {
-    ctx.fillStyle = '#2a0f1a';
-    layer(0.2, 170, (x, n) => {
-      const h = 120 + hash(n) * 110; rect(x + 30, GTOP - h, 110, h);
-      for (let k = 0; k < 4; k++) rect(x + 30 + k * 30, GTOP - h - 14, 18, 14);
-      ctx.fillStyle = '#ffb74d'; rect(x + 78, GTOP - h + 30, 14, 26); ctx.fillStyle = '#2a0f1a';
-    });
-    layer(0.5, 210, (x, n) => {
-      ctx.fillStyle = '#3d1d2b'; rect(x + 80, GTOP - 230, 46, 230); rect(x + 70, GTOP - 240, 66, 14); rect(x + 70, GTOP - 14, 66, 14);
-      const fl = 8 + Math.sin(tick * 0.3 + n) * 2;
-      ctx.shadowColor = '#ff9100'; ctx.shadowBlur = 16; ctx.fillStyle = '#ff9100'; circle(x + 103, GTOP - 150, fl); ctx.shadowBlur = 0;
-      ctx.fillStyle = '#ffeb3b'; circle(x + 103, GTOP - 148, fl * 0.5);
-    });
+  const img = getBackground(theme), off = camX * 0.35, first = Math.floor(off / BG_W);
+  ctx.imageSmoothingEnabled = false;
+  for (let n = first; n <= first + 1; n++) {
+    const x = Math.round(n * BG_W - off);
+    ctx.save();
+    if (n % 2) { ctx.translate(x + BG_W, 0); ctx.scale(-1, 1); } else ctx.translate(x, 0);
+    ctx.drawImage(img, 0, 0, 192, 1, 0, 0, BG_W, BG_Y);                                   // 위쪽 여백: 맨 윗줄 늘이기
+    ctx.drawImage(img, 0, 0, 192, 84, 0, BG_Y, BG_W, 84 * BG_SCALE);
+    ctx.drawImage(img, 0, 83, 192, 1, 0, BG_Y + 84 * BG_SCALE, BG_W, H);                  // 아래쪽 여백: 맨 아랫줄 늘이기
+    ctx.restore();
   }
-
-  // 바닥
-  const g = ctx.createLinearGradient(0, GTOP, 0, H);
-  g.addColorStop(0, ground[0]); g.addColorStop(1, ground[1]);
-  ctx.fillStyle = g; rect(0, GTOP, W, H - GTOP);
-  ctx.fillStyle = 'rgba(0,0,0,.35)'; rect(0, GTOP, W, 4);
-  ctx.strokeStyle = line; ctx.lineWidth = 2;
+  // 걷는 바닥은 캐릭터 이동 속도로 스크롤되는 선을 얹어 속도감을 준다
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; rect(0, GTOP, W, 4);
+  ctx.strokeStyle = 'rgba(0,0,0,.16)'; ctx.lineWidth = 2;
   for (let y = GTOP + 40; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
   for (let x = -(camX % 90); x < W; x += 90) { ctx.beginPath(); ctx.moveTo(x, GTOP); ctx.lineTo(x - 30, H); ctx.stroke(); }
 }
 
+const SPR_SCALE = 2;   // 도트 1칸 = 화면 2px (정수 배율이라 도트가 선명하게 유지됨)
+
 function drawChar(e, o) {
-  const s = o.s || 1, h = o.h * s;
-  const sx = Math.round(e.x - camX), sy = e.y;
+  const S = SPRITES[o.sprite], sc = SPR_SCALE;
+  const sx = Math.round(e.x - camX), sy = Math.round(e.y);
+  const H = S.gy * sc;
   ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(sx, sy, 18 * s * (1 - Math.min(e.z, 150) / 300), 6 * s, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(sx, sy, S.sh * sc * (1 - Math.min(e.z, 150) / 300), 6 * sc * 0.7, 0, 0, Math.PI * 2); ctx.fill();
   if (o.blink && Math.floor(tick / 4) % 2) return;
 
   ctx.save();
-  ctx.translate(sx, sy - e.z); ctx.scale(e.face, 1);
-  if (o.lying) { ctx.translate(h * 0.5, -10 * s); ctx.rotate(-Math.PI / 2); }
+  ctx.translate(sx, sy - Math.round(e.z)); ctx.scale(e.face, 1);
+  if (o.lying) { ctx.translate(H * 0.5, -8); ctx.rotate(-Math.PI / 2); }
+  else {
+    ctx.translate(Math.round(o.dx || 0), Math.round(o.dy || 0));
+    if (o.lean) ctx.rotate(o.lean);
+  }
   if (o.aura) {
     ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';
-    ctx.beginPath(); ctx.ellipse(0, -h * 0.5, 26 * s, h * 0.62, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.ellipse(0, -H * 0.5, S.sh * sc * 1.5, H * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
   }
-  const C = c => o.flash ? '#fff' : c;
-  const legH = h * 0.38, torsoH = h * 0.36, bw = 22 * s * (o.wide || 1);
-  const sw = o.walk ? Math.sin(tick * 0.3) * 6 * s : 0;
-  const shY = -legH - torsoH + 6 * s;
-
-  ctx.fillStyle = C(o.skin); rect(-bw / 2 - 3 * s, shY, 6 * s, torsoH * 0.8);                // 뒤쪽 팔
-  ctx.fillStyle = C(o.pants);
-  rect(-bw / 2 + 1 * s + sw, -legH, 9 * s, legH);
-  if (o.kick) rect(2 * s, -legH, 30 * s, 9 * s); else rect(bw / 2 - 10 * s - sw, -legH, 9 * s, legH);
-  ctx.fillStyle = C(o.col); rect(-bw / 2, -legH - torsoH, bw, torsoH);                          // 몸통
-  ctx.fillStyle = C(o.skin); circle(2 * s, -legH - torsoH - 9 * s, 10 * s);                       // 머리
-  ctx.fillStyle = C(o.hair);
-  ctx.beginPath(); ctx.arc(2 * s, -legH - torsoH - 9 * s, 10.5 * s, Math.PI * 1.05, Math.PI * 1.95); ctx.fill();
-  if (o.band) { ctx.fillStyle = C(o.band); rect(-8 * s, -legH - torsoH - 12 * s, 21 * s, 4 * s); rect(-14 * s, -legH - torsoH - 12 * s, 7 * s, 3 * s); }
-  if (o.crown) {
-    ctx.fillStyle = C(o.crown);
-    ctx.beginPath(); ctx.moveTo(-6 * s, -legH - torsoH - 17 * s); ctx.lineTo(-4 * s, -legH - torsoH - 28 * s); ctx.lineTo(0, -legH - torsoH - 19 * s);
-    ctx.lineTo(4 * s, -legH - torsoH - 30 * s); ctx.lineTo(8 * s, -legH - torsoH - 19 * s); ctx.lineTo(11 * s, -legH - torsoH - 27 * s);
-    ctx.lineTo(11 * s, -legH - torsoH - 17 * s); ctx.fill();
-  }
-  ctx.fillStyle = '#111'; rect(6 * s, -legH - torsoH - 11 * s, 3 * s, 3 * s);                    // 눈
-
-  // 앞쪽 팔 (공격 시 뻗음)
-  ctx.fillStyle = C(o.skin);
-  const a = o.atk;
-  if (a !== undefined && a !== null && !o.kick) {
-    const len = 8 * s + 28 * s * Math.max(a, -0.3);
-    rect(bw / 2 - 4 * s, shY, len, 7 * s);
-    ctx.fillStyle = C(o.col === '#2e86de' ? '#fff' : o.skin); circle(bw / 2 - 4 * s + len, shY + 3.5 * s, 5 * s);
-  } else rect(bw / 2 - 3 * s, shY, 6 * s, torsoH * 0.8);
+  ctx.imageSmoothingEnabled = false;
+  const img = getSprite(o.sprite, o.frame, o.flash);
+  ctx.drawImage(img, -S.ax * sc, -S.gy * sc, S.w * sc, S.h * sc);
 
   if (o.fx) {                                                                                       // 타격 이펙트
     ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.arc(bw / 2 + 6 * s, -h * 0.5, o.fx * 0.55, -1.0, 1.0); ctx.stroke();
+    ctx.beginPath(); ctx.arc(o.fx * 0.35, -H * 0.55, o.fx * 0.62, -1.0, 1.0); ctx.stroke();
   }
   ctx.restore();
 }
 
+// 도트 스프라이트는 프레임이 2장(0/1)뿐이라 기울임/돌진 이동으로 동작을 표현한다
+function idleFrame(walk) { return Math.floor(tick / (walk ? 10 : 30)) % 2; }
+
 function playerLook() {
-  const p = player, o = { h: 64, s: 1, col: '#2e86de', pants: '#2c3e50', skin: '#f5cba7', hair: '#4a2c17', band: '#e74c3c' };
+  const p = player, o = { sprite: 'player' };
   o.walk = p.walk; o.flash = p.flash > 0; o.aura = p.buff > 0;
+  o.frame = idleFrame(p.walk);
+  if (p.walk && p.z === 0) o.dy = -Math.abs(Math.sin(tick * 0.3)) * 3;
   o.blink = p.inv > 0 && p.st === 'free';
   o.lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
+  if (p.st === 'hurt' || (p.st === 'down' && !o.lying)) { o.lean = -0.2; o.flash = true; }
   if (p.st === 'atk') {
     const A = ATK[p.atk];
-    if (p.atk === 'air') { o.kick = true; o.fx = 40; }
+    if (p.atk === 'air') { o.lean = 0.45; o.fx = 44; }
     else {
       const a = p.t < A.on ? p.t / A.on : p.t <= A.off ? 1 : Math.max(0, 1 - (p.t - A.off) / 10);
-      if (p.atk === 'c3') { o.kick = true; } else o.atk = a;
+      const big = p.atk === 'c3';
+      o.dx = a * (big ? 16 : 9); o.lean = a * (big ? 0.3 : 0.16); o.frame = 1;
       if (p.t >= A.on && p.t <= A.off) o.fx = A.reach;
     }
   }
   return o;
 }
 function enemyLook(e) {
-  const d = e.d, o = { h: d.h, s: d.s, wide: d.wide, col: d.col, pants: d.pants, skin: d.skin, hair: d.hair, crown: d.crown };
+  const d = e.d, o = { sprite: d.sprite };
   o.walk = e.walk; o.flash = e.flash > 0;
+  o.frame = idleFrame(e.walk);
+  if (e.walk && e.z === 0) o.dy = -Math.abs(Math.sin(tick * 0.3 + e.id)) * 3;
   o.lying = (e.st === 'down' || e.st === 'dead') && e.z === 0;
   if (e.st === 'dead' && e.t > (e.boss ? 90 : 35)) o.blink = true;
-  if (e.st === 'wind') { o.atk = -0.4; if (e.t > 6 && Math.floor(e.t / 4) % 2) o.flash = true; }
-  if (e.st === 'act') { if (e.pat === 'swing') o.atk = 1; else o.kick = true; }
+  if (e.st === 'hurt' || ((e.st === 'down' || e.st === 'dead') && !o.lying)) o.lean = -0.2;
+  if (e.st === 'wind') {                                   // 공격 예고: 뒤로 젖히며 번쩍
+    const k = Math.min(1, e.t / 12);
+    o.lean = -0.14 * k; o.dx = -7 * k;
+    if (e.t > 6 && Math.floor(e.t / 4) % 2) o.flash = true;
+  }
+  if (e.st === 'act') {
+    if (e.pat === 'swing') { o.lean = 0.16; o.dx = 14; o.frame = 1; o.fx = d.range * 0.8; }
+    else if (e.pat === 'charge') { o.lean = 0.3; o.dx = 6; o.frame = 1; }
+    else if (e.pat === 'slam') { o.lean = 0.25; o.frame = 1; }
+  }
   return o;
 }
 
@@ -804,7 +761,7 @@ function drawEnemyOverlay(e) {
 function render() {
   ctx.save();
   if (shake > 0.5) ctx.translate(rand(-shake, shake) * 0.5, rand(-shake, shake) * 0.5);
-  drawBG(stage ? stage.theme : 'city');
+  drawBG(stage ? stage.theme : 'stage1');
   if (stage) {
     // y 순서로 정렬해서 그린다
     const list = [];
@@ -839,7 +796,7 @@ function render() {
 function renderIdle() {   // 타이틀/튜토리얼 뒤 배경
   stage = stage || STAGES[0];
   camX = tick * 1.2;
-  drawBG(['city', 'harbor', 'castle'][Math.floor(tick / 600) % 3]);
+  drawBG(['stage1', 'stage2', 'stage3'][Math.floor(tick / 600) % 3]);
 }
 
 // ---------------------------------------------------------------- 루프
