@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>STREET FIST - 벨트스크롤 액션</title>
+<title>흑월의 기사 - BLACK MOON KNIGHT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
   html, body { margin: 0; height: 100%; background: #0b0b14; color: #fff;
@@ -18,6 +18,18 @@
   .screen.show { display: flex; }
   .screen h1 { font-size: 9cqw; margin: 0; letter-spacing: .5cqw; color: #ffd23f;
     text-shadow: 0 0 2cqw #ff6a00, .5cqw .5cqw 0 #c0392b; font-style: italic; }
+  /* 타이틀: 왼쪽엔 캔버스에 그린 흑기사, 오른쪽에 제목. 붉은 달빛 느낌의 고딕 제목 */
+  #title { background: linear-gradient(90deg, rgba(6,4,10,0) 0%, rgba(6,4,10,.25) 35%, rgba(6,4,10,.8) 62%, rgba(6,4,10,.9) 100%);
+    align-items: flex-end; padding-right: 7cqw; box-sizing: border-box; }
+  #title .logo { text-align: center; }
+  #title .moon { width: 9cqw; height: 9cqw; margin: 0 auto -2.4cqw; border-radius: 50%;
+    background: radial-gradient(circle at 62% 40%, transparent 46%, #b0101e 47%, #ff3a4a 60%, #5a0610 72%, transparent 73%); filter: drop-shadow(0 0 1.6cqw #ff1a2a); }
+  #title h1 { font-family: 'Batang', 'Nanum Myeongjo', 'Noto Serif KR', serif; font-style: normal; font-weight: 900; font-size: 8.4cqw;
+    letter-spacing: 1.2cqw; color: #e8e2ea; text-shadow: 0 0 1.2cqw #ff1a2a, 0 0 3cqw #8a0010, .35cqw .35cqw 0 #1a0004; }
+  #title .en { margin: .4cqw 0 0; font-size: 2.1cqw; letter-spacing: 1.4cqw; color: #c8283a; font-weight: bold; text-shadow: 0 0 1cqw #000; }
+  #title .sub { color: #a89aa8; font-size: 1.6cqw; letter-spacing: .5cqw; margin-top: 1.6cqw; }
+  #title .btn { border-color: #8a1a24; background: #2a0a10; color: #f0e6ea; letter-spacing: .6cqw; }
+  #title .btn:hover { background: #6a0a14; }
   .screen h2 { font-size: 4cqw; margin: 0 0 2cqw; color: #ffd23f; }
   .screen p { margin: .6cqw 0; color: #cfd2ff; }
   .btn { margin-top: 2.5cqw; padding: 1.2cqw 5cqw; font-size: 2.6cqw; font-weight: bold; cursor: pointer;
@@ -55,10 +67,14 @@
 
   <!-- 타이틀 -->
   <div class="screen show" id="title">
-    <h1>STREET FIST</h1>
-    <p style="font-size:2.2cqw">3 STAGES · BELT-SCROLL ACTION</p>
-    <button class="btn" id="btnStart">시작</button>
-    <p class="blink" style="margin-top:2cqw;font-size:1.6cqw">Enter 키로도 시작할 수 있어요</p>
+    <div class="logo">
+      <div class="moon"></div>
+      <h1>흑월의 기사</h1>
+      <p class="en">BLACK MOON KNIGHT</p>
+      <p class="sub">5 STAGES · BELT-SCROLL ACTION</p>
+      <button class="btn" id="btnStart">시작</button>
+      <p class="blink" style="margin-top:2cqw;font-size:1.6cqw">Enter 키로도 시작할 수 있어요</p>
+    </div>
   </div>
 
   <!-- 키 튜토리얼 -->
@@ -85,11 +101,16 @@
       <div class="keys"><span class="cap" data-k="KeyK">K</span><span class="or">또는</span><span class="cap" data-k="KeyX">X</span></div>
       <div class="desc"><b>필살기 흑월참</b> — SP 게이지가 차면 사용! 돌진 4연 베기 + 도약 내려찍기 (무적)</div>
 
-      <div class="keys"><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="Escape">ESC</span></div>
-      <div class="desc"><b>일시정지</b></div>
+      <div class="keys"><span class="cap" data-k="KeyI">I</span><span class="or">또는</span><span class="cap" data-k="KeyV">V</span></div>
+      <div class="desc"><b>마법 뇌격</b> — 두루마리 1개로 화면 안의 모든 적에게 번개! (최대 3개)</div>
+
+      <div class="keys"><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="Escape">ESC</span><span class="cap" data-k="KeyM">M</span></div>
+      <div class="desc"><b>일시정지</b> · <b>M</b> 소리 켜기/끄기</div>
     </div>
     <div class="tips">
-      🧪 물약 = 체력 회복 &nbsp;·&nbsp; 🛢 통을 부수면 아이템 &nbsp;·&nbsp; ⭐ 파워업 = 공격력 UP<br>
+      🏹 <b style="color:#9cc3ff">궁수</b>는 같은 줄에서 활을 당긴 뒤 화살을 쏩니다 — 위아래로 줄을 바꾸거나 점프해서 피하세요<br>
+      🧪 물약 = 체력 회복 &nbsp;·&nbsp; 📜 두루마리 = 뇌격 +1 &nbsp;·&nbsp; 💎 수정 = SP +25 &nbsp;·&nbsp; ⭐ 파워업 = 공격력 UP &nbsp;·&nbsp; 🛢 통을 부수면 아이템<br>
+      연속으로 때리면 <b style="color:#ffe27a">HIT</b> 가 쌓이고, 이어질수록 보스에게 주는 피해가 커집니다<br>
       보스는 맞을수록 <b style="color:#ffb300">그로기 게이지</b>가 차고, 가득 차면 5초간 기절 &nbsp;·&nbsp; 적 머리 위 <b style="color:#ff5252">!</b> · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기) &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진
     </div>
     <p style="margin-top:1.2cqw;font-size:1.5cqw">키를 눌러 위 버튼이 반응하는지 연습해보세요.</p>
@@ -118,9 +139,10 @@
     <button class="btn" id="btnEndTitle">타이틀로</button>
   </div>
 </div>
+<script src="motion.js"></script>
 <script src="sprites.js"></script>
 <script src="backgrounds.js"></script>
-<script src="motion.js"></script>
+<script src="audio.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

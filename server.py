@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["sprites.js", "backgrounds.js", "motion.js", "game.js"]
+SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "audio.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -45,12 +45,12 @@ def build_single_html() -> str:
 def run_streamlit():
     import streamlit as st
 
-    st.set_page_config(page_title="STREET FIST", page_icon="🗡️", layout="wide")
+    st.set_page_config(page_title="흑월의 기사 - BLACK MOON KNIGHT", page_icon="🌑", layout="wide")
     st.markdown(
         "<style>.block-container{padding-top:1rem;max-width:1200px}</style>",
         unsafe_allow_html=True,
     )
-    st.caption("게임 화면을 한 번 클릭한 뒤 키보드로 조작하세요. (방향키/WASD · Space · J)")
+    st.caption("게임 화면을 한 번 클릭한 뒤 키보드로 조작하세요. (방향키/WASD 이동 · Space/Ctrl 점프 · J 공격 · K 필살기 · I 뇌격 · M 소리)")
     html = build_single_html()
     if hasattr(st, "iframe"):          # 최신 Streamlit (components.v1.html 은 제거 예정)
         st.iframe(html, height=680)
