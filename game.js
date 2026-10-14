@@ -67,11 +67,11 @@ const ET = {
   archer: { name: '망령 궁수', sprite: 'archer', hp: 30, spd: 1.5, dmg: 7, range: 260, wind: 42, act: 6, rec: 46, kb: 3, score: 200,
            h: 96, s: 1, hw: 18, ranged: true },
   boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 260, spd: 1.05, range: 62, score: 2000, kd: true,
-           h: 148, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진' } },
+           h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진' } },
   boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 380, spd: 1.2, range: 64, score: 3500, kd: true,
-           h: 148, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼' } },
+           h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼' } },
   boss3: { name: '황금왕 오렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, range: 68, score: 6000, kd: true,
-           h: 152, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '화염 기둥', charge: '왕의 돌진' } },
+           h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '화염 기둥', charge: '왕의 돌진' } },
   boss4: { name: '망령 기사단장 바르굴', en: 'VARGUL', sprite: 'boss4', boss: true, hp: 640, spd: 1.25, range: 70, score: 8000, kd: true,
            h: 152, s: 1, hw: 34, orb: 'blue', pats: { slam: '묘지 내려찍기', slash3: '망령 삼연참', orbs: '혼불 탄막' } },
   boss5: { name: '마왕 모르데카이', en: 'MORDECAI', sprite: 'boss5', boss: true, hp: 820, spd: 1.2, range: 78, score: 12000, kd: true,
@@ -1056,7 +1056,7 @@ function updIntro() {
   const b = introBoss;
   introT += MS;
   const u = introT / INTRO_MS;
-  b.z = 360 * (1 - ease(Math.min(1, u / 0.25)));
+  b.z = b.type === 'boss3' ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
   if (!introLand && u >= 0.25) {
     introLand = true; b.z = 0; shake = 22; sfx('land');
     for (let k = 0; k < 7; k++) burst(b.x + (k - 3) * 10, b.y, 4, ['#fff0c0', '#c8b890', '#8a7a5a']);
@@ -1330,7 +1330,7 @@ function layerFor(w, h) {
   if (!o) { const L = new Layer(w, h); o = layerPool[k] = { L, img: new ImageData(L.d, w, h) }; } else o.L.clear();
   return o;
 }
-const scratch = document.createElement('canvas'); scratch.width = 256; scratch.height = 224;
+const scratch = document.createElement('canvas'); scratch.width = 300; scratch.height = 330;   // 고해상도 프레임(최대 241x275 + 여백)도 들어가게
 const sctx = scratch.getContext('2d');
 
 // 피규어 1체를 버퍼에 그린다. pose 가 있으면 몸통+팔+무기 합성, 없으면 스프라이트만 (잡몹/잔상)
@@ -1354,14 +1354,15 @@ function figure(id, face, pose, o) {
   return { P, ax: L.w / 2, ay: PADT + S.gy, res };
 }
 // 버퍼를 발밑 기준점 (sx, sy) 에 찍는다. lying: 뒤로 눕힌다
-function present(F, sx, sy, alpha, lying, face, gy) {
+// k = 버퍼 1px 의 월드 크기 (도트 SC, 고해상도 1)
+function present(F, sx, sy, alpha, lying, face, gy, k = SC) {
   const L = F.P.L;
   sctx.putImageData(F.P.img, 0, 0);
   ctx.save(); ctx.imageSmoothingEnabled = false;
   if (alpha < 1) ctx.globalAlpha = Math.max(0, alpha);
   ctx.translate(Math.round(sx), Math.round(sy));
   if (lying) { ctx.scale(face, 1); ctx.translate(gy * SC * 0.5, -8); ctx.rotate(-Math.PI / 2); ctx.scale(face, 1); }
-  ctx.drawImage(scratch, 0, 0, L.w, L.h, -F.ax * SC, -F.ay * SC, L.w * SC, L.h * SC);
+  ctx.drawImage(scratch, 0, 0, L.w, L.h, -F.ax * k, -F.ay * k, L.w * k, L.h * k);
   ctx.restore();
 }
 function drawShadow(sx, y, sh, z) {
@@ -1430,6 +1431,7 @@ function drawPlayer() {
     ctx.beginPath(); ctx.ellipse(sx, p.y - p.z - Hh * 0.5, S.sh * SC * 1.5, Hh * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
   }
   const lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
+  if (HD.player) { drawPlayerHD(lying); return; }
   const key = (p.st === 'atk' ? 'atk' + p.atk : p.st) + (lying ? 'L' : '') + (p.st === 'free' ? (p.z > 0 ? 'j' : p.walk ? 'w' : '') : '');
   const pose = blendPose(p, key, playerPose(lying), p.st === 'hurt' ? 50 : p.st === 'atk' ? 70 : 110);
   const f = playerFrame(lying), HF = HERO_FRAMES[f] || HERO_FRAMES[0];
@@ -1442,6 +1444,7 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if (HD[e.d.sprite]) { drawEnemyHD(e); return; }
   const d = e.d, S = SPRITES[d.sprite], sx = e.x - camX;
   drawShadow(sx, e.y, S.sh, e.z);
   if (e.st === 'dead' && !e.boss && e.t > 35 && Math.floor(tick / 4) % 2) return;
@@ -1497,8 +1500,195 @@ function drawEnemy(e) {
   present(F, sx, e.y - e.z + bob, alpha, lying, e.face, S.gy);
 }
 function drawGhost(g) {
+  if (HD[g.id]) {                                  // 고해상도: 대시·돌진 프레임으로 잔상
+    const F = hdFigure(g.id, HD_GHOST[g.id], g.face, { wash: g.wash, washA: 0.55 });
+    present(F, g.x - camX, g.y - g.z, (g.id === 'player' ? 0.4 : 0.35) * (1 - g.age / g.life), false, g.face, 0, 1);
+    return;
+  }
   const F = figure(g.id, g.face, null, { f: g.id === 'player' ? 14 : 0, lean: g.id === 'player' ? 6 : 7, wash: g.wash, washA: 0.55 });
   present(F, g.x - camX, g.y - g.z, (g.id === 'player' ? 0.4 : 0.35) * (1 - g.age / g.life), false, g.face, 0);
+}
+
+// ---------------------------------------------------------------- 고해상도 스프라이트 (흑기사 · 보스 1~3)
+// hd_sprites.js 의 아틀라스(참고 시트를 잘라 64색으로 줄인 프레임)를 풀어 쓴다. 고해상도 1px = 월드 1px (도트 1칸의 절반)
+// 대검·식칼·지팡이와 궤적이 그림 안에 들어 있으므로 팔·무기 합성 없이 "상태 + 시간 → 프레임 이름"만 고른다
+const HD = {};
+for (const id in HD_DATA) {
+  const D = HD_DATA[id], pal = D.pal.map(c => { const n = parseInt(c.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; });
+  const F = D.f.map(fd => {
+    const L = new Layer(fd.w, fd.h), bin = atob(fd.d);
+    let p = 0, bot = 0;
+    for (let i = 0; i < bin.length; i += 2) {
+      const v = bin.charCodeAt(i), run = bin.charCodeAt(i + 1);
+      if (v) {
+        const c = pal[v - 1];
+        for (let k = 0; k < run; k++) { const j = (p + k) * 4; L.d[j] = c[0]; L.d[j + 1] = c[1]; L.d[j + 2] = c[2]; L.d[j + 3] = 255; }
+        bot = Math.floor((p + run - 1) / fd.w);
+      }
+      p += run;
+    }
+    return { L, ax: fd.ax, ay: fd.ay, bot };
+  });
+  HD[id] = { F, N: D.n };
+}
+const HD_GHOST = { player: 'skd_2', boss1: 'a4_3', boss2: 'flame_5', boss3: 'a11' };
+// 지팡이 끝·검 끝(탄막 발사, 검기 불꽃 위치): 발밑 기준 [앞쪽 x, 높이]
+const HD_TIP = { boss1: [40, 60], boss2: [62, 91], boss3: [44, 64] };
+function hdFrame(id, name) { const H = HD[id], i = H.N[name]; return H.F[i === undefined ? 0 : i]; }
+const HPAD = 24;
+// 프레임 1장을 버퍼에 그린다. o = { lean(px, 앞 +), dx, crouch, flash, wash, washA, bottom(발밑 대신 그림 맨 아래를 기준점으로) }
+function hdFigure(id, name, face, o) {
+  const fr = hdFrame(id, name), S = fr.L, P = layerFor(S.w + HPAD * 2, S.h + HPAD * 2), L = P.L;
+  blit(S, L, HPAD + Math.round(o.dx || 0), HPAD, { flip: face < 0, lean: Math.round(o.lean || 0), split: Math.round(S.h * 0.55),
+    crouch: o.crouch || 0, flash: o.flash, wash: o.wash, washA: o.washA });
+  return { P, ax: HPAD + (face < 0 ? S.w - 1 - fr.ax : fr.ax), ay: HPAD + (o.bottom ? fr.bot : fr.ay), fr };
+}
+// 프레임 맨 위 픽셀 (치켜든 검 끝): 발밑 기준 [앞쪽 x, 높이]
+function hdTop(fr) {
+  const L = fr.L;
+  for (let y = 0; y < L.h; y++) for (let x = 0; x < L.w; x++) if (L.d[(y * L.w + x) * 4 + 3]) return [x - fr.ax, fr.ay - y];
+  return [0, fr.ay];
+}
+
+// ---- 흑기사: 상태 → 프레임
+// 1타 일섬 atkb (치켜듦 → 대각선 내려베기) · 2타 역일섬 atku (낮게 → 올려베기) · 3타 참격 q (머리 위 → 땅까지 내려찍기)
+function heroAtkHD(ci, t) {
+  const A = HATK[ci], tw = A.wind, ta = tw + A.act;
+  if (ci === 0) return t < tw * 0.55 ? 'atkb_1' : t < tw ? 'atkb_2' : t < tw + A.act * 0.85 ? 'atkb_3' : t < ta + A.rec * 0.6 ? 'atkb_4' : 'atkb_0';
+  if (ci === 1) return t < tw ? 'atku_0' : t < ta + A.rec * 0.3 ? 'atku_2' : t < ta + A.rec * 0.6 ? 'atku_1' : 'atku_3';
+  return t < tw * 0.5 ? 'q_1' : t < tw ? 'q_2' : t < tw + A.act * 0.6 ? 'q_3' : t < ta + A.rec * 0.45 ? 'q_4' : t < ta + A.rec * 0.8 ? 'q_6' : 'q_7';
+}
+// 흑월참: 기 모으기 → 돌진 → 4연 베기 → 도약 → 내려찍기(바닥 폭발) → 회수
+function heroSpecialHD(t) {
+  if (t < 450) return t < 260 ? 'q_7' : 'q_0';
+  if (t < 620) return 'skd_2';
+  if (t < 1260) return ['atkb_3', 'atku_2', 'skp_1', 'atkb_6'][Math.min(3, Math.floor((t - 620) / 160))];
+  if (t < 1560) return 'skj_1';
+  if (t < 1650) return 'skj_0';
+  if (t < 1900) return 'skj_3';
+  return 'skj_4';
+}
+function heroHD(lying) {
+  const p = player, t = p.t * MS;
+  switch (p.st) {
+    case 'atk':
+      if (p.atk === 'air') return { name: t < 90 ? 'skj_1' : 'skj_0', bottom: true };   // 공중 내려찍기: 칼끝을 아래로
+      return { name: heroAtkHD(p.combo, t) };
+    case 'special': return { name: heroSpecialHD(t) };
+    case 'dash': return { name: t < 50 ? 'skd_0' : t < 120 ? 'skd_2' : 'skd_3' };
+    case 'cast': return { name: t < 120 ? 'q_0' : 'q_1' };                              // 검을 하늘로
+    case 'hurt': return { name: t < 110 ? 'hurt_0' : 'hurt_1' };
+    case 'down':
+      if (!lying) return { name: 'hurt_1', bottom: p.z > 0 };
+      return { name: p.t > 44 ? 'hurt_2' : 'death_2' };                                 // 쓰러졌다가 무릎을 짚고 일어난다
+    case 'dead': return { name: !lying ? 'death_0' : p.t < 40 ? 'death_1' : 'death_2' };
+    default:
+      if (p.z > 0) return { name: 'skj_1', bottom: true };
+      if (p.walk) return { name: 'walk_' + Math.floor(tick * MS / 92) % 7 };
+      return { name: 'idle_' + Math.floor(tick * MS / 230) % 4 };
+  }
+}
+function drawPlayerHD(lying) {
+  const p = player, S = SPRITES.player, sx = p.x - camX, sp = p.st === 'special', s = heroHD(lying);
+  const hurtT = p.st === 'hurt' ? p.t * MS : 999, osc = p.st === 'hurt' ? Math.exp(-hurtT / 180) : 0;
+  const F = hdFigure('player', s.name, p.face, {
+    bottom: s.bottom, lean: -8 * osc * p.face,
+    wash: p.flash > 0 ? '#ffffff' : (sp ? '#ff3a4a' : null), washA: p.flash > 0 ? 0.75 : 0.16 });
+  const top = hdTop(F.fr);                         // 검 끝 (뇌격 빛이 모이는 곳)
+  p.tipX = p.x + top[0] * p.face; p.tipH = p.z + top[1];
+  if (p.st === 'atk' && p.combo === 2) p.tipX = p.x + p.face * 56;   // 참격이 땅에 박히는 자리
+  present(F, sx, p.y - p.z, 1, false, p.face, S.gy, 1);
+}
+
+// ---- 보스 1~3: 상태 → 프레임 (패턴 타임라인은 runPat 과 같다)
+function bossHD(e) {
+  const t = e.pt, T = tick * MS, p2 = phase2(e), id = e.d.sprite, dt = e.t * MS, iu = introT / INTRO_MS;
+  if (id === 'boss1') {                            // 도살자 고라스
+    if (e.st === 'intro') return iu < 0.25 ? 'jump_0' : iu < 0.36 ? 'jump_1' : iu < 0.48 ? 'jump_2' : iu < 0.8 ? 'rage_' + Math.floor(T / 130) % 2 : 'idle_0';
+    if (e.st === 'dead') return dt < 260 ? 'death_0' : dt < 520 ? 'death_1' : dt < 880 ? 'death_2' : dt < 1300 ? 'death_3' : 'death_4';
+    if (e.st === 'stun') return 'stun_' + Math.floor(T / 240) % 2;
+    if (e.st === 'down') return e.z > 0 ? 'hurt_2' : e.t > 48 ? 'stun_3' : 'stun_2';
+    if (e.st === 'pat') {
+      if (e.pat === 'slam') {
+        if (t < 250) return 'a1_0'; if (t < 500) return 'a1_1'; if (t < 650) return 'a1_2';
+        if (!p2) return t < 980 ? 'a1_3' : 'a1_0';
+        return t < 800 ? 'a1_3' : t < 950 ? 'a1_2' : t < 1350 ? 'a1_3' : 'a1_0';
+      }
+      if (e.pat === 'sweep') return t < 450 ? 'a2_0' : t < 700 ? 'a2_1' : 'a2_2';
+      if (e.pat === 'rage') {
+        if (t < 550) return Math.floor(t / 110) % 2 ? 'rage_3' : 'rage_2';
+        if (t < 1250) return 'a4_' + (1 + Math.min(4, Math.floor((t - 550) / 140)));
+        return t < 1500 ? 'a4_5' : 'a4_0';
+      }
+    }
+    if (e.hr < 150) return e.hheavy ? 'hurt_1' : 'hurt_0';
+    if (p2) return e.walk ? 'run_' + Math.floor(T / 120) % 3 : 'rage_' + Math.floor(T / 260) % 2;   // 광폭화
+    return e.walk ? 'walk_' + Math.floor(T / 150) % 3 : 'idle_' + Math.floor(T / 300) % 3;
+  }
+  if (id === 'boss2') {                            // 까마귀 마녀 모르그라
+    if (e.st === 'intro') return iu > 0.5 && iu < 0.82 ? (iu < 0.6 ? 'soul_1' : 'soul_2') : 'idle_' + Math.floor(T / 220) % 6;
+    if (e.st === 'dead') return dt < 220 ? 'death_0' : dt < 520 ? 'death_1' : dt < 820 ? 'death_2' : dt < 1120 ? 'death_3' : dt < 1450 ? 'death_4' : 'death_5';
+    if (e.st === 'stun') return Math.floor(T / 200) % 2 ? 'hurt_2' : 'hurt_3';
+    if (e.st === 'down') return e.z > 0 ? 'hurt_2' : e.t > 48 ? 'hurt_3' : 'death_2';
+    if (e.st === 'pat') {
+      if (e.pat === 'teleport') return t < 250 ? 'flame_5' : t < 500 ? 'flame_6' : 'idle_0';
+      if (e.pat === 'orbs') {
+        const n = p2 ? 7 : 5;
+        if (t < 250) return 'flame_0'; if (t < 380) return 'flame_1'; if (t < 500) return 'flame_2';
+        return t < 500 + n * 110 + 300 ? 'flame_3' : 'flame_0';
+      }
+      if (e.pat === 'ravens') return t < 250 ? 'gas_0' : t < 450 ? 'gas_1' : t < 1100 ? 'gas_3' : 'gas_4';
+    }
+    if (e.hr < 260) return 'hurt_' + (e.hheavy ? 2 : Math.min(3, Math.floor(e.hr / 90)));
+    return e.walk ? 'walk_' + Math.floor(T / 120) % 8 : 'idle_' + Math.floor(T / 220) % 6;
+  }
+  // 황금왕 오렐리온
+  if (e.st === 'intro') {                          // 빛기둥 속에서 모습을 드러낸다
+    const Q = ['i0', 'i1', 'i2', 'i3', 'i5', 'i7', 'i8', 'i9'];
+    return iu >= 0.78 ? 'i11' : Q[Math.min(Q.length - 1, Math.floor(iu / 0.78 * Q.length))];
+  }
+  if (e.st === 'dead') { const Q = ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd9', 'd10', 'd11', 'd12', 'd13']; const k = Math.floor(dt / 150); return k < Q.length ? Q[k] : 'd14'; }
+  if (e.st === 'stun') return Math.floor(T / 200) % 2 ? 'h6' : 'h4';
+  if (e.st === 'down') return e.z > 0 ? 'h2' : e.t > 48 ? 'd1' : 'd3';
+  if (e.st === 'pat') {
+    if (e.pat === 'slash3') {
+      const n = p2 ? 4 : 3, gap = p2 ? 340 : 420, k = Math.min(n - 1, Math.floor(t / gap)), u = t - k * gap;
+      return u < 130 ? 'a2' : u < 260 ? 'a3' : u < 340 ? 'a4' : u < 400 ? 'a5' : 'a6';
+    }
+    if (e.pat === 'pillars') return t < 200 ? 's0' : t < 420 ? 's1' : t < 650 ? 's3' : t < 950 ? 's4' : t < 1400 ? 's7' : 's0';
+    if (e.pat === 'charge') {
+      if (t < 225) return 'a8'; if (t < 450) return 'a9';
+      if (t < 1010) return Math.floor(t / 80) % 2 ? 'a10' : 'a11';
+      return t < 1150 ? 'a12' : t < 1350 ? 'a13' : 'a14';
+    }
+  }
+  if (e.hr < 260) return 'h' + [1, 2, 3, 4][Math.min(3, Math.floor(e.hr / 90))];
+  return ['i11', 'i13', 'i15', 'i13'][Math.floor(T / (e.walk ? 130 : 260)) % 4];
+}
+function drawEnemyHD(e) {
+  const d = e.d, id = d.sprite, S = SPRITES[id], sx = e.x - camX, o = { dx: 0 };
+  drawShadow(sx, e.y, S.sh, e.z);
+  let alpha = 1;
+  // 피격 반동: 맞은 쪽 반대로 꺾였다가 흔들리며 돌아온다
+  if (e.hr < 600 && e.st !== 'dead' && e.st !== 'down') {
+    const osc = Math.cos(e.hr * 0.03) * Math.exp(-e.hr / 200);
+    o.lean = e.hdir * (e.hheavy ? 10 : 6) * osc; o.dx = e.hdir * (e.hheavy ? 6 : 3) * Math.exp(-e.hr / 160);
+  }
+  if (e.flash > 0) { o.wash = '#ffffff'; o.washA = 0.7; }
+  let dy = 0;
+  if (e.st === 'pat') {
+    o.dx += e.bdx * e.face * SC; dy = e.bdy * SC; alpha = e.alpha;
+    if (e.wash && !o.wash) { o.wash = e.wash; o.washA = 0.4; }
+  } else if (e.st === 'stun') o.lean = (o.lean || 0) + Math.sin(tick * MS * 0.012) * 3;
+  else if (e.st === 'dead') {
+    const t = e.t * MS, fade = id === 'boss3' ? 1750 : 1500;
+    alpha = t < fade ? 1 : Math.max(0, 1 - (t - fade) / (2000 - fade));
+    if (t < 900 && Math.floor(t / 70) % 2 === 0) { o.wash = '#ffffff'; o.washA = 0.6; }
+  }
+  if (id === 'boss2' && e.st !== 'dead' && e.st !== 'down') dy += Math.round(Math.sin(tick * MS * 0.004) * 2);   // 마녀는 살짝 떠 있다
+  const F = hdFigure(id, bossHD(e), e.face, o), tip = HD_TIP[id];
+  e.tipX = e.x + e.face * tip[0]; e.tipH = e.z - dy + tip[1];
+  present(F, sx, e.y - e.z + dy, alpha, false, e.face, S.gy, 1);
 }
 
 // ---------------------------------------------------------------- 이펙트 레이어 (보이는 월드를 도트 1칸 해상도로)
@@ -1642,8 +1832,28 @@ const PIX = '"Press Start 2P", "Courier New", monospace';
 if (document.fonts) document.fonts.load(`10px ${PIX}`).catch(() => {});
 const PORTRAIT = { player: [18, 0, 21, 21], boss1: [14, 0, 38, 27], boss2: [14, 0, 34, 28], boss3: [21, 0, 28, 27], boss4: [19, 0, 30, 28], boss5: [27, 1, 32, 28] };   // 머리 부분 (x, y, w, h)
 const portraitCache = {};
+// 고해상도 초상화: 대기 프레임에서 머리 부분을 잘라 밝게 (frame, 머리 영역 한 변, 위 여백, 밝기)
+const PORTRAIT_HD = { player: ['idle_0', 36, -2, 1.5], boss1: ['idle_0', 40, -3, 1.6], boss2: ['idle_0', 36, 2, 1.5], boss3: ['i11', 48, 8, 1.0] };
+function portraitHD(id) {
+  const [name, n, oy, gain] = PORTRAIT_HD[id], fr = hdFrame(id, name), s = fr.L;
+  const on = (x, y) => s.d[(y * s.w + x) * 4 + 3] > 0;
+  let y0 = 0; while (y0 < s.h && ![...Array(s.w).keys()].some(x => on(x, y0))) y0++;
+  let sum = 0, cnt = 0;                            // 머리 중심: 위쪽 줄들의 평균 x
+  for (let y = y0 + 4; y < Math.min(s.h, y0 + 26); y++) for (let x = 0; x < s.w; x++) if (on(x, y)) { sum += x; cnt++; }
+  const x0 = Math.round(sum / Math.max(1, cnt)) - (n >> 1), yy = y0 + oy, L = new Layer(n, n);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const sx = x0 + x, sy = yy + y; if (sx < 0 || sy < 0 || sx >= s.w || sy >= s.h || !on(sx, sy)) continue;
+    const i = (sy * s.w + sx) * 4, j = (y * n + x) * 4;
+    for (let k = 0; k < 3; k++) L.d[j + k] = Math.min(255, s.d[i + k] * gain + 8);
+    L.d[j + 3] = 255;
+  }
+  const c = document.createElement('canvas'); c.width = n; c.height = n; c.hd = true;
+  c.getContext('2d').putImageData(new ImageData(L.d, n, n), 0, 0);
+  return c;
+}
 function portrait(id) {
   if (portraitCache[id]) return portraitCache[id];
+  if (HD[id]) return (portraitCache[id] = portraitHD(id));
   const [sx, sy, w, h] = PORTRAIT[id], src = sprite(id, 0), L = new Layer(w + 2, h + 2);
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const i = ((sy + y) * src.w + sx + x) * 4, j = ((y + 1) * L.w + x + 1) * 4;
@@ -1692,7 +1902,7 @@ function drawPortrait(id, x, y, w, h, flip, glow) {
   ctx.fillStyle = glow ? (Math.floor(tick / 6) % 2 ? '#ffe14d' : '#c9a24a') : '#c9a24a'; rect(x - 2, y - 2, w + 4, h + 4);
   const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, '#6a2a3a'); g.addColorStop(1, '#160a16');
   ctx.fillStyle = g; rect(x, y, w, h);
-  const img = portrait(id), s = Math.max(1, Math.floor(Math.min(w / img.width, h / img.height)));
+  const img = portrait(id), fit = Math.min(w / img.width, h / img.height), s = img.hd ? fit : Math.max(1, Math.floor(fit));
   const dw = img.width * s, dh = img.height * s, dx = Math.round(x + (w - dw) / 2), dy = y + h - dh;
   ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.imageSmoothingEnabled = false;
   if (flip) { ctx.translate(dx + dw, dy); ctx.scale(-1, 1); ctx.drawImage(img, 0, 0, dw, dh); } else ctx.drawImage(img, dx, dy, dw, dh);
@@ -1877,10 +2087,13 @@ function renderIdle() {   // 타이틀/튜토리얼 뒤 배경: 스테이지 풍
   drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY); drawFloor(theme); ctx.restore();
   if (scene === 'title') {
-    const f = Math.floor(tick * MS / 260) % 4, F = figure('player', 1, HR, { f, shOff: [HERO_FRAMES[f].lx, HERO_FRAMES[f].bob] });
     ctx.save(); ctx.scale(2.6, 2.6);
     ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.beginPath(); ctx.ellipse(96, 190, 34, 6, 0, 0, Math.PI * 2); ctx.fill();
-    present(F, 96, 190, 1, false, 1, SPRITES.player.gy);
+    if (HD.player) present(hdFigure('player', 'idle_' + Math.floor(tick * MS / 230) % 4, 1, {}), 96, 190, 1, false, 1, 0, 1);
+    else {
+      const f = Math.floor(tick * MS / 260) % 4;
+      present(figure('player', 1, HR, { f, shOff: [HERO_FRAMES[f].lx, HERO_FRAMES[f].bob] }), 96, 190, 1, false, 1, SPRITES.player.gy);
+    }
     ctx.restore();
   }
   drawVignette();
