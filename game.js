@@ -1953,6 +1953,38 @@ function drawGhost(g) {
 // ---------------------------------------------------------------- 고해상도 스프라이트 (흑기사 · 보스 1~3)
 // hd_sprites.js 의 아틀라스(참고 시트를 잘라 64색으로 줄인 프레임)를 풀어 쓴다. 고해상도 1px = 월드 1px (도트 1칸의 절반)
 // 대검·식칼·지팡이와 궤적이 그림 안에 들어 있으므로 팔·무기 합성 없이 "상태 + 시간 → 프레임 이름"만 고른다
+// The player atlas has small transparent islands inside otherwise solid armor.
+// Repair these once at load time, leaving exterior air and larger pose gaps intact.
+function sealSpritePinholes(L) {
+  const { w, h, d } = L, seen = new Uint8Array(w * h);
+  for (let start = 0; start < seen.length; start++) {
+    if (seen[start] || d[start * 4 + 3]) continue;
+    const pixels = [start];
+    seen[start] = 1;
+    let exterior = false, minX = w, minY = h, maxX = 0, maxY = 0;
+    let shadow = -1, shade = Infinity;
+    for (let q = 0; q < pixels.length; q++) {
+      const p = pixels[q], x = p % w, y = Math.floor(p / w);
+      minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+      if (x === 0 || x === w - 1 || y === 0 || y === h - 1) exterior = true;
+      for (const n of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, y > 0 ? p - w : -1, y < h - 1 ? p + w : -1]) {
+        if (n < 0) continue;
+        const j = n * 4;
+        if (d[j + 3]) {
+          const light = d[j] * 3 + d[j + 1] * 6 + d[j + 2];
+          if (light < shade) { shade = light; shadow = j; }
+        } else if (!seen[n]) { seen[n] = 1; pixels.push(n); }
+      }
+    }
+    // Long slits and large openings can be intentional (sword, arms, legs).
+    if (exterior || pixels.length > 24 || maxX - minX >= 8 || maxY - minY >= 8 || shadow < 0) continue;
+    for (const p of pixels) {
+      const j = p * 4;
+      d[j] = d[shadow]; d[j + 1] = d[shadow + 1]; d[j + 2] = d[shadow + 2]; d[j + 3] = 255;
+    }
+  }
+}
 const HD = {};
 for (const id in HD_DATA) {
   const D = HD_DATA[id], pal = D.pal.map(c => { const n = parseInt(c.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; });
@@ -1968,6 +2000,7 @@ for (const id in HD_DATA) {
       }
       p += run;
     }
+    if (id === 'player') sealSpritePinholes(L);
     return { L, ax: fd.ax, ay: fd.ay, bot };
   });
   HD[id] = { F, N: D.n };
