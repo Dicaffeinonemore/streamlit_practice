@@ -51,6 +51,61 @@ async function ready(url) {
   }
   throw new Error('Page did not initialize');
 }
+function spriteChecks() {
+  const check = (condition, message) => { if (!condition) throw new Error(message); };
+  let repaired = 0, frames = 0, preservedGaps = 0;
+  for (const id of Object.keys(HD_DATA)) HD_DATA[id].f.forEach((fd, index) => {
+    const raw = new Uint8Array(fd.w * fd.h), bin = atob(fd.d), L = HD[id].F[index].L;
+    let at = 0, changes = 0;
+    for (let i = 0; i < bin.length; i += 2) {
+      const run = bin.charCodeAt(i + 1);
+      raw.fill(bin.charCodeAt(i), at, at + run); at += run;
+    }
+    for (let p = 0; p < raw.length; p++) {
+      const j = p * 4;
+      if (raw[p]) {
+        const color = parseInt(HD_DATA[id].pal[raw[p] - 1].slice(1), 16);
+        check(L.d[j] === (color >> 16 & 255) && L.d[j + 1] === (color >> 8 & 255) && L.d[j + 2] === (color & 255) && L.d[j + 3] === 255, 'Original sprite color/alpha preserved');
+      } else if (L.d[j + 3]) {
+        check(id === 'player' && L.d[j + 3] === 255, 'Only player pinholes become opaque');
+        changes++;
+      }
+    }
+    if (id !== 'player') return;
+    const visited = new Set();
+    for (let p = 0; p < raw.length; p++) {
+      if (raw[p] || visited.has(p)) continue;
+      const region = [p]; visited.add(p);
+      let edge = false;
+      for (let q = 0; q < region.length; q++) {
+        const n = region[q], x = n % fd.w, y = Math.floor(n / fd.w);
+        if (!x || !y || x === fd.w - 1 || y === fd.h - 1) edge = true;
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = x + dx, ny = y + dy, next = ny * fd.w + nx;
+          if (nx < 0 || nx >= fd.w || ny < 0 || ny >= fd.h || raw[next] || visited.has(next)) continue;
+          visited.add(next); region.push(next);
+        }
+      }
+      if (edge || region.length > 24) {
+        check(region.every(n => L.d[n * 4 + 3] === 0), 'Exterior and large pose gaps stay transparent');
+        if (!edge) preservedGaps++;
+      }
+    }
+    check(changes > 0, 'Player frame ' + index + ' has repaired pinholes');
+    repaired += changes; frames++;
+  });
+  // A known chest hole in the supplied idle pose must remain solid through
+  // composition in both directions, including the damage flash color wash.
+  const fr = hdFrame('player', 'idle_0'), x = 58, y = 34;
+  check(fr.L.d[(y * fr.L.w + x) * 4 + 3] === 255, 'Idle chest is opaque');
+  for (const face of [-1, 1]) {
+    const F = hdFigure('player', 'idle_0', face, { wash: '#ffffff', washA: .75 });
+    const px = HPAD + (face < 0 ? fr.L.w - 1 - x : x);
+    check(F.P.L.d[((HPAD + y) * F.P.L.w + px) * 4 + 3] === 255, 'Chest stays opaque when facing ' + face);
+  }
+  check(preservedGaps > 0, 'Pose gaps exercised');
+  return 'All ' + frames + ' player frames repaired (' + repaired + ' pixels); original colors, exterior transparency and ' + preservedGaps + ' pose gaps preserved';
+}
 function combatChecks() {
   window.requestAnimationFrame = () => 0;
   const passed = [];
@@ -174,6 +229,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       await screenshot('tutorial-' + width);
     }
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
+    console.log('PASS ' + await evaluate('(' + spriteChecks.toString() + ')()'));
     const results = await evaluate('(' + combatChecks.toString() + ')()');
     results.forEach(name => console.log('PASS ' + name));
     await ready(base); assert.deepEqual(await evaluate('({stage:UX.checkpoint().stage,score:UX.checkpoint().score})'), { stage: 1, score: 2345 });
