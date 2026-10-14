@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>흑월의 기사 - BLACK MOON KNIGHT</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
   html, body { margin: 0; height: 100%; background: #0b0b14; color: #fff;
     font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; overflow: hidden; }
@@ -72,13 +71,69 @@
   .skillbtn.ready { border-color: #c9a24a; box-shadow: 0 0 1cqw rgba(201,162,74,.35); }
   .skillbtn:disabled { color: #776f83; cursor: default; }
   @media (max-width: 700px) { #skillbar { bottom: 1cqw; gap: .35cqw; } .skillbtn { min-width: 56px; font-size: 10px; } }
+  [hidden] { display: none !important; }
+  button:focus-visible, input:focus-visible { outline: 3px solid #9cc3ff; outline-offset: 3px; }
+  .screen { font-size: clamp(13px, 1.7cqw, 20px); box-sizing: border-box; }
+  .dialog { padding: clamp(12px, 2cqw, 28px); gap: 12px; background: rgba(8,6,20,.97); }
+  .dialog h2 { font-size: clamp(24px, 3cqw, 36px); margin: 0; flex-shrink: 0; }
+  .dialog-body { min-height: 0; overflow: auto; overscroll-behavior: contain; width: 100%; flex: 1; text-align: left; }
+  .dialog-body > * { max-width: 850px; margin-left: auto; margin-right: auto; }
+  .dialog .grid { grid-template-columns: minmax(90px, 220px) 1fr; gap: 14px 20px; padding: 12px 0; }
+  .dialog .keys { flex-wrap: wrap; }
+  .dialog .or { white-space: nowrap; font-size: 12px; }
+  .dialog .cap { font: bold 14px sans-serif; min-width: 25px; height: 28px; line-height: 28px; }
+  .dialog .tips { font-size: 14px; line-height: 1.8; }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; flex-shrink: 0; }
+  .actions .btn, .small-btn { margin: 0; padding: 10px 20px; font-size: clamp(13px, 1.7cqw, 19px); letter-spacing: 0 !important; }
+  .secondary { background: #282239 !important; border-color: #82738e !important; }
+  #title .actions { margin-top: 12px; }
+  #title .sub { margin-bottom: 16px; }
+  #recordSummary, #saveStatus { font-size: 13px; letter-spacing: 0; }
+  #skillbar { bottom: auto; top: 20%; }
+  .skillbtn .state { display: block; position: relative; z-index: 1; font-size: 10px; }
+  .skillbtn { height: 5.8cqw; min-height: 46px; }
+  #playPause { position: absolute; z-index: 5; right: 1.5%; top: 15%; }
+  .setting-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 10px 0; border-bottom: 1px solid #393045; }
+  .setting-row input[type=range] { width: 160px; }
+  #bindings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 24px; }
+  #practiceGuide { position: absolute; left: 1%; right: 1%; top: 32%; z-index: 5; text-align: center; pointer-events: none; }
+  #practiceGuide p { display: inline-block; margin: 0; padding: 8px 12px; background: #100b20e8; color: #ffe27a; font-size: clamp(12px, 1.5cqw, 18px); }
+  #practiceGuide .actions { margin-top: 6px; pointer-events: auto; }
+  #touchControls { width: min(100%, 960px); padding: 10px; box-sizing: border-box; display: flex; justify-content: space-between; gap: 12px; background: #100d1b; }
+  #touchControls button { touch-action: none; user-select: none; min-height: 44px; min-width: 44px; border: 1px solid #82738e; border-radius: 8px; background: #292139; color: white; font: bold 13px sans-serif; }
+  #touchControls button.active { background: #805025; }
+  #touchControls button:disabled { opacity: .45; border-color: #494153; }
+  .dpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 3px; }
+  .touch-actions { display: grid; grid-template-columns: repeat(3, minmax(44px, 1fr)); gap: 5px; flex: 1; max-width: 380px; }
+  body { flex-direction: column; }
+  body.touch #wrap { width: min(100vw, calc((100dvh - 180px) * 16 / 9)); }
+  body.touch #skillbar { display: none; }
+  body.touch #playPause { top: 22%; }
+  @media (max-width: 700px) {
+    .screen.show { position: fixed; inset: 0; width: 100%; height: 100dvh; z-index: 20; }
+    #title { align-items: center; padding: 20px; background: #100b20e8; }
+    #title h1 { font-size: 38px; letter-spacing: 4px; }
+    #title .en { font-size: 13px; letter-spacing: 3px; }
+    #title .sub { font-size: 12px; letter-spacing: 1px; }
+    #title .btn { font-size: 17px; }
+    .screen h1 { font-size: 36px !important; }
+    .screen h2 { font-size: 25px; }
+    .screen > .btn { font-size: 17px; padding: 12px 24px; }
+    .dialog .grid { grid-template-columns: 90px 1fr; gap: 14px 12px; }
+    #bindings { grid-template-columns: 1fr; }
+    #practiceGuide { top: 34%; }
+    #practiceGuide .btn { padding: 5px 10px; font-size: 12px; }
+  }
+  body.reduce-motion .blink, body.reduce-motion #cutin.show { animation: none; }
 </style>
 </head>
 <body>
 <div id="wrap">
   <canvas id="c" width="960" height="540"></canvas>
   <div id="cutin" aria-hidden="true"><span>흑월참</span><small>DARK MOON SLASH</small></div>
-  <div id="skillbar" aria-label="전투 기술">
+  <button id="playPause" class="btn small-btn secondary" hidden aria-label="일시정지">Ⅱ</button>
+  <div id="practiceGuide" hidden><p id="practiceText" aria-live="polite"></p><div class="actions"><button id="btnPracticeGo" class="btn small-btn">실전 시작</button><button id="btnPracticeHelp" class="btn small-btn secondary">조작 안내</button></div></div>
+  <div id="skillbar" aria-label="전투 기술" hidden>
     <button class="skillbtn" data-skill="thrust"><span class="key">U</span><span class="name">돌진 찌르기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="slam"><span class="key">H</span><span class="name">내려찍기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="whirl"><span class="key">O</span><span class="name">회전 베기</span><span class="cool"></span></button>
@@ -92,14 +147,18 @@
       <h1>흑월의 기사</h1>
       <p class="en">BLACK MOON KNIGHT</p>
       <p class="sub">5 STAGES · BELT-SCROLL ACTION</p>
-      <button class="btn" id="btnStart">시작</button>
-      <p class="blink" style="margin-top:2cqw;font-size:1.6cqw">Enter 키로도 시작할 수 있어요</p>
+      <div class="actions"><button class="btn" id="btnContinue" hidden>이어하기</button><button class="btn" id="btnStart">새 게임</button></div>
+      <div class="actions"><button class="btn secondary" id="btnTitleSettings">설정</button></div>
+      <p id="recordSummary"></p><p id="saveStatus"></p>
+      <p style="margin-top:12px;font-size:13px">Enter · 새 게임 / 진행은 스테이지 시작 지점에 저장됩니다</p>
     </div>
   </div>
 
   <!-- 키 튜토리얼 -->
-  <div class="screen" id="tutorial">
+  <div class="screen dialog" id="tutorial">
     <h2>조작 방법</h2>
+    <div class="dialog-body" tabindex="0" aria-label="조작 안내 내용">
+    <p>이동 · 공격 · 점프부터 익혀보세요. 연습장에서는 피해를 받지 않습니다.</p>
     <div class="grid">
       <div class="keys"><span class="cap" data-k="ArrowLeft KeyA">←</span><span class="cap" data-k="ArrowRight KeyD">→</span>
         <span class="or">또는</span><span class="cap" data-k="KeyA">A</span><span class="cap" data-k="KeyD">D</span></div>
@@ -136,11 +195,25 @@
       연속으로 때리면 <b style="color:#ffe27a">HIT</b> 가 쌓이고, 이어질수록 보스에게 주는 피해가 커집니다<br>
       보스는 맞을수록 <b style="color:#ffb300">그로기 게이지</b>가 차고, 가득 차면 5초간 기절 &nbsp;·&nbsp; 적 머리 위 <b style="color:#ff5252">!</b> · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기) &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진
     </div>
-    <p style="margin-top:1.2cqw;font-size:1.5cqw">키를 눌러 위 버튼이 반응하는지 연습해보세요.</p>
-    <button class="btn" id="btnGo">게임 시작</button>
+    <p class="tips">설정에서 키를 바꿀 수 있습니다. Shift로도 대시할 수 있습니다. 랭크는 누적 피해·사망·시간·최대 콤보로 결정됩니다.</p>
+    </div>
+    <div class="actions"><button class="btn" id="btnPractice">직접 연습</button><button class="btn secondary" id="btnGo">게임 시작</button><button class="btn secondary" id="btnHelpBack" hidden>돌아가기</button></div>
   </div>
 
-  <div class="screen" id="pause"><h2>일시정지</h2><p>ESC 로 계속하기</p></div>
+  <div class="screen dialog" id="pause"><h2>일시정지</h2><p id="pauseReason">ESC 또는 계속하기</p>
+    <div class="actions"><button class="btn" id="btnResume">계속하기</button><button class="btn secondary" id="btnPauseHelp">조작 안내</button><button class="btn secondary" id="btnPauseSettings">설정</button></div>
+    <div class="actions"><button class="btn secondary" id="btnRestart">스테이지 다시 시작</button><button class="btn secondary" id="btnPauseTitle">타이틀로</button></div>
+    <p class="tips">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
+  </div>
+  <div class="screen dialog" id="settings"><h2>설정</h2><div class="dialog-body">
+    <label class="setting-row">음악 <input id="musicVolume" aria-label="음악 음량" type="range" min="0" max="100"></label>
+    <label class="setting-row">효과음 <input id="sfxVolume" aria-label="효과음 음량" type="range" min="0" max="100"></label>
+    <label class="setting-row">화면 흔들림 <input id="screenShake" type="checkbox"></label>
+    <label class="setting-row">화면 섬광 <input id="screenFlash" type="checkbox"></label>
+    <label class="setting-row">터치 조작 <input id="touchEnabled" type="checkbox"></label>
+    <p class="tips">키 버튼을 선택한 뒤 새 키를 누르세요. ESC는 변경 취소. 방향키·Z/X/V·Ctrl은 보조 조작입니다.</p>
+    <div id="bindings"></div><p id="bindingStatus" role="status"></p>
+  </div><div class="actions"><button class="btn" id="btnSettingsBack">돌아가기</button><button class="btn secondary" id="btnResetKeys">기본 키 복원</button></div></div>
 
   <div class="screen" id="clear">
     <h2 id="clearTitle">STAGE CLEAR!</h2>
@@ -162,11 +235,16 @@
     <button class="btn" id="btnEndTitle">타이틀로</button>
   </div>
 </div>
+<div id="touchControls" aria-label="터치 조작" hidden>
+  <div class="dpad"><span></span><button data-control="KeyW" aria-label="위로 이동">↑</button><span></span><button data-control="KeyA" aria-label="왼쪽 이동">←</button><button data-control="ShiftLeft">대시</button><button data-control="KeyD" aria-label="오른쪽 이동">→</button><span></span><button data-control="KeyS" aria-label="아래로 이동">↓</button></div>
+  <div class="touch-actions"><button data-control="KeyJ">공격</button><button data-control="Space">점프</button><button data-control="KeyK">필살기</button><button data-control="KeyU">찌르기</button><button data-control="KeyH">강타</button><button data-control="KeyI">뇌격</button><button data-control="KeyO">회전</button><button data-control="KeyP">강하</button><button id="touchPause">정지</button></div>
+</div>
 <script src="motion.js"></script>
 <script src="sprites.js"></script>
 <script src="backgrounds.js"></script>
 <script src="audio.js"></script>
 <script src="hd_sprites.js"></script>
+<script src="game-ui.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

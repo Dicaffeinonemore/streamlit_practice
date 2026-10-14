@@ -108,7 +108,7 @@
   SPRITES.infantry = { w: 40, h: 48, ax: 21, gy: 47, sh: 11, build(L, f) {
     const m = new Mk(40, 48), b = f;
     const rag = m.part(RAMP.rag, 2), rim = m.part(RAMP.rust, 2), wood = m.part(RAMPX.wood, 1), bleg = m.part(RAMP.bsteelD, 1), fleg = m.part(RAMP.bsteelD, 2),
-      body = m.part(RAMP.rust, 2), tab = m.part(RAMP.rag, 2), head = m.part(RAMPX.bone, 2), helm = m.part(RAMP.rust, 3), arm = m.part(RAMP.bsteelD, 2), blade = m.part(RAMP.bsteel, 3);
+      body = m.part(RAMP.bsteel, 2), tab = m.part(RAMP.crimson, 1), head = m.part(RAMPX.bone, 1), helm = m.part(RAMP.bsteel, 3), arm = m.part(RAMP.bsteelD, 2), blade = m.part(RAMP.bsteel, 3);
     m.poly(rag, [[22, 16 + b], [14, 17 + b], [11, 26 + b], [9, 38], [12, 36], [13, 42], [16, 37], [18, 41], [20, 34]]);
     m.ell(rim, 11, 27 + b, 7, 7.5); m.ell(wood, 11, 27 + b, 5.6, 6);
     m.cap(bleg, 17, 33, 15, 44, 2.6); m.cap(fleg, 23, 33, 25, 44, 2.8);
@@ -125,6 +125,8 @@
     for (let x = 28; x <= 33; x++) L.put(x, 25 + b - (x - 28) * 0.2, '#45301e');
     L.put(34, 13 + b, '#14141a'); L.put(35, 10 + b, '#14141a'); L.put(11, 27 + b, '#9a7a58'); L.put(10, 26 + b, '#c8b090');
     L.put(18, 22 + b, '#6a4a30'); L.put(24, 27 + b, '#6a4a30');
+    for (const y of [21, 26, 31]) { L.line(17, y + b, 26, y + b, '#101016', 1); L.put(18, y - 1 + b, '#737583'); }
+    L.line(22, 18 + b, 22, 30 + b, '#383842', 1);
   } };
 
   // ===== 흑창병 (56x48): 두건을 쓴 창병, 검은 쇠 창날과 붉은 술 =====
@@ -145,6 +147,8 @@
     for (let x = 4 + sp; x <= 44 + sp; x++) { L.put(x, 25 + b, '#3a2618'); L.put(x, 26 + b, '#1e140c'); }   // 창 자루
     for (let i = 0; i < 10; i++) { const hw = Math.max(0, 3 - i * 0.3); for (let v = -hw; v <= hw; v++) L.put(44 + sp + i, 25.5 + b + v, Math.abs(v) >= hw - 0.5 ? '#c8ccd8' : '#22222a'); }
     L.put(54 + sp, 25 + b, '#ffffff');
+    for (const y of [20, 23, 28]) L.line(17, y + b, 25, y + b, '#464650', 1);
+    L.line(16, 9 + b, 18, 5 + b, '#6b6265', 1); L.line(12, 22 + b, 10, 35, '#100c12', 1);
     for (let y = 27; y <= 31; y++) { L.put(41 + sp, y + b, '#a01a24'); L.put(42 + sp, y + b, '#c8283a'); L.put(43 + sp, y + b + 1, '#6a0a14'); }
   } };
 
@@ -328,8 +332,8 @@
   // ===== 보스 4 : 망령 기사단장 바르굴 (68x76) — 녹슨 판금의 해골 기사, 푸른 혼불 눈, 부러진 뿔 =====
   SPRITES.boss4 = { w: 68, h: 76, ax: 34, gy: 72, sh: 19, build(L, f) {
     const m = new Mk(68, 76), b = f;
-    const cape = m.part(RAMP.ghost, 2), barm = m.part(RAMP.rust, 1), bpl = m.part(RAMP.rust, 1), blg = m.part(RAMP.bsteelD, 1), flg = m.part(RAMP.bsteelD, 2),
-      bbt = m.part(RAMP.rust, 0), fbt = m.part(RAMP.rust, 1), tor = m.part(RAMP.rust, 2), tas = m.part(RAMP.rust, 2), tab = m.part(RAMP.ghost, 2),
+    const cape = m.part(RAMP.ghost, 1), barm = m.part(RAMP.bsteel, 1), bpl = m.part(RAMP.bsteel, 2), blg = m.part(RAMP.bsteelD, 1), flg = m.part(RAMP.bsteelD, 2),
+      bbt = m.part(RAMP.bsteel, 0), fbt = m.part(RAMP.bsteel, 1), tor = m.part(RAMP.bsteel, 2), tas = m.part(RAMP.bsteel, 2), tab = m.part(RAMP.ghost, 2),
       blt = m.part(RAMP.rag, 2), nk = m.part(RAMPX.bone, 1), hm = m.part(RAMP.bsteel, 2), skull = m.part(RAMPX.bone, 2), horn = m.part(RAMPX.bone, 3);
     m.poly(cape, [[22, 22 + b], [12, 24 + b], [6, 36 + b], [2, 50 + b], [0, 66], [5, 62], [7, 72], [11, 64], [15, 70], [18, 60], [22, 66], [24, 52], [24, 34]]);
     m.cap(barm, 14, 31 + b, 10, 41 + b, 4.2); m.ell(barm, 9.5, 44 + b, 3.8, 3.8);
@@ -353,13 +357,21 @@
       P(ex, 17, '#7ad8ff'); P(ex, 16 - f, '#eaf8ff'); P(ex, 15 - f, '#7ad8ff');
     }
     for (let x = 30; x <= 38; x++) P(x, 22, x % 2 ? '#3a3228' : '#ddd3ba');               // 이빨
-    for (let k = 0; k < 4; k++) for (let x = 25 + k; x <= 42 - k; x++) P(x, 30 + k * 4, '#c8c0b0');   // 갈비뼈 모양 흉갑
-    for (let y = 29; y <= 45; y++) P(34, y, '#2a1a10');
+    for (let k = 0; k < 4; k++) {
+      const y = 30 + k * 4;
+      L.line(24 + k, y + b, 33, y + 2 + b, '#737f92', 1);
+      L.line(35, y + 2 + b, 44 - k, y + b, '#465369', 1);
+      L.line(25 + k, y + 1 + b, 33, y + 3 + b, '#10121c', 1);
+    }
+    for (let y = 29; y <= 45; y++) P(34, y, '#121824');
+    for (const x of [21, 47]) for (const y of [28, 36, 44]) P(x, y, '#8c98ab');
+    L.line(20, 50 + b, 24, 59 + b, '#637186', 1); L.line(46, 50 + b, 43, 59 + b, '#637186', 1);
+    L.line(27, 11 + b, 29, 22 + b, '#383e4c', 2); L.line(40, 11 + b, 40, 23 + b, '#383e4c', 2);
     [[22, 36], [45, 40], [26, 58], [44, 57], [31, 27]].forEach(q => P(q[0], q[1], '#9a7a58'));   // 녹 얼룩
     for (let k = 0; k < 5; k++) L.put(3 + k * 4, 70 - ((k + f) % 2) * 2, '#56708a');          // 망토 끝에서 흩어지는 혼불
   } };
   SPRITES.pauld4 = { w: 20, h: 16, build(L) {
-    const m = new Mk(20, 16), a = m.part(RAMP.rust, 2), b = m.part(RAMP.rust, 2), sp = m.part(RAMPX.bone, 3), sk = m.part(RAMPX.bone, 2);
+    const m = new Mk(20, 16), a = m.part(RAMP.bsteel, 2), b = m.part(RAMP.bsteel, 2), sp = m.part(RAMPX.bone, 2), sk = m.part(RAMPX.bone, 1);
     m.poly(sp, [[10, 0], [13, 5], [7, 5]]); m.poly(sp, [[3, 3], [7, 7], [2, 9]]); m.poly(sp, [[17, 3], [18, 9], [13, 7]]);
     m.ell(b, 10, 12, 9, 3.8); m.ell(a, 10, 8.5, 9, 6); m.ell(sk, 10, 9, 3.2, 3);
     m.shadeInto(L);
@@ -397,6 +409,12 @@
     lava.forEach(q => { for (let k = 0; k <= 8; k++) { const x = q[0] + (q[2] - q[0]) * k / 8, y = q[1] + (q[3] - q[1]) * k / 8; L.put(x, y + b, k % 3 ? '#ff5a1a' : '#ffb02a'); } });
     L.disc(41, 44 + b, 4, '#4a0808'); L.disc(41, 44 + b, 3, '#ff5a1a'); L.disc(41, 44 + b, 1, '#fff0a0');   // 가슴의 불씨
     for (let x = 24; x <= 57; x++) P(x, 62, '#08060a');
+    for (const y of [35, 42, 51]) {
+      L.line(26, y + b, 37, y + 3 + b, '#56303d', 1);
+      L.line(45, y + 3 + b, 56, y + b, '#56303d', 1);
+      L.line(26, y + 1 + b, 37, y + 4 + b, '#08060a', 1);
+    }
+    for (const x of [28, 54]) for (const y of [34, 49, 60]) P(x, y, '#9a6263');
     for (let k = 0; k < 6; k++) L.put(4 + k * 4, 84 - ((k + f) % 2) * 3, k % 2 ? '#ff5a1a' : '#86262c');   // 망토 끝 불티
   } };
   SPRITES.pauld5 = { w: 24, h: 18, build(L) {

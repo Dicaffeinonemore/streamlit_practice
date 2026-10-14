@@ -21,28 +21,45 @@ const { Layer, blit, sprite, spriteShaded, shade, RAD, ease, lerp, crescent, spa
 // ---------------------------------------------------------------- 입력
 const keys = {}, pressed = {};
 const down = (...c) => c.some(k => keys[k]);
-const hit = (...c) => c.some(k => pressed[k]);
+const hit = (...c) => {
+  if (!c.some(k => pressed[k] > 0)) return false;
+  c.forEach(k => delete pressed[k]); return true;
+};
 const JUMP_KEYS = ['Space', 'ControlLeft', 'ControlRight'];
 // 같은 방향키를 0.25초(15틱) 안에 두 번 누르면 대시
 const TAP_DIR = { ArrowLeft: -1, KeyA: -1, ArrowRight: 1, KeyD: 1 };
 let lastTap = { dir: 0, t: -99 }, dashReq = 0;
-addEventListener('keydown', e => {
-  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
-  // Ctrl(점프)을 누른 채 다른 키를 눌러도 브라우저 단축키(북마크·저장 등)가 뜨지 않게 막는다
-  if ((scene === 'play' || scene === 'intro') && (e.ctrlKey || e.code.startsWith('Control'))) e.preventDefault();
-  if (!e.repeat) {
-    pressed[e.code] = true; onKeyOnce(e.code);
-    const d = TAP_DIR[e.code];
+function clearInput() {
+  for (const k in keys) delete keys[k];
+  for (const k in pressed) delete pressed[k];
+  lastTap = { dir: 0, t: -99 }; dashReq = 0; UX.clearTouch();
+  document.querySelectorAll('.cap.on').forEach(c => c.classList.remove('on'));
+}
+function inputDown(code) {
+  if (!code || keys[code]) return;
+  onKeyOnce(code);
+  if (scene === 'play') {
+    pressed[code] = BUF_MS;
+    const d = TAP_DIR[code];
     if (d) {
       if (lastTap.dir === d && tick - lastTap.t <= 15) { dashReq = d; lastTap = { dir: 0, t: -99 }; }
       else lastTap = { dir: d, t: tick };
     }
   }
-  keys[e.code] = true;
-  if (scene === 'tutorial') lightCaps(e.code, true);
+  keys[code] = true;
+  if (scene === 'tutorial') lightCaps(code, true);
+}
+function inputUp(code) { keys[code] = false; if (scene === 'tutorial') lightCaps(code, false); }
+addEventListener('keydown', e => {
+  if (e.target.closest?.('input, select, textarea, button') && scene !== 'play' && !['Escape', 'KeyM'].includes(e.code)) return;
+  if (e.metaKey || e.altKey) return;
+  const code = UX.mapKey(e.code);
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'Enter'].includes(code) || (scene === 'play' && e.ctrlKey)) e.preventDefault();
+  if (!e.repeat) inputDown(code);
 });
-addEventListener('keyup', e => { keys[e.code] = false; if (scene === 'tutorial') lightCaps(e.code, false); });
-addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+addEventListener('keyup', e => inputUp(UX.mapKey(e.code)));
+addEventListener('blur', () => { clearInput(); pauseGame('다른 창으로 이동해 게임을 멈췄습니다.'); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); pauseGame('화면을 벗어나 게임을 멈췄습니다.'); } });
 
 function lightCaps(code, on) {
   document.querySelectorAll('.cap').forEach(c => {
@@ -72,14 +89,14 @@ const ET = {
            h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼', feather: '깃털 투척', staff: '지팡이 강타', soul: '영혼 추수' } },
   boss3: { name: '황금왕 오렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, range: 68, score: 6000, kd: true,
            h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '황금 기둥', charge: '왕의 돌진', cleave: '황금 중파참', whirl: '황금 선풍' } },
-  boss4: { name: '망령 기사단장 바르굴', en: 'VARGUL', sprite: 'boss4', boss: true, hp: 640, spd: 1.25, range: 70, score: 8000, kd: true,
-           h: 152, s: 1, hw: 34, orb: 'blue', pats: { slam: '묘지 내려찍기', slash3: '망령 삼연참', orbs: '혼불 탄막' } },
-  boss5: { name: '마왕 모르데카이', en: 'MORDECAI', sprite: 'boss5', boss: true, hp: 820, spd: 1.2, range: 78, score: 12000, kd: true,
-           h: 176, s: 1, hw: 40, orb: 'fire', pats: { slam: '심연 강타', pillars: '지옥불 기둥', orbs: '마염 탄막', charge: '마왕 돌진', ravens: '악령 떼' } },
+  boss4: { name: '망령 기사단장 바르굴', en: 'VARGUL', sprite: 'boss4', boss: true, hp: 580, spd: 1.25, range: 70, score: 8000, kd: true,
+           h: 152, s: 1, hw: 34, orb: 'blue', pats: { frost: '빙결 십자 · 이동 / 점프', slam: '묘지 내려찍기', slash3: '망령 삼연참', orbs: '혼불 탄막' } },
+  boss5: { name: '마왕 모르데카이', en: 'MORDECAI', sprite: 'boss5', boss: true, hp: 740, spd: 1.2, range: 78, score: 12000, kd: true,
+           h: 176, s: 1, hw: 40, orb: 'fire', pats: { eclipse: '심연 고리 · 점프로 넘기', slam: '심연 강타', pillars: '지옥불 기둥', orbs: '마염 탄막', charge: '마왕 돌진', ravens: '악령 떼' } },
 };
 // 패턴 시작 후 이 시간(ms) 동안 머리 위에 ! 경고 표시
 const TELE = { slam: 650, sweep: 450, rage: 550, hook: 500, meat: 500, orbs: 500, ravens: 450, feather: 450,
-  staff: 500, soul: 700, pillars: 700, charge: 450, cleave: 820, whirl: 900 };
+  staff: 500, soul: 700, pillars: 700, charge: 450, cleave: 820, whirl: 900, slash3: 260, frost: 1050, eclipse: 1400 };
 
 const STAGES = [
   { name: 'STAGE 1', title: '붉은 평원', theme: 'stage1', len: 3200, boss: 'boss1',
@@ -137,6 +154,12 @@ const STAGES = [
     ] },
 ];
 
+// Selected encounters teach a new response without making every wave longer.
+STAGES[2].waves[3].arena = 'fire';
+STAGES[3].waves[2].arena = 'frost'; STAGES[3].waves[4].arena = 'frost';
+STAGES[4].waves[2].arena = 'abyss'; STAGES[4].waves[5].arena = 'abyss';
+for (const i of [3, 4]) for (const w of STAGES[i].waves) if (!w.boss && w.e.length > 4) w.e = w.e.slice(0, 4);
+
 // 플레이어 3콤보: 예비 동작(wind) → 휘두름(act) → 회수(rec), ms. 휘두름 35% 지점부터 판정
 const SP_MAX = 100;           // 필살기 게이지: 적을 때릴수록 차오른다
 const GROGGY_TICKS = 300;     // 보스 기절 시간 (5초 = 300틱)
@@ -173,7 +196,12 @@ let tick = 0, hitStop = 0, shake = 0, flashT = 0, flashCol = '255,255,255', bann
 let slowT = 0;                         // 보스를 쓰러뜨리면 잠깐 느려진다 (ms)
 let introBoss = null, introT = 0, introLand = false;   // 보스 등장 연출
 const chain = { n: 0, t: 0, max: 0 };  // 연속 히트 (화면 왼쪽 HIT 표시, 보스 피해 보너스)
-const stat = { ticks: 0, kills: 0 };   // 스테이지 집계 (클리어 랭크)
+const stat = { ticks: 0, kills: 0, damage: 0, deaths: 0 };
+let resumeScene = 'play', settingsFrom = 'title', helpFrom = 'title', stageEntry = null;
+let practice = false;
+const practiceDone = new Set();
+let practiceOrigin = 80;
+let arena = null;
 
 function newPlayer(score = 0) {
   return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
@@ -184,57 +212,121 @@ function newPlayer(score = 0) {
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
-const screens = ['title', 'tutorial', 'pause', 'clear', 'over', 'ending'];
-function showScreen(id) { screens.forEach(s => $(s).classList.toggle('show', s === id)); }
+const screens = ['title', 'tutorial', 'pause', 'clear', 'over', 'ending', 'settings'];
+function showScreen(id) {
+  screens.forEach(s => $(s).classList.toggle('show', s === id));
+  $('skillbar').hidden = !!id; $('playPause').hidden = !!id;
+  $('practiceGuide').hidden = !!id || !practice;
+  $('touchControls').hidden = !!id || !UX.options.touch;
+}
 
-function toTutorial() { scene = 'tutorial'; showScreen('tutorial'); sfx('click'); }
+function toTutorial(from = 'title') {
+  helpFrom = from; clearInput(); scene = 'tutorial'; showScreen('tutorial'); sfx('click');
+  $('btnHelpBack').hidden = from !== 'pause'; $('btnPractice').hidden = from === 'pause'; $('btnGo').hidden = from === 'pause';
+  document.querySelector('#tutorial .dialog-body').scrollTop = 0;
+}
 function beginGame() {
+  practice = false; clearInput(); AUDIO.pause(false);
   player = newPlayer(0);
   startStage(0);
 }
-function toTitle() { scene = 'title'; showScreen('title'); AUDIO.silence(); }
+function toTitle() { clearInput(); practice = false; scene = 'title'; showScreen('title'); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
+function pauseGame(reason = 'ESC 또는 계속하기') {
+  if (!['play', 'intro', 'bossintro'].includes(scene)) return;
+  resumeScene = scene; clearInput(); scene = 'pause'; $('pauseReason').textContent = reason; showScreen('pause'); AUDIO.pause(true);
+}
+function resumeGame() {
+  if (scene !== 'pause') return;
+  clearInput(); scene = resumeScene; showScreen(null); AUDIO.pause(false); last = performance.now(); acc = 0;
+}
+function openSettings(from) { settingsFrom = from; clearInput(); scene = 'settings'; showScreen('settings'); }
+function closeSettings() { UX.cancelCapture(); scene = settingsFrom; showScreen(settingsFrom); clearInput(); }
+function entrySnapshot(i = stageIdx) {
+  const { score, hp, lives, sp, mg, buff } = player;
+  return { stage: i, score, hp, lives, sp, mg, buff };
+}
+function continueGame() {
+  const saved = UX.checkpoint(); if (!saved) return;
+  practice = false; player = Object.assign(newPlayer(), saved); AUDIO.pause(false); startStage(saved.stage, true);
+}
+function beginPractice() {
+  practice = true; practiceDone.clear(); player = newPlayer(); startStage(0); scene = 'play'; bannerT = 0;
+  camLock = true; lockAt = 0; barrels = []; player.inv = 0; practiceOrigin = player.x;
+  enemies = [mkEnemy('grunt', 350, 420)]; enemies[0].training = true;
+  showScreen(null); AUDIO.pause(false); updatePractice();
+}
+function updatePractice() {
+  if (Math.abs(player.x - practiceOrigin) > 40) practiceDone.add('move');
+  if (player.z > 20) practiceDone.add('jump');
+  if (player.st === 'dash') practiceDone.add('dash');
+  if (!enemies.length || enemies[0].st === 'dead') { enemies = [mkEnemy('grunt', clamp(player.x + 110, 100, 550), player.y)]; enemies[0].training = true; }
+  const label = code => UX.keyName(UX.options.bindings[code]);
+  const steps = [['move', '이동: 방향키 또는 이동 버튼으로 허수아비에게 접근하세요'], ['attack', `공격: ${label('KeyJ')} / 공격 버튼으로 같은 줄의 적을 맞히세요`],
+    ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 대시 버튼 또는 방향키 두 번`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
+  const next = steps.find(([id]) => !practiceDone.has(id));
+  $('practiceText').textContent = next ? `연습 ${practiceDone.size}/5 · ${next[1]}` : '연습 완료! 실전에서 공격 예고를 보고 피하세요.';
+}
 
-$('btnStart').onclick = toTutorial;
+$('btnStart').onclick = () => toTutorial();
 $('btnGo').onclick = beginGame;
 $('btnNext').onclick = nextStage;
 $('btnRetry').onclick = retryStage;
 $('btnToTitle').onclick = toTitle;
 $('btnEndTitle').onclick = toTitle;
+$('btnContinue').onclick = continueGame;
+$('btnPractice').onclick = beginPractice;
+$('btnPracticeGo').onclick = beginGame;
+$('btnPracticeHelp').onclick = () => { pauseGame(); toTutorial('pause'); };
+$('btnResume').onclick = resumeGame;
+$('playPause').onclick = () => pauseGame(); $('touchPause').onclick = () => pauseGame();
+$('btnPauseTitle').onclick = toTitle;
+$('btnRestart').onclick = () => { AUDIO.pause(false); if (practice) beginPractice(); else retryStage(); };
+$('btnTitleSettings').onclick = () => openSettings('title');
+$('btnPauseSettings').onclick = () => openSettings('pause');
+$('btnPauseHelp').onclick = () => toTutorial('pause');
+$('btnHelpBack').onclick = () => { scene = 'pause'; showScreen('pause'); clearInput(); };
+$('btnSettingsBack').onclick = closeSettings;
 document.querySelectorAll('.skillbtn').forEach(b => {
   b.addEventListener('pointerdown', e => {
     e.preventDefault();
-    if (scene === 'play') startSkill(b.dataset.skill);
+    if (scene === 'play' && canStartSkill(b.dataset.skill)) startSkill(b.dataset.skill);
   });
 });
 
 function onKeyOnce(code) {
   if (code === 'Enter') {
     if (scene === 'title') toTutorial();
-    else if (scene === 'tutorial') beginGame();
+    else if (scene === 'tutorial' && helpFrom !== 'pause') beginGame();
     else if (scene === 'clear') nextStage();
     else if (scene === 'over') retryStage();
     else if (scene === 'ending') toTitle();
   }
   if (code === 'KeyM') AUDIO.toggle();             // 소리 켜기/끄기
   if (code === 'Escape') {
-    if (scene === 'play') { scene = 'pause'; showScreen('pause'); }
-    else if (scene === 'pause') { scene = 'play'; showScreen(null); }
+    if (['play', 'intro', 'bossintro'].includes(scene)) pauseGame();
+    else if (scene === 'pause') resumeGame();
+    else if (scene === 'settings') closeSettings();
+    else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else toTitle(); }
   }
 }
 
 // ---------------------------------------------------------------- 스테이지 진행
-function startStage(i) {
+function startStage(i, restored = false) {
+  clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i];
+  arena = null;
   camX = 0; camLock = false; waveIdx = 0; clearT = 0; goT = 0; flashT = 0;
   enemies = []; items = []; parts = []; texts = []; target = null; hazards = []; impacts = []; bursts = []; ghosts = []; bolts = [];
-  chain.n = 0; chain.t = 0; chain.max = 0; stat.ticks = 0; stat.kills = 0; slowT = 0; introBoss = null;
+  chain.n = 0; chain.t = 0; chain.max = 0; stat.ticks = 0; stat.kills = 0; stat.damage = 0; stat.deaths = 0; slowT = 0; introBoss = null;
   barrels = stage.barrels.map(bx => ({ kind: 'barrel', x: bx, y: rand(GTOP + 30, GBOT - 10), z: 0, hw: 16,
     hp: 2, flash: 0, dead: false, t: 0 }));
   const p = player;
   p.x = 80; p.y = 420; p.z = 0; p.vx = 0; p.vz = 0; p.face = 1; p.st = 'free'; p.t = 0; p.inv = 90;
   p.skill = null; for (const id in p.skillCd) p.skillCd[id] = 0;
-  p.hp = Math.min(p.max, p.hp + (i > 0 ? 40 : 0));
+  p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.spTg = null;
+  p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
   stageStartScore = p.score;
+  if (!practice) { stageEntry = entrySnapshot(); UX.saveCheckpoint(stageEntry); }
   scene = 'intro'; bannerT = 160;
   showScreen(null);
   AUDIO.music(i);
@@ -243,11 +335,12 @@ function nextStage() {
   if (stageIdx + 1 < STAGES.length) startStage(stageIdx + 1);
 }
 function retryStage() {
-  player = newPlayer(stageStartScore);
-  startStage(stageIdx);
+  player = Object.assign(newPlayer(stageStartScore), stageEntry || {});
+  startStage(stageIdx, true);
 }
 
 function spawnWave(w) {
+  arena = w.arena ? { kind: w.arena, time: 0, next: 1800, cycle: 0 } : null;
   for (const [type, side] of w.e) {
     if (ET[type].boss) {                           // 보스: 하늘에서 떨어져 착지 → 포효 → 이름 카드
       const b = mkEnemy(type, camX + VW * 0.72, clamp(player.y, GTOP + 40, GBOT - 30));
@@ -318,14 +411,16 @@ function startAtk(n) {
 
 function hurtPlayer(dmg, dir, kd) {
   const p = player;
+  if (practice) return false;
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special') return false;
+  stat.damage += Math.min(p.hp, dmg);
   p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; p.skill = null; chain.n = 0;
   hitStop = Math.max(hitStop, kd ? 6 : 4); shake = Math.max(shake, kd ? 12 : 7);
   floatText(p.x, p.y - p.z - 110, dmg, '#ff5a6a');
   impact(p.x - dir * 6, p.y, p.z + 56, kd ? 2 : 1, dir);
   sfx(kd ? 'hurtH' : 'hurt');
   if (p.hp <= 0) {
-    p.hp = 0; p.lives--; p.st = 'dead'; p.t = 0; p.vz = 6; p.vx = dir * 4; sfx('pdie'); return true;
+    p.hp = 0; p.lives--; stat.deaths++; p.st = 'dead'; p.t = 0; p.vz = 6; p.vx = dir * 4; sfx('pdie'); return true;
   }
   if (kd || p.z > 0) { p.st = 'down'; p.t = 0; p.vz = 5; p.vx = dir * 3.5; }
   else { p.st = 'hurt'; p.t = 0; p.vx = dir * 2; p.inv = 40; }
@@ -499,12 +594,13 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
 function updSkill() {
   const p = player, id = p.skill, t = p.t * MS, prev = (p.t - 1) * MS;
   if (id === 'thrust') {
-    if (t >= 180 && t < 360) {
+    if (t >= 180 && t <= 360 + MS) {
       const u = ease((t - 180) / 180);
       p.x = lerp(p.x0, p.skillDest, u); p.inv = Math.max(p.inv, 4);
       if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#ff6b78', 210);
+      if (t >= 240) skillStrike(0, 18, 68, 8, false, 1);
       if (prev < 240 && t >= 240) {
-        skillStrike(0, 18, 68, 8, false, 1); impact(p.x + p.face * 42, p.y, 55, 1, p.face);
+        impact(p.x + p.face * 42, p.y, 55, 1, p.face);
         burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); sfx('hit', 2);
       }
     }
@@ -543,8 +639,9 @@ function updPlayer() {
   for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
   p.walk = false;
   for (const code in SKILL_KEYS) {
-    if (hit(code) && startSkill(SKILL_KEYS[code])) return;
+    if (canStartSkill(SKILL_KEYS[code]) && hit(code) && startSkill(SKILL_KEYS[code])) return;
   }
+  if (p.dashCd <= 0 && p.z === 0 && (p.st === 'free' || p.st === 'atk') && hit('ShiftLeft')) dashReq = p.face;
   if (dashReq) {                                   // 방향키 두 번: 지상에서 이동·공격 중 언제든 대시 (공격은 취소)
     const d = dashReq; dashReq = 0;
     if (p.dashCd <= 0 && p.z === 0 && (p.st === 'free' || p.st === 'atk')) startDash(d);
@@ -569,9 +666,9 @@ function updPlayer() {
       p.walk = !!(ax || ay);
       p.t++;
       if (p.comboT > 0) p.comboT--;
-      if (hit(...JUMP_KEYS) && p.z === 0) { p.vz = 9.6; sfx('jump'); }
-      if (hit('KeyK', 'KeyX') && p.sp >= SP_MAX) { startSpecial(); break; }
-      if (hit('KeyI', 'KeyV') && p.mg > 0 && p.z === 0) { startCast(); break; }
+      if (p.z === 0 && hit(...JUMP_KEYS)) { p.vz = 9.6; sfx('jump'); }
+      if (p.sp >= SP_MAX && hit('KeyK', 'KeyX')) { startSpecial(); break; }
+      if (p.mg > 0 && p.z === 0 && hit('KeyI', 'KeyV')) { startCast(); break; }
       if (hit('KeyJ', 'KeyZ')) {
         if (p.z > 0) startAtk('air');
         else startAtk(p.comboT > 0 && p.combo < 2 ? p.combo + 1 : 0);
@@ -606,7 +703,7 @@ function updPlayer() {
       const t = p.t * MS;
       p.x = p.x0 + p.face * DASH.dist * ease(Math.min(1, t / 150));
       if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
-      if (hit('KeyJ', 'KeyZ') && t >= 110) { startAtk(0); break; }
+      if (t >= 110 && hit('KeyJ', 'KeyZ')) { startAtk(0); break; }
       if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
       break;
     }
@@ -674,6 +771,7 @@ function heal(n) {
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
 function damageEnemy(e, dmg, kd, kind = 0) {
   const p = player;
+  if (practice) practiceDone.add(p.st === 'skill' ? 'skill' : 'attack');
   const stunned = e.st === 'stun';
   if (stunned) dmg = Math.round(dmg * 1.5);           // 기절 중에는 추가 피해
   if (e.boss) dmg = Math.round(dmg * (1 + Math.min(0.5, 0.05 * chain.n)));   // 연속 히트가 이어질수록 보스에게 최대 +50%
@@ -690,6 +788,7 @@ function damageEnemy(e, dmg, kd, kind = 0) {
 
   if (e.hp <= 0) {
     e.hp = 0; e.st = 'dead'; e.t = 0; e.pat = null;
+    if (practice) return;
     p.score += e.d.score; dropFrom(e);
     if (e.boss) {                                  // 보스는 그 자리에서 무너지고, 잠깐 슬로 모션
       resetBossFx(e); e.vx = 0; e.vz = 0; shake = 20; hitStop = 16; flashT = 220; flashCol = '255,255,255'; slowT = 1100;
@@ -757,11 +856,11 @@ function pickPat(e, adx, ady, p2) {
     ch = adx < 110 ? ['teleport', 'staff', 'staff', 'orbs', 'feather'] :
       (p2 ? ['orbs', 'soul', 'feather', 'ravens', 'teleport', 'soul'] : ['orbs', 'orbs', 'ravens', 'feather', 'soul', 'teleport']);
   } else if (e.type === 'boss4') {               // 바르굴: 근접 삼연참·내려찍기, 멀면 혼불 탄막
-    if (near) ch = ['slash3', 'slam', 'slash3', p2 ? 'orbs' : 'slam'];
-    else if (Math.random() < 0.65) ch = ['orbs', 'slash3', 'orbs', p2 ? 'slam' : 'orbs'];
+    if (near) ch = ['frost', 'slash3', 'slam', p2 ? 'frost' : 'orbs'];
+    else ch = ['frost', 'orbs', 'slash3'];
   } else if (e.type === 'boss5') {               // 모르데카이: 모든 기술을 섞어 쓴다
-    if (near) ch = ['slam', 'charge', 'slam', p2 ? 'pillars' : 'orbs'];
-    else ch = ['pillars', 'orbs', 'ravens', p2 ? 'charge' : 'orbs', p2 ? 'pillars' : 'ravens'];
+    if (near) ch = ['eclipse', 'slam', 'charge', p2 ? 'pillars' : 'orbs'];
+    else ch = ['eclipse', 'pillars', 'orbs', 'ravens'];
   } else if (near) ch = ['slash3', 'cleave', 'whirl', p2 ? 'charge' : 'pillars', 'cleave'];
   else if (Math.random() < 0.75) ch = p2 ? ['pillars', 'whirl', 'charge', 'cleave', 'slash3'] : ['pillars', 'slash3', 'charge', 'cleave', 'slash3'];
   if (!ch) return null;                            // 멀면 조금 더 다가간 뒤 다시 고른다
@@ -803,6 +902,26 @@ function alignY(e, k) { e.y += clamp(player.y - e.y, -k, k); }   // 근접 패�
 function runPat(e) {
   const p = player, t = e.pt, m = e.marks, p2 = phase2(e), f = e.face;
   switch (e.pat) {
+    case 'frost': {
+      const count = p2 ? 2 : 1;
+      for (let k = 0; k < count; k++) {
+        if (t >= 100 + k * 1400 && !m['cross' + k]) {
+          m['cross' + k] = true;
+          hazards.push({ type: 'rift', kind: 'frost', x: camX, y: p.y, width: VW, depth: 17, delay: 950, life: 320, age: 0, owner: e });
+          hazards.push({ type: 'rift', kind: 'frost', x: p.x - 19, y: (GTOP + GBOT) / 2, width: 38, depth: 85, delay: 950, life: 320, age: 0, owner: e });
+          sfx('bwind');
+        }
+      }
+      if (t >= (p2 ? 3300 : 2100)) endPat(e);
+      break;
+    }
+    case 'eclipse': {
+      if (t >= 200 && !m.ring) {
+        m.ring = true; hazards.push({ type: 'eclipse', x: p.x, y: p.y, age: 0, delay: 1200, life: p2 ? 1000 : 1300, owner: e }); sfx('bwind');
+      }
+      if (t >= 3100) endPat(e);
+      break;
+    }
     case 'slam': {                                 // 식칼을 들어 올렸다가 내려꽂고, 양쪽으로 충격파
       if (t < 650) e.bdy = -Math.round(7 * Math.min(1, t / 450));
       else if (!m.a) { m.a = 1; e.bdy = 0; slamImpact(e); }
@@ -1014,6 +1133,7 @@ function slamImpact(e) {
 }
 
 function updEnemy(e) {
+  if (e.training) { if (e.st !== 'dead') { e.st = 'chase'; e.z = 0; e.inv = 0; e.flash = Math.max(0, e.flash - 1); } return; }
   const p = player, d = e.d;
   e.t++;
   if (e.flash > 0) e.flash--;
@@ -1124,11 +1244,40 @@ function archerChase(e) {
 
 // ---------------------------------------------------------------- 투사체 · 위험 지대
 // 보스 공격은 깊이(y)가 맞아야 맞는다. 충격파는 점프로 넘을 수 있다
+function updArena() {
+  if (!arena || !camLock || player.st === 'dead' || enemies.every(e => e.st === 'dead')) return;
+  arena.time += MS;
+  if (arena.time < arena.next) return;
+  const lanes = [370, 425, 480], safe = arena.cycle % lanes.length;
+  const selected = arena.kind === 'abyss' ? lanes.filter((_, i) => i !== safe) : [lanes.reduce((a, b) => Math.abs(a - player.y) < Math.abs(b - player.y) ? a : b)];
+  for (const y of selected) hazards.push({ type: 'rift', kind: arena.kind, x: camX, y, width: VW, depth: 23,
+    age: 0, delay: 1200, life: 350, arena: true });
+  arena.cycle++; arena.next += 5000;
+}
 function updHazards() {
   const p = player, off = z => z.x < camX - 60 || z.x > camX + VW + 60;
   for (const z of hazards) {
     z.age += MS;
+    if (z.owner && ['dead', 'down', 'stun'].includes(z.owner.st) && ['rift', 'eclipse'].includes(z.type)) { z.dead = true; continue; }
     switch (z.type) {
+      case 'rift': {
+        if (z.age >= z.delay && !z.boom) { z.boom = true; sfx('pillar'); }
+        const jumpLimit = z.kind === 'frost' ? 24 : 90;
+        if (z.age >= z.delay && z.age <= z.delay + z.life && !z.hit && p.x >= z.x && p.x <= z.x + z.width && Math.abs(p.y - z.y) < z.depth && p.z < jumpLimit) {
+          if (hurtPlayer(12, p.x < z.x + z.width / 2 ? -1 : 1, true)) z.hit = true;
+        }
+        if (z.age > z.delay + z.life) z.dead = true;
+        break;
+      }
+      case 'eclipse': {
+        const u = clamp((z.age - z.delay) / z.life, 0, 1), radius = 35 + u * 280;
+        if (z.age >= z.delay && !z.boom) { z.boom = true; sfx('bwave'); }
+        if (z.age >= z.delay && !z.hit && Math.abs(Math.hypot(p.x - z.x, (p.y - z.y) * 2) - radius) < 16 && p.z < 24) {
+          if (hurtPlayer(16, Math.sign(p.x - z.x) || 1, true)) z.hit = true;
+        }
+        if (z.age > z.delay + z.life) z.dead = true;
+        break;
+      }
       case 'shock': {
         const fx = z.x + z.dir * z.age * 0.32;
         if (!z.hit && Math.abs(fx - p.x) < 12 && Math.abs(p.y - z.y) < 24 && p.z < 14 && hurtPlayer(14, z.dir, true)) z.hit = true;
@@ -1193,7 +1342,7 @@ function updHazards() {
         }
         break;
       }
-      case 'meatmark': if (z.age > 480) z.dead = true; break;
+      case 'meatmark': if (z.age > 1180) z.dead = true; break;
       case 'splat': if (z.age > 520) z.dead = true; break;
       case 'feather':
         z.x += z.dir * z.v;
@@ -1234,6 +1383,7 @@ function updHazards() {
 
 // ---------------------------------------------------------------- 메인 업데이트
 function update() {
+  if (['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene)) return false;
   tick++;
   if (scene === 'intro') {
     if (--bannerT <= 0) scene = 'play';
@@ -1241,13 +1391,19 @@ function update() {
   }
   if (scene === 'bossintro') { updIntro(); return; }
   if (scene !== 'play') return;
+  stat.ticks++;
   if (flashT > 0) flashT -= MS;
   if (hitStop > 0) { hitStop--; return; }
-  stat.ticks++;
   if (chain.t > 0) { chain.t -= MS; if (chain.t <= 0) chain.n = 0; }
   if (shake > 0) shake *= 0.85;
 
   updPlayer();
+  if (scene !== 'play') return true;
+  if (practice) {
+    enemies.forEach(updEnemy); updHazards(); updFx(); updatePractice();
+    parts = parts.filter(q => --q.life > 0); texts = texts.filter(t => --t.life > 0);
+    return true;
+  }
 
   // 카메라와 웨이브(화면 고정 전투)
   const waves = stage.waves;
@@ -1260,11 +1416,13 @@ function update() {
   }
   if (camLock && enemies.every(e => e.st === 'dead')) {
     camLock = false;
+    arena = null; hazards = hazards.filter(z => !z.arena);
     if (waveIdx < waves.length) goT = 300;
   }
 
   enemies.forEach(updEnemy);
   enemies = enemies.filter(e => !e.remove);
+  updArena();
   updHazards();
 
   // 스테이지 클리어 판정 (보스 사망)
@@ -1289,6 +1447,7 @@ function update() {
   updFx();
   if (goT > 0) goT--;
   if (target && target.t > 0) target.t--;
+  return true;
 }
 
 function updFx() {
@@ -1318,22 +1477,26 @@ function updIntro() {
   if (introT >= INTRO_MS) { scene = 'play'; b.st = 'chase'; b.atkCd = 40; player.inv = Math.max(player.inv, 18); }
 }
 function introPoseT(u) { return u < 0.28 ? 0 : u < 0.5 ? 500 * ease((u - 0.28) / 0.22) : u < 0.8 ? 500 : 500 * (1 - ease((u - 0.8) / 0.2)); }
-// 클리어 랭크: 남은 체력 + 걸린 시간 + 최대 연속 히트
+// Recovery never erases damage/death penalties. S/A require a deathless stage.
 function rankOf(secs) {
-  const pts = player.hp * 0.6 + clamp((300 - secs) / 300, 0, 1) * 25 + Math.min(chain.max, 30) * 1.2;
-  return pts >= 90 ? 'S' : pts >= 70 ? 'A' : pts >= 50 ? 'B' : 'C';
+  const pts = Math.max(0, 60 - stat.damage * .18 - stat.deaths * 20) + clamp((300 - secs) / 300, 0, 1) * 20 + Math.min(chain.max, 20);
+  if (pts >= 85 && stat.deaths === 0) return 'S';
+  if (pts >= 65 && stat.deaths === 0) return 'A';
+  return pts >= 40 && stat.deaths <= 1 ? 'B' : 'C';
 }
 function tallyHtml() {
   const secs = Math.round(stat.ticks / 60), mm = Math.floor(secs / 60), ss = secs % 60, rk = rankOf(secs);
   const col = { S: '#ffe27a', A: '#9cf0a8', B: '#9cc3ff', C: '#c8c0e0' }[rk];
   return `최대 연속 히트 <b>${chain.max}</b> · 시간 <b>${mm}:${String(ss).padStart(2, '0')}</b> · 남은 체력 <b>${Math.max(0, player.hp)}</b><br>` +
-    `랭크 <b style="color:${col};font-size:1.6em">${rk}</b>`;
+    `누적 피해 <b>${stat.damage}</b> · 사망 <b>${stat.deaths}</b> · 랭크 <b style="color:${col};font-size:1.6em">${rk}</b>`;
 }
 
 function finishStage() {
   const p = player;
   const bonus = p.hp * 10;
   p.score += bonus;
+  UX.record(stageIdx, p.score, rankOf(Math.round(stat.ticks / 60)), Math.round(stat.ticks / 60));
+  UX.saveCheckpoint(stageIdx + 1 < STAGES.length ? { ...entrySnapshot(stageIdx + 1), hp: Math.min(p.max, p.hp + 40) } : null);
   if (stageIdx + 1 < STAGES.length) {
     scene = 'clear';
     $('clearTitle').textContent = `${stage.name} CLEAR!`;
@@ -2000,7 +2163,23 @@ function presentFx(F) { fxCtx.putImageData(F.img, 0, 0); ctx.imageSmoothingEnabl
 
 function drawGroundFx(L) {
   for (const z of hazards) {
-    if (z.type === 'shock') shockwave(L, fxX(z.x + z.dir * z.age * 0.32), z.age, z.dir, fxY(z.y));
+    if (z.type === 'rift') {
+      const active = z.age >= z.delay, c = z.kind === 'frost' ? '#7ad8ff' : z.kind === 'abyss' ? '#ce8cff' : '#ff965c';
+      const x = fxX(z.x), y = fxY(z.y - z.depth), w = z.width / SC, h = z.depth * 2 / SC;
+      L.rect(x, y, w, h, c, active ? .65 : .2);
+      L.line(x, y, x + w, y, c, 2); L.line(x, y + h, x + w, y + h, c, 2);
+      L.line(x, y, x, y + h, c, 2); L.line(x + w, y, x + w, y + h, c, 2);
+      for (let dx = 5; dx < w; dx += 16) L.line(x + dx, y + 2, x + Math.min(w, dx + 8), y + h - 2, c, 1, .65);
+    } else if (z.type === 'eclipse') {
+      const active = z.age >= z.delay, radius = active ? 35 + clamp((z.age - z.delay) / z.life, 0, 1) * 280 : 35;
+      const c = active ? '#ff9aa6' : '#ce8cff';
+      for (let i = 0; i < 96; i++) {
+        const a = i * Math.PI * 2 / 96, b = (i + 1) * Math.PI * 2 / 96;
+        L.line(fxX(z.x + Math.cos(a) * radius), fxY(z.y + Math.sin(a) * radius / 2),
+          fxX(z.x + Math.cos(b) * radius), fxY(z.y + Math.sin(b) * radius / 2), c, active ? 3 : 2);
+      }
+      if (!active) warn(L, fxX(z.x), 22, z.age, fxY(z.y));
+    } else if (z.type === 'shock') shockwave(L, fxX(z.x + z.dir * z.age * 0.32), z.age, z.dir, fxY(z.y));
     else if (z.type === 'pillar' && z.age < z.delay) warn(L, fxX(z.x), 22, z.age, fxY(z.y));
     else if (z.type === 'meatmark') warn(L, fxX(z.x), 28, z.age, fxY(z.y));
     else if (z.type === 'splat') {
@@ -2266,7 +2445,7 @@ function drawHUD() {
   const sg = ctx.createLinearGradient(96, 0, 334, 0); sg.addColorStop(0, '#2a6aff'); sg.addColorStop(1, spFull ? '#ff5a7a' : '#7ad8ff');
   ctx.fillStyle = '#0a1430'; rect(96, 80, 238, 6);
   ctx.fillStyle = spFull && Math.floor(tick / 6) % 2 ? '#fff6c8' : sg; rect(96, 80, 238 * p.sp / SP_MAX, 6);
-  if (spFull) pxText('K:흑월참', 96, 96, '#ffe14d', 8); else pxText('SP', 96, 96, '#7ad8ff', 7);
+  if (spFull) pxText(`${UX.keyName(UX.options.bindings.KeyK)}:흑월참`, 96, 96, '#ffe14d', 8); else pxText('SP', 96, 96, '#7ad8ff', 7);
   for (let i = 0; i < MAGIC.max; i++) {             // 뇌격 두루마리 칸 (I 키)
     const x = 270 + i * 22, y = 89, on = i < p.mg;
     ctx.fillStyle = '#000'; rect(x - 3, y - 1, 20, 10);
@@ -2274,7 +2453,7 @@ function drawHUD() {
     ctx.fillStyle = on ? '#c0a060' : '#3a3048'; rect(x - 2, y - 1, 2, 10); rect(x + 14, y - 1, 2, 10);
     if (on) { ctx.fillStyle = '#c8283a'; rect(x + 6, y, 2, 8); }
   }
-  if (p.mg > 0) pxText('I', 258, 97, '#9cc3ff', 8, 'right');
+  if (p.mg > 0) pxText(UX.keyName(UX.options.bindings.KeyI), 258, 97, '#9cc3ff', 8, 'right');
 
   // ---- 스테이지 패널 (오른쪽)
   panel(722, 12, 224, 50);
@@ -2323,6 +2502,10 @@ function drawHUD() {
   }
 
   // GO 화살표
+  if (arena && camLock) {
+    const help = { fire: '화염 지대 · 표식이 없는 줄로 이동하세요', frost: '서리 지대 · 표식을 벗어나거나 점프로 피하세요', abyss: '심연 지대 · 표식이 없는 줄이 안전합니다' };
+    outlineText(help[arena.kind], W / 2, H - 18, '#ffe27a', 'bold 15px sans-serif');
+  }
   if (goT > 0 && Math.floor(tick / 20) % 2 === 0) { krText('GO', W - 120, H / 2 - 30, '#ffd23f', 40); krText('➜', W - 60, H / 2 - 30, '#ffd23f', 40); }
   updateSkillButtons();
 }
@@ -2330,11 +2513,22 @@ function drawHUD() {
 function updateSkillButtons() {
   document.querySelectorAll('.skillbtn').forEach(b => {
     const id = b.dataset.skill, cd = player ? player.skillCd[id] : SKILLS[id].cd;
-    const ratio = clamp(cd / SKILLS[id].cd, 0, 1), ready = !!player && cd <= 0 && scene === 'play';
+    const ratio = clamp(cd / SKILLS[id].cd, 0, 1), ready = canStartSkill(id);
     b.style.setProperty('--cool', ratio.toFixed(3));
     b.classList.toggle('ready', ready);
-    b.disabled = !player || scene !== 'play';
-    b.title = ready ? `${SKILLS[id].name} 준비 완료` : `${SKILLS[id].name} ${(cd / 1000).toFixed(1)}초`;
+    b.disabled = !ready;
+    const status = ready ? '준비 완료' : cd > 0 ? `${(cd / 1000).toFixed(1)}초` : scene !== 'play' ? '일시정지' : player.z > 0 ? '착지 후 사용' : '동작 종료 후 사용';
+    b.title = `${SKILLS[id].name} · ${status}`;
+    const label = b.querySelector('.state'); if (label) label.textContent = status;
+  });
+  document.querySelectorAll('#touchControls [data-control]').forEach(b => {
+    const id = SKILL_KEYS[b.dataset.control];
+    if (id) {
+      const cd = player ? player.skillCd[id] : 0;
+      b.disabled = !canStartSkill(id);
+      b.title = cd > 0 ? `${(cd / 1000).toFixed(1)}초` : b.disabled ? '동작 종료 후 사용' : '준비 완료';
+      b.textContent = b.dataset.label + (cd > 0 ? ` ${Math.ceil(cd / 1000)}` : '');
+    }
   });
 }
 
@@ -2364,7 +2558,7 @@ function drawVignette() {
 function render() {
   const theme = stage ? stage.theme : 'stage1';
   ctx.save();
-  if (shake > 0.5) ctx.translate(rand(-shake, shake) * 0.6, rand(-shake, shake) * 0.6);
+  if (UX.options.shake && shake > 0.5 && scene !== 'pause' && scene !== 'settings') ctx.translate(rand(-shake, shake) * 0.6, rand(-shake, shake) * 0.6);
   drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY);         // ↓ 월드 좌표 (1.5배 줌)
   drawFloor(theme);
@@ -2397,11 +2591,11 @@ function render() {
   ctx.restore();
   drawVignette();
   ctx.restore();
-  if (flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.9, flashT / 220 * 0.9).toFixed(3)})`; rect(0, 0, W, H); }
-  if (scene === 'bossintro') drawIntroCard(introT / INTRO_MS);   // 등장 연출 중에는 HUD 를 숨긴다
+  if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
+  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) drawIntroCard(introT / INTRO_MS);
   else if (stage && player) drawHUD();
 
-  if (scene === 'intro') {
+  if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
     const a = clamp(Math.min(bannerT, 160 - bannerT) / 25, 0, 1);
     ctx.globalAlpha = a; ctx.fillStyle = 'rgba(0,0,0,.6)'; rect(0, H / 2 - 70, W, 140);
     outlineText(stage.name, W / 2, H / 2 - 10, '#ffd23f', 'bold 56px sans-serif');
@@ -2449,11 +2643,20 @@ function renderIdle() {   // 타이틀/튜토리얼 뒤 배경: 스테이지 풍
 let last = 0, acc = 0;
 function loop(t) {
   const real = Math.min(100, t - last); last = t;
-  acc += slowT > 0 ? real * 0.3 : real;            // 보스 격파 직후 슬로 모션
-  if (slowT > 0) slowT -= real;
-  while (acc >= MS) { update(); acc -= MS; for (const k in pressed) delete pressed[k]; }
-  if (scene === 'title' || scene === 'tutorial') { ctx.clearRect(0, 0, W, H); const sv = stage; renderIdle(); stage = sv; }
+  const frozen = ['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene);
+  acc += frozen ? 0 : slowT > 0 ? real * 0.3 : real;
+  if (!frozen && slowT > 0) slowT -= real;
+  while (acc >= MS) {
+    const processed = update(); acc -= MS;
+    if (processed) for (const k in pressed) { pressed[k] -= MS; if (pressed[k] <= 0) delete pressed[k]; }
+  }
+  if (scene === 'title' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else render();
+  $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
+  $('skillbar').hidden = scene !== 'play';
+  $('touchControls').hidden = !UX.options.touch || scene !== 'play';
+  $('practiceGuide').hidden = !practice || scene !== 'play';
   requestAnimationFrame(loop);
 }
+UX.mount();
 requestAnimationFrame(t => { last = t; loop(t); });

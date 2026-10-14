@@ -7,6 +7,21 @@
 (function (global) {
   const AU = { ctx: null, on: false, master: null, sfxB: null, musB: null, noise: null, mus: null, timer: 0, gm: 1, want: -1 };
   const mtof = n => 440 * Math.pow(2, (n - 69) / 12);
+  let musicVolume = .7, sfxVolume = .8, paused = false;
+  function setVolumes(music, effects) {
+    musicVolume = Math.max(0, Math.min(1, music)); sfxVolume = Math.max(0, Math.min(1, effects));
+    if (AU.ctx) {
+      const t = AU.ctx.currentTime;
+      AU.musB.gain.cancelScheduledValues(t); AU.musB.gain.setValueAtTime(.34 * musicVolume, t);
+      AU.sfxB.gain.setValueAtTime(.9 * sfxVolume, t);
+    }
+  }
+  function pause(on) {
+    paused = on;
+    if (!AU.ctx) return;
+    if (on) AU.ctx.suspend().catch(() => {});
+    else if (AU.on) AU.ctx.resume().catch(() => {});
+  }
 
   function setup(ctx) {
     AU.ctx = ctx;
@@ -17,6 +32,7 @@
     const n = ctx.sampleRate * 1.5, buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
     for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
     AU.noise = buf;
+    setVolumes(musicVolume, sfxVolume);
   }
   function init() {
     if (AU.ctx) return AU.ctx;
@@ -145,7 +161,7 @@
     AU.want = i;
     if (!AU.on || !AU.ctx) return;
     stop(0);
-    AU.musB.gain.cancelScheduledValues(AU.ctx.currentTime); AU.musB.gain.setValueAtTime(0.34, AU.ctx.currentTime);
+    AU.musB.gain.cancelScheduledValues(AU.ctx.currentTime); AU.musB.gain.setValueAtTime(0.34 * musicVolume, AU.ctx.currentTime);
     AU.mus = { T: TRACKS[i % TRACKS.length], step: 0, next: AU.ctx.currentTime + 0.08, rate: rate || 1 };
     clearInterval(AU.timer);
     AU.timer = setInterval(() => { if (AU.ctx && AU.ctx.state === 'running') musTick(AU.ctx.currentTime + 0.25); }, 40);
@@ -164,10 +180,11 @@
   function enable(on) {
     if (on) {
       const c = init(); if (!c) { AU.on = false; return false; }
-      if (c.resume) c.resume();
+      if (c.resume && !paused) c.resume().catch(() => {});
+      AU.master.gain.value = .8;
       AU.on = true;
       if (AU.want >= 0 && !AU.mus) music(AU.want);
-    } else { AU.on = false; stop(0); }
+    } else { AU.on = false; stop(0); if (AU.master) AU.master.gain.value = 0; }
     return AU.on;
   }
   function toggle() { const on = enable(!AU.on); save(on ? 'on' : 'off'); if (on) sfx('click'); return on; }
@@ -179,5 +196,5 @@
   }
   ['keydown', 'pointerdown'].forEach(ev => global.addEventListener(ev, gesture, true));
 
-  global.AUDIO = { sfx, music, stop, silence, toggle, enable, isOn: () => AU.on };
+  global.AUDIO = { sfx, music, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on };
 })(window);
