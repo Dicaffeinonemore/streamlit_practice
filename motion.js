@@ -200,7 +200,7 @@
       if (!a[y * w + x]) continue;
       const i = (y * w + x) * 4;
       let k = 0;
-      if (!on(x, y - 1) || !on(x - 1, y)) k = 0.22;
+      if (!on(x, y - 1) || !on(x - 1, y)) k = 0.12;
       else if (!on(x, y + 1) || !on(x + 1, y)) k = -0.3;
       else if (!on(x, y + 2) || !on(x + 2, y)) k = -0.13;
       if (k > 0) { d[i] += (255 - d[i]) * k; d[i + 1] += (255 - d[i + 1]) * k; d[i + 2] += (255 - d[i + 2]) * k; }
@@ -362,8 +362,8 @@
     boss1: { w: 68, h: 74, sh: [55, 29], split: 50, arm: ['#b09a8e', '#8e7a70', '#4a3c3a'], elb: null, th: 7, hand: '#d8d0b8', wpn: 'cleaver', over: 'pauld1', ov: [9, 7] },
     boss2: { w: 60, h: 74, sh: [40, 30], split: 40, arm: ['#9a6cc8', '#6a3f9c', '#43266a'], elb: null, th: 5, hand: '#c9b8d8', wpn: 'staff', over: 'mant2', ov: [8, 6] },
     boss3: { w: 68, h: 76, sh: [53, 27], split: 52, arm: ['#d0b050', '#9a7a24', '#3e2e0c'], elb: '#d0b050', th: 6, hand: '#9a7a24', wpn: 'greatsword', over: 'pauld3', ov: [10, 8] },
-    boss4: { w: 68, h: 76, sh: [52, 28], split: 52, arm: ['#9a7a58', '#6a4a30', '#2a1a10'], elb: '#c8c0b0', th: 6, hand: '#d8d0c0', wpn: 'rustblade', over: 'pauld4', ov: [10, 8],
-      back: { sh: [18, 28], at: 6, arm: ['#6a4a30', '#45301e', '#140c08'] } },
+    boss4: { w: 68, h: 76, sh: [52, 28], split: 52, arm: ['#8c98ab', '#383e4c', '#151824'], elb: '#737f92', th: 6, hand: '#555f70', wpn: 'rustblade', over: 'pauld4', ov: [10, 8],
+      back: { sh: [18, 28], at: 6, arm: ['#555f70', '#222834', '#0a0d14'] } },
     boss5: { w: 84, h: 88, sh: [62, 32], split: 60, arm: ['#7a3040', '#3e1e2a', '#140c14'], elb: '#ff5a1a', th: 8, hand: '#24141e', wpn: 'scythe', over: 'pauld5', ov: [12, 10] },
   };
   const WPN = {
@@ -560,7 +560,13 @@
   function bossPoseAt(id, pat, t, p2) {
     const R = BR[id]; let r = mixP(R, R, 0);
     const arc = (x, a0) => { x.arc = [a0, x.ang]; return x; };
-    if (pat === 'slam') {
+    if (pat === 'frost' || pat === 'eclipse') {
+      const wind = pat === 'frost' ? 1050 : 1400, cycle = pat === 'frost' && p2 ? t % 1400 : t;
+      const W = { ang: 165, hx: -3, hy: -14, lean: -3, dy: -3 }, St = { ang: -72, hx: 9, hy: 11, lean: 5, crouch: 2, dy: 0 };
+      if (cycle < wind) r = mixP(R, W, ease(cycle / 500));
+      else if (cycle < wind + 150) r = arc(mixP(W, St, ease((cycle - wind) / 150)), 165);
+      else r = mixP(St, R, ease((cycle - wind - 150) / 600));
+    } else if (pat === 'slam') {
       const W = { ang: 155, hx: -4, hy: -15, lean: -4, dy: -7 }, St = { ang: -70, hx: 8, hy: 11, lean: 7, crouch: 2, dy: 0 };
       if (t < 650) r = mixP(R, W, ease(t / 500)); else if (t < 740) r = arc(mixP(W, St, ease((t - 650) / 90)), 155);
       else if (t < 1000) r = mixP(St, St, 0); else r = mixP(St, R, ease((t - 1000) / 150));
