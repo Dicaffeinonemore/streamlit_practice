@@ -13,7 +13,7 @@
     container-type: size; background: #000; box-shadow: 0 0 40px #000; }
   canvas { width: 100%; height: 100%; display: block; image-rendering: auto; }
 
-  .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center;
+  .screen { position: absolute; inset: 0; z-index: 10; display: none; flex-direction: column; align-items: center;
     justify-content: center; text-align: center; background: rgba(8, 6, 20, .86); font-size: 2cqw; }
   .screen.show { display: flex; }
   .screen h1 { font-size: 9cqw; margin: 0; letter-spacing: .5cqw; color: #ffd23f;
@@ -58,12 +58,32 @@
   @keyframes cut { 0% { opacity: 0; transform: translateX(-30%); } 10%, 78% { opacity: 1; transform: none; }
     100% { opacity: 0; transform: translateX(30%); } }
   @media (prefers-reduced-motion: reduce) { #cutin.show { animation-duration: .01s; } }
+
+  /* 전투 기술: 첨부 보스전의 4개 기술을 키보드와 터치에서 바로 쓸 수 있다. */
+  #skillbar { position: absolute; left: 50%; bottom: 1.5cqw; transform: translateX(-50%); z-index: 4;
+    display: flex; gap: .65cqw; pointer-events: none; }
+  .skillbtn { position: relative; width: 10.5cqw; min-width: 62px; height: 4.8cqw; min-height: 34px; overflow: hidden;
+    border: .18cqw solid #5d506f; border-radius: .6cqw; background: rgba(14,10,24,.9); color: #eee8f3;
+    font-family: inherit; font-size: 1.15cqw; font-weight: 700; cursor: pointer; pointer-events: auto; touch-action: manipulation; }
+  .skillbtn .key { display: block; color: #f3d26a; font-family: 'Press Start 2P', monospace; font-size: .75cqw; margin-bottom: .25cqw; }
+  .skillbtn .key, .skillbtn .name { position: relative; z-index: 1; }
+  .skillbtn .cool { position: absolute; inset: 0; background: rgba(4,2,9,.76); transform-origin: bottom;
+    transform: scaleY(var(--cool, 0)); pointer-events: none; }
+  .skillbtn.ready { border-color: #c9a24a; box-shadow: 0 0 1cqw rgba(201,162,74,.35); }
+  .skillbtn:disabled { color: #776f83; cursor: default; }
+  @media (max-width: 700px) { #skillbar { bottom: 1cqw; gap: .35cqw; } .skillbtn { min-width: 56px; font-size: 10px; } }
 </style>
 </head>
 <body>
 <div id="wrap">
   <canvas id="c" width="960" height="540"></canvas>
   <div id="cutin" aria-hidden="true"><span>흑월참</span><small>DARK MOON SLASH</small></div>
+  <div id="skillbar" aria-label="전투 기술">
+    <button class="skillbtn" data-skill="thrust"><span class="key">U</span><span class="name">돌진 찌르기</span><span class="cool"></span></button>
+    <button class="skillbtn" data-skill="slam"><span class="key">H</span><span class="name">내려찍기</span><span class="cool"></span></button>
+    <button class="skillbtn" data-skill="whirl"><span class="key">O</span><span class="name">회전 베기</span><span class="cool"></span></button>
+    <button class="skillbtn" data-skill="leap"><span class="key">P</span><span class="name">점프 강하</span><span class="cool"></span></button>
+  </div>
 
   <!-- 타이틀 -->
   <div class="screen show" id="title">
@@ -104,7 +124,10 @@
       <div class="keys"><span class="cap" data-k="KeyI">I</span><span class="or">또는</span><span class="cap" data-k="KeyV">V</span></div>
       <div class="desc"><b>마법 뇌격</b> — 두루마리 1개로 화면 안의 모든 적에게 번개! (최대 3개)</div>
 
-      <div class="keys"><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="Escape">ESC</span><span class="cap" data-k="KeyM">M</span></div>
+      <div class="keys"><span class="cap" data-k="KeyU">U</span><span class="cap" data-k="KeyH">H</span><span class="cap" data-k="KeyO">O</span><span class="cap" data-k="KeyP">P</span></div>
+      <div class="desc"><b>전투 기술</b> — 돌진 찌르기 · 내려찍기 · 회전 베기 · 점프 강하</div>
+
+      <div class="keys"><span class="cap" data-k="Escape">ESC</span><span class="cap" data-k="KeyM">M</span></div>
       <div class="desc"><b>일시정지</b> · <b>M</b> 소리 켜기/끄기</div>
     </div>
     <div class="tips">
@@ -117,7 +140,7 @@
     <button class="btn" id="btnGo">게임 시작</button>
   </div>
 
-  <div class="screen" id="pause"><h2>일시정지</h2><p>P 또는 ESC 로 계속하기</p></div>
+  <div class="screen" id="pause"><h2>일시정지</h2><p>ESC 로 계속하기</p></div>
 
   <div class="screen" id="clear">
     <h2 id="clearTitle">STAGE CLEAR!</h2>

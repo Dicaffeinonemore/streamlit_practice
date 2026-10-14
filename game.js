@@ -67,18 +67,19 @@ const ET = {
   archer: { name: '망령 궁수', sprite: 'archer', hp: 30, spd: 1.5, dmg: 7, range: 260, wind: 42, act: 6, rec: 46, kb: 3, score: 200,
            h: 96, s: 1, hw: 18, ranged: true },
   boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 260, spd: 1.05, range: 62, score: 2000, kd: true,
-           h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진' } },
+           h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진', hook: '갈고리 끌어오기', meat: '고기 덩어리 투척' } },
   boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 380, spd: 1.2, range: 64, score: 3500, kd: true,
-           h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼' } },
+           h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼', feather: '깃털 투척', staff: '지팡이 강타', soul: '영혼 추수' } },
   boss3: { name: '황금왕 오렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, range: 68, score: 6000, kd: true,
-           h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '화염 기둥', charge: '왕의 돌진' } },
+           h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '황금 기둥', charge: '왕의 돌진', cleave: '황금 중파참', whirl: '황금 선풍' } },
   boss4: { name: '망령 기사단장 바르굴', en: 'VARGUL', sprite: 'boss4', boss: true, hp: 640, spd: 1.25, range: 70, score: 8000, kd: true,
            h: 152, s: 1, hw: 34, orb: 'blue', pats: { slam: '묘지 내려찍기', slash3: '망령 삼연참', orbs: '혼불 탄막' } },
   boss5: { name: '마왕 모르데카이', en: 'MORDECAI', sprite: 'boss5', boss: true, hp: 820, spd: 1.2, range: 78, score: 12000, kd: true,
            h: 176, s: 1, hw: 40, orb: 'fire', pats: { slam: '심연 강타', pillars: '지옥불 기둥', orbs: '마염 탄막', charge: '마왕 돌진', ravens: '악령 떼' } },
 };
 // 패턴 시작 후 이 시간(ms) 동안 머리 위에 ! 경고 표시
-const TELE = { slam: 650, sweep: 450, rage: 550, orbs: 500, ravens: 450, pillars: 700, charge: 450 };
+const TELE = { slam: 650, sweep: 450, rage: 550, hook: 500, meat: 500, orbs: 500, ravens: 450, feather: 450,
+  staff: 500, soul: 700, pillars: 700, charge: 450, cleave: 820, whirl: 900 };
 
 const STAGES = [
   { name: 'STAGE 1', title: '붉은 평원', theme: 'stage1', len: 3200, boss: 'boss1',
@@ -150,6 +151,14 @@ const LINK_MS = 420, BUF_MS = 220;      // 다음 타 연결 허용 시간 / 선
 const SPECIAL = { dur: 2100, slash: 7, fin: 30 };
 // 마법 "뇌격": 두루마리 1개로 화면 안의 모든 적에게 번개. 잡몹은 쓰러지고 보스는 최대 체력의 12% 피해
 const MAGIC = { max: 3, dur: 640, fire: 380, bossPct: 0.12 };
+// 첨부 보스전의 전투 기술. 일반 공격보다 강하지만 각각 독립 쿨다운이 있다.
+const SKILLS = {
+  thrust: { name: '돌진 찌르기', key: 'U', cd: 4600, dur: 700 },
+  slam:   { name: '내려찍기', key: 'H', cd: 6000, dur: 820 },
+  whirl:  { name: '회전 베기', key: 'O', cd: 7000, dur: 760 },
+  leap:   { name: '점프 강하', key: 'P', cd: 8000, dur: 960 },
+};
+const SKILL_KEYS = { KeyU: 'thrust', KeyH: 'slam', KeyO: 'whirl', KeyP: 'leap' };
 const INTRO_MS = 2000;                 // 보스 등장 연출 길이
 const CHAIN_MS = 1700;                 // 이 시간 안에 다시 때리면 연속 히트가 이어진다
 
@@ -169,7 +178,9 @@ const stat = { ticks: 0, kills: 0 };   // 스테이지 집계 (클리어 랭크)
 function newPlayer(score = 0) {
   return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
-    inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0, spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
+    inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
+    skill: null, skillCd: { thrust: 0, slam: 0, whirl: 0, leap: 0 }, skillHits: new Set(), skillDest: 0,
+    spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
@@ -189,6 +200,12 @@ $('btnNext').onclick = nextStage;
 $('btnRetry').onclick = retryStage;
 $('btnToTitle').onclick = toTitle;
 $('btnEndTitle').onclick = toTitle;
+document.querySelectorAll('.skillbtn').forEach(b => {
+  b.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    if (scene === 'play') startSkill(b.dataset.skill);
+  });
+});
 
 function onKeyOnce(code) {
   if (code === 'Enter') {
@@ -199,7 +216,7 @@ function onKeyOnce(code) {
     else if (scene === 'ending') toTitle();
   }
   if (code === 'KeyM') AUDIO.toggle();             // 소리 켜기/끄기
-  if (code === 'KeyP' || code === 'Escape') {
+  if (code === 'Escape') {
     if (scene === 'play') { scene = 'pause'; showScreen('pause'); }
     else if (scene === 'pause') { scene = 'play'; showScreen(null); }
   }
@@ -215,6 +232,7 @@ function startStage(i) {
     hp: 2, flash: 0, dead: false, t: 0 }));
   const p = player;
   p.x = 80; p.y = 420; p.z = 0; p.vx = 0; p.vz = 0; p.face = 1; p.st = 'free'; p.t = 0; p.inv = 90;
+  p.skill = null; for (const id in p.skillCd) p.skillCd[id] = 0;
   p.hp = Math.min(p.max, p.hp + (i > 0 ? 40 : 0));
   stageStartScore = p.score;
   scene = 'intro'; bannerT = 160;
@@ -301,7 +319,7 @@ function startAtk(n) {
 function hurtPlayer(dmg, dir, kd) {
   const p = player;
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special') return false;
-  p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; chain.n = 0;
+  p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; p.skill = null; chain.n = 0;
   hitStop = Math.max(hitStop, kd ? 6 : 4); shake = Math.max(shake, kd ? 12 : 7);
   floatText(p.x, p.y - p.z - 110, dmg, '#ff5a6a');
   impact(p.x - dir * 6, p.y, p.z + 56, kd ? 2 : 1, dir);
@@ -430,6 +448,91 @@ function damageBarrel(b) {
   if (b.hp <= 0) { b.dead = true; sparks(b.x, b.y, 25, 14, '#a1744a'); dropFromBarrel(b); sfx('barrel'); }
 }
 
+function canStartSkill(id) {
+  const p = player;
+  if (!p || !SKILLS[id] || p.skillCd[id] > 0 || p.z > 0 || p.st === 'dead' || p.st === 'down' ||
+      p.st === 'hurt' || p.st === 'special' || p.st === 'cast' || p.st === 'skill') return false;
+  if (p.st === 'atk') {
+    const A = ATK[p.atk], t = p.t * MS;
+    if (p.atk === 'air' || t < A.wind + A.act) return false;
+  }
+  if (p.st === 'dash' && p.t * MS < 110) return false;
+  return scene === 'play';
+}
+function startSkill(id) {
+  if (!canStartSkill(id)) return false;
+  const p = player;
+  p.st = 'skill'; p.skill = id; p.t = 0; p.x0 = p.x; p.vx = 0; p.vz = 0; p.z = 0;
+  p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false; p.skillHits = new Set(); p.skillCd[id] = SKILLS[id].cd;
+  const targets = enemies.filter(e => e.st !== 'dead' && Math.abs(e.y - p.y) < 60 && Math.abs(e.x - p.x) < 320)
+    .sort((a, b) => Math.abs(a.x - p.x) - Math.abs(b.x - p.x));
+  if (targets[0]) p.face = targets[0].x >= p.x ? 1 : -1;
+  p.skillDest = clamp(targets[0] ? targets[0].x - p.face * 44 : p.x + p.face * 160,
+    camX + 24, Math.min(camX + VW - 24, stage.len - 24));
+  if (id === 'thrust' || id === 'leap') sfx('spdash');
+  else sfx('swing', id === 'slam' ? 2 : 1);
+  return true;
+}
+function skillStrike(phase, dmg, reach, behind, kd, fx) {
+  const p = player, mul = p.buff > 0 ? 1.5 : 1;
+  let landed = false;
+  for (const e of enemies) {
+    const key = phase + ':' + e.id;
+    if (!canHit(e) || p.skillHits.has(key)) continue;
+    const dx = (e.x - p.x) * p.face;
+    if (dx > -behind - e.hw && dx < reach + e.hw && Math.abs(e.y - p.y) < 38 && Math.abs(e.z - p.z) < 85) {
+      p.skillHits.add(key); damageEnemy(e, Math.round(dmg * mul), kd, fx); landed = true;
+      p.sp = Math.min(SP_MAX, p.sp + (kd ? 9 : 5));
+    }
+  }
+  for (const b of barrels) {
+    const key = phase + ':b' + b.x;
+    if (b.dead || p.skillHits.has(key)) continue;
+    const dx = (b.x - p.x) * p.face;
+    if (dx > -behind - b.hw && dx < reach + b.hw && Math.abs(b.y - p.y) < 38) {
+      p.skillHits.add(key); damageBarrel(b);
+    }
+  }
+  if (landed) { hitStop = Math.max(hitStop, kd ? 7 : 4); shake = Math.max(shake, kd ? 12 : 6); }
+  return landed;
+}
+function updSkill() {
+  const p = player, id = p.skill, t = p.t * MS, prev = (p.t - 1) * MS;
+  if (id === 'thrust') {
+    if (t >= 180 && t < 360) {
+      const u = ease((t - 180) / 180);
+      p.x = lerp(p.x0, p.skillDest, u); p.inv = Math.max(p.inv, 4);
+      if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#ff6b78', 210);
+      if (prev < 240 && t >= 240) {
+        skillStrike(0, 18, 68, 8, false, 1); impact(p.x + p.face * 42, p.y, 55, 1, p.face);
+        burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); sfx('hit', 2);
+      }
+    }
+  } else if (id === 'slam') {
+    if (prev < 330 && t >= 330) {
+      skillStrike(0, 24, 92, 10, true, 2); groundSmash(p.x + p.face * 64, p.y);
+    }
+  } else if (id === 'whirl') {
+    if (t >= 100 && t < 540) p.inv = Math.max(p.inv, 4);
+    [200, 330, 460].forEach((at, k) => {
+      if (prev < at && t >= at) {
+        skillStrike(k, 8, 82, 82, false, 1); sfx('swing', k === 1 ? 2 : 1);
+        impact(p.x + p.face * (k === 1 ? -14 : 20), p.y, 54, 1, p.face);
+      }
+    });
+  } else if (id === 'leap') {
+    if (t >= 120 && t < 560) {
+      const u = (t - 120) / 440;
+      p.x = lerp(p.x0, p.skillDest, ease(u)); p.z = Math.sin(Math.PI * u) * 88; p.inv = Math.max(p.inv, 4);
+      if (every(t, 40)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 220);
+    }
+    if (prev < 560 && t >= 560) {
+      p.z = 0; skillStrike(0, 26, 76, 38, true, 2); groundSmash(p.x + p.face * 34, p.y);
+    }
+  }
+  if (t >= SKILLS[id].dur) { p.st = 'free'; p.t = 0; p.z = 0; p.skill = null; p.inv = Math.max(p.inv, 10); }
+}
+
 function updPlayer() {
   const p = player;
   if (p.inv > 0) p.inv--;
@@ -437,7 +540,11 @@ function updPlayer() {
   if (p.buff > 0) p.buff--;
   if (p.buf > 0) p.buf -= MS;
   if (p.dashCd > 0) p.dashCd--;
+  for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
   p.walk = false;
+  for (const code in SKILL_KEYS) {
+    if (hit(code) && startSkill(SKILL_KEYS[code])) return;
+  }
   if (dashReq) {                                   // 방향키 두 번: 지상에서 이동·공격 중 언제든 대시 (공격은 취소)
     const d = dashReq; dashReq = 0;
     if (p.dashCd <= 0 && p.z === 0 && (p.st === 'free' || p.st === 'atk')) startDash(d);
@@ -506,6 +613,10 @@ function updPlayer() {
     case 'special':
       p.t++;
       updSpecial();
+      break;
+    case 'skill':
+      p.t++;
+      updSkill();
       break;
     case 'cast':                                   // 검을 치켜들어 번개를 부른다
       p.t++;
@@ -640,18 +751,19 @@ function pickPat(e, adx, ady, p2) {
   const near = adx < (e.type === 'boss1' ? 110 : 130) && ady < 34;   // 고라스 휩쓸기 사거리 ≈ 108px
   let ch = null;
   if (e.type === 'boss1') {
-    if (near) ch = ['sweep', 'sweep', 'slam', p2 ? 'rage' : 'slam'];
-    else if (adx < 460 && Math.random() < 0.6) ch = p2 ? ['slam', 'rage', 'rage'] : ['slam', 'slam', 'rage'];
+    if (near) ch = ['sweep', 'sweep', 'slam', p2 ? 'rage' : 'hook'];
+    else if (adx < 460 && Math.random() < 0.75) ch = p2 ? ['hook', 'meat', 'rage', 'rage', 'slam'] : ['hook', 'meat', 'slam', 'meat', 'sweep'];
   } else if (e.type === 'boss2') {
-    ch = adx < 110 ? ['teleport', 'teleport', 'orbs'] : ['orbs', 'orbs', 'ravens', 'ravens', 'teleport'];
+    ch = adx < 110 ? ['teleport', 'staff', 'staff', 'orbs', 'feather'] :
+      (p2 ? ['orbs', 'soul', 'feather', 'ravens', 'teleport', 'soul'] : ['orbs', 'orbs', 'ravens', 'feather', 'soul', 'teleport']);
   } else if (e.type === 'boss4') {               // 바르굴: 근접 삼연참·내려찍기, 멀면 혼불 탄막
     if (near) ch = ['slash3', 'slam', 'slash3', p2 ? 'orbs' : 'slam'];
     else if (Math.random() < 0.65) ch = ['orbs', 'slash3', 'orbs', p2 ? 'slam' : 'orbs'];
   } else if (e.type === 'boss5') {               // 모르데카이: 모든 기술을 섞어 쓴다
     if (near) ch = ['slam', 'charge', 'slam', p2 ? 'pillars' : 'orbs'];
     else ch = ['pillars', 'orbs', 'ravens', p2 ? 'charge' : 'orbs', p2 ? 'pillars' : 'ravens'];
-  } else if (near) ch = ['slash3', 'pillars', 'slash3', p2 ? 'charge' : 'pillars'];
-  else if (Math.random() < 0.6) ch = ['pillars', 'slash3', p2 ? 'charge' : 'pillars', p2 ? 'charge' : 'slash3'];
+  } else if (near) ch = ['slash3', 'cleave', 'whirl', p2 ? 'charge' : 'pillars', 'cleave'];
+  else if (Math.random() < 0.75) ch = p2 ? ['pillars', 'whirl', 'charge', 'cleave', 'slash3'] : ['pillars', 'slash3', 'charge', 'cleave', 'slash3'];
   if (!ch) return null;                            // 멀면 조금 더 다가간 뒤 다시 고른다
   const fresh = ch.filter(c => c !== e.last), list = fresh.length ? fresh : ch;
   return list[Math.floor(Math.random() * list.length)];
@@ -722,6 +834,32 @@ function runPat(e) {
       if (t >= (rage ? 1900 : 1700)) endPat(e);
       break;
     }
+    case 'hook': {                                 // 사슬 갈고리로 끌어온 뒤 식칼 휩쓸기 연계
+      alignY(e, 1.2);
+      if (t >= 500 && !m.a) {
+        m.a = 1; sfx('bwave');
+        hazards.push({ type: 'hook', owner: e, x: e.x + f * 32, y: e.y, h: 62, dir: f, age: 0, out: true, hit: false });
+      }
+      if (m.h && t >= m.ht + 260 && !m.follow) { m.follow = 1; endPat(e, 'sweep'); }
+      else if (t >= 1350) endPat(e);
+      break;
+    }
+    case 'meat': {                                 // 플레이어의 발밑을 예고한 뒤 고기 덩어리 투척
+      const n = p2 ? 2 : 1;
+      for (let k = 0; k < n; k++) {
+        const at = 500 + k * 340;
+        if (t >= at - 420 && !m['w' + k]) {
+          m['w' + k] = 1; m['tx' + k] = clamp(p.x + p.vx * 10, camX + 24, camX + VW - 24);
+          m['ty' + k] = p.y; hazards.push({ type: 'meatmark', x: m['tx' + k], y: p.y, age: 0 });
+        }
+        if (t >= at && !m['t' + k]) {
+          m['t' + k] = 1; sfx('bswing');
+          hazards.push({ type: 'meat', x0: e.x + f * 28, y0: e.y, tx: m['tx' + k], ty: m['ty' + k], age: 0, T: 760, arc: 92, h: 76 });
+        }
+      }
+      if (t >= 500 + n * 340 + 700) endPat(e);
+      break;
+    }
     case 'teleport': {                             // 깃털 속으로 사라졌다가 플레이어 곁에 나타남
       e.invuln = t < 520;
       if (t < 250) { e.alpha = 1 - t / 250; if (!m.r1) { m.r1 = 1; sfx('tele'); hazards.push({ type: 'ring', x: e.x, y: e.y, h: 68, age: 0 }); } }
@@ -768,6 +906,45 @@ function runPat(e) {
       if (t >= 450 + n * 170 + 500) endPat(e);
       break;
     }
+    case 'feather': {                              // 낮게 날아오는 붉은 깃털 투척
+      const n = p2 ? 3 : 2;
+      for (let k = 0; k < n; k++) {
+        const at = 450 + k * 300;
+        if (t >= at && !m['f' + k]) {
+          m['f' + k] = 1; sfx('bwave');
+          hazards.push({ type: 'feather', x: e.x + f * 40, y: e.y, h: 46, dir: f, age: 0, v: (p2 ? 150 : 125) * SC / 1000 * MS });
+        }
+      }
+      if (t >= 450 + n * 300 + 500) endPat(e);
+      break;
+    }
+    case 'staff': {                                // 휘두르기 뒤 지팡이를 내려쳐 보라색 충격
+      if (t < 500) alignY(e, 1.4);
+      if (t >= 500 && !m.a) {
+        m.a = 1; sfx('bswing'); shake = Math.max(shake, 6);
+        if (inReach(e, p, 104, 28, 70)) hurtPlayer(10, f, false);
+      }
+      if (t >= 1100 && !m.b) {
+        m.b = 1; sfx('slam'); shake = Math.max(shake, 12);
+        const cx = e.x + f * 76; burst(cx, e.y, 8, ['#ffffff', '#c8a0ff', '#7a3ac8']);
+        hazards.push({ type: 'ring', x: cx, y: e.y, h: 18, age: 0 });
+        if (Math.abs(p.x - cx) < 40 && Math.abs(p.y - e.y) < 28 && p.z < 24) hurtPlayer(13, f, true);
+      }
+      if (t >= 1750) endPat(e);
+      break;
+    }
+    case 'soul': {                                 // 느리게 출발해 점점 빨라지는 유도 영혼
+      const n = p2 ? 3 : 2;
+      for (let k = 0; k < n; k++) {
+        const at = 700 + k * 260;
+        if (t >= at && !m['s' + k]) {
+          m['s' + k] = 1; sfx('orb');
+          hazards.push({ type: 'soul', x: e.x + f * 40, y: e.y, h: 92, vx: f * 0.8, vy: -0.25, vh: 0, age: 0 });
+        }
+      }
+      if (t >= 700 + n * 260 + 700) endPat(e);
+      break;
+    }
     case 'slash3': {                               // 대검을 내리벤 뒤 되베고, 벨 때마다 황금 검기
       const n = p2 ? 4 : 3, gap = p2 ? 340 : 420;
       for (let k = 0; k < n; k++) {
@@ -794,6 +971,36 @@ function runPat(e) {
       }
       if (t >= 920 && !m.b) { m.b = 1; shake = Math.max(shake, 8); }
       if (t >= 300 + 620 + xs.length * 100 + 700) endPat(e);
+      break;
+    }
+    case 'cleave': {                               // 머리 위에서 내리쳐 전방으로 황금 충격파
+      if (t < 700) e.wash = t > 400 && Math.floor(t / 90) % 2 ? '#ffe27a' : null;
+      else e.wash = null;
+      if (t >= 820 && !m.a) {
+        m.a = 1; e.hot = true; sfx('bwave'); shake = Math.max(shake, 16);
+        hazards.push({ type: 'shock', x: e.x + f * 60, y: e.y, dir: f, age: 0, hit: false, gold: true });
+        if (p2) hazards.push({ type: 'shock', x: e.x - f * 60, y: e.y, dir: -f, age: 0, hit: false, gold: true });
+        burst(e.x + f * 60, e.y, 8, ['#fff3b8', '#ffd23a', '#d4a437']);
+      }
+      if (t >= 820 && t < 1100 && !m.h && inReach(e, p, 92, 30, 70) && hurtPlayer(16, f, true)) m.h = 1;
+      if (t >= 1100) e.hot = false;
+      if (t >= 1900) endPat(e);
+      break;
+    }
+    case 'whirl': {                                // 검기를 두르고 회전하며 세 번 휩쓴다
+      if (t < 600) e.wash = Math.floor(t / 90) % 2 ? '#ffe27a' : null;
+      else e.wash = null;
+      if (t >= 900 && t < 2000) {
+        e.hot = true; if (!m.s) { m.s = 1; sfx('bcharge'); }
+        e.x += f * 34 * SC / 1000 * MS; alignY(e, 0.8);
+        [1000, 1330, 1660].forEach((at, k) => {
+          if (t >= at && !m['h' + k]) {
+            m['h' + k] = 1; sfx('bwave'); shake = Math.max(shake, 8);
+            if (Math.abs(p.x - e.x) < 76 && Math.abs(p.y - e.y) < 32 && p.z < 18) hurtPlayer(11, f, false);
+          }
+        });
+      } else e.hot = false;
+      if (t >= 2400) endPat(e);
       break;
     }
   }
@@ -957,6 +1164,49 @@ function updHazards() {
         if (pr > 0.12 && pr < 0.85 && !z.hit && Math.abs(z.x - p.x) < 18 && Math.abs(z.y - p.y) < 18 && p.z < 90 &&
           hurtPlayer(14, Math.sign(p.x - z.x) || 1, true)) z.hit = true;
         if (z.age > z.delay + z.life) z.dead = true;
+        break;
+      }
+      case 'hook': {
+        const o = z.owner;
+        if (!o || o.st === 'dead') { z.dead = true; break; }
+        if (z.out) {
+          z.x += z.dir * 240 * SC / 1000 * MS;
+          if (!z.hit && Math.abs(z.x - p.x) < 18 && Math.abs(z.y - p.y) < 24 && p.z < 32 && hurtPlayer(8, z.dir, false)) {
+            z.hit = true; o.marks.h = 1; o.marks.ht = o.pt; p.x = clamp(o.x + o.face * 54, camX + 20, camX + VW - 20); sfx('hit', 1);
+          }
+          if (z.hit || Math.abs(z.x - o.x) > 236 || off(z)) z.out = false;
+        } else {
+          const tx = o.x + o.face * 32; z.x += Math.sign(tx - z.x) * 10;
+          if (Math.abs(z.x - tx) < 10) z.dead = true;
+        }
+        if (z.age > 1600) z.dead = true;
+        break;
+      }
+      case 'meat': {
+        const u = clamp(z.age / z.T, 0, 1);
+        z.x = lerp(z.x0, z.tx, u); z.y = lerp(z.y0, z.ty, u); z.h = lerp(76, 0, u) + Math.sin(Math.PI * u) * z.arc;
+        if (u >= 1) {
+          z.dead = true; sfx('slam'); shake = Math.max(shake, 9);
+          hazards.push({ type: 'splat', x: z.tx, y: z.ty, age: 0 });
+          burst(z.tx, z.ty, 4, ['#a8283a', '#ffffff', '#5a1018']);
+          if (Math.abs(z.tx - p.x) < 30 && Math.abs(z.ty - p.y) < 25 && p.z < 20) hurtPlayer(11, Math.sign(p.x - z.tx) || 1, true);
+        }
+        break;
+      }
+      case 'meatmark': if (z.age > 480) z.dead = true; break;
+      case 'splat': if (z.age > 520) z.dead = true; break;
+      case 'feather':
+        z.x += z.dir * z.v;
+        if (Math.abs(z.x - p.x) < 20 && Math.abs(z.y - p.y) < 22 && p.z < 28 && hurtPlayer(9, z.dir, false)) z.dead = true;
+        if (z.age > 2200 || off(z)) z.dead = true;
+        break;
+      case 'soul': {
+        const dx = p.x - z.x, dy = p.y - z.y, dh = (p.z + 48) - z.h, d = Math.hypot(dx, dy, dh) || 1;
+        const speed = (z.age < 500 ? 22 : 56) * SC / 1000 * MS, turn = Math.min(1, MS / 380);
+        z.vx += (dx / d * speed - z.vx) * turn; z.vy += (dy / d * speed - z.vy) * turn; z.vh += (dh / d * speed - z.vh) * turn;
+        z.x += z.vx; z.y += z.vy; z.h += z.vh;
+        if (Math.hypot(z.x - p.x, z.y - p.y, z.h - (p.z + 48)) < 20 && hurtPlayer(8, Math.sign(z.vx) || 1, false)) z.dead = true;
+        if (z.age > 3400 || off(z)) z.dead = true;
         break;
       }
       case 'ring':
@@ -1391,6 +1641,11 @@ function playerFrame(lying) {
       return t < A.wind ? 12 : (t < A.wind + A.act + A.rec * 0.35 ? 13 : 12);
     }
     case 'special': return t < 450 ? 15 : t < 620 ? 14 : t < 1260 ? 13 : t < 1650 ? 16 : t < 1900 ? 13 : 12;
+    case 'skill':
+      if (p.skill === 'thrust') return t < 180 ? 12 : 14;
+      if (p.skill === 'slam') return t < 330 ? 12 : 13;
+      if (p.skill === 'whirl') return 13;
+      return t < 560 ? 16 : 13;
     case 'dash': return 14;
     case 'hurt': return t < 130 ? 10 : 11;
     case 'down': case 'dead': return 10;
@@ -1411,6 +1666,29 @@ function playerPose(lying) {
       }
       { const r = heroAtk(p.combo, t); r.arcCols = ['#ffffff', '#e0e0e8', '#a0a0b0', '#5a5a66']; r.fleck = '#b01a26'; return r; }
     case 'special': return heroSpecial(t);
+    case 'skill': {
+      if (p.skill === 'thrust') {
+        const r = mixP(HR, { ang: 5, hx: 12, hy: 1, lean: 8, crouch: 1 }, ease(Math.min(1, t / 180)));
+        if (t >= 180 && t < 430) { r.arc = [30, -18]; r.arcR = 24; }
+        return r;
+      }
+      if (p.skill === 'slam') {
+        const r = t < 330 ? mixP(HR, { ang: 158, hx: -4, hy: -12, lean: -4, crouch: 1 }, ease(t / 300)) :
+          mixP({ ang: -62, hx: 11, hy: 8, lean: 7, crouch: 3 }, HR, ease((t - 330) / 420));
+        if (t >= 290 && t < 520) { r.arc = [158, -62]; r.arcR = 28; }
+        return r;
+      }
+      if (p.skill === 'whirl') {
+        const k = Math.max(0, Math.min(2, Math.floor((t - 150) / 130))), ang = [145, -35, 145][k];
+        const r = mixP(HR, { ang, hx: 9, hy: 1, lean: 4, crouch: 1 }, ease(Math.min(1, t / 120)));
+        if (t >= 150 && t < 580) { r.arc = [ang - 210, ang]; r.arcR = 30; }
+        return r;
+      }
+      const r = t < 560 ? { ang: -52, hx: 10, hy: 6, lean: 6, crouch: 0 } :
+        mixP({ ang: -62, hx: 11, hy: 9, lean: 8, crouch: 3 }, HR, ease((t - 560) / 320));
+      if (t >= 520 && t < 760) { r.arc = [135, -62]; r.arcR = 28; }
+      return r;
+    }
     case 'dash': return mixP(HR, { ang: 15, hx: 9, hy: 3, lean: 7, crouch: 1 }, ease(Math.min(1, t / 80)));
     case 'cast': return mixP(HR, { ang: 94, hx: 3, hy: -13, lean: -2, crouch: 0 }, ease(Math.min(1, t / 260)));   // 검을 하늘로
     case 'hurt': { const a = Math.max(0, 1 - p.t / 16); return { ang: 205, hx: -2, hy: 9, lean: -6.3 * a, crouch: 2.1 * a }; }
@@ -1568,6 +1846,12 @@ function heroSpecialHD(t) {
   if (t < 1900) return 'skj_3';
   return 'skj_4';
 }
+function heroSkillHD(id, t) {
+  if (id === 'thrust') return t < 100 ? 'atkc_0' : t < 200 ? 'atkc_1' : t < 260 ? 'atkc_2' : t < 360 ? 'atkc_3' : t < 480 ? 'atkc_4' : 'atkc_5';
+  if (id === 'slam') return t < 300 ? 'atks_0' : t < 420 ? 'atks_1' : t < 620 ? 'atks_2' : 'atks_3';
+  if (id === 'whirl') return t < 140 ? 'skp_0' : t < 520 ? (Math.floor((t - 140) / 95) % 2 ? 'skp_1' : 'skp_0') : 'skp_2';
+  return t < 120 ? 'skj_1' : t < 340 ? 'skj_0' : t < 560 ? 'skj_2' : t < 720 ? 'skj_3' : 'skj_4';
+}
 function heroHD(lying) {
   const p = player, t = p.t * MS;
   switch (p.st) {
@@ -1575,6 +1859,7 @@ function heroHD(lying) {
       if (p.atk === 'air') return { name: t < 90 ? 'skj_1' : 'skj_0', bottom: true };   // 공중 내려찍기: 칼끝을 아래로
       return { name: heroAtkHD(p.combo, t) };
     case 'special': return { name: heroSpecialHD(t) };
+    case 'skill': return { name: heroSkillHD(p.skill, t), bottom: p.skill === 'leap' && t < 560 };
     case 'dash': return { name: t < 50 ? 'skd_0' : t < 120 ? 'skd_2' : 'skd_3' };
     case 'cast': return { name: t < 120 ? 'q_0' : 'q_1' };                              // 검을 하늘로
     case 'hurt': return { name: t < 110 ? 'hurt_0' : 'hurt_1' };
@@ -1620,6 +1905,8 @@ function bossHD(e) {
         if (t < 1250) return 'a4_' + (1 + Math.min(4, Math.floor((t - 550) / 140)));
         return t < 1500 ? 'a4_5' : 'a4_0';
       }
+      if (e.pat === 'hook') return t < 360 ? 'a3_0' : t < 760 ? 'a3_1' : 'a3_2';
+      if (e.pat === 'meat') return t < 350 ? 'a5_0' : t < 650 ? 'a5_1' : t < 1050 ? 'a5_2' : 'a5_3';
     }
     if (e.hr < 150) return e.hheavy ? 'hurt_1' : 'hurt_0';
     if (p2) return e.walk ? 'run_' + Math.floor(T / 120) % 3 : 'rage_' + Math.floor(T / 260) % 2;   // 광폭화
@@ -1638,6 +1925,9 @@ function bossHD(e) {
         return t < 500 + n * 110 + 300 ? 'flame_3' : 'flame_0';
       }
       if (e.pat === 'ravens') return t < 250 ? 'gas_0' : t < 450 ? 'gas_1' : t < 1100 ? 'gas_3' : 'gas_4';
+      if (e.pat === 'feather') return 'feat_' + Math.min(5, Math.floor(t / 240));
+      if (e.pat === 'staff') return 'slam_' + Math.min(4, Math.floor(t / 350));
+      if (e.pat === 'soul') return 'soul_' + Math.min(5, Math.floor(t / 360));
     }
     if (e.hr < 260) return 'hurt_' + (e.hheavy ? 2 : Math.min(3, Math.floor(e.hr / 90)));
     return e.walk ? 'walk_' + Math.floor(T / 120) % 8 : 'idle_' + Math.floor(T / 220) % 6;
@@ -1660,6 +1950,14 @@ function bossHD(e) {
       if (t < 225) return 'a8'; if (t < 450) return 'a9';
       if (t < 1010) return Math.floor(t / 80) % 2 ? 'a10' : 'a11';
       return t < 1150 ? 'a12' : t < 1350 ? 'a13' : 'a14';
+    }
+    if (e.pat === 'cleave') {
+      const Q = ['c0', 'c2', 'c3', 'c4', 'c6', 'c8', 'c10', 'c12', 'c14'];
+      return Q[Math.min(Q.length - 1, Math.floor(t / 220))];
+    }
+    if (e.pat === 'whirl') {
+      const Q = ['w0', 'w1', 'w4', 'w6', 'w8', 'w9', 'w11', 'w13', 'w15'];
+      return Q[Math.min(Q.length - 1, Math.floor(t / 280))];
     }
   }
   if (e.hr < 260) return 'h' + [1, 2, 3, 4][Math.min(3, Math.floor(e.hr / 90))];
@@ -1704,6 +2002,11 @@ function drawGroundFx(L) {
   for (const z of hazards) {
     if (z.type === 'shock') shockwave(L, fxX(z.x + z.dir * z.age * 0.32), z.age, z.dir, fxY(z.y));
     else if (z.type === 'pillar' && z.age < z.delay) warn(L, fxX(z.x), 22, z.age, fxY(z.y));
+    else if (z.type === 'meatmark') warn(L, fxX(z.x), 28, z.age, fxY(z.y));
+    else if (z.type === 'splat') {
+      const a = Math.max(0, 1 - z.age / 520), x = fxX(z.x), y = fxY(z.y);
+      L.disc(x, y, 10, '#5a1018', .45 * a); L.line(x - 13, y, x + 13, y, '#a8283a', 1, .65 * a);
+    }
   }
   for (const e of enemies) if (e.st === 'pat' && e.pat === 'slam' && e.pt < 650) warn(L, fxX(e.x), 70, e.pt, fxY(e.y));
 }
@@ -1721,6 +2024,22 @@ function drawTopFx(L) {
       L.put(x + d, y, '#c8ccd8'); L.put(x + d * 2, y, '#ffffff'); L.put(x + d, y - 1, '#8c8e9c'); L.put(x + d, y + 1, '#8c8e9c');
       L.put(x - d * 8, y - 1, '#c8283a'); L.put(x - d * 9, y - 1, '#c8283a'); L.put(x - d * 8, y + 1, '#c8283a');
       for (let k = 1; k <= 3; k++) L.put(x - d * (9 + k * 2), y, '#ffffff', 0.3 / k);
+    }
+    else if (z.type === 'hook') {
+      const o = z.owner, y = fxY(z.y, z.h), ox = o ? fxX(o.x + o.face * 28) : x;
+      L.line(ox, fxY(z.y, 58), x, y, '#4a3a32', 2); L.line(ox, fxY(z.y, 58) - 1, x, y - 1, '#b8a080', 1);
+      L.arc(x, y, 5, -.6, Math.PI + .6, '#d8d0c0', 2);
+    }
+    else if (z.type === 'meat') {
+      const y = fxY(z.y, z.h); L.disc(x, y, 7, '#8a1a2a'); L.disc(x - 2, y - 2, 3, '#d85862'); L.put(x + 3, y + 2, '#f0b0a0');
+    }
+    else if (z.type === 'feather') {
+      const y = fxY(z.y, z.h), d = z.dir;
+      L.line(x - d * 8, y + 2, x + d * 6, y - 2, '#ff5a6a', 2); L.line(x - d * 6, y, x + d * 4, y, '#ffffff', 1);
+    }
+    else if (z.type === 'soul') {
+      const y = fxY(z.y, z.h), pulse = 5 + Math.sin(z.age * .02) * 2;
+      L.disc(x, y, Math.round(pulse), '#7a3ac8', .55); L.disc(x, y, 3, '#e0c8ff'); L.put(x, y - 1, '#ffffff');
     }
     else if (z.type === 'pwave') {
       const y = fxY(z.y, z.h);
@@ -1746,6 +2065,21 @@ function drawTopFx(L) {
       if (age >= 0 && age <= 220) slashLine(L, cx - u * 30, cy + v * 30, cx + u * 30, cy - v * 30, Math.min(1, age / 50));
     }
     if (sp >= 1570 && sp < 1950) moon(L, cx, cy, Math.round(lerp(8, 32, ease((sp - 1570) / 220))), (sp - 1570) / 380, f < 0);
+  }
+  if (p.st === 'skill') {
+    const t = p.t * MS, px = fxX(p.x), py = fxY(p.y, p.z + 54), f = p.face;
+    if (p.skill === 'thrust' && t >= 170 && t < 470) {
+      const a = 1 - (t - 170) / 300;
+      for (let i = 0; i < 4; i++) L.line(px - f * (8 + i * 8), py - 4 + i * 2, px + f * (20 - i * 2), py - 4 + i * 2, i ? '#ff6b78' : '#ffffff', 1, a);
+    } else if (p.skill === 'whirl' && t >= 140 && t < 600) {
+      const a0 = (t * 0.55) % 360;
+      for (let i = 0; i < 3; i++) L.arc(px, py, 24 - i * 3, (a0 + i * 35) * RAD, (a0 + 245 + i * 35) * RAD, i ? '#ff7a88' : '#ffffff', 2, 0.9 - i * 0.2);
+    } else if ((p.skill === 'slam' && t >= 280 && t < 610) || (p.skill === 'leap' && t >= 520 && t < 790)) {
+      const age = p.skill === 'slam' ? t - 280 : t - 520;
+      const r = 10 + age * 0.09;
+      L.arc(px + f * 20, fxY(p.y, 4), r, Math.PI, Math.PI * 2, '#ffffff', 2, Math.max(0, 1 - age / 350));
+      L.arc(px + f * 20, fxY(p.y, 4), r + 4, Math.PI, Math.PI * 2, '#ff6b78', 1, Math.max(0, .8 - age / 420));
+    }
   }
   if (p.st === 'cast') {                            // 시전: 검 끝에 빛이 모이고 발밑에 고리
     const u = p.castFired ? 1 : Math.min(1, p.t * MS / MAGIC.fire), tx = fxX(p.tipX), ty = fxY(p.y, p.tipH);
@@ -1990,6 +2324,18 @@ function drawHUD() {
 
   // GO 화살표
   if (goT > 0 && Math.floor(tick / 20) % 2 === 0) { krText('GO', W - 120, H / 2 - 30, '#ffd23f', 40); krText('➜', W - 60, H / 2 - 30, '#ffd23f', 40); }
+  updateSkillButtons();
+}
+
+function updateSkillButtons() {
+  document.querySelectorAll('.skillbtn').forEach(b => {
+    const id = b.dataset.skill, cd = player ? player.skillCd[id] : SKILLS[id].cd;
+    const ratio = clamp(cd / SKILLS[id].cd, 0, 1), ready = !!player && cd <= 0 && scene === 'play';
+    b.style.setProperty('--cool', ratio.toFixed(3));
+    b.classList.toggle('ready', ready);
+    b.disabled = !player || scene !== 'play';
+    b.title = ready ? `${SKILLS[id].name} 준비 완료` : `${SKILLS[id].name} ${(cd / 1000).toFixed(1)}초`;
+  });
 }
 
 function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별, 공격 예고 !

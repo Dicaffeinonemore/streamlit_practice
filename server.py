@@ -50,7 +50,7 @@ def run_streamlit():
         "<style>.block-container{padding-top:1rem;max-width:1200px}</style>",
         unsafe_allow_html=True,
     )
-    st.caption("게임 화면을 한 번 클릭한 뒤 키보드로 조작하세요. (방향키/WASD 이동 · Space/Ctrl 점프 · J 공격 · K 필살기 · I 뇌격 · M 소리)")
+    st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · K 필살기 · I 뇌격 · ESC 일시정지)")
     html = build_single_html()
     if hasattr(st, "iframe"):          # 최신 Streamlit (components.v1.html 은 제거 예정)
         st.iframe(html, height=680)
