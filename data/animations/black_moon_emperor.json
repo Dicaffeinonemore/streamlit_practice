@@ -1,0 +1,816 @@
+{
+  "id": "black_moon_emperor",
+  "name": "블랙 문 엠페러",
+  "animations": {
+    "idle": {
+      "id": "idle",
+      "name": "대기 모션",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        9,
+        241,
+        559,
+        370
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": 8,
+      "fps": 8,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/bosses/black_moon_emperor/idle/00-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/00-original.png",
+          "sourceRect": [
+            16,
+            289,
+            81,
+            366
+          ],
+          "sourceAnchor": [
+            52,
+            365
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/bosses/black_moon_emperor/idle/01-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/01-original.png",
+          "sourceRect": [
+            81,
+            289,
+            148,
+            366
+          ],
+          "sourceAnchor": [
+            115,
+            365
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/bosses/black_moon_emperor/idle/02-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/02-original.png",
+          "sourceRect": [
+            148,
+            289,
+            214,
+            366
+          ],
+          "sourceAnchor": [
+            182,
+            365
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/bosses/black_moon_emperor/idle/03-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/03-original.png",
+          "sourceRect": [
+            214,
+            289,
+            281,
+            366
+          ],
+          "sourceAnchor": [
+            248,
+            365
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/bosses/black_moon_emperor/idle/04-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/04-original.png",
+          "sourceRect": [
+            281,
+            289,
+            348,
+            366
+          ],
+          "sourceAnchor": [
+            314,
+            365
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/bosses/black_moon_emperor/idle/05-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/05-original.png",
+          "sourceRect": [
+            348,
+            289,
+            415,
+            366
+          ],
+          "sourceAnchor": [
+            381,
+            365
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 6,
+          "image": "assets/bosses/black_moon_emperor/idle/06-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/06-original.png",
+          "sourceRect": [
+            415,
+            289,
+            482,
+            366
+          ],
+          "sourceAnchor": [
+            447,
+            365
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 7,
+          "image": "assets/bosses/black_moon_emperor/idle/07-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/idle/07-original.png",
+          "sourceRect": [
+            482,
+            289,
+            554,
+            366
+          ],
+          "sourceAnchor": [
+            514,
+            365
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            44,
+            84
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "16 표기지만 식별되는 인물 자세는 8개. 누락 프레임 복제 금지."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/idle-source.png",
+      "canvas": [
+        92,
+        93
+      ],
+      "origin": [
+        44,
+        84
+      ]
+    },
+    "walk": {
+      "id": "walk",
+      "name": "이동 모션 (걷기)",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        565,
+        241,
+        1104,
+        370
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": 8,
+      "fps": 10,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/bosses/black_moon_emperor/walk/00-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/00-original.png",
+          "sourceRect": [
+            570,
+            290,
+            636,
+            366
+          ],
+          "sourceAnchor": [
+            611,
+            365
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/bosses/black_moon_emperor/walk/01-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/01-original.png",
+          "sourceRect": [
+            636,
+            290,
+            702,
+            366
+          ],
+          "sourceAnchor": [
+            676,
+            365
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/bosses/black_moon_emperor/walk/02-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/02-original.png",
+          "sourceRect": [
+            702,
+            290,
+            768,
+            366
+          ],
+          "sourceAnchor": [
+            742,
+            365
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/bosses/black_moon_emperor/walk/03-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/03-original.png",
+          "sourceRect": [
+            768,
+            290,
+            834,
+            366
+          ],
+          "sourceAnchor": [
+            807,
+            365
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/bosses/black_moon_emperor/walk/04-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/04-original.png",
+          "sourceRect": [
+            834,
+            290,
+            900,
+            366
+          ],
+          "sourceAnchor": [
+            872,
+            365
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/bosses/black_moon_emperor/walk/05-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/05-original.png",
+          "sourceRect": [
+            900,
+            290,
+            966,
+            366
+          ],
+          "sourceAnchor": [
+            937,
+            365
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 6,
+          "image": "assets/bosses/black_moon_emperor/walk/06-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/06-original.png",
+          "sourceRect": [
+            966,
+            290,
+            1032,
+            366
+          ],
+          "sourceAnchor": [
+            1003,
+            365
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 7,
+          "image": "assets/bosses/black_moon_emperor/walk/07-candidate.png",
+          "original": "assets/bosses/black_moon_emperor/walk/07-original.png",
+          "sourceRect": [
+            1032,
+            290,
+            1100,
+            366
+          ],
+          "sourceAnchor": [
+            1069,
+            365
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            49,
+            83
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "16 표기지만 식별되는 인물 자세는 8개. 망토 겹침 가능."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/walk-source.png",
+      "canvas": [
+        88,
+        92
+      ],
+      "origin": [
+        49,
+        83
+      ]
+    },
+    "intro": {
+      "id": "intro",
+      "name": "등장 씬",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        1111,
+        241,
+        1662,
+        370
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/intro-source.png"
+    },
+    "attack": {
+      "id": "attack",
+      "name": "월식 베기",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        9,
+        374,
+        682,
+        492
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/attack-source.png"
+    },
+    "upper": {
+      "id": "upper",
+      "name": "흑월 올려치기",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        688,
+        374,
+        1187,
+        492
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/upper-source.png"
+    },
+    "empower": {
+      "id": "empower",
+      "name": "암흑 강화",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        1193,
+        374,
+        1662,
+        492
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "원본 제목은 ‘암흑 강화’. ‘암흑 강하’로 변경하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/empower-source.png"
+    },
+    "dash": {
+      "id": "dash",
+      "name": "월영 돌진",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        9,
+        497,
+        1662,
+        594
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/dash-source.png"
+    },
+    "skill1": {
+      "id": "skill1",
+      "name": "흑월 연참",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        9,
+        599,
+        845,
+        708
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/skill1-source.png"
+    },
+    "skill2": {
+      "id": "skill2",
+      "name": "종언의 월식",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        852,
+        599,
+        1662,
+        708
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/skill2-source.png"
+    },
+    "skill3": {
+      "id": "skill3",
+      "name": "허무의 처형식",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        9,
+        714,
+        1662,
+        827
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/skill3-source.png"
+    },
+    "death": {
+      "id": "death",
+      "name": "사망 모션",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        9,
+        832,
+        578,
+        936
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/death-source.png"
+    },
+    "hurt": {
+      "id": "hurt",
+      "name": "피격 모션",
+      "source": "black_moon_emperor",
+      "sourceRect": null,
+      "declaredFrames": null,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "missing",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "독립 피격 패널 없음."
+      ]
+    },
+    "effects": {
+      "id": "effects",
+      "name": "주요 이펙트 (일부 발췌)",
+      "source": "black_moon_emperor",
+      "sourceRect": [
+        585,
+        832,
+        1254,
+        936
+      ],
+      "declaredFrames": null,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "월식 베기 이펙트 / 암흑 폭발 / 허무의 기둥 / 월식 잔흔 (바닥) / 어둠의 파편. 효과 견본이며 애니메이션 아님."
+      ],
+      "panel": "assets/bosses/black_moon_emperor/effects-source.png",
+      "samples": [
+        {
+          "id": "eclipse_slash",
+          "name": "월식 베기 이펙트",
+          "source": "black_moon_emperor",
+          "sourceRect": [
+            590,
+            848,
+            692,
+            917
+          ],
+          "original": "assets/effects/black_moon_emperor/eclipse_slash-original.png",
+          "image": "assets/effects/black_moon_emperor/eclipse_slash-candidate.png",
+          "status": "review",
+          "gameReady": false,
+          "animated": false,
+          "note": "원본의 효과 견본 한 장. 지속 시간/재생 순서/알파 미확정. 연속 애니메이션으로 재사용하지 않음."
+        },
+        {
+          "id": "dark_burst",
+          "name": "암흑 폭발",
+          "source": "black_moon_emperor",
+          "sourceRect": [
+            695,
+            848,
+            813,
+            917
+          ],
+          "original": "assets/effects/black_moon_emperor/dark_burst-original.png",
+          "image": "assets/effects/black_moon_emperor/dark_burst-candidate.png",
+          "status": "review",
+          "gameReady": false,
+          "animated": false,
+          "note": "원본의 효과 견본 한 장. 지속 시간/재생 순서/알파 미확정. 연속 애니메이션으로 재사용하지 않음."
+        },
+        {
+          "id": "void_pillar",
+          "name": "허무의 기둥",
+          "source": "black_moon_emperor",
+          "sourceRect": [
+            816,
+            845,
+            945,
+            917
+          ],
+          "original": "assets/effects/black_moon_emperor/void_pillar-original.png",
+          "image": "assets/effects/black_moon_emperor/void_pillar-candidate.png",
+          "status": "review",
+          "gameReady": false,
+          "animated": false,
+          "note": "원본의 효과 견본 한 장. 지속 시간/재생 순서/알파 미확정. 연속 애니메이션으로 재사용하지 않음."
+        },
+        {
+          "id": "eclipse_trace",
+          "name": "월식 잔흔 (바닥)",
+          "source": "black_moon_emperor",
+          "sourceRect": [
+            949,
+            848,
+            1087,
+            917
+          ],
+          "original": "assets/effects/black_moon_emperor/eclipse_trace-original.png",
+          "image": "assets/effects/black_moon_emperor/eclipse_trace-candidate.png",
+          "status": "review",
+          "gameReady": false,
+          "animated": false,
+          "note": "원본의 효과 견본 한 장. 지속 시간/재생 순서/알파 미확정. 연속 애니메이션으로 재사용하지 않음."
+        },
+        {
+          "id": "dark_fragments",
+          "name": "어둠의 파편",
+          "source": "black_moon_emperor",
+          "sourceRect": [
+            1091,
+            848,
+            1245,
+            917
+          ],
+          "original": "assets/effects/black_moon_emperor/dark_fragments-original.png",
+          "image": "assets/effects/black_moon_emperor/dark_fragments-candidate.png",
+          "status": "review",
+          "gameReady": false,
+          "animated": false,
+          "note": "원본의 효과 견본 한 장. 지속 시간/재생 순서/알파 미확정. 연속 애니메이션으로 재사용하지 않음."
+        }
+      ]
+    }
+  }
+}

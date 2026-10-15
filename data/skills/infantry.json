@@ -1,0 +1,20 @@
+{
+  "character": "infantry",
+  "skills": {
+    "attack": {
+      "id": "attack",
+      "name": "기본 공격",
+      "animation": "attack",
+      "enabled": false,
+      "disabledReason": "원본 프레임 및 타격 시점 검수 전. 임의 판정·다른 모션 대체 금지.",
+      "balance": {
+        "damage": null,
+        "cooldownMs": null
+      },
+      "activeFrames": [],
+      "hitboxes": [],
+      "lockMovement": true,
+      "lockActions": true
+    }
+  }
+}

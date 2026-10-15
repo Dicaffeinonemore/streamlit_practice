@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>원본 스프라이트 검수 · 흑월의 기사</title>
+  <link rel="stylesheet" href="src/animation/lab.css">
+</head>
+<body>
+  <header><div><p class="eyebrow">BLACK MOON KNIGHT / SOURCE REVIEW</p><h1>원본 스프라이트 검수</h1></div><a href="index.html">게임으로 돌아가기 ↗</a></header>
+  <p class="notice">검수 후보입니다. 없는 자세는 생성하지 않았습니다. 투명 처리·경계·시간 순서가 검증되지 않은 모션은 실제 전투에 적용되지 않습니다.</p>
+  <main>
+    <aside>
+      <label for="character">캐릭터</label><select id="character"></select>
+      <label for="motion">모션 / 스킬</label><select id="motion"></select>
+      <p id="status" role="status">리소스 불러오는 중…</p>
+      <dl id="facts"></dl><ul id="notes"></ul>
+      <details open><summary>스킬 설정</summary><pre id="skill">해당 없음</pre></details>
+      <a id="sourceLink" target="_blank" rel="noopener">원본 시트 열기 ↗</a>
+    </aside>
+    <section class="workspace">
+      <div class="toolbar">
+        <button id="play" disabled>재생</button><button id="restart" disabled>처음</button>
+        <button id="prev" disabled aria-label="이전 프레임">←</button><button id="next" disabled aria-label="다음 프레임">→</button>
+        <label>FPS <input id="fps" type="number" min="1" max="30" value="8"></label>
+        <label>확대 <select id="zoom"><option>1</option><option>2</option><option selected>3</option><option>4</option></select>×</label>
+        <label><input id="flip" type="checkbox">좌우 반전</label>
+        <label><input id="guide" type="checkbox" checked>발 기준선</label>
+        <label>배경 <select id="background"><option value="checker">체커</option><option value="light">밝게</option><option value="dark">어둡게</option></select></label>
+      </div>
+      <div class="comparison">
+        <figure><figcaption>원본 픽셀 조각 <span>배경 포함 · 색상 보존</span></figcaption><div class="viewport"><canvas id="original" width="640" height="400"></canvas></div></figure>
+        <figure><figcaption>투명 PNG 후보 <span>알파·경계 검수 필요</span></figcaption><div class="viewport"><canvas id="candidate" width="640" height="400"></canvas></div></figure>
+      </div>
+      <div class="scrubber"><input id="frame" type="range" min="0" max="0" value="0" disabled aria-label="프레임 선택"><output id="counter">—</output></div>
+      <p id="unavailable" hidden></p>
+      <div id="samples" class="samples" hidden></div>
+      <figure class="source-panel"><figcaption>원본 패널 <span>숫자 순서를 재정렬하지 않음 · 가로 스크롤 가능</span></figcaption><div><img id="panel" alt="선택한 모션의 원본 패널"></div></figure>
+      <details><summary>전체 분석 목록 · 표기 수와 추출 수 비교</summary><div class="table-scroll"><table><thead><tr><th>캐릭터</th><th>모션</th><th>표기</th><th>후보</th><th>상태</th></tr></thead><tbody id="inventory"></tbody></table></div></details>
+    </section>
+  </main>
+  <script src="src/animation/player.js"></script>
+  <script src="src/combat/reference-combat.js"></script>
+  <script src="src/animation/lab.js"></script>
+</body>
+</html>

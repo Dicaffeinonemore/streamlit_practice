@@ -1,0 +1,300 @@
+{
+  "id": "aurelion",
+  "name": "황금왕 아우렐리온",
+  "animations": {
+    "idle": {
+      "id": "idle",
+      "name": "기본 자세 / 대기",
+      "source": "aurelion",
+      "sourceRect": [
+        7,
+        211,
+        831,
+        355
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 8,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "약 13개 인물 자세가 보임. 번호 16개와 불일치하며 망토/검이 이웃 자세와 겹쳐 독립 분리 보류."
+      ],
+      "panel": "assets/bosses/aurelion/idle-source.png"
+    },
+    "walk": {
+      "id": "walk",
+      "name": "이동 (걷기)",
+      "source": "aurelion",
+      "sourceRect": [
+        842,
+        211,
+        1666,
+        355
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "16개로 보이는 자세가 밀집. 망토/검 겹침으로 개별 경계 확정 보류."
+      ],
+      "panel": "assets/bosses/aurelion/walk-source.png"
+    },
+    "intro": {
+      "id": "intro",
+      "name": "등장 씬",
+      "source": "aurelion",
+      "sourceRect": [
+        7,
+        359,
+        1666,
+        499
+      ],
+      "declaredFrames": null,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호 중복·역순 및 장면 겹침. 배경과 등장 광원이 합성되어 있음."
+      ],
+      "panel": "assets/bosses/aurelion/intro-source.png"
+    },
+    "attack": {
+      "id": "attack",
+      "name": "기본 베기",
+      "source": "aurelion",
+      "sourceRect": [
+        7,
+        502,
+        831,
+        624
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/attack-source.png"
+    },
+    "upper": {
+      "id": "upper",
+      "name": "올려치기",
+      "source": "aurelion",
+      "sourceRect": [
+        842,
+        502,
+        1666,
+        624
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/upper-source.png"
+    },
+    "slam": {
+      "id": "slam",
+      "name": "내려찍기",
+      "source": "aurelion",
+      "sourceRect": [
+        7,
+        627,
+        831,
+        741
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/slam-source.png"
+    },
+    "dash": {
+      "id": "dash",
+      "name": "돌진 베기",
+      "source": "aurelion",
+      "sourceRect": [
+        842,
+        627,
+        1666,
+        741
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/dash-source.png"
+    },
+    "skill1": {
+      "id": "skill1",
+      "name": "3단 검기 선풍",
+      "source": "aurelion",
+      "sourceRect": [
+        7,
+        745,
+        831,
+        861
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/skill1-source.png"
+    },
+    "skill2": {
+      "id": "skill2",
+      "name": "황금의 엄벌",
+      "source": "aurelion",
+      "sourceRect": [
+        842,
+        745,
+        1666,
+        861
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/skill2-source.png"
+    },
+    "skill3": {
+      "id": "skill3",
+      "name": "황금중파참",
+      "source": "aurelion",
+      "sourceRect": [
+        7,
+        865,
+        831,
+        940
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "원본에 적힌 이름을 보존. 행 높이가 매우 작고 번호 중복, 효과 식별이 어려워 공격 형태 확정 불가."
+      ],
+      "panel": "assets/bosses/aurelion/skill3-source.png"
+    },
+    "death": {
+      "id": "death",
+      "name": "사망",
+      "source": "aurelion",
+      "sourceRect": [
+        842,
+        865,
+        1666,
+        940
+      ],
+      "declaredFrames": 16,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "번호와 자세의 대응 및 이펙트 경계 미확정. 인접 효과/배경이 합성된 패널은 독립 프레임으로 등분하지 않음."
+      ],
+      "panel": "assets/bosses/aurelion/death-source.png"
+    },
+    "hurt": {
+      "id": "hurt",
+      "name": "피격 모션",
+      "source": "aurelion",
+      "sourceRect": null,
+      "declaredFrames": null,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "missing",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "독립 피격 패널 없음. 다른 모션으로 대체하지 않음."
+      ]
+    }
+  }
+}

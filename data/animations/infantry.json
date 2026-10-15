@@ -1,0 +1,851 @@
+{
+  "id": "infantry",
+  "name": "보병",
+  "animations": {
+    "idle": {
+      "id": "idle",
+      "name": "대기 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        578,
+        133,
+        1058,
+        276
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": 6,
+      "fps": 8,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/infantry/idle/00-candidate.png",
+          "original": "assets/characters/infantry/idle/00-original.png",
+          "sourceRect": [
+            587,
+            184,
+            666,
+            272
+          ],
+          "sourceAnchor": [
+            639,
+            271
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            60,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/infantry/idle/01-candidate.png",
+          "original": "assets/characters/infantry/idle/01-original.png",
+          "sourceRect": [
+            666,
+            184,
+            744,
+            272
+          ],
+          "sourceAnchor": [
+            710,
+            271
+          ],
+          "offset": [
+            16,
+            8
+          ],
+          "origin": [
+            60,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/infantry/idle/02-candidate.png",
+          "original": "assets/characters/infantry/idle/02-original.png",
+          "sourceRect": [
+            744,
+            184,
+            820,
+            272
+          ],
+          "sourceAnchor": [
+            786,
+            271
+          ],
+          "offset": [
+            18,
+            8
+          ],
+          "origin": [
+            60,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/infantry/idle/03-candidate.png",
+          "original": "assets/characters/infantry/idle/03-original.png",
+          "sourceRect": [
+            820,
+            184,
+            895,
+            272
+          ],
+          "sourceAnchor": [
+            859,
+            271
+          ],
+          "offset": [
+            21,
+            8
+          ],
+          "origin": [
+            60,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/infantry/idle/04-candidate.png",
+          "original": "assets/characters/infantry/idle/04-original.png",
+          "sourceRect": [
+            895,
+            184,
+            969,
+            272
+          ],
+          "sourceAnchor": [
+            933,
+            271
+          ],
+          "offset": [
+            22,
+            8
+          ],
+          "origin": [
+            60,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/infantry/idle/05-candidate.png",
+          "original": "assets/characters/infantry/idle/05-original.png",
+          "sourceRect": [
+            969,
+            184,
+            1048,
+            272
+          ],
+          "sourceAnchor": [
+            1008,
+            271
+          ],
+          "offset": [
+            21,
+            8
+          ],
+          "origin": [
+            60,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/infantry/idle-source.png",
+      "canvas": [
+        108,
+        104
+      ],
+      "origin": [
+        60,
+        95
+      ]
+    },
+    "walk": {
+      "id": "walk",
+      "name": "이동 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        1061,
+        133,
+        1662,
+        276
+      ],
+      "declaredFrames": 8,
+      "identifiedFrames": 8,
+      "fps": 10,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/infantry/walk/00-candidate.png",
+          "original": "assets/characters/infantry/walk/00-original.png",
+          "sourceRect": [
+            1067,
+            184,
+            1141,
+            272
+          ],
+          "sourceAnchor": [
+            1116,
+            271
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/infantry/walk/01-candidate.png",
+          "original": "assets/characters/infantry/walk/01-original.png",
+          "sourceRect": [
+            1141,
+            184,
+            1216,
+            272
+          ],
+          "sourceAnchor": [
+            1190,
+            271
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/infantry/walk/02-candidate.png",
+          "original": "assets/characters/infantry/walk/02-original.png",
+          "sourceRect": [
+            1216,
+            184,
+            1292,
+            272
+          ],
+          "sourceAnchor": [
+            1265,
+            271
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/infantry/walk/03-candidate.png",
+          "original": "assets/characters/infantry/walk/03-original.png",
+          "sourceRect": [
+            1292,
+            184,
+            1367,
+            272
+          ],
+          "sourceAnchor": [
+            1340,
+            271
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/infantry/walk/04-candidate.png",
+          "original": "assets/characters/infantry/walk/04-original.png",
+          "sourceRect": [
+            1367,
+            184,
+            1442,
+            272
+          ],
+          "sourceAnchor": [
+            1415,
+            271
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/infantry/walk/05-candidate.png",
+          "original": "assets/characters/infantry/walk/05-original.png",
+          "sourceRect": [
+            1442,
+            184,
+            1517,
+            272
+          ],
+          "sourceAnchor": [
+            1490,
+            271
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 6,
+          "image": "assets/characters/infantry/walk/06-candidate.png",
+          "original": "assets/characters/infantry/walk/06-original.png",
+          "sourceRect": [
+            1517,
+            184,
+            1592,
+            272
+          ],
+          "sourceAnchor": [
+            1565,
+            271
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 7,
+          "image": "assets/characters/infantry/walk/07-candidate.png",
+          "original": "assets/characters/infantry/walk/07-original.png",
+          "sourceRect": [
+            1592,
+            184,
+            1655,
+            272
+          ],
+          "sourceAnchor": [
+            1636,
+            271
+          ],
+          "offset": [
+            13,
+            8
+          ],
+          "origin": [
+            57,
+            95
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "망토·무기가 이웃 자세와 가까움. 경계 잘림과 번호 혼입을 검수해야 함."
+      ],
+      "panel": "assets/characters/infantry/walk-source.png",
+      "canvas": [
+        92,
+        104
+      ],
+      "origin": [
+        57,
+        95
+      ]
+    },
+    "attack": {
+      "id": "attack",
+      "name": "기본 공격",
+      "source": "soldiers",
+      "sourceRect": [
+        578,
+        279,
+        1039,
+        428
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": 6,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/infantry/attack/00-candidate.png",
+          "original": "assets/characters/infantry/attack/00-original.png",
+          "sourceRect": [
+            584,
+            327,
+            660,
+            417
+          ],
+          "sourceAnchor": [
+            626,
+            416
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            51,
+            97
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/infantry/attack/01-candidate.png",
+          "original": "assets/characters/infantry/attack/01-original.png",
+          "sourceRect": [
+            660,
+            327,
+            735,
+            417
+          ],
+          "sourceAnchor": [
+            701,
+            416
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            51,
+            97
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/infantry/attack/02-candidate.png",
+          "original": "assets/characters/infantry/attack/02-original.png",
+          "sourceRect": [
+            735,
+            327,
+            812,
+            417
+          ],
+          "sourceAnchor": [
+            778,
+            416
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            51,
+            97
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/infantry/attack/03-candidate.png",
+          "original": "assets/characters/infantry/attack/03-original.png",
+          "sourceRect": [
+            812,
+            327,
+            889,
+            417
+          ],
+          "sourceAnchor": [
+            851,
+            416
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            51,
+            97
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/infantry/attack/04-candidate.png",
+          "original": "assets/characters/infantry/attack/04-original.png",
+          "sourceRect": [
+            889,
+            327,
+            965,
+            417
+          ],
+          "sourceAnchor": [
+            927,
+            416
+          ],
+          "offset": [
+            13,
+            8
+          ],
+          "origin": [
+            51,
+            97
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/infantry/attack/05-candidate.png",
+          "original": "assets/characters/infantry/attack/05-original.png",
+          "sourceRect": [
+            965,
+            327,
+            1034,
+            417
+          ],
+          "sourceAnchor": [
+            1002,
+            416
+          ],
+          "offset": [
+            14,
+            8
+          ],
+          "origin": [
+            51,
+            97
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "검기/창끝이 이웃 자세와 겹칠 수 있음. 공격 판정 프레임 확정 보류."
+      ],
+      "panel": "assets/characters/infantry/attack-source.png",
+      "canvas": [
+        97,
+        106
+      ],
+      "origin": [
+        51,
+        97
+      ]
+    },
+    "hurt": {
+      "id": "hurt",
+      "name": "피격 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        1041,
+        279,
+        1317,
+        428
+      ],
+      "declaredFrames": 4,
+      "identifiedFrames": 4,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/infantry/hurt/00-candidate.png",
+          "original": "assets/characters/infantry/hurt/00-original.png",
+          "sourceRect": [
+            1047,
+            334,
+            1114,
+            417
+          ],
+          "sourceAnchor": [
+            1083,
+            416
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            45,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/infantry/hurt/01-candidate.png",
+          "original": "assets/characters/infantry/hurt/01-original.png",
+          "sourceRect": [
+            1114,
+            334,
+            1182,
+            417
+          ],
+          "sourceAnchor": [
+            1150,
+            416
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            45,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/infantry/hurt/02-candidate.png",
+          "original": "assets/characters/infantry/hurt/02-original.png",
+          "sourceRect": [
+            1182,
+            334,
+            1250,
+            417
+          ],
+          "sourceAnchor": [
+            1219,
+            416
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            45,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/infantry/hurt/03-candidate.png",
+          "original": "assets/characters/infantry/hurt/03-original.png",
+          "sourceRect": [
+            1250,
+            334,
+            1313,
+            417
+          ],
+          "sourceAnchor": [
+            1284,
+            416
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            45,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/infantry/hurt-source.png",
+      "canvas": [
+        85,
+        99
+      ],
+      "origin": [
+        45,
+        90
+      ]
+    },
+    "death": {
+      "id": "death",
+      "name": "사망 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        1319,
+        279,
+        1662,
+        428
+      ],
+      "declaredFrames": 5,
+      "identifiedFrames": 4,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/infantry/death/00-candidate.png",
+          "original": "assets/characters/infantry/death/00-original.png",
+          "sourceRect": [
+            1326,
+            334,
+            1404,
+            417
+          ],
+          "sourceAnchor": [
+            1370,
+            416
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            55,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/infantry/death/01-candidate.png",
+          "original": "assets/characters/infantry/death/01-original.png",
+          "sourceRect": [
+            1404,
+            334,
+            1487,
+            417
+          ],
+          "sourceAnchor": [
+            1451,
+            416
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            55,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/infantry/death/02-candidate.png",
+          "original": "assets/characters/infantry/death/02-original.png",
+          "sourceRect": [
+            1487,
+            334,
+            1571,
+            417
+          ],
+          "sourceAnchor": [
+            1532,
+            416
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            55,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/infantry/death/03-candidate.png",
+          "original": "assets/characters/infantry/death/03-original.png",
+          "sourceRect": [
+            1571,
+            334,
+            1657,
+            417
+          ],
+          "sourceAnchor": [
+            1614,
+            416
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            55,
+            90
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "표기 5프레임과 달리 4개 인물 자세만 식별됨. 누락 자세는 생성하지 않음."
+      ],
+      "panel": "assets/characters/infantry/death-source.png",
+      "canvas": [
+        106,
+        99
+      ],
+      "origin": [
+        55,
+        90
+      ]
+    }
+  }
+}

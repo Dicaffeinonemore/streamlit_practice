@@ -1,0 +1,21 @@
+{
+  "id": "infantry",
+  "name": "보병",
+  "animations": "data/animations/infantry.json",
+  "skills": "data/skills/infantry.json",
+  "productionReady": false,
+  "blockers": [
+    "프레임 경계 및 알파 검수",
+    "누락/중복 프레임과 순서 확인",
+    "공격 판정 타이밍 확인"
+  ],
+  "balance": {
+    "hp": null,
+    "speed": null
+  },
+  "render": {
+    "filter": "nearest",
+    "anchor": "feet",
+    "scale": 1
+  }
+}

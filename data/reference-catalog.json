@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "sourcePolicy": "original-pixels-only",
+  "sources": [
+    {
+      "id": "knight",
+      "originalFilename": "ChatGPT 이미지 2026년 10월 15일 오후 08_38_06-1.png",
+      "image": "assets/reference/sources/knight.png",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "a3a55ddc44379119790656f6638de16c5dabb461cbcf59856b32149690672d89",
+      "hasAlpha": false
+    },
+    {
+      "id": "soldiers",
+      "originalFilename": "ChatGPT 이미지 2026년 10월 15일 오후 08_38_08-2.png",
+      "image": "assets/reference/sources/soldiers.png",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "c21012ecf45c536561ca0bbcfda9c991df19639b090bc222b5252f6993ee44a0",
+      "hasAlpha": false
+    },
+    {
+      "id": "aurelion",
+      "originalFilename": "ChatGPT 이미지 2026년 10월 15일 오후 08_38_10-4.png",
+      "image": "assets/reference/sources/aurelion.png",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "797099edbe3ef57c259af1ba99e460cecccfe3f4c0411d0e23c01026a3b09703",
+      "hasAlpha": false
+    },
+    {
+      "id": "frozen_graveblord",
+      "originalFilename": "ChatGPT 이미지 2026년 10월 15일 오후 08_38_11-5.png",
+      "image": "assets/reference/sources/frozen_graveblord.png",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "db303fae29ccf2f7f821d2f3ed08ec211aae055d934cb6040c1196abb6bc7d5f",
+      "hasAlpha": false
+    },
+    {
+      "id": "black_moon_emperor",
+      "originalFilename": "ChatGPT 이미지 2026년 10월 15일 오후 08_39_04.png",
+      "image": "assets/reference/sources/black_moon_emperor.png",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "bbb4f75232a61158732300f8326898b62bbcf8f4be67904daf4e00fb00da1213",
+      "hasAlpha": false
+    }
+  ],
+  "characters": [
+    {
+      "id": "infantry",
+      "name": "보병",
+      "source": "soldiers",
+      "animations": "data/animations/infantry.json",
+      "skills": "data/skills/infantry.json",
+      "enemy": "data/enemies/infantry.json"
+    },
+    {
+      "id": "spearman",
+      "name": "창병",
+      "source": "soldiers",
+      "animations": "data/animations/spearman.json",
+      "skills": "data/skills/spearman.json",
+      "enemy": "data/enemies/spearman.json"
+    },
+    {
+      "id": "archer",
+      "name": "궁병",
+      "source": "soldiers",
+      "animations": "data/animations/archer.json",
+      "skills": "data/skills/archer.json",
+      "enemy": "data/enemies/archer.json"
+    },
+    {
+      "id": "knight",
+      "name": "기사",
+      "source": "knight",
+      "animations": "data/animations/knight.json",
+      "skills": "data/skills/knight.json",
+      "enemy": "data/enemies/knight.json"
+    },
+    {
+      "id": "aurelion",
+      "name": "황금왕 아우렐리온",
+      "source": "aurelion",
+      "animations": "data/animations/aurelion.json",
+      "skills": "data/skills/aurelion.json",
+      "enemy": "data/enemies/aurelion.json"
+    },
+    {
+      "id": "frozen_graveblord",
+      "name": "프로즌 그레이브로드",
+      "source": "frozen_graveblord",
+      "animations": "data/animations/frozen_graveblord.json",
+      "skills": "data/skills/frozen_graveblord.json",
+      "enemy": "data/enemies/frozen_graveblord.json"
+    },
+    {
+      "id": "black_moon_emperor",
+      "name": "블랙 문 엠페러",
+      "source": "black_moon_emperor",
+      "animations": "data/animations/black_moon_emperor.json",
+      "skills": "data/skills/black_moon_emperor.json",
+      "enemy": "data/enemies/black_moon_emperor.json"
+    }
+  ],
+  "effects": "data/effects/reference.json",
+  "candidateFrames": 139
+}
