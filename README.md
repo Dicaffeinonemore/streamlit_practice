@@ -30,6 +30,8 @@ python server.py
 
 ## 회귀 검증
 
+v1.10의 보스 4~5와 군단 병사 4종은 첨부 디자인 시트를 프레임 단위로 잘라 만든 스프라이트 아틀라스(`legion_sprites.js`)로 그립니다. 황금왕 아우렐리온은 `hd_sprites.js`의 프레임 아틀라스를 씁니다. `score.js`에는 일반 스테이지 5곡과 보스 전용 5곡의 악보 및 Web Audio 합성 악기가 있습니다. 보스 등장 시 전용 음악으로 전환하며, 외부 음원 다운로드는 필요하지 않습니다.
+
 Node.js와 Chrome/Chromium/Edge가 있는 환경에서:
 
 ```powershell
