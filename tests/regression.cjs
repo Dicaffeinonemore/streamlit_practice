@@ -106,6 +106,82 @@ function spriteChecks() {
   check(preservedGaps > 0, 'Pose gaps exercised');
   return 'All ' + frames + ' player frames repaired (' + repaired + ' pixels); original colors, exterior transparency and ' + preservedGaps + ' pose gaps preserved';
 }
+function legionChecks() {
+  // Every state of every sheet-cut unit must resolve to an existing frame with a stable ground anchor.
+  const check = (c, message) => { if (!c) throw new Error(message); };
+  const seen = {}, mark = (id, name) => { check(name in HD[id].N, id + ' missing frame ' + name); (seen[id] = seen[id] || new Set()).add(name); };
+  for (const type of ['grunt', 'rogue', 'archer', 'brute']) {
+    const e = mkEnemy(type, 400, 420), id = e.d.sprite;
+    check(HD[id] && HD_SCALE[id] > 0, 'Atlas for ' + id);
+    for (const form of ['atk', 'heavy']) for (const [st, len, pat] of [['wind', e.d.wind, 'swing'], ['act', e.d.act + 3, 'swing'], ['rec', e.d.rec, 'swing'], ['rec', 20, null], ['hurt', 20, null], ['dead', 70, null], ['chase', 1, null]])
+      for (let t = 0; t <= len; t++) { e.st = st; e.t = t; e.form = form; e.pat = pat; e.recT = len; e.walk = t % 2 === 0; mark(id, legionFrame(e)); }
+    e.st = 'down'; for (const z of [20, 0]) for (const t of [5, 30, 55]) { e.z = z; e.t = t; mark(id, legionFrame(e)); }
+    for (const name in HD[id].N) { const f = hdFrame(id, name); check(f.ay > 0 && f.ay <= f.L.h && f.ax >= 0 && f.ax < f.L.w, 'Ground anchor inside ' + id + ' ' + name); }
+  }
+  for (const type of ['boss3', 'boss4', 'boss5']) {
+    const e = mkEnemy(type, 400, 420), id = e.d.sprite;
+    for (const p2 of [false, true]) {
+      e.hp = p2 ? e.max * .4 : e.max;
+      for (const pat of Object.keys(e.d.pats)) for (let t = 0; t <= 3400; t += 10) { e.st = 'pat'; e.pat = pat; e.pt = t; mark(id, bossHD(e)); }
+      for (const st of ['intro', 'dead', 'stun', 'down', 'chase']) for (let k = 0; k <= 160; k += 4) {
+        e.st = st; e.t = k; e.z = k % 8 ? 0 : 10; e.walk = k % 8 === 0; introT = k / 160 * INTRO_MS; tick = k * 7; mark(id, bossHD(e));
+      }
+    }
+  }
+  return 'Sheet-cut motion: ' + Object.entries(seen).map(([id, set]) => id + ' ' + set.size).join(', ') + ' frames reached';
+}
+async function scoreChecks() {
+  const check = (ok, name) => { if (!ok) throw new Error(name); };
+  const fingerprints = new Set(), results = [];
+  for (let stage = 0; stage < 5; stage++) for (const boss of [false, true]) {
+    const buffer = await AUDIO.renderPreview(stage, boss, 4), data = buffer.getChannelData(0);
+    let peak = 0, energy = 0, hash = 0;
+    for (let i = 0; i < data.length; i++) { check(Number.isFinite(data[i]), 'Finite audio samples'); peak = Math.max(peak, Math.abs(data[i])); energy += data[i] * data[i]; if (i % 997 === 0) hash += data[i] * i; }
+    const rms = Math.sqrt(energy / data.length);
+    check(peak < .98 && rms > .005, 'Audible, unclipped score ' + stage + ':' + boss + ' (rms ' + rms + ', peak ' + peak + ')');
+    fingerprints.add(hash.toFixed(4)); results.push({ stage, boss, rms: +rms.toFixed(4), peak: +peak.toFixed(4) });
+  }
+  check(fingerprints.size === 10, 'Ten distinct compositions');
+  window.requestAnimationFrame = () => 0; AUDIO.enable(false); beginGame();
+  for (let stage = 0; stage < 5; stage++) {
+    startStage(stage); check(AUDIO.currentMusic()?.boss === false, 'Stage selects exploration score');
+    spawnWave({ e: [[STAGES[stage].boss, 1]], boss: true });
+    check(AUDIO.currentMusic()?.stage === stage && AUDIO.currentMusic()?.boss, 'Boss entry selects own score');
+    const name = AUDIO.currentMusic().name; AUDIO.enable(true); AUDIO.pause(true); AUDIO.pause(false); AUDIO.enable(false); AUDIO.enable(true);
+    check(AUDIO.currentMusic()?.name === name, 'Mute/resume retains boss score');
+    AUDIO.stop(0); AUDIO.enable(false); AUDIO.enable(true);
+    check(AUDIO.currentMusic() === null, 'Stopped score cannot restart after mute');
+  }
+  AUDIO.silence(); AUDIO.enable(false); toTitle();
+  return results;
+}
+async function scorePreviewWav(stage, boss) {
+  const b = await AUDIO.renderPreview(stage, boss, 16), frames = b.length, bytes = new ArrayBuffer(44 + frames * 4), v = new DataView(bytes);
+  const str = (at, s) => [...s].forEach((c, i) => v.setUint8(at + i, c.charCodeAt(0)));
+  str(0,'RIFF');v.setUint32(4,36+frames*4,true);str(8,'WAVE');str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,2,true);
+  v.setUint32(24,b.sampleRate,true);v.setUint32(28,b.sampleRate*4,true);v.setUint16(32,4,true);v.setUint16(34,16,true);str(36,'data');v.setUint32(40,frames*4,true);
+  for(let ch=0;ch<2;ch++) { const data=b.getChannelData(ch); for(let i=0;i<frames;i++) { if(!Number.isFinite(data[i]) || Math.abs(data[i])>=.98) throw new Error('Preview clips');v.setInt16(44+i*4+ch*2,Math.round(data[i]*32767),true); } }
+  let binary='';const array=new Uint8Array(bytes);for(let at=0;at<array.length;at+=16384) binary+=String.fromCharCode(...array.subarray(at,at+16384));return btoa(binary);
+}
+function referenceSheet() {
+  // Contact sheet of every soldier / boss 4-5 frame at in-game scale, for visual review.
+  const ids = ['infantry', 'spearman', 'archer', 'knight', 'boss4', 'boss5'], cell = 190, cols = 16;
+  const rows = ids.map(id => Math.ceil(Object.keys(HD[id].N).length / cols)), canvas = document.createElement('canvas');
+  canvas.width = cols * cell; canvas.height = rows.reduce((a, b) => a + b, 0) * cell;
+  const c = canvas.getContext('2d'); c.imageSmoothingEnabled = false; c.fillStyle = '#2a2d3a'; c.fillRect(0, 0, canvas.width, canvas.height);
+  let row = 0;
+  ids.forEach((id, n) => {
+    Object.keys(HD[id].N).forEach((name, i) => {
+      const f = hdFrame(id, name), k = HD_SCALE[id], s = document.createElement('canvas'), x = (i % cols) * cell, y = (row + Math.floor(i / cols)) * cell;
+      s.width = f.L.w; s.height = f.L.h; s.getContext('2d').putImageData(new ImageData(f.L.d, f.L.w, f.L.h), 0, 0);
+      c.fillStyle = '#c33'; c.fillRect(x, y + cell - 12, cell, 1);
+      c.drawImage(s, x + cell / 2 - f.ax * k, y + cell - 12 - f.ay * k, f.L.w * k, f.L.h * k);
+      c.fillStyle = '#eee'; c.font = '11px sans-serif'; c.fillText(id + ' ' + name, x + 3, y + 12);
+    });
+    row += rows[n];
+  });
+  return canvas.toDataURL().split(',')[1];
+}
 function combatChecks() {
   window.requestAnimationFrame = () => 0;
   const passed = [];
@@ -230,6 +306,11 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     }
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     console.log('PASS ' + await evaluate('(' + spriteChecks.toString() + ')()'));
+    console.log('PASS ' + await evaluate('(' + legionChecks.toString() + ')()'));
+    console.log('PASS Ten orchestral scores and boss music lifecycle: ' + JSON.stringify(await evaluate('(' + scoreChecks.toString() + ')()')));
+    for (const [stage, boss, name] of [[0, false, 'stage-march'], [2, true, 'boss-aurelion']]) {
+      fs.writeFileSync(path.join(profile, name + '.wav'), Buffer.from(await evaluate('(' + scorePreviewWav.toString() + ')(' + stage + ',' + boss + ')'), 'base64'));
+    }
     const results = await evaluate('(' + combatChecks.toString() + ')()');
     results.forEach(name => console.log('PASS ' + name));
     await ready(base); assert.deepEqual(await evaluate('({stage:UX.checkpoint().stage,score:UX.checkpoint().score})'), { stage: 1, score: 2345 });
@@ -265,8 +346,15 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('window.requestAnimationFrame=()=>0;beginGame();scene="play";render()');
     console.log('PASS Single HTML bundle initializes and renders');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
-    await evaluate('UX.options.touch=false;document.body.classList.remove("touch");player=newPlayer();startStage(3);scene="play";player.x=220;player.inv=0;enemies=[mkEnemy("boss4",430,420),mkEnemy("grunt",530,460)];render()');
+    await evaluate('UX.options.touch=false;document.body.classList.remove("touch");player=newPlayer();startStage(2);scene="play";player.x=210;player.inv=0;enemies=[mkEnemy("boss3",430,420)];render()');
+    await screenshot('stage3-king');
+    await evaluate('startPat(enemies[0],"cleave");enemies[0].pt=820;render()');
+    await screenshot('stage3-cleave');
+    await evaluate('UX.options.touch=false;document.body.classList.remove("touch");player=newPlayer();startStage(3);scene="play";player.x=220;player.inv=0;enemies=[mkEnemy("boss4",430,420),mkEnemy("grunt",560,460),mkEnemy("rogue",300,380),mkEnemy("archer",600,360),mkEnemy("brute",140,470)];render()');
     await screenshot('stage4');
+    await evaluate('player=newPlayer();startStage(4);scene="play";player.x=210;player.inv=0;enemies=[mkEnemy("boss5",430,420)];render()');
+    await screenshot('stage5-emperor');
+    fs.writeFileSync(path.join(profile, 'reference-units.png'), Buffer.from(await evaluate('(' + referenceSheet.toString() + ')()'), 'base64'));
     await evaluate('toTitle();AUDIO.enable(false)');
     await evaluate('(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=()=>{throw new DOMException("blocked", "SecurityError")};try{beginGame();scene="play";render();}finally{Storage.prototype.setItem=original}})()');
     assert.equal(await evaluate('scene'), 'play');

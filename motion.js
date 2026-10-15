@@ -261,11 +261,11 @@
     }
   }
   // 도살자 고라스: 내려찍기 충격파 (fx = 파도 앞머리 x)
-  function shockwave(L, fx, t, dir, gy) {
+  function shockwave(L, fx, t, dir, gy, colors = ['#fff0c0', '#f6b25a', '#a8864a']) {
     const h = Math.max(1, Math.round(9 * (1 - t / 1100)));
     for (let k = 0; k < 16; k++) {
       const px = fx - dir * k, hh = Math.max(1, Math.round(h * (1 - k / 16)));
-      for (let j = 0; j < hh; j++) L.put(px, gy - 1 - j, j > hh - 2 ? '#fff0c0' : (j > hh / 2 ? '#f6b25a' : '#a8864a'));
+      for (let j = 0; j < hh; j++) L.put(px, gy - 1 - j, j > hh - 2 ? colors[0] : (j > hh / 2 ? colors[1] : colors[2]));
     }
     const R = rng(31 + (dir > 0 ? 1 : 0));
     for (let i = 0; i < 6; i++) {
@@ -274,7 +274,7 @@
     }
   }
   // 까마귀 마녀 모르그라: 초록 불꽃 구슬, 순간이동 고리
-  const ORB_PAL = { green: ['#7dff7a', '#2a6a3a', '#eaffea'], blue: ['#7ad8ff', '#1e4a6a', '#eaf8ff'], fire: ['#ff8a2a', '#8a1a10', '#fff0c0'] };
+  const ORB_PAL = { green: ['#7dff7a', '#2a6a3a', '#eaffea'], blue: ['#7ad8ff', '#1e4a6a', '#eaf8ff'], fire: ['#ff8a2a', '#8a1a10', '#fff0c0'], eclipse: ['#ff498d', '#4b153e', '#ffe4fa'] };
   function orb(L, x, y, vx, vy, t, pal) {
     const m = Math.hypot(vx, vy) || 1, ux = vx / m, uy = vy / m, P = ORB_PAL[pal] || ORB_PAL.green;
     for (let k = 1; k <= 6; k++) L.put(x - ux * k * 2, y - uy * k * 2 + Math.sin(t * 0.02 + k) * 0.8, k < 3 ? P[0] : P[1]);
@@ -288,26 +288,26 @@
     for (let i = 0; i < 10; i++) { const a = R() * 6.28; L.put(x + Math.cos(a) * r * 1.2, y - Math.sin(a) * r * 1.2 - p * 8, '#7dff7a'); }
   }
   // 황금왕 오렐리온: 초승달 검기, 화염 기둥
-  function goldWave(L, x, y, dir) {
+  function goldWave(L, x, y, dir, colors = ['#fff3b8', '#f3d26a', '#d4a437']) {
     for (let k = 0; k < 3; k++) {
       L.arc(x - dir * k * 5, y, 16, (dir > 0 ? -62 : 118) * RAD, (dir > 0 ? 62 : 242) * RAD,
-        k === 0 ? '#fff3b8' : (k === 1 ? '#f3d26a' : '#d4a437'), 3, 1 - k * 0.3);
+        colors[k], 3, 1 - k * 0.3);
     }
     L.put(x + dir * 16, y, '#ffffff');
     const R = rng(41);
-    for (let i = 0; i < 5; i++) L.put(x - dir * (8 + R() * 14), y + (R() - 0.5) * 22, '#ffd23a');
+    for (let i = 0; i < 5; i++) L.put(x - dir * (8 + R() * 14), y + (R() - 0.5) * 22, colors[1]);
   }
-  function pillar(L, x, t, p, gy) {      // p: 0..1 (솟아오름 → 꺼짐)
+  function pillar(L, x, t, p, gy, colors = ['#fff0c0', '#ffb02a', '#ff5a1a']) {      // p: 0..1 (솟아오름 → 꺼짐)
     const hgt = Math.round(66 * Math.sin(clamp(p, 0, 1) * Math.PI * 0.9 + 0.2)), w = 7 + Math.round(3 * Math.sin(t * 0.03));
     for (let j = 0; j < hgt; j++) {
       const taper = 1 - j / hgt * 0.55, hw = Math.max(2, Math.round(w * taper + Math.sin(j * 0.5 + t * 0.04) * 1.5));
-      L.rect(x - hw, gy - 1 - j, hw * 2, 1, '#ff5a1a');
-      const iw = Math.max(1, Math.round(hw * 0.62)); L.rect(x - iw, gy - 1 - j, iw * 2, 1, '#ffb02a');
-      const cw = Math.max(0, Math.round(hw * 0.28)); if (cw) L.rect(x - cw, gy - 1 - j, cw * 2, 1, '#fff0c0');
+      L.rect(x - hw, gy - 1 - j, hw * 2, 1, colors[2]);
+      const iw = Math.max(1, Math.round(hw * 0.62)); L.rect(x - iw, gy - 1 - j, iw * 2, 1, colors[1]);
+      const cw = Math.max(0, Math.round(hw * 0.28)); if (cw) L.rect(x - cw, gy - 1 - j, cw * 2, 1, colors[0]);
     }
-    L.rect(x - w - 3, gy - 1, (w + 3) * 2, 2, '#ffb02a');
+    L.rect(x - w - 3, gy - 1, (w + 3) * 2, 2, colors[1]);
     const R = rng(17);
-    for (let i = 0; i < 8; i++) { const ph = (t * 0.002 + R()) % 1; L.put(x + (R() - 0.5) * 26, gy - ph * hgt, '#ffd23a'); }
+    for (let i = 0; i < 8; i++) { const ph = (t * 0.002 + R()) % 1; L.put(x + (R() - 0.5) * 26, gy - ph * hgt, colors[1]); }
   }
   // 필살기 흑월참: 붉은 초승달 (큰 원에서 어긋난 원을 뺀다)
   function moon(L, cx, cy, r, p, flip) {

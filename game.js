@@ -87,12 +87,12 @@ const ET = {
            h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진', hook: '갈고리 끌어오기', meat: '고기 덩어리 투척' } },
   boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 380, spd: 1.2, range: 64, score: 3500, kd: true,
            h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼', feather: '깃털 투척', staff: '지팡이 강타', soul: '영혼 추수' } },
-  boss3: { name: '황금왕 오렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, range: 68, score: 6000, kd: true,
+  boss3: { name: '황금왕 아우렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 520, spd: 1.3, range: 68, score: 6000, kd: true,
            h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '황금 기둥', charge: '왕의 돌진', cleave: '황금 중파참', whirl: '황금 선풍' } },
-  boss4: { name: '망령 기사단장 바르굴', en: 'VARGUL', sprite: 'boss4', boss: true, hp: 580, spd: 1.25, range: 70, score: 8000, kd: true,
+  boss4: { name: '프로즌 그레이브로드', en: 'FROZEN GRAVELORD', sprite: 'boss4', boss: true, hp: 580, spd: 1.25, range: 70, score: 8000, kd: true,
            h: 152, s: 1, hw: 34, orb: 'blue', pats: { frost: '빙결 십자 · 이동 / 점프', slam: '묘지 내려찍기', slash3: '망령 삼연참', orbs: '혼불 탄막' } },
-  boss5: { name: '마왕 모르데카이', en: 'MORDECAI', sprite: 'boss5', boss: true, hp: 740, spd: 1.2, range: 78, score: 12000, kd: true,
-           h: 176, s: 1, hw: 40, orb: 'fire', pats: { eclipse: '심연 고리 · 점프로 넘기', slam: '심연 강타', pillars: '지옥불 기둥', orbs: '마염 탄막', charge: '마왕 돌진', ravens: '악령 떼' } },
+  boss5: { name: '블랙 문 엠페러', en: 'BLACK MOON EMPEROR', sprite: 'boss5', boss: true, hp: 740, spd: 1.2, range: 78, score: 12000, kd: true,
+           h: 176, s: 1, hw: 40, orb: 'eclipse', pats: { eclipse: '심연 고리 · 점프로 넘기', slam: '심연 강타', pillars: '지옥불 기둥', orbs: '마염 탄막', charge: '마왕 돌진', ravens: '악령 떼' } },
 };
 // 패턴 시작 후 이 시간(ms) 동안 머리 위에 ! 경고 표시
 const TELE = { slam: 650, sweep: 450, rage: 550, hook: 500, meat: 500, orbs: 500, ravens: 450, feather: 450,
@@ -346,6 +346,7 @@ function spawnWave(w) {
       const b = mkEnemy(type, camX + VW * 0.72, clamp(player.y, GTOP + 40, GBOT - 30));
       b.st = 'intro'; b.z = 360; b.face = -1;
       enemies.push(b); introBoss = b; introT = 0; introLand = false; scene = 'bossintro';
+      AUDIO.bossMusic(stageIdx);
       continue;
     }
     const x = side > 0 ? camX + VW + rand(30, 110) : camX - rand(30, 110);
@@ -836,6 +837,7 @@ function spawnAdds(types) {
 function startAttack(e, pat) {
   e.pat = pat; e.st = 'wind'; e.t = 0; e.hitSet = new Set();
   e.face = player.x >= e.x ? 1 : -1;
+  e.form = e.d.sprite === 'knight' && Math.random() < 0.4 ? 'heavy' : 'atk';   // 중기사: 내려베기 / 찌르며 베기
   sfx('bwind');
 }
 
@@ -844,6 +846,7 @@ function startAttack(e, pat) {
 // 모르그라: 순간이동 / 녹염 탄막 / 까마귀 떼
 // 오렐리온: 삼연 검기 / 화염 기둥 / 왕의 돌진(분노)
 // 체력 절반 이하(2페이즈)에서는 탄 수가 늘고 쿨타임이 짧아진다
+function bossColors(e) { return e.type === 'boss4' ? ['#eaf8ff','#7ad8ff','#365caa'] : e.type === 'boss5' ? ['#ffe4fa','#ff498d','#691a52'] : ['#fff3b8','#f3d26a','#d4a437']; }
 function phase2(e) { return e.hp < e.max * 0.5; }
 function resetBossFx(e) { e.pat = null; e.bdx = 0; e.bdy = 0; e.alpha = 1; e.wash = null; e.invuln = false; e.hot = false; }
 function pickPat(e, adx, ady, p2) {
@@ -1074,7 +1077,7 @@ function runPat(e) {
         }
         if (t >= s + 260 && !m['s' + k]) {
           m['s' + k] = 1; e.bdy = 0; e.x += f * 10;
-          hazards.push({ type: 'wave', x: e.x + f * 52, y: e.y, h: 52, dir: f, v: (p2 ? 150 : 125) * SC / 1000, age: 0 });
+          hazards.push({ type: 'wave', colors: bossColors(e), x: e.x + f * 52, y: e.y, h: 52, dir: f, v: (p2 ? 150 : 125) * SC / 1000, age: 0 });
           shake = Math.max(shake, 5); sfx('bwave');
         }
       }
@@ -1086,7 +1089,7 @@ function runPat(e) {
       const xs = p2 ? [0, -52, 52, -104, 104] : [0, -60, 60];
       if (t >= 300 && !m.a) {
         m.a = 1;
-        xs.forEach((o, i) => hazards.push({ type: 'pillar', x: clamp(p.x + o, camX + 20, camX + VW - 20), y: p.y, age: 0, delay: 620 + i * 100, life: 650, hit: false }));
+        xs.forEach((o, i) => hazards.push({ type: 'pillar', colors: bossColors(e), x: clamp(p.x + o, camX + 20, camX + VW - 20), y: p.y, age: 0, delay: 620 + i * 100, life: 650, hit: false }));
       }
       if (t >= 920 && !m.b) { m.b = 1; shake = Math.max(shake, 8); }
       if (t >= 300 + 620 + xs.length * 100 + 700) endPat(e);
@@ -1097,8 +1100,8 @@ function runPat(e) {
       else e.wash = null;
       if (t >= 820 && !m.a) {
         m.a = 1; e.hot = true; sfx('bwave'); shake = Math.max(shake, 16);
-        hazards.push({ type: 'shock', x: e.x + f * 60, y: e.y, dir: f, age: 0, hit: false, gold: true });
-        if (p2) hazards.push({ type: 'shock', x: e.x - f * 60, y: e.y, dir: -f, age: 0, hit: false, gold: true });
+        hazards.push({ type: 'shock', colors: bossColors(e), x: e.x + f * 60, y: e.y, dir: f, age: 0, hit: false, gold: true });
+        if (p2) hazards.push({ type: 'shock', colors: bossColors(e), x: e.x - f * 60, y: e.y, dir: -f, age: 0, hit: false, gold: true });
         burst(e.x + f * 60, e.y, 8, ['#fff3b8', '#ffd23a', '#d4a437']);
       }
       if (t >= 820 && t < 1100 && !m.h && inReach(e, p, 92, 30, 70) && hurtPlayer(16, f, true)) m.h = 1;
@@ -1127,7 +1130,7 @@ function runPat(e) {
 function slamImpact(e) {
   const p = player;
   shake = Math.max(shake, 16); hitStop = Math.max(hitStop, 4); sfx('slam');
-  for (const d of [-1, 1]) hazards.push({ type: 'shock', x: e.x + d * 20, y: e.y, dir: d, age: 0, hit: false });
+  for (const d of [-1, 1]) hazards.push({ type: 'shock', colors: bossColors(e), x: e.x + d * 20, y: e.y, dir: d, age: 0, hit: false });
   burst(e.x + e.face * 30, e.y, 4, ['#fff0c0', '#f6b25a', '#a8864a']);
   if (Math.abs(p.x - e.x) < 70 && Math.abs(p.y - e.y) < 26 && p.z < 30) hurtPlayer(14, Math.sign(p.x - e.x) || 1, true);
 }
@@ -1885,6 +1888,7 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if (HD[e.d.sprite] && !e.boss) { drawLegion(e); return; }
   if (HD[e.d.sprite]) { drawEnemyHD(e); return; }
   const d = e.d, S = SPRITES[d.sprite], sx = e.x - camX;
   drawShadow(sx, e.y, S.sh, e.z);
@@ -1943,7 +1947,7 @@ function drawEnemy(e) {
 function drawGhost(g) {
   if (HD[g.id]) {                                  // 고해상도: 대시·돌진 프레임으로 잔상
     const F = hdFigure(g.id, HD_GHOST[g.id], g.face, { wash: g.wash, washA: 0.55 });
-    present(F, g.x - camX, g.y - g.z, (g.id === 'player' ? 0.4 : 0.35) * (1 - g.age / g.life), false, g.face, 0, 1);
+    present(F, g.x - camX, g.y - g.z, (g.id === 'player' ? 0.4 : 0.35) * (1 - g.age / g.life), false, g.face, 0, HD_SCALE[g.id] || 1);
     return;
   }
   const F = figure(g.id, g.face, null, { f: g.id === 'player' ? 14 : 0, lean: g.id === 'player' ? 6 : 7, wash: g.wash, washA: 0.55 });
@@ -2003,11 +2007,13 @@ for (const id in HD_DATA) {
     if (id === 'player') sealSpritePinholes(L);
     return { L, ax: fd.ax, ay: fd.ay, bot };
   });
-  HD[id] = { F, N: D.n };
+  const cnt = {};                                  // 동작별 프레임 수 (idle_0 … idle_5 → idle: 6)
+  for (const name in D.n) { const a = name.slice(0, name.lastIndexOf('_')); cnt[a] = (cnt[a] || 0) + 1; }
+  HD[id] = { F, N: D.n, cnt };
 }
-const HD_GHOST = { player: 'skd_2', boss1: 'a4_3', boss2: 'flame_5', boss3: 'a11' };
-// 지팡이 끝·검 끝(탄막 발사, 검기 불꽃 위치): 발밑 기준 [앞쪽 x, 높이]
-const HD_TIP = { boss1: [40, 60], boss2: [62, 91], boss3: [44, 64] };
+const HD_GHOST = { player: 'skd_2', boss1: 'a4_3', boss2: 'flame_5', boss3: 'a11', boss4: 'walk_3', boss5: 'dash_10' };
+// 지팡이 끝·검 끝(탄막 발사, 검기 불꽃 위치): 발밑 기준 [앞쪽 x, 높이] (월드 px)
+const HD_TIP = { boss1: [40, 60], boss2: [62, 91], boss3: [44, 64], boss4: [46, 112], boss5: [52, 118] };
 function hdFrame(id, name) { const H = HD[id], i = H.N[name]; return H.F[i === undefined ? 0 : i]; }
 const HPAD = 24;
 // 프레임 1장을 버퍼에 그린다. o = { lean(px, 앞 +), dx, crouch, flash, wash, washA, bottom(발밑 대신 그림 맨 아래를 기준점으로) }
@@ -2128,6 +2134,60 @@ function bossHD(e) {
     if (e.hr < 260) return 'hurt_' + (e.hheavy ? 2 : Math.min(3, Math.floor(e.hr / 90)));
     return e.walk ? 'walk_' + Math.floor(T / 120) % 8 : 'idle_' + Math.floor(T / 220) % 6;
   }
+  if (id === 'boss4') {                            // 프로즌 그레이브로드
+    if (e.st === 'intro') return iu < 0.42 ? 'idle_1' : iu < 0.56 ? 'wave_0' : iu < 0.66 ? 'wave_1' : iu < 0.9 ? 'intro_8' : 'idle_1';
+    if (e.st === 'dead') return 'death_' + Math.min(6, Math.floor(dt / 230));
+    if (e.st === 'stun') return Math.floor(T / 300) % 2 ? 'death_1' : 'wave_1';
+    if (e.st === 'down') return e.z > 0 ? 'death_1' : e.t > 48 ? 'wave_0' : 'death_2';
+    if (e.st === 'pat') {
+      if (e.pat === 'frost') {                     // 웅크렸다가 일어서며 검을 박아 얼음을 솟구치게 한다 (2페이즈는 두 번)
+        const u = p2 && t >= 1400 ? t - 1400 : t;
+        return u < 300 ? 'wave_0' : u < 650 ? 'wave_1' : u < 1050 ? 'wave_2' : u < 1400 ? 'wave_7' : 'wave_2';
+      }
+      if (e.pat === 'slam') {                      // 서리창을 끌어 올렸다가 땅에 찍는다
+        if (t < 300) return 'spear_0'; if (t < 650) return 'spear_2';
+        if (!p2) return t < 1000 ? 'spear_3' : 'spear_2';
+        return t < 800 ? 'spear_3' : t < 950 ? 'spear_2' : t < 1300 ? 'spear_3' : 'spear_2';
+      }
+      if (e.pat === 'slash3') {                    // 서리 베기: 들어 올림 → 세 방향 베기 → 낮게 마무리
+        const n = p2 ? 4 : 3, gap = p2 ? 340 : 420, k = Math.min(n - 1, Math.floor(t / gap)), u = t - k * gap;
+        if (t >= (n - 1) * gap + 520) return 'sk1_5';
+        return u < 200 ? (k ? 'sk1_1' : 'sk1_0') : u < 260 ? 'sk1_1' : 'sk1_' + (2 + k % 3);
+      }
+      if (e.pat === 'orbs') {                      // 망령을 불러내 혼불을 쏜다
+        const n = p2 ? 7 : 5;
+        return t < 250 ? 'summon_0' : t < 500 ? 'summon_2' : t < 500 + n * 110 + 250 ? 'summon_3' : 'summon_0';
+      }
+    }
+    return e.walk ? 'walk_' + Math.floor(T / 120) % 8 : 'idle_' + (1 + Math.floor(T / 190) % 7);
+  }
+  if (id === 'boss5') {                            // 블랙 문 엠페러
+    if (e.st === 'intro') return iu < 0.42 ? 'dash_0' : iu < 0.56 ? 'descent_2' : iu < 0.9 ? 'descent_6' : 'idle_1';
+    if (e.st === 'dead') return 'death_' + Math.min(8, Math.floor(dt / 190));
+    if (e.st === 'stun') return Math.floor(T / 300) % 2 ? 'death_1' : 'death_2';
+    if (e.st === 'down') return e.z > 0 || e.t > 48 ? 'death_1' : 'death_2';
+    if (e.st === 'pat') {
+      if (e.pat === 'eclipse') return t < 400 ? 'sk2_0' : t < 1300 ? 'sk2_2' : t < 2000 ? 'sk2_7' : t < 2500 ? 'sk2_0' : 'idle_1';   // 종언의 월식
+      if (e.pat === 'slam') return t < 250 ? 'descent_0' : t < 500 ? 'descent_1' : t < (p2 ? 1300 : 1000) ? 'descent_2' : 'descent_6';   // 암흑 강하
+      if (e.pat === 'pillars') return t < 300 ? 'sk3_0' : t < 620 ? 'sk3_1' : t < 920 ? 'sk3_3' : t < 1500 ? 'sk3_11' : 'sk3_0';   // 허무의 처형식
+      if (e.pat === 'orbs') {                      // 흑월 연참: 초승달 검기를 연달아 날린다
+        const n = p2 ? 7 : 5;
+        if (t < 250) return 'sk1_0'; if (t < 500) return 'sk1_1';
+        return t < 500 + n * 110 + 150 ? 'sk1_' + (2 + Math.floor((t - 500) / 110) % 5) : 'sk1_1';
+      }
+      if (e.pat === 'charge') {                    // 월영 돌진
+        if (t < 225) return 'dash_0'; if (t < 450) return 'dash_2';
+        if (t < 1010) return Math.floor(t / 90) % 2 ? 'dash_8' : 'dash_10';
+        return t < 1250 ? 'dash_14' : t < 1450 ? 'dash_17' : 'dash_0';
+      }
+      if (e.pat === 'ravens') {                    // 흑월 올려치기로 악령을 풀어놓는다
+        const Q = [[150, 'upper_0'], [300, 'upper_1'], [450, 'upper_2'], [650, 'upper_4'], [850, 'upper_5'], [1100, 'upper_6']];
+        for (const [at, name] of Q) if (t < at) return name;
+        return 'upper_0';
+      }
+    }
+    return e.walk ? 'walk_' + Math.floor(T / 115) % 8 : 'idle_' + Math.floor(T / 170) % 7;
+  }
   // 황금왕 오렐리온
   if (e.st === 'intro') {                          // 빛기둥 속에서 모습을 드러낸다
     const Q = ['i0', 'i1', 'i2', 'i3', 'i5', 'i7', 'i8', 'i9'];
@@ -2159,8 +2219,46 @@ function bossHD(e) {
   if (e.hr < 260) return 'h' + [1, 2, 3, 4][Math.min(3, Math.floor(e.hr / 90))];
   return ['i11', 'i13', 'i15', 'i13'][Math.floor(T / (e.walk ? 130 : 260)) % 4];
 }
+// ---- 검은 달 군단 병사 (legion_sprites.js): 상태 → 프레임
+// 공격 모션은 [예고, 판정, 회복] 구간마다 보여 줄 프레임 번호. 각 구간 길이는 ET 의 wind/act/rec 틱
+const LEGION_ATK = {
+  infantry: { atk: [[0, 1], [2, 3], [4, 5]] },
+  spearman: { atk: [[0, 1], [2, 3, 4], [5]] },
+  archer: { atk: [[0, 1, 2, 3], [4], [4]] },
+  knight: { atk: [[0, 1], [2, 3], [4, 5]], heavy: [[0], [1, 2], [3]] },
+};
+const hdCount = (id, anim) => HD[id].cnt[anim] || 1;
+function legionFrame(e) {
+  const id = e.d.sprite, d = e.d, t = e.t, T = tick * MS + e.id * 137;
+  const pick = (anim, list, u) => anim + '_' + list[Math.min(list.length - 1, Math.floor(clamp(u, 0, 0.999) * list.length))];
+  const form = LEGION_ATK[id][e.form] ? e.form : 'atk', A = LEGION_ATK[id][form];
+  switch (e.st) {
+    case 'wind': return pick(form, A[0], t / d.wind);
+    case 'act': return pick(form, A[1], t / (d.act + 2));
+    case 'rec':
+      if (!e.pat) return 'hurt_3';                 // 쓰러졌다가 일어나는 중
+      return t < e.recT * 0.6 ? pick(form, A[2], t / (e.recT * 0.6)) : 'idle_0';
+    case 'hurt': return pick('hurt', [0, 1, 2], t / 18);
+    case 'down': return e.z > 0 ? 'hurt_2' : t < 46 ? 'death_' + (hdCount(id, 'death') - 1) : 'hurt_3';
+    case 'dead': return 'death_' + Math.min(hdCount(id, 'death') - 1, Math.floor(t / 7));
+    default: return e.walk ? 'walk_' + Math.floor(T / 95) % hdCount(id, 'walk') : 'idle_' + Math.floor(T / 170) % hdCount(id, 'idle');
+  }
+}
+function drawLegion(e) {
+  const id = e.d.sprite, sx = e.x - camX, o = {};
+  drawShadow(sx, e.y, SPRITES[id].sh, e.z);
+  if (e.hr < 400 && e.st !== 'dead' && e.st !== 'down') {   // 피격 반동: 맞은 쪽 반대로 꺾였다가 돌아온다
+    const osc = Math.cos(e.hr * 0.03) * Math.exp(-e.hr / 160);
+    o.lean = e.hdir * (e.hheavy ? 6 : 3.5) * osc; o.dx = e.hdir * (e.hheavy ? 4 : 2) * Math.exp(-e.hr / 160);
+  }
+  if (e.flash > 0) { o.wash = '#ffffff'; o.washA = 0.7; }
+  else if (e.st === 'dead' && e.bolted) { o.wash = '#cfe0ff'; o.washA = 0.7; }
+  else if (e.st === 'wind' && e.t > 6 && Math.floor(e.t / 4) % 2) { o.wash = '#ffffff'; o.washA = 0.3; }   // 공격 예고
+  const alpha = e.st === 'dead' ? clamp(1 - (e.t - 45) / 20, 0, 1) : 1;
+  present(hdFigure(id, legionFrame(e), e.face, o), sx, e.y - e.z, alpha, false, e.face, 0, HD_SCALE[id]);
+}
 function drawEnemyHD(e) {
-  const d = e.d, id = d.sprite, S = SPRITES[id], sx = e.x - camX, o = { dx: 0 };
+  const d = e.d, id = d.sprite, S = SPRITES[id], sx = e.x - camX, o = { dx: 0 }, k = HD_SCALE[id] || 1;
   drawShadow(sx, e.y, S.sh, e.z);
   let alpha = 1;
   // 피격 반동: 맞은 쪽 반대로 꺾였다가 흔들리며 돌아온다
@@ -2171,18 +2269,18 @@ function drawEnemyHD(e) {
   if (e.flash > 0) { o.wash = '#ffffff'; o.washA = 0.7; }
   let dy = 0;
   if (e.st === 'pat') {
-    o.dx += e.bdx * e.face * SC; dy = e.bdy * SC; alpha = e.alpha;
+    o.dx += e.bdx * e.face * SC / k; dy = e.bdy * SC; alpha = e.alpha;
     if (e.wash && !o.wash) { o.wash = e.wash; o.washA = 0.4; }
   } else if (e.st === 'stun') o.lean = (o.lean || 0) + Math.sin(tick * MS * 0.012) * 3;
   else if (e.st === 'dead') {
-    const t = e.t * MS, fade = id === 'boss3' ? 1750 : 1500;
+    const t = e.t * MS, fade = id === 'boss3' || id === 'boss5' ? 1750 : 1500;
     alpha = t < fade ? 1 : Math.max(0, 1 - (t - fade) / (2000 - fade));
     if (t < 900 && Math.floor(t / 70) % 2 === 0) { o.wash = '#ffffff'; o.washA = 0.6; }
   }
   if (id === 'boss2' && e.st !== 'dead' && e.st !== 'down') dy += Math.round(Math.sin(tick * MS * 0.004) * 2);   // 마녀는 살짝 떠 있다
   const F = hdFigure(id, bossHD(e), e.face, o), tip = HD_TIP[id];
   e.tipX = e.x + e.face * tip[0]; e.tipH = e.z - dy + tip[1];
-  present(F, sx, e.y - e.z + dy, alpha, false, e.face, S.gy, 1);
+  present(F, sx, e.y - e.z + dy, alpha, false, e.face, S.gy, k);
 }
 
 // ---------------------------------------------------------------- 이펙트 레이어 (보이는 월드를 도트 1칸 해상도로)
@@ -2212,7 +2310,7 @@ function drawGroundFx(L) {
           fxX(z.x + Math.cos(b) * radius), fxY(z.y + Math.sin(b) * radius / 2), c, active ? 3 : 2);
       }
       if (!active) warn(L, fxX(z.x), 22, z.age, fxY(z.y));
-    } else if (z.type === 'shock') shockwave(L, fxX(z.x + z.dir * z.age * 0.32), z.age, z.dir, fxY(z.y));
+    } else if (z.type === 'shock') shockwave(L, fxX(z.x + z.dir * z.age * 0.32), z.age, z.dir, fxY(z.y), z.colors);
     else if (z.type === 'pillar' && z.age < z.delay) warn(L, fxX(z.x), 22, z.age, fxY(z.y));
     else if (z.type === 'meatmark') warn(L, fxX(z.x), 28, z.age, fxY(z.y));
     else if (z.type === 'splat') {
@@ -2226,9 +2324,9 @@ function drawTopFx(L) {
   for (const z of hazards) {
     const x = fxX(z.x);
     if (z.type === 'orb') orb(L, x, fxY(z.y, z.h), z.vx, z.vy - z.vh, z.age, z.pal);
-    else if (z.type === 'wave') goldWave(L, x, fxY(z.y, z.h), z.dir);
+    else if (z.type === 'wave') goldWave(L, x, fxY(z.y, z.h), z.dir, z.colors);
     else if (z.type === 'raven') blit(spriteShaded('raven', Math.floor(z.age / 90) % 2), L, x - 7, fxY(z.y, z.h) - 4, { flip: z.st === 'dive' ? z.vx < 0 : z.x > player.x });
-    else if (z.type === 'pillar' && z.age >= z.delay) pillar(L, x, z.age, (z.age - z.delay) / z.life, fxY(z.y));
+    else if (z.type === 'pillar' && z.age >= z.delay) pillar(L, x, z.age, (z.age - z.delay) / z.life, fxY(z.y), z.colors);
     else if (z.type === 'ring') teleportRing(L, x, fxY(z.y, z.h), z.age / 420);
     else if (z.type === 'arrow') {
       const y = Math.round(fxY(z.y, z.h)), d = z.dir;
@@ -2259,8 +2357,8 @@ function drawTopFx(L) {
     }
   }
   for (const e of enemies) {                       // 황금왕 2페이즈: 왕관에서 불티
-    if (e.type === 'boss5' && e.st !== 'dead')       // 마왕: 늘 몸에서 불티가 피어오른다
-      for (let i = 0; i < 4; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 50, fxY(e.y, e.z + 60 + Math.random() * 100), Math.random() < 0.5 ? '#ff5a1a' : '#ffb02a');
+    if (e.type === 'boss5' && e.st !== 'dead')
+      for (let i = 0; i < 4; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 50, fxY(e.y, e.z + 60 + Math.random() * 100), Math.random() < 0.5 ? '#ff498d' : '#c48adb');
     if (e.type === 'boss3' && phase2(e) && e.st !== 'dead')
       for (let i = 0; i < 5; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 16, fxY(e.y, e.z + 138) - Math.random() * 12, Math.random() < 0.5 ? '#ffd23a' : '#ff7a1a');
   }
@@ -2379,7 +2477,7 @@ if (document.fonts) document.fonts.load(`10px ${PIX}`).catch(() => {});
 const PORTRAIT = { player: [18, 0, 21, 21], boss1: [14, 0, 38, 27], boss2: [14, 0, 34, 28], boss3: [21, 0, 28, 27], boss4: [19, 0, 30, 28], boss5: [27, 1, 32, 28] };   // 머리 부분 (x, y, w, h)
 const portraitCache = {};
 // 고해상도 초상화: 대기 프레임에서 머리 부분을 잘라 밝게 (frame, 머리 영역 한 변, 위 여백, 밝기)
-const PORTRAIT_HD = { player: ['idle_0', 36, -2, 1.5], boss1: ['idle_0', 40, -3, 1.6], boss2: ['idle_0', 36, 2, 1.5], boss3: ['i11', 48, 8, 1.0] };
+const PORTRAIT_HD = { player: ['idle_0', 36, -2, 1.5], boss1: ['idle_0', 40, -3, 1.6], boss2: ['idle_0', 36, 2, 1.5], boss3: ['i11', 48, 8, 1.0], boss4: ['idle_1', 30, 2, 1.25], boss5: ['idle_1', 32, 4, 1.2] };
 function portraitHD(id) {
   const [name, n, oy, gain] = PORTRAIT_HD[id], fr = hdFrame(id, name), s = fr.L;
   const on = (x, y) => s.d[(y * s.w + x) * 4 + 3] > 0;

@@ -107,74 +107,42 @@
     AU.gm = GAIN[name] || 1; try { f(a); } catch (e) { /* 무시 */ } AU.gm = 1;
   }
 
-  // ---------------------------------------------------------------- BGM: 16분음표 스텝 시퀀서
-  const SCALES = { min: [0, 2, 3, 5, 7, 8, 10], harm: [0, 2, 3, 5, 7, 8, 11], phr: [0, 1, 3, 5, 7, 8, 10] };
-  const TRACKS = [
-    { bpm: 132, root: 50, sc: 'min', chords: [1, 6, 3, 7, 1, 6, 7, 5],             // 1: 해질녘 행군
-      bass: 'r.r.o.r.r.o.r.f.', kick: 'x...x...x...x...', snare: '....x.......x...', hat: 'x.x.x.x.x.x.x.xx', lt: 'square',
-      lead: ['5..6.7.a..7.6.5.', '6..7.a.b..a.7.6.', '3..5.6.7..6.5.3.', '7..a.7.6..5.5...', '5..6.7.a..b.a.7.', '6..a.b.c..b.a.6.', '7..a.b.a..7.6.5.', '5..5.6.5..3.2.1.'] },
-    { bpm: 92, root: 57, sc: 'harm', chords: [1, 6, 4, 5, 1, 3, 6, 5],             // 2: 안개 낀 습지
-      bass: 'r.......o.......', kick: 'x.......x.......', snare: '................', hat: '..x...x...x...x.', lt: 'triangle',
-      lead: ['a-------7-------', '6-------5-------', '4---5---6-------', '5-------3-------', 'a---b---a---7---', '6---7---a-------', 'b---a---6---5---', '5---------------'] },
-    { bpm: 150, root: 52, sc: 'phr', chords: [1, 2, 1, 7, 1, 6, 2, 1],             // 3: 왕좌의 방
-      bass: 'rrorrorrrrorrorr', kick: 'x..xx..xx..xx.x.', snare: '....x.......x..x', hat: 'x.xxx.xxx.xxx.xx', lt: 'sawtooth',
-      lead: ['a..b.a.7..5.7.a.', 'b..c.b.a..7.a.b.', 'a..7.5.6..7.a.c.', 'b.a.7.6.5.6.7.a.', 'c..b.a.b..7.5.7.', 'a..b.c.d..c.b.a.', 'b..a.7.a..6.7.a.', 'a..a.7.5..a---a-'] },
-    { bpm: 84, root: 55, sc: 'min', chords: [1, 4, 6, 5, 1, 4, 3, 5],             // 4: 얼어붙은 묘지 (느린 종소리)
-      bass: 'r.......r...o...', kick: 'x.......x.......', snare: '........x.......', hat: '....x.......x...', lt: 'triangle',
-      lead: ['a---7---5---3---', '4-------6---5---', '3---5---6---a---', '7-------5-------', 'a---b---c---a---', 'b---a---7---6---', '5---6---7---3---', '5---------------'] },
-    { bpm: 162, root: 50, sc: 'phr', chords: [1, 2, 1, 6, 1, 7, 2, 1],            // 5: 마왕과의 결전
-      bass: 'rrorrorrrrorrorr', kick: 'x.xxx.xxx.xxx.xx', snare: '....x.......x.xx', hat: 'xxxxxxxxxxxxxxxx', lt: 'sawtooth',
-      lead: ['a.a.b.a.7.5.7.a.', 'b.b.c.b.a.7.a.b.', 'c.b.a.7.5.6.7.a.', 'b.a.7.6.5.3.2.1.', 'a..b..c..d..c.b.', 'a.b.c.d.c.b.a.7.', 'b..a..7..a..b.c.', 'a---a---a---a---'] },
-  ];
-  function degNote(T, deg, oct) { const S = SCALES[T.sc], i = deg - 1, o = Math.floor(i / 7), k = ((i % 7) + 7) % 7; return T.root + S[k] + 12 * (o + (oct || 0)); }
-  function leadDeg(ch) { if (ch >= '1' && ch <= '7') return +ch; const c = 'abcd'.indexOf(ch); return c >= 0 ? 8 + c : 0; }
-  function musStep(T, st, t, spb) {
-    const c = AU.ctx, bar = Math.floor(st / 16) % 8, s = st % 16, cd = T.chords[bar];
-    const nt = (f, dur, type, vol, lp) => {
-      const os = c.createOscillator(), g = c.createGain(), fl = c.createBiquadFilter(); os.type = type; os.frequency.value = f; fl.type = 'lowpass'; fl.frequency.value = lp || 2400;
-      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      os.connect(g); g.connect(fl); fl.connect(AU.musB); os.start(t); os.stop(t + dur + 0.03);
-    };
-    const dr = kind => {
-      if (kind === 'k') {
-        const os = c.createOscillator(), g = c.createGain(); os.frequency.setValueAtTime(150, t); os.frequency.exponentialRampToValueAtTime(40, t + 0.12);
-        g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.16); os.connect(g); g.connect(AU.musB); os.start(t); os.stop(t + 0.2);
-      } else {
-        const s2 = c.createBufferSource(); s2.buffer = AU.noise; const fl = c.createBiquadFilter(), g = c.createGain();
-        fl.type = kind === 's' ? 'bandpass' : 'highpass'; fl.frequency.value = kind === 's' ? 1800 : 7000;
-        g.gain.setValueAtTime(kind === 's' ? 0.45 : 0.14, t); g.gain.exponentialRampToValueAtTime(0.001, t + (kind === 's' ? 0.13 : 0.04));
-        s2.connect(fl); fl.connect(g); g.connect(AU.musB); s2.start(t, Math.random()); s2.stop(t + 0.15);
-      }
-    };
-    if (T.kick[s] === 'x') dr('k'); if (T.snare[s] === 'x') dr('s'); if (T.hat[s] === 'x') dr('h');
-    const b = T.bass[s];
-    if (b !== '.') { const base = degNote(T, cd, -2), n = b === 'o' ? base + 12 : (b === 'f' ? degNote(T, cd + 4, -2) : base); nt(mtof(n), spb * 1.8, T.lt === 'sawtooth' ? 'sawtooth' : 'triangle', 0.5, 700); }
-    if (s % 2 === 0) { const ar = [0, 2, 4, 2][(s / 2) % 4]; nt(mtof(degNote(T, cd + ar, 1)), spb * 1.4, 'triangle', 0.11, 2600); }
-    const L = T.lead[bar][s];
-    if (L && L !== '.' && L !== '-') { const d = leadDeg(L); if (d) { let len = 1; while (T.lead[bar][s + len] === '-' && s + len < 15) len++; nt(mtof(degNote(T, d, 0)), spb * (len + 0.6), T.lt, 0.2, 3000); } }
-  }
+  // Separate original stage and boss scores, with a per-track fade bus.
+  let wantedBoss = false, wantedRate = 1;
   function musTick(until) {
     const M = AU.mus; if (!M) return;
-    while (M.next < until) { const spb = 60 / (M.T.bpm * M.rate) / 4; musStep(M.T, M.step, M.next, spb); M.next += spb; M.step++; }
-  }
-  function music(i, rate) {
-    AU.want = i;
-    if (!AU.on || !AU.ctx) return;
-    stop(0);
-    AU.musB.gain.cancelScheduledValues(AU.ctx.currentTime); AU.musB.gain.setValueAtTime(0.34 * musicVolume, AU.ctx.currentTime);
-    AU.mus = { T: TRACKS[i % TRACKS.length], step: 0, next: AU.ctx.currentTime + 0.08, rate: rate || 1 };
-    clearInterval(AU.timer);
-    AU.timer = setInterval(() => { if (AU.ctx && AU.ctx.state === 'running') musTick(AU.ctx.currentTime + 0.25); }, 40);
-  }
-  function stop(fade) {
-    clearInterval(AU.timer); AU.mus = null;
-    if (AU.ctx && AU.musB && fade) {
-      const t = AU.ctx.currentTime; AU.musB.gain.cancelScheduledValues(t); AU.musB.gain.setValueAtTime(AU.musB.gain.value, t); AU.musB.gain.linearRampToValueAtTime(0.0001, t + fade);
+    while (M.next < until) {
+      const step = 60 / (M.T.bpm * M.rate) / 4;
+      SCORE.step(M.engine, M.T, M.step++, M.next, step); M.next += step;
     }
   }
-  function silence() { stop(0); AU.want = -1; }
+  function music(i, rate = 1, boss = false) {
+    stop(.6); AU.want = i; wantedBoss = boss; wantedRate = rate;
+    if (!AU.on || !AU.ctx) return;
+    const engine = SCORE.create(AU.ctx, AU.musB), now = AU.ctx.currentTime;
+    engine.bus.gain.setValueAtTime(0,now);engine.bus.gain.linearRampToValueAtTime(2.5,now+.8);
+    AU.mus = { T: SCORE.tracks[(i % 5) + (boss ? 5 : 0)], engine, step: 0, next: now+.08, rate };
+    AU.timer = setInterval(() => { if (AU.ctx?.state === 'running') musTick(AU.ctx.currentTime+.25); },40);
+  }
+  function stop(fade = 0) {
+    clearInterval(AU.timer); const old = AU.mus; AU.mus = null; AU.want = -1;
+    if (old && AU.ctx) {
+      const now = AU.ctx.currentTime;
+      old.engine.bus.gain.cancelScheduledValues(now);old.engine.bus.gain.setValueAtTime(old.engine.bus.gain.value,now);
+      old.engine.bus.gain.linearRampToValueAtTime(0,now+fade);
+      if (fade) setTimeout(() => old.engine.dispose(), (fade+.1)*1000); else old.engine.dispose();
+    }
+  }
+  function silence() { stop(.25); }
+  function currentMusic() { return AU.want < 0 ? null : { stage: AU.want, boss: wantedBoss, name: SCORE.tracks[(AU.want%5)+(wantedBoss?5:0)].name }; }
+  async function renderPreview(stage, boss, seconds = 12) {
+    const c = new OfflineAudioContext(2,Math.ceil(seconds*24000),24000), gain=c.createGain();gain.gain.value=.34;gain.connect(c.destination);
+    const engine=SCORE.create(c,gain), T=SCORE.tracks[stage+(boss?5:0)], step=60/T.bpm/4;
+    engine.bus.gain.setValueAtTime(2.5,0);engine.bus.gain.setValueAtTime(2.5,Math.max(0,seconds-1));engine.bus.gain.linearRampToValueAtTime(0,seconds);
+    for(let st=0;st*step<seconds;st++) SCORE.step(engine,T,st,st*step,step);
+    const buffer = await c.startRendering(); engine.dispose(); return buffer;
+  }
 
-  // ---------------------------------------------------------------- 켜기 / 끄기
   function pref() { try { return localStorage.getItem('sf_snd'); } catch (e) { return null; } }
   function save(v) { try { localStorage.setItem('sf_snd', v); } catch (e) { /* 저장 불가 환경 무시 */ } }
   function enable(on) {
@@ -183,8 +151,8 @@
       if (c.resume && !paused) c.resume().catch(() => {});
       AU.master.gain.value = .8;
       AU.on = true;
-      if (AU.want >= 0 && !AU.mus) music(AU.want);
-    } else { AU.on = false; stop(0); if (AU.master) AU.master.gain.value = 0; }
+      if (AU.want >= 0 && !AU.mus) music(AU.want, wantedRate, wantedBoss);
+    } else { const desired=AU.want; AU.on = false; stop(0); AU.want=desired; if (AU.master) AU.master.gain.value = 0; }
     return AU.on;
   }
   function toggle() { const on = enable(!AU.on); save(on ? 'on' : 'off'); if (on) sfx('click'); return on; }
@@ -196,5 +164,5 @@
   }
   ['keydown', 'pointerdown'].forEach(ev => global.addEventListener(ev, gesture, true));
 
-  global.AUDIO = { sfx, music, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on };
+  global.AUDIO = { sfx, music, bossMusic: i => music(i, 1, true), currentMusic, renderPreview, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on };
 })(window);
