@@ -35,6 +35,7 @@
     border: .3cqw solid #ffd23f; background: #c0392b; color: #fff; border-radius: 1cqw; font-family: inherit; }
   .btn:hover { background: #e74c3c; transform: scale(1.05); }
   .blink { animation: blink 1s steps(2) infinite; }
+  #referenceLabLink { color: #b4c9e4; font-size: 14px; }
   @keyframes blink { 50% { opacity: .25; } }
 
   .grid { display: grid; grid-template-columns: auto auto; gap: 1.2cqw 3cqw; align-items: center; text-align: left; }
@@ -149,6 +150,7 @@
       <p class="sub">5 STAGES · BELT-SCROLL ACTION</p>
       <div class="actions"><button class="btn" id="btnContinue" hidden>이어하기</button><button class="btn" id="btnStart">새 게임</button></div>
       <div class="actions"><button class="btn secondary" id="btnTitleSettings">설정</button></div>
+      <p><a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a></p>
       <p id="recordSummary"></p><p id="saveStatus"></p>
       <p style="margin-top:12px;font-size:13px">Enter · 새 게임 / 진행은 스테이지 시작 지점에 저장됩니다</p>
     </div>

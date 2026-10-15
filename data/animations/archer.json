@@ -1,0 +1,852 @@
+{
+  "id": "archer",
+  "name": "궁병",
+  "animations": {
+    "idle": {
+      "id": "idle",
+      "name": "대기 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        578,
+        708,
+        1058,
+        828
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": 6,
+      "fps": 8,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/archer/idle/00-candidate.png",
+          "original": "assets/characters/archer/idle/00-original.png",
+          "sourceRect": [
+            587,
+            748,
+            666,
+            827
+          ],
+          "sourceAnchor": [
+            639,
+            826
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            60,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/archer/idle/01-candidate.png",
+          "original": "assets/characters/archer/idle/01-original.png",
+          "sourceRect": [
+            666,
+            748,
+            744,
+            827
+          ],
+          "sourceAnchor": [
+            710,
+            826
+          ],
+          "offset": [
+            16,
+            8
+          ],
+          "origin": [
+            60,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/archer/idle/02-candidate.png",
+          "original": "assets/characters/archer/idle/02-original.png",
+          "sourceRect": [
+            744,
+            748,
+            820,
+            827
+          ],
+          "sourceAnchor": [
+            786,
+            826
+          ],
+          "offset": [
+            18,
+            8
+          ],
+          "origin": [
+            60,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/archer/idle/03-candidate.png",
+          "original": "assets/characters/archer/idle/03-original.png",
+          "sourceRect": [
+            820,
+            748,
+            895,
+            827
+          ],
+          "sourceAnchor": [
+            859,
+            826
+          ],
+          "offset": [
+            21,
+            8
+          ],
+          "origin": [
+            60,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/archer/idle/04-candidate.png",
+          "original": "assets/characters/archer/idle/04-original.png",
+          "sourceRect": [
+            895,
+            748,
+            969,
+            827
+          ],
+          "sourceAnchor": [
+            933,
+            826
+          ],
+          "offset": [
+            22,
+            8
+          ],
+          "origin": [
+            60,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/archer/idle/05-candidate.png",
+          "original": "assets/characters/archer/idle/05-original.png",
+          "sourceRect": [
+            969,
+            748,
+            1048,
+            827
+          ],
+          "sourceAnchor": [
+            1008,
+            826
+          ],
+          "offset": [
+            21,
+            8
+          ],
+          "origin": [
+            60,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/archer/idle-source.png",
+      "canvas": [
+        108,
+        95
+      ],
+      "origin": [
+        60,
+        86
+      ]
+    },
+    "walk": {
+      "id": "walk",
+      "name": "이동 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        1061,
+        708,
+        1662,
+        828
+      ],
+      "declaredFrames": 8,
+      "identifiedFrames": 8,
+      "fps": 10,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/archer/walk/00-candidate.png",
+          "original": "assets/characters/archer/walk/00-original.png",
+          "sourceRect": [
+            1067,
+            748,
+            1141,
+            827
+          ],
+          "sourceAnchor": [
+            1116,
+            826
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/archer/walk/01-candidate.png",
+          "original": "assets/characters/archer/walk/01-original.png",
+          "sourceRect": [
+            1141,
+            748,
+            1216,
+            827
+          ],
+          "sourceAnchor": [
+            1190,
+            826
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/archer/walk/02-candidate.png",
+          "original": "assets/characters/archer/walk/02-original.png",
+          "sourceRect": [
+            1216,
+            748,
+            1292,
+            827
+          ],
+          "sourceAnchor": [
+            1265,
+            826
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/archer/walk/03-candidate.png",
+          "original": "assets/characters/archer/walk/03-original.png",
+          "sourceRect": [
+            1292,
+            748,
+            1367,
+            827
+          ],
+          "sourceAnchor": [
+            1340,
+            826
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/archer/walk/04-candidate.png",
+          "original": "assets/characters/archer/walk/04-original.png",
+          "sourceRect": [
+            1367,
+            748,
+            1442,
+            827
+          ],
+          "sourceAnchor": [
+            1415,
+            826
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/archer/walk/05-candidate.png",
+          "original": "assets/characters/archer/walk/05-original.png",
+          "sourceRect": [
+            1442,
+            748,
+            1517,
+            827
+          ],
+          "sourceAnchor": [
+            1490,
+            826
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 6,
+          "image": "assets/characters/archer/walk/06-candidate.png",
+          "original": "assets/characters/archer/walk/06-original.png",
+          "sourceRect": [
+            1517,
+            748,
+            1592,
+            827
+          ],
+          "sourceAnchor": [
+            1565,
+            826
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 7,
+          "image": "assets/characters/archer/walk/07-candidate.png",
+          "original": "assets/characters/archer/walk/07-original.png",
+          "sourceRect": [
+            1592,
+            748,
+            1655,
+            827
+          ],
+          "sourceAnchor": [
+            1636,
+            826
+          ],
+          "offset": [
+            13,
+            8
+          ],
+          "origin": [
+            57,
+            86
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "망토·무기가 이웃 자세와 가까움. 경계 잘림과 번호 혼입을 검수해야 함."
+      ],
+      "panel": "assets/characters/archer/walk-source.png",
+      "canvas": [
+        92,
+        95
+      ],
+      "origin": [
+        57,
+        86
+      ]
+    },
+    "attack": {
+      "id": "attack",
+      "name": "기본 공격",
+      "source": "soldiers",
+      "sourceRect": [
+        578,
+        831,
+        1039,
+        928
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": 5,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/archer/attack/00-candidate.png",
+          "original": "assets/characters/archer/attack/00-original.png",
+          "sourceRect": [
+            584,
+            864,
+            661,
+            922
+          ],
+          "sourceAnchor": [
+            625,
+            921
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            49,
+            65
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/archer/attack/01-candidate.png",
+          "original": "assets/characters/archer/attack/01-original.png",
+          "sourceRect": [
+            661,
+            864,
+            736,
+            922
+          ],
+          "sourceAnchor": [
+            699,
+            921
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            49,
+            65
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/archer/attack/02-candidate.png",
+          "original": "assets/characters/archer/attack/02-original.png",
+          "sourceRect": [
+            736,
+            864,
+            811,
+            922
+          ],
+          "sourceAnchor": [
+            774,
+            921
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            49,
+            65
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/archer/attack/03-candidate.png",
+          "original": "assets/characters/archer/attack/03-original.png",
+          "sourceRect": [
+            811,
+            864,
+            885,
+            922
+          ],
+          "sourceAnchor": [
+            848,
+            921
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            49,
+            65
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/archer/attack/04-candidate.png",
+          "original": "assets/characters/archer/attack/04-original.png",
+          "sourceRect": [
+            885,
+            864,
+            958,
+            922
+          ],
+          "sourceAnchor": [
+            922,
+            921
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            49,
+            65
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "5개 인물 자세만 식별됨. 마지막 칸은 화살/잔상이며 6번째 인물로 복제하지 않음."
+      ],
+      "panel": "assets/characters/archer/attack-source.png",
+      "canvas": [
+        94,
+        74
+      ],
+      "origin": [
+        49,
+        65
+      ]
+    },
+    "hurt": {
+      "id": "hurt",
+      "name": "피격 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        1041,
+        831,
+        1317,
+        928
+      ],
+      "declaredFrames": 4,
+      "identifiedFrames": 4,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/archer/hurt/00-candidate.png",
+          "original": "assets/characters/archer/hurt/00-original.png",
+          "sourceRect": [
+            1047,
+            871,
+            1114,
+            922
+          ],
+          "sourceAnchor": [
+            1083,
+            921
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            45,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/archer/hurt/01-candidate.png",
+          "original": "assets/characters/archer/hurt/01-original.png",
+          "sourceRect": [
+            1114,
+            871,
+            1182,
+            922
+          ],
+          "sourceAnchor": [
+            1150,
+            921
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            45,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/archer/hurt/02-candidate.png",
+          "original": "assets/characters/archer/hurt/02-original.png",
+          "sourceRect": [
+            1182,
+            871,
+            1250,
+            922
+          ],
+          "sourceAnchor": [
+            1219,
+            921
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            45,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/archer/hurt/03-candidate.png",
+          "original": "assets/characters/archer/hurt/03-original.png",
+          "sourceRect": [
+            1250,
+            871,
+            1313,
+            922
+          ],
+          "sourceAnchor": [
+            1284,
+            921
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            45,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/archer/hurt-source.png",
+      "canvas": [
+        85,
+        67
+      ],
+      "origin": [
+        45,
+        58
+      ]
+    },
+    "death": {
+      "id": "death",
+      "name": "사망 모션",
+      "source": "soldiers",
+      "sourceRect": [
+        1319,
+        831,
+        1662,
+        928
+      ],
+      "declaredFrames": 5,
+      "identifiedFrames": 4,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/archer/death/00-candidate.png",
+          "original": "assets/characters/archer/death/00-original.png",
+          "sourceRect": [
+            1326,
+            871,
+            1404,
+            922
+          ],
+          "sourceAnchor": [
+            1370,
+            921
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            55,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/archer/death/01-candidate.png",
+          "original": "assets/characters/archer/death/01-original.png",
+          "sourceRect": [
+            1404,
+            871,
+            1487,
+            922
+          ],
+          "sourceAnchor": [
+            1451,
+            921
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            55,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/archer/death/02-candidate.png",
+          "original": "assets/characters/archer/death/02-original.png",
+          "sourceRect": [
+            1487,
+            871,
+            1571,
+            922
+          ],
+          "sourceAnchor": [
+            1532,
+            921
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            55,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/archer/death/03-candidate.png",
+          "original": "assets/characters/archer/death/03-original.png",
+          "sourceRect": [
+            1571,
+            871,
+            1657,
+            922
+          ],
+          "sourceAnchor": [
+            1614,
+            921
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            55,
+            58
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "표기 5프레임과 달리 4개 인물 자세만 식별됨. 누락 자세는 생성하지 않음."
+      ],
+      "panel": "assets/characters/archer/death-source.png",
+      "canvas": [
+        106,
+        67
+      ],
+      "origin": [
+        55,
+        58
+      ]
+    },
+    "arrow_reference": {
+      "id": "arrow_reference",
+      "name": "화살 / 잔상 참고",
+      "source": "soldiers",
+      "sourceRect": [
+        950,
+        866,
+        1033,
+        898
+      ],
+      "declaredFrames": null,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "궁병 기본 공격 마지막 구간. 발사체 원화와 인물 모션을 구분. 가장자리 발광의 정확한 알파는 복원 불가."
+      ],
+      "panel": "assets/characters/archer/arrow_reference-source.png"
+    }
+  }
+}

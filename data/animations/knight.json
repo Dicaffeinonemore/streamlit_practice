@@ -1,0 +1,777 @@
+{
+  "id": "knight",
+  "name": "기사",
+  "animations": {
+    "idle": {
+      "id": "idle",
+      "name": "대기 모션",
+      "source": "knight",
+      "sourceRect": [
+        630,
+        123,
+        1661,
+        298
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": 6,
+      "fps": 8,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": [
+        1,
+        2,
+        4,
+        3,
+        5,
+        6
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/knight/idle/00-candidate.png",
+          "original": "assets/characters/knight/idle/00-original.png",
+          "sourceRect": [
+            641,
+            173,
+            807,
+            293
+          ],
+          "sourceAnchor": [
+            725,
+            292
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            92,
+            127
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/knight/idle/01-candidate.png",
+          "original": "assets/characters/knight/idle/01-original.png",
+          "sourceRect": [
+            807,
+            173,
+            971,
+            293
+          ],
+          "sourceAnchor": [
+            888,
+            292
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            92,
+            127
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/knight/idle/02-candidate.png",
+          "original": "assets/characters/knight/idle/02-original.png",
+          "sourceRect": [
+            971,
+            173,
+            1137,
+            293
+          ],
+          "sourceAnchor": [
+            1053,
+            292
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            92,
+            127
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/knight/idle/03-candidate.png",
+          "original": "assets/characters/knight/idle/03-original.png",
+          "sourceRect": [
+            1137,
+            173,
+            1302,
+            293
+          ],
+          "sourceAnchor": [
+            1219,
+            292
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            92,
+            127
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/knight/idle/04-candidate.png",
+          "original": "assets/characters/knight/idle/04-original.png",
+          "sourceRect": [
+            1302,
+            173,
+            1468,
+            293
+          ],
+          "sourceAnchor": [
+            1383,
+            292
+          ],
+          "offset": [
+            11,
+            8
+          ],
+          "origin": [
+            92,
+            127
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/knight/idle/05-candidate.png",
+          "original": "assets/characters/knight/idle/05-original.png",
+          "sourceRect": [
+            1468,
+            173,
+            1653,
+            293
+          ],
+          "sourceAnchor": [
+            1550,
+            292
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            92,
+            127
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨.",
+        "인쇄 번호가 1,2,4,3,5,6. 왼쪽→오른쪽 공간 순서로 보관하며 의도된 시간 순서는 미확정."
+      ],
+      "panel": "assets/characters/knight/idle-source.png",
+      "canvas": [
+        203,
+        136
+      ],
+      "origin": [
+        92,
+        127
+      ]
+    },
+    "walk": {
+      "id": "walk",
+      "name": "이동 모션",
+      "source": "knight",
+      "sourceRect": [
+        630,
+        305,
+        1661,
+        473
+      ],
+      "declaredFrames": 8,
+      "identifiedFrames": 8,
+      "fps": 10,
+      "loop": true,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/knight/walk/00-candidate.png",
+          "original": "assets/characters/knight/walk/00-original.png",
+          "sourceRect": [
+            638,
+            357,
+            764,
+            464
+          ],
+          "sourceAnchor": [
+            713,
+            463
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/knight/walk/01-candidate.png",
+          "original": "assets/characters/knight/walk/01-original.png",
+          "sourceRect": [
+            764,
+            357,
+            892,
+            464
+          ],
+          "sourceAnchor": [
+            840,
+            463
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/knight/walk/02-candidate.png",
+          "original": "assets/characters/knight/walk/02-original.png",
+          "sourceRect": [
+            892,
+            357,
+            1020,
+            464
+          ],
+          "sourceAnchor": [
+            968,
+            463
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/knight/walk/03-candidate.png",
+          "original": "assets/characters/knight/walk/03-original.png",
+          "sourceRect": [
+            1020,
+            357,
+            1148,
+            464
+          ],
+          "sourceAnchor": [
+            1096,
+            463
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/knight/walk/04-candidate.png",
+          "original": "assets/characters/knight/walk/04-original.png",
+          "sourceRect": [
+            1148,
+            357,
+            1276,
+            464
+          ],
+          "sourceAnchor": [
+            1224,
+            463
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 5,
+          "image": "assets/characters/knight/walk/05-candidate.png",
+          "original": "assets/characters/knight/walk/05-original.png",
+          "sourceRect": [
+            1276,
+            357,
+            1404,
+            464
+          ],
+          "sourceAnchor": [
+            1352,
+            463
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 6,
+          "image": "assets/characters/knight/walk/06-candidate.png",
+          "original": "assets/characters/knight/walk/06-original.png",
+          "sourceRect": [
+            1404,
+            357,
+            1532,
+            464
+          ],
+          "sourceAnchor": [
+            1480,
+            463
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 7,
+          "image": "assets/characters/knight/walk/07-candidate.png",
+          "original": "assets/characters/knight/walk/07-original.png",
+          "sourceRect": [
+            1532,
+            357,
+            1656,
+            464
+          ],
+          "sourceAnchor": [
+            1607,
+            463
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            84,
+            114
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/knight/walk-source.png",
+      "canvas": [
+        144,
+        123
+      ],
+      "origin": [
+        84,
+        114
+      ]
+    },
+    "attack": {
+      "id": "attack",
+      "name": "기본 공격",
+      "source": "knight",
+      "sourceRect": [
+        630,
+        480,
+        1661,
+        634
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "6개 인물 자세가 보이지만 3→4 구간 검기가 이어져 있음. 검기를 자르지 않는 독립 프레임 분리 보류."
+      ],
+      "panel": "assets/characters/knight/attack-source.png"
+    },
+    "heavy": {
+      "id": "heavy",
+      "name": "강공격",
+      "source": "knight",
+      "sourceRect": [
+        9,
+        639,
+        832,
+        786
+      ],
+      "declaredFrames": 6,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "4개 인물 자세와 겹친 검기. 숫자 1,2,3,5,6이 자세 수와 불일치. 6프레임으로 복원 불가."
+      ],
+      "panel": "assets/characters/knight/heavy-source.png"
+    },
+    "ambiguous_hurt": {
+      "id": "ambiguous_hurt",
+      "name": "피격 모션 (오른쪽 중단 중복 표기)",
+      "source": "knight",
+      "sourceRect": [
+        838,
+        639,
+        1661,
+        786
+      ],
+      "declaredFrames": 4,
+      "identifiedFrames": null,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "blocked",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [],
+      "notes": [
+        "5개 인물 자세와 공격 검기가 함께 있음. 아래쪽 정상 피격 패널과 섞지 않음."
+      ],
+      "panel": "assets/characters/knight/ambiguous_hurt-source.png"
+    },
+    "hurt": {
+      "id": "hurt",
+      "name": "피격 모션",
+      "source": "knight",
+      "sourceRect": [
+        9,
+        794,
+        713,
+        908
+      ],
+      "declaredFrames": 4,
+      "identifiedFrames": 4,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/knight/hurt/00-candidate.png",
+          "original": "assets/characters/knight/hurt/00-original.png",
+          "sourceRect": [
+            17,
+            833,
+            188,
+            903
+          ],
+          "sourceAnchor": [
+            108,
+            902
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            101,
+            77
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/knight/hurt/01-candidate.png",
+          "original": "assets/characters/knight/hurt/01-original.png",
+          "sourceRect": [
+            188,
+            833,
+            360,
+            903
+          ],
+          "sourceAnchor": [
+            280,
+            902
+          ],
+          "offset": [
+            9,
+            8
+          ],
+          "origin": [
+            101,
+            77
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/knight/hurt/02-candidate.png",
+          "original": "assets/characters/knight/hurt/02-original.png",
+          "sourceRect": [
+            360,
+            833,
+            533,
+            903
+          ],
+          "sourceAnchor": [
+            453,
+            902
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            101,
+            77
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/knight/hurt/03-candidate.png",
+          "original": "assets/characters/knight/hurt/03-original.png",
+          "sourceRect": [
+            533,
+            833,
+            707,
+            903
+          ],
+          "sourceAnchor": [
+            622,
+            902
+          ],
+          "offset": [
+            12,
+            8
+          ],
+          "origin": [
+            101,
+            77
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/knight/hurt-source.png",
+      "canvas": [
+        194,
+        86
+      ],
+      "origin": [
+        101,
+        77
+      ]
+    },
+    "death": {
+      "id": "death",
+      "name": "사망 모션",
+      "source": "knight",
+      "sourceRect": [
+        721,
+        794,
+        1661,
+        908
+      ],
+      "declaredFrames": 5,
+      "identifiedFrames": 5,
+      "fps": 10,
+      "loop": false,
+      "fpsSource": "preview-default-not-source",
+      "gameReady": false,
+      "status": "review",
+      "order": "source-left-to-right-unverified",
+      "printedLabels": null,
+      "frames": [
+        {
+          "index": 0,
+          "image": "assets/characters/knight/death/00-candidate.png",
+          "original": "assets/characters/knight/death/00-original.png",
+          "sourceRect": [
+            728,
+            834,
+            909,
+            903
+          ],
+          "sourceAnchor": [
+            806,
+            902
+          ],
+          "offset": [
+            18,
+            8
+          ],
+          "origin": [
+            96,
+            76
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 1,
+          "image": "assets/characters/knight/death/01-candidate.png",
+          "original": "assets/characters/knight/death/01-original.png",
+          "sourceRect": [
+            909,
+            834,
+            1097,
+            903
+          ],
+          "sourceAnchor": [
+            997,
+            902
+          ],
+          "offset": [
+            8,
+            8
+          ],
+          "origin": [
+            96,
+            76
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 2,
+          "image": "assets/characters/knight/death/02-candidate.png",
+          "original": "assets/characters/knight/death/02-original.png",
+          "sourceRect": [
+            1097,
+            834,
+            1284,
+            903
+          ],
+          "sourceAnchor": [
+            1180,
+            902
+          ],
+          "offset": [
+            13,
+            8
+          ],
+          "origin": [
+            96,
+            76
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 3,
+          "image": "assets/characters/knight/death/03-candidate.png",
+          "original": "assets/characters/knight/death/03-original.png",
+          "sourceRect": [
+            1284,
+            834,
+            1472,
+            903
+          ],
+          "sourceAnchor": [
+            1370,
+            902
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            96,
+            76
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        },
+        {
+          "index": 4,
+          "image": "assets/characters/knight/death/04-candidate.png",
+          "original": "assets/characters/knight/death/04-original.png",
+          "sourceRect": [
+            1472,
+            834,
+            1655,
+            903
+          ],
+          "sourceAnchor": [
+            1558,
+            902
+          ],
+          "offset": [
+            10,
+            8
+          ],
+          "origin": [
+            96,
+            76
+          ],
+          "alphaStatus": "boundary-mask-unverified"
+        }
+      ],
+      "notes": [
+        "인물 수를 기준으로 잘라낸 검수 후보. 원본 시간 순서·경계·발 기준점·알파 검증 전이며 게임 적용은 차단됨."
+      ],
+      "panel": "assets/characters/knight/death-source.png",
+      "canvas": [
+        208,
+        85
+      ],
+      "origin": [
+        96,
+        76
+      ]
+    }
+  }
+}
