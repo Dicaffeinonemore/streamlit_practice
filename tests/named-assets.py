@@ -13,11 +13,11 @@ for f in m['frames']:
  assert cut.convert('RGB').tobytes()==original.convert('RGB').tobytes(),f['id']
  diffs=[(a,b) for a,b in zip(cut.getchannel('A').tobytes(),original.getchannel('A').tobytes()) if a!=b]
  assert len(diffs)==f.get('edgeFragmentPixels',0) and all(a==0 and b>0 for a,b in diffs),f['id']
- if diffs:assert f['source'].startswith('soldiers') or f['source']=='emperor'
+ if diffs:assert f['source'].startswith('soldiers') or f['source'] in ('emperor','player_moves')
  assert f['scale']>0 and all(isinstance(n,(int,float)) for n in f['anchor'])
 for actor,clips in m['clips'].items():
  for clip,ids in clips.items():
   assert ids and all(0<=i<len(m['frames']) for i in ids)
-  expected={'boss1':{'gorath_motion','gorath_moves'},'boss2p2':{'witch2'},'boss3':{'gold'},'boss4':{'ice'},'boss5':{'emperor'},'player':{'player'}}.get(actor,({'soldiers'+actor[5]} if actor.startswith('stage') else set()))
+  expected={'boss1':{'gorath_motion','gorath_moves'},'boss2p2':{'witch2'},'boss3':{'gold'},'boss4':{'ice'},'boss5':{'emperor'},'player':{'player','player_base','player_moves'}}.get(actor,({'soldiers'+actor[5]} if actor.startswith('stage') else set()))
   assert all(m['frames'][i]['source'] in expected for i in ids),(actor,clip)
 print('PASS named source hashes,',len(m['frames']),'RGB-preserving crops, recorded edge-alpha cleanup, anchors and exclusive role mappings')

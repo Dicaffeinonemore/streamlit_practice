@@ -13,22 +13,28 @@ function namedAt(actor, action, progress, loop = false) {
 function namedPlayerFrame() {
   const p = player, t = p.t * MS;
   if (p.st === 'skill') {
-    if (p.skill === 'thrust') return namedClip('player','dash',t<180?0:t<240?1:t<360?2:t<480?3:5);
-    if (p.skill === 'slam') return namedClip('player','leap',t<300?3:t<620?4:5);
-    if (p.skill === 'whirl') return namedClip('player','whirl',t<180?0:t<540?1:2);
-    if (p.skill === 'leap') return namedClip('player','leap',t<120?0:t<340?1:t<560?3:t<720?4:5);
+    if (p.skill === 'redwave') return t<540 ? namedClip('player','cast',t<300?0:t<420?1:2) : namedClip('player','idle');
+    if (p.skill === 'thrust') return namedClip('player','rush',t<180?0:t<240?1:t<300?2:t<360?3:t<500?4:5);
+    if (p.skill === 'slam') return namedClip('player',t<330?'overhead':t<600?'plunge':'idle');
+    if (p.skill === 'whirl') return namedClip('player','whirl',t<180?0:t<300?1:t<430?2:t<540?3:t<620?4:5);
+    if (p.skill === 'leap') return t<120 ? namedClip('player','dash',0) : t<480 ? namedClip('player','jump',t<300?0:1) : namedClip('player',t<720?'plunge':'idle');
   }
-  if (p.st === 'atk' && p.atk !== 'air') {
+  if (p.st === 'atk') {
     const a=ATK[p.atk],active=t>=a.wind && t<=a.wind+a.act;
-    return p.combo===1 ? namedClip('player','upper',active?1:t<a.wind?0:2) : namedClip('player','dash',active?3:t<a.wind?0:5);
+    if(p.atk==='air')return namedClip('player',active?'plunge':'jump',1);
+    return namedClip('player',t<a.wind?'overhead':active?(p.combo===1?'swing':'stab'):'idle');
   }
-  if (p.st === 'dash') return namedClip('player','dash',t<60?1:2);
+  if (p.st === 'dash') return namedAt('player','dash',t/280);
+  if (p.st === 'hurt') return namedClip('player','hurt');
+  if (p.st === 'down' || p.st === 'dead') return namedClip('player','death');
+  if (p.st === 'cast') return namedClip('player','overhead');
   if (p.st === 'special') {
-    if (t<620) return namedClip('player','special',t<450?0:1);
-    if(t<1260)return namedClip('player','dash',3);
-    return namedClip('player','leap',t<1650?3:t<1900?4:5);
+    if (t<620) return namedClip('player','cast',0);
+    if(t<1260)return namedAt('player','rush',(t-620)/640);
+    return namedClip('player',t<1650?'overhead':t<1900?'plunge':'idle');
   }
-  return null; // Sheet has no verified walk/hurt/death; preserve existing motion.
+  if(p.st==='free')return p.z>0 ? namedClip('player','jump',p.vz>0?0:1) : namedClip('player',p.walk?'walk':'idle');
+  return null;
 }
 function namedEnemyRole(e) {
   if(['grunt','rogue','archer','brute'].includes(e.type))return 'stage'+(stageIdx+1)+'_'+(e.type==='brute'?'grunt':e.type);
@@ -81,8 +87,15 @@ function paintNamedFrame(frame, actor, shadow=false) {
 }
 function drawNamedPlayer() {
   const f=namedPlayerFrame();if(!paintNamedFrame(f,player))return false;
+  const t=player.t*MS,impactAt=player.skill==='slam'?330:player.skill==='leap'?560:-1;
+  if(player.st==='skill' && impactAt>=0 && t>=impactAt && t<impactAt+180)
+    paintNamedFrame(namedClip('player','impact'),{...player,x:player.x+player.face*54,z:0,alpha:1-(t-impactAt)/180});
   player.tipX=player.x+player.face*72;player.tipH=player.z+68;
   return true;
+}
+function drawNamedWave(z) {
+  return paintNamedFrame(namedAt('player','wave',z.age/360,true),
+    {x:z.x,y:z.y,z:z.h,face:z.dir,alpha:Math.min(1,(520-z.travel)/50)});
 }
 function drawNamedEnemy(e){return paintNamedFrame(namedEnemyFrame(e),e,true);}
 function setupNamedTitle() {

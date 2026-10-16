@@ -92,7 +92,7 @@ def run_streamlit():
     )
     review = st.radio("화면", ["게임", "원본 스프라이트 검수"], horizontal=True) == "원본 스프라이트 검수"
     if not review:
-        st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · K 필살기 · I 뇌격 · ESC 일시정지)")
+        st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
     html = build_reference_html() if review else build_single_html()
     height = 1000 if review else 680
     if hasattr(st, "iframe"):          # 최신 Streamlit (components.v1.html 은 제거 예정)
