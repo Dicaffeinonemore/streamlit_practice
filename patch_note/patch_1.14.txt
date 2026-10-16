@@ -1,0 +1,41 @@
+흑월의 기사 v1.14 — 스테이지별 바닥 이미지
+
+적용 이미지
+- 1스테이지 바닥.png: 피 묻은 처형장 석재·배수 격자
+- 2스테이지 바닥.png: 보랏빛 저주·마법진
+- 3스테이지 바닥.png: 황금 왕실 문장·대리석
+- 4스테이지 바닥.png: 얼음 묘지·눈 덮인 석재
+- 5스테이지 바닥.png: 붉은 월식 문장·심연 균열
+다섯 파일 모두 적용. 원본 PNG를 바이트 그대로 assets/floors/에 보존.
+
+동작
+- 기존 화면 좌표와 보행 범위(GTOP=340, GBOT=500)를 유지.
+- 원본 중앙 보행면을 Canvas 소스 사각형으로 표시. 난간/전경 벽 일부는 화면에서 제외.
+- 비율을 유지한 바닥을 좌우 반전 반복하여 카메라 이동에 대응.
+- 경계 픽셀을 맞춰 타일 사이 빈틈을 방지. 이미지 디코딩은 초기 로딩에만 수행.
+- 일반전/보스 진입/보스전/2페이즈에서 스테이지별 바닥 유지.
+- 로딩 중 또는 이미지 오류에는 기존 절차적 바닥을 사용.
+- 데이터 URL 번들로 로컬 서버와 Streamlit 단일 HTML 모두 지원.
+- 그림의 웅덩이·쇠사슬·잔해는 시각 장식이며 새 충돌/피해 판정은 없음.
+
+변경 파일
+game.js, index.html, server.py, tests/regression.cjs, README.md
+신규: floor-art.js, floor-runtime.js, tools/build_floor_art.py,
+data/stage-floors.json, assets/floors/의 원본 5장, 본 패치 기록.
+실제 브라우저 캡처: docs/screenshots/floor-stage-1.png ~ floor-stage-5.png
+수정 전 복구용: backups/pre-stage-floors.zip
+
+검증
+- 변경 전/후 node tests/regression.cjs 전체 통과.
+- 5장 디코딩, 파일명 매핑, 음수/소수/스테이지 끝 카메라 위치, 이미지 누락 폴백 확인.
+- 5스테이지 클리어, 52개 보스 패턴/페이즈, 저장/이어하기,
+  키 설정/멀티터치 및 단일 HTML 초기화 회귀 통과. 브라우저 예외 없음.
+- 5개 스테이지의 실제 게임 화면에서 바닥과 캐릭터 발 위치 확인.
+
+제한
+원본은 무한 반복용 타일이 아니므로 긴 스크롤에서는 문양의 좌우 반전 반복이 보임.
+배경과 바닥은 별도 이미지이므로 일부 원근/경계 차이가 남아 있음.
+60FPS 실측은 수행하지 않음.
+
+실행: python server.py 또는 streamlit run server.py
+재번들: python tools/build_floor_art.py

@@ -1,0 +1,29 @@
+흑월의 기사 v1.15 — 블랙 문 엠페러 그래픽 교체
+
+원본: 5스테이지 보스.png
+보존 위치: assets/named/emperor.png (원본 바이트 그대로)
+적용: 최종 보스 대기 2, 이동 2, 시전 3, 공격 4, 각성 3, 피격 2, 사망 7프레임.
+2페이즈 대기/이동에는 날개를 펼친 각성 프레임 사용.
+월식은 각성, 검기/돌진/악령은 공격, 강하/기둥은 시전 동작에 연결.
+기존 기술 타이밍·피해·히트박스·2페이즈 배경·하단 체력바·클리어 흐름 유지.
+원본 RGB와 검은 갑옷을 유지하며, 잘린 이웃 포즈의 작은 분리 조각만 알파 정리.
+정리한 픽셀 수와 발 기준점은 data/named-sprites.json에 기록.
+이미지 미로딩/오류에는 기존 렌더러 사용.
+
+미적용: 시트의 독립된 대형 광선·기둥·포털 이펙트 패널.
+이 패널들은 캐릭터 몸체로 사용하지 않으며, 기존 공격 예고/효과/판정을 유지.
+각성 이후 모든 공격에 대응하는 날개 모션은 없으므로 일부 공격에는 일반형 포즈 사용.
+
+변경 파일: tools/build_named_sprites.py, named-runtime.js, named-art.js,
+data/named-sprites.json, assets/named/combat.png, tests/named-assets.py,
+tests/regression.cjs, README.md. 신규 원본 emperor.png 및 본 패치 기록.
+복구용 백업: backups/pre-boss5.zip
+
+검증: 변경 전/후 node tests/regression.cjs 통과.
+python tests/named-assets.py: 418프레임 원본 RGB·알파 변경 기록·역할 매핑 통과.
+모든 최종 보스 패턴/상태의 신규 원본 연결 및 1·2페이즈 브라우저 캡처 확인.
+52개 보스 패턴/페이즈, 5스테이지 클리어, 저장/이어하기, 터치,
+키 설정, Streamlit용 단일 HTML 초기화 회귀 통과. 브라우저 예외 없음.
+캡처: docs/screenshots/emperor-phase-1.png, emperor-phase-2.png
+
+실행: python server.py 또는 streamlit run server.py

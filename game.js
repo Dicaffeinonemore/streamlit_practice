@@ -99,16 +99,16 @@ const TELE = { slam: 650, sweep: 450, rage: 550, hook: 500, meat: 500, orbs: 500
   staff: 500, soul: 700, pillars: 700, charge: 450, cleave: 820, whirl: 900, slash3: 260, frost: 1050, eclipse: 1400 };
 
 const STAGES = [
-  { name: 'STAGE 1', title: '붉은 평원', theme: 'stage1', len: 3200, boss: 'boss1',
+  { name: 'STAGE 1', title: '붉은 처형자의 성채', theme: 'stage1', len: 3200, boss: 'boss1',
     barrels: [520, 1100, 1650, 2100],
     waves: [
       { at: 400,  e: [['grunt', 1], ['grunt', 1]] },
       { at: 900,  e: [['grunt', 1], ['grunt', -1], ['rogue', 1]] },
-      { at: 1400, e: [['rogue', 1], ['rogue', -1], ['grunt', 1]] },
+      { at: 1400, e: [['rogue', 1], ['archer', -1], ['grunt', 1]] },
       { at: 1900, e: [['grunt', 1], ['grunt', -1], ['brute', 1]] },
       { at: 2240, e: [['boss1', 1], ['grunt', -1]], boss: true },
     ] },
-  { name: 'STAGE 2', title: '진흙의 야영지', theme: 'stage2', len: 3600, boss: 'boss2',
+  { name: 'STAGE 2', title: '까마귀 마녀의 성역', theme: 'stage2', len: 3600, boss: 'boss2',
     barrels: [450, 950, 1500, 2000, 2400],
     waves: [
       { at: 400,  e: [['grunt', 1], ['rogue', 1], ['rogue', -1]] },
@@ -118,7 +118,7 @@ const STAGES = [
       { at: 2250, e: [['grunt', 1], ['grunt', 1], ['rogue', -1], ['brute', -1]] },
       { at: 2640, e: [['boss2', 1], ['rogue', -1], ['rogue', -1]], boss: true },
     ] },
-  { name: 'STAGE 3', title: '불타는 성채', theme: 'stage3', len: 4000, boss: 'boss3',
+  { name: 'STAGE 3', title: '몰락한 황금 왕국', theme: 'stage3', len: 4000, boss: 'boss3',
     barrels: [500, 900, 1400, 1900, 2400, 2800],
     waves: [
       { at: 400,  e: [['rogue', 1], ['rogue', 1], ['grunt', -1], ['grunt', -1]] },
@@ -129,7 +129,7 @@ const STAGES = [
       { at: 2650, e: [['grunt', 1], ['grunt', 1], ['grunt', -1], ['brute', -1], ['rogue', 1]] },
       { at: 3040, e: [['boss3', 1]], boss: true },
     ] },
-  { name: 'STAGE 4', title: '얼어붙은 묘지', theme: 'stage4', len: 4200, boss: 'boss4',
+  { name: 'STAGE 4', title: '얼어붙은 망자의 왕국', theme: 'stage4', len: 4200, boss: 'boss4',
     barrels: [520, 1000, 1500, 2100, 2600, 3100],
     waves: [
       { at: 400,  e: [['grunt', 1], ['grunt', 1], ['archer', 1], ['grunt', -1]] },
@@ -140,7 +140,7 @@ const STAGES = [
       { at: 2800, e: [['brute', 1], ['grunt', -1], ['grunt', -1], ['archer', 1], ['archer', -1]] },
       { at: 3240, e: [['boss4', 1], ['archer', -1]], boss: true },
     ] },
-  { name: 'STAGE 5', title: '마왕성 심연', theme: 'stage5', len: 4400, boss: 'boss5',
+  { name: 'STAGE 5', title: '검은 월식의 심연', theme: 'stage5', len: 4400, boss: 'boss5',
     barrels: [480, 1000, 1600, 2200, 2800, 3300],
     waves: [
       { at: 400,  e: [['brute', 1], ['archer', 1], ['grunt', -1], ['grunt', -1]] },
@@ -225,7 +225,8 @@ function toTutorial(from = 'title') {
   $('btnHelpBack').hidden = from !== 'pause'; $('btnPractice').hidden = from === 'pause'; $('btnGo').hidden = from === 'pause';
   document.querySelector('#tutorial .dialog-body').scrollTop = 0;
 }
-function beginGame() {
+function beginGame(cinematic = false) {
+  if (cinematic === true) { startOpening(); return; }
   practice = false; clearInput(); AUDIO.pause(false);
   player = newPlayer(0);
   startStage(0);
@@ -268,14 +269,14 @@ function updatePractice() {
 }
 
 $('btnStart').onclick = () => toTutorial();
-$('btnGo').onclick = beginGame;
+$('btnGo').onclick = () => beginGame(true);
 $('btnNext').onclick = nextStage;
 $('btnRetry').onclick = retryStage;
 $('btnToTitle').onclick = toTitle;
 $('btnEndTitle').onclick = toTitle;
 $('btnContinue').onclick = continueGame;
 $('btnPractice').onclick = beginPractice;
-$('btnPracticeGo').onclick = beginGame;
+$('btnPracticeGo').onclick = () => beginGame(true);
 $('btnPracticeHelp').onclick = () => { pauseGame(); toTutorial('pause'); };
 $('btnResume').onclick = resumeGame;
 $('playPause').onclick = () => pauseGame(); $('touchPause').onclick = () => pauseGame();
@@ -294,9 +295,10 @@ document.querySelectorAll('.skillbtn').forEach(b => {
 });
 
 function onKeyOnce(code) {
+  if (scene === 'opening' && ['Enter', 'Space', 'Escape'].includes(code)) { finishOpening(); return; }
   if (code === 'Enter') {
     if (scene === 'title') toTutorial();
-    else if (scene === 'tutorial' && helpFrom !== 'pause') beginGame();
+    else if (scene === 'tutorial' && helpFrom !== 'pause') beginGame(true);
     else if (scene === 'clear') nextStage();
     else if (scene === 'over') retryStage();
     else if (scene === 'ending') toTitle();
@@ -313,7 +315,7 @@ function onKeyOnce(code) {
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
-  stageIdx = i; stage = STAGES[i];
+  stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
   arena = null;
   camX = 0; camLock = false; waveIdx = 0; clearT = 0; goT = 0; flashT = 0;
   enemies = []; items = []; parts = []; texts = []; target = null; hazards = []; impacts = []; bursts = []; ghosts = []; bolts = [];
@@ -354,7 +356,9 @@ function spawnWave(w) {
   }
 }
 function mkEnemy(type, x, y) {
-  const d = ET[type];
+  const base = ET[type];
+  const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
+  const d = base.boss ? base : { ...base, name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
     st: 'chase', t: 0, wait: rand(0, 40), atkCd: rand(20, 60), pat: null, hitSet: null, inv: 0, flash: 0,
     boss: !!d.boss, nextKd: d.hp * 0.75, gr: 0, grMax: d.hp >= 500 ? 130 : 110, grT: 0, walk: false, recT: d.rec || 30, remove: false,
@@ -370,7 +374,7 @@ function sparks(x, y, z, n = 7, col = '#fff6a8') {
 function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life: 50 }); }
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
-function burst(x, y, z, cols) { bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
+function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
 function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0 }); }
 function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
@@ -771,6 +775,7 @@ function heal(n) {
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
 function damageEnemy(e, dmg, kd, kind = 0) {
+  if (e.phaseT > 0) return;
   const p = player;
   if (practice) practiceDone.add(p.st === 'skill' ? 'skill' : 'attack');
   const stunned = e.st === 'stun';
@@ -801,6 +806,13 @@ function damageEnemy(e, dmg, kd, kind = 0) {
     if (!e.p2shown && phase2(e)) {                 // 체력 절반: 2페이즈 돌입 알림
       e.p2shown = true; sfx('phase2'); shake = Math.max(shake, 12);
       floatText(e.x, e.y - e.z - e.d.h - 40, 'PHASE 2', '#ff5a6a');
+      if (['boss2', 'boss4', 'boss5'].includes(e.type)) {
+        resetBossFx(e); e.phaseT = 72; e.st = 'rec'; e.t = 0; e.recT = 36;
+        e.z = 0; e.vz = 0; e.vx = 0; e.invuln = true;
+        hazards = hazards.filter(h => h.type === 'pwave');
+        player.inv = Math.max(player.inv, 90);
+        return;
+      }
     }
     if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
     e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
@@ -1136,6 +1148,11 @@ function slamImpact(e) {
 }
 
 function updEnemy(e) {
+  if (e.phaseT > 0 && e.st !== 'dead') {
+    e.phaseT--; e.walk = false; e.flash = 0;
+    if (!e.phaseT) { e.invuln = false; e.st = 'rec'; e.t = 0; e.recT = 36; }
+    return;
+  }
   if (e.training) { if (e.st !== 'dead') { e.st = 'chase'; e.z = 0; e.inv = 0; e.flash = Math.max(0, e.flash - 1); } return; }
   const p = player, d = e.d;
   e.t++;
@@ -1388,6 +1405,7 @@ function updHazards() {
 function update() {
   if (['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene)) return false;
   tick++;
+  if (scene === 'opening') { openingTime += MS; if (openingTime >= 18000) finishOpening(); return; }
   if (scene === 'intro') {
     if (--bannerT <= 0) scene = 'play';
     return;
@@ -1525,6 +1543,7 @@ const BG_Y = Math.round(HORIZON) - BG_HORIZON * BG_S;            // 그림 속 �
 const srng = seed => { let v = seed >>> 0; return () => ((v = (Math.imul(v, 1664525) + 1013904223) >>> 0) / 4294967296); };
 const floorCache = {};
 function drawBackdrop(theme, scroll) {
+  if (drawReleaseBackdrop(theme, scroll)) return;
   const img = getBackdrop(theme, tick * MS), off = scroll * 0.35, first = Math.floor(off / BG_W);
   ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = img.topColor; rect(0, 0, W, BG_Y + 1);   // 하늘 위쪽 여백은 한 가지 색으로 (맨 윗줄을 늘이면 별이 세로줄이 된다)
@@ -1638,7 +1657,7 @@ const FLOOR_FN = {
     }
     for (let yy = 0; yy < 4; yy++) for (let x = 0; x < FL_W; x++) P(x, yy, '#1a1228', 0.5 - yy * 0.12);
   },
-  stage4(L, R, P, depth) {                         // 얼어붙은 묘지: 눈밭 + 가운데 얼어붙은 판석 길 + 뼛조각과 마른 풀
+  stage4(L, R, P, depth) {                         // 얼어붙은 망자의 왕국: 눈밭 + 가운데 얼어붙은 판석 길 + 뼛조각과 마른 풀
     bands(L, ['#6e8098', '#7c8ea4', '#8a9cb0', '#98aabc', '#a8b8c8', '#b8c6d4', '#c8d4e0']);
     for (let i = 0; i < 900; i++) { const x = R() * FL_W, y = R() * FL_H; P(x, y, R() < 0.5 ? '#dce8f0' : '#8a9cb0'); }
     let y = Math.round(FL_H * 0.34), row = 0;
@@ -1665,7 +1684,7 @@ const FLOOR_FN = {
     }
     for (let yy = 0; yy < 4; yy++) for (let x = 0; x < FL_W; x++) P(x, yy, '#0a121c', 0.4 - yy * 0.09);
   },
-  stage5(L, R, P, depth) {                         // 마왕성 심연: 갈라진 흑요석 바닥, 틈마다 흐르는 용암, 재
+  stage5(L, R, P, depth) {                         // 검은 월식의 심연: 갈라진 흑요석 바닥, 틈마다 흐르는 용암, 재
     bands(L, ['#1a0c10', '#20101a', '#24121c', '#2a141e', '#2e1620', '#321822', '#361a24']);
     for (let i = 0; i < 700; i++) { const x = R() * FL_W, y = R() * FL_H; P(x, y, R() < 0.5 ? '#4a3a3a' : '#120608'); }
     for (let i = 0; i < 26; i++) {                  // 용암 줄기 (어두운 테두리 + 밝은 가운데)
@@ -1725,6 +1744,7 @@ function floorImage(theme) {
   return (floorCache[theme] = c);
 }
 function drawFloor(theme) {                        // 월드 좌표에서 호출
+  if (drawStageFloor()) return;
   const img = floorImage(theme), tw = FL_W * SC, first = Math.floor(camX / tw);
   ctx.imageSmoothingEnabled = false;
   for (let k = first; k * tw - camX < VW; k++) {   // 홀수 칸은 좌우로 뒤집어 반복이 덜 보이게
@@ -1875,6 +1895,7 @@ function drawPlayer() {
     ctx.beginPath(); ctx.ellipse(sx, p.y - p.z - Hh * 0.5, S.sh * SC * 1.5, Hh * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
   }
   const lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
+  if (drawNamedPlayer()) return;
   if (HD.player) { drawPlayerHD(lying); return; }
   const key = (p.st === 'atk' ? 'atk' + p.atk : p.st) + (lying ? 'L' : '') + (p.st === 'free' ? (p.z > 0 ? 'j' : p.walk ? 'w' : '') : '');
   const pose = blendPose(p, key, playerPose(lying), p.st === 'hurt' ? 50 : p.st === 'atk' ? 70 : 110);
@@ -1888,6 +1909,7 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if (drawNamedEnemy(e)) return;
   if (HD[e.d.sprite] && !e.boss) { drawLegion(e); return; }
   if (HD[e.d.sprite]) { drawEnemyHD(e); return; }
   const d = e.d, S = SPRITES[d.sprite], sx = e.x - camX;
@@ -2245,7 +2267,7 @@ function legionFrame(e) {
   }
 }
 function drawLegion(e) {
-  const id = e.d.sprite, sx = e.x - camX, o = {};
+  const id = e.d.sprite, sx = e.x - camX, o = e.boss ? {} : { wash: BOSS_COLORS[stageIdx], washA: .22 };
   drawShadow(sx, e.y, SPRITES[id].sh, e.z);
   if (e.hr < 400 && e.st !== 'dead' && e.st !== 'down') {   // 피격 반동: 맞은 쪽 반대로 꺾였다가 돌아온다
     const osc = Math.cos(e.hr * 0.03) * Math.exp(-e.hr / 160);
@@ -2510,11 +2532,11 @@ function portrait(id) {
 }
 function panel(x, y, w, h) {
   ctx.fillStyle = '#000'; rect(x - 4, y - 4, w + 8, h + 8);
-  ctx.fillStyle = '#8a6a1c'; rect(x - 3, y - 3, w + 6, h + 6);
-  ctx.fillStyle = '#f3d26a'; rect(x - 3, y - 3, w + 6, 1); rect(x - 3, y - 3, 1, h + 6);
+  ctx.fillStyle = '#68707a'; rect(x - 3, y - 3, w + 6, h + 6);
+  ctx.fillStyle = '#b5a8a3'; rect(x - 3, y - 3, w + 6, 1); rect(x - 3, y - 3, 1, h + 6);
   ctx.fillStyle = '#3a2a08'; rect(x - 1, y - 1, w + 2, h + 2);
   const g = ctx.createLinearGradient(0, y, 0, y + h);
-  g.addColorStop(0, 'rgba(46,36,80,.94)'); g.addColorStop(1, 'rgba(12,9,26,.94)');
+  g.addColorStop(0, 'rgba(37,31,38,.94)'); g.addColorStop(1, 'rgba(12,9,26,.94)');
   ctx.fillStyle = g; rect(x, y, w, h);
   ctx.fillStyle = 'rgba(255,255,255,.07)'; rect(x, y, w, 2);
   for (const [cx, cy] of [[x - 3, y - 3], [x + w - 2, y - 3], [x - 3, y + h - 2], [x + w - 2, y + h - 2]]) {   // 모서리 리벳
@@ -2596,21 +2618,7 @@ function drawHUD() {
   // ---- 보스 패널 (가운데) / 아니면 최근에 때린 적 이름과 체력 (레퍼런스의 "Goblin" 표시)
   const boss = enemies.find(e => e.boss && (e.st !== 'dead' || e.t < 60));
   if (boss) {
-    panel(356, 12, 352, 88);
-    drawPortrait(boss.d.sprite, 364, 20, 80, 60, true, boss.st === 'stun');
-    krText(boss.d.name, 454, 36, '#ffb0a0', 15, 'left', '#2a0008');
-    lifeBar(454, 44, 246, 12, boss.hp / boss.max, lagTo(boss, 'hpLag', boss.hp, boss.max * 0.004) / boss.max, ['#ff7a6a', '#b0101a']);
-    ctx.fillStyle = 'rgba(255,255,255,.7)';
-    for (const f of [0.25, 0.5, 0.75]) rect(454 + Math.round(246 * f), 42, 1, 16);        // 다운 구간 눈금
-    if (boss.st !== 'dead') {
-      // 그로기 게이지 (가득 차면 5초 기절, 기절 중에는 남은 시간이 줄어든다)
-      const stun = boss.st === 'stun', r = stun ? 1 - boss.t / GROGGY_TICKS : boss.gr / boss.grMax;
-      ctx.fillStyle = '#000'; rect(452, 62, 250, 9); ctx.fillStyle = '#2a1a04'; rect(454, 64, 246, 5);
-      ctx.fillStyle = stun ? (Math.floor(tick / 6) % 2 ? '#ffe14d' : '#ff9800') : '#ffb300'; rect(454, 64, 246 * r, 5);
-      if (stun) krText(`기절 ${((GROGGY_TICKS - boss.t) / 60).toFixed(1)}초 · 받는 피해 x1.5`, 454, 90, '#ffe14d', 12);
-      else if (boss.st === 'pat') krText(boss.d.pats[boss.pat], 454, 90, '#ff9aa6', 13);   // 사용 중인 기술 이름
-      else pxText('GROGGY', 454, 88, '#c9a24a', 7);
-    }
+    drawBossBar(boss);
   } else if (target && target.t > 0 && enemies.includes(target.e)) {
     const e = target.e, a = Math.min(1, target.t / 20);
     ctx.globalAlpha = a;
@@ -2635,7 +2643,7 @@ function drawHUD() {
   // GO 화살표
   if (arena && camLock) {
     const help = { fire: '화염 지대 · 표식이 없는 줄로 이동하세요', frost: '서리 지대 · 표식을 벗어나거나 점프로 피하세요', abyss: '심연 지대 · 표식이 없는 줄이 안전합니다' };
-    outlineText(help[arena.kind], W / 2, H - 18, '#ffe27a', 'bold 15px sans-serif');
+    outlineText(help[arena.kind], W / 2, H - 116, '#ffe27a', 'bold 15px sans-serif');
   }
   if (goT > 0 && Math.floor(tick / 20) % 2 === 0) { krText('GO', W - 120, H / 2 - 30, '#ffd23f', 40); krText('➜', W - 60, H / 2 - 30, '#ffd23f', 40); }
   updateSkillButtons();
@@ -2723,7 +2731,7 @@ function render() {
   drawVignette();
   ctx.restore();
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
-  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) drawIntroCard(introT / INTRO_MS);
+  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / INTRO_MS); if (introBoss) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
 
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
@@ -2782,6 +2790,7 @@ function loop(t) {
     if (processed) for (const k in pressed) { pressed[k] -= MS; if (pressed[k] <= 0) delete pressed[k]; }
   }
   if (scene === 'title' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
+  else if (scene === 'opening') drawOpening();
   else render();
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
   $('skillbar').hidden = scene !== 'play';

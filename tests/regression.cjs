@@ -305,6 +305,83 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       await screenshot('tutorial-' + width);
     }
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
+    await evaluate('NAMED_ATLAS.decode()');
+    await evaluate('Promise.all(FLOOR_IMAGES.map(im=>im.decode()))');
+    assert.equal(await evaluate(`(()=>{
+      if(GTOP!==340||GBOT!==500)return false;
+      const original=ctx.drawImage;
+      try {
+        for(let n=0;n<5;n++) {
+          player=newPlayer();startStage(n);
+          if(FLOOR_ART[n].filename!==(n+1)+'스테이지 바닥.png')return false;
+          for(const x of [-1,0,639.5,1280.25,stage.len-VW]) {
+            camX=x;let calls=0;
+            ctx.drawImage=function(im,...args){if(im!==FLOOR_IMAGES[n])throw Error('Wrong stage floor');calls++;return original.call(this,im,...args)};
+            if(!drawStageFloor()||calls<1)return false;
+          }
+          const saved=FLOOR_IMAGES[n];FLOOR_IMAGES[n]=null;
+          try{if(drawStageFloor()!==false)return false;ctx.drawImage=original;drawFloor(stage.theme)}finally{FLOOR_IMAGES[n]=saved}
+        }
+      }finally{ctx.drawImage=original;camX=0}
+      return true;
+    })()`),true,'Five floor mappings, scrolling, unchanged lanes and missing-image fallback');
+    console.log('PASS Five supplied stage floors decode, scroll and fall back safely');
+
+    assert.equal(await evaluate("NAMED_SPRITES.sources.gorath_motion.filename"),'1스테이지 보스 고라스 모션.png');
+    assert.equal(await evaluate("NAMED_SPRITES.sources.player.filename"),'다크 기사 전투 스프라이트 시트.png');
+    assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(1);const b=mkEnemy('boss2',400,420);if(namedEnemyRole(b)!==null)return false;b.p2shown=true;return namedEnemyRole(b)==='boss2p2' && namedEnemyRole(mkEnemy('boss5',400,420))==='boss5'})()`),true);
+    for(const stage of [0,1,2,3,4]) {
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;const b=mkEnemy(STAGES[${stage}].boss,430,420);b.p2shown=true;enemies=[b];for(const st of ['chase','hurt','dead']){b.st=st;b.t=10;if(!namedEnemyFrame(b))return false;render();}b.st='pat';for(const pat of Object.keys(b.d.pats)){b.pat=pat;b.pt=800;render()}return true})()`),true);
+      await screenshot('named-boss-'+(stage+1));
+    }
+    assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(0);scene='play';player.inv=0;for(const id of Object.keys(SKILLS)){player.st='skill';player.skill=id;player.t=20;if(namedPlayerFrame().source!=='player')return false;render()}player.st='free';return namedPlayerFrame()===null})()`),true);
+    await screenshot('named-player');
+    await evaluate('toTitle(); document.getElementById("namedTitleImage").decode()');
+    assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundImage.startsWith('url(')`),true,'Settings uses supplied artwork');
+    assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundSize`),'contain','Settings art is fitted inside button');
+    for(const [width,height] of [[1920,1080],[844,390],[390,844]]) {
+      await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
+      assert.equal(await evaluate(`(()=>{const r=$('wrap').getBoundingClientRect();return ['btnStart','btnContinue','btnTitleSettings'].every(id=>{const b=$(id).getBoundingClientRect();return b.top>=r.top&&b.bottom<=r.bottom&&b.left>=r.left&&b.right<=r.right})})()`),true,'Named title controls fit');
+      await screenshot('named-title-'+width);
+    }
+    await call('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false});
+    await screenshot('named-title');
+    for(let stage=0;stage<5;stage++) {
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;enemies=['grunt','rogue','archer','brute'].map((type,i)=>mkEnemy(type,230+i*110,420));for(const e of enemies){for(const st of ['chase','wind','act','rec','hurt','down','dead']){e.st=st;e.t=4;const f=namedEnemyFrame(e);if(!f||f.source!=='soldiers${stage+1}')return false;render()}e.st='chase';e.walk=false;}render();return true})()`),true,'All soldier states use stage '+(stage+1)+' art');
+      await screenshot('soldiers-stage-'+(stage+1));
+    }
+    assert.equal(await evaluate(`(()=>{const e=enemies[0];e.st='dead';e.t=60;const f=namedEnemyFrame(e);const ids=NAMED_SPRITES.clips[namedEnemyRole(e)].death;return f.id===ids.at(-1)})()`),true,'Soldier death reaches final frame before removal');
+    console.log('PASS All five soldier themes, all states, heavy infantry and completed death animation');
+
+    console.log('PASS Named sprite roles, phase-two gate, player techniques, boss states and title GIF');
+    for(const p2 of [false,true]) {
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(4);scene='play';player.x=170;player.inv=0;const b=mkEnemy('boss5',400,420);enemies=[b];b.p2shown=${p2};b.st='chase';b.walk=false;for(const state of ['chase','hurt','stun','dead']){b.st=state;b.t=80;if(namedEnemyFrame(b)?.source!=='emperor')return false;}for(const pat of Object.keys(b.d.pats)){b.st='pat';b.pat=pat;for(const t of [0,500,1000,1800]){b.pt=t;if(namedEnemyFrame(b)?.source!=='emperor')return false;render();}}b.st='chase';b.t=0;render();return true})()`),true,'Emperor source for every boss state and phase');
+      await screenshot('emperor-phase-'+(p2?2:1));
+    }
+    await evaluate('toTutorial()');
+    await evaluate('Promise.all(Object.values(RELEASE_IMAGES).map(im=>im.decode()))');
+    assert.equal(await evaluate('Object.values(RELEASE_IMAGES).every(im=>im.naturalWidth>0)'), true);
+    console.log('PASS All release images decode, including opening and phase arenas');
+    await evaluate(`beginGame(true); openingTime=5000; drawOpening(); onKeyOnce('Space')`);
+    assert.equal(await evaluate('scene'), 'intro');
+    assert.equal(await evaluate("$('openingSkip').hidden"), true);
+    await evaluate('beginGame(true); openingTime=17999; update()');
+    assert.equal(await evaluate('scene'), 'intro');
+    console.log('PASS Opening skip and automatic completion start stage one');
+    for (const n of [1,3,4]) {
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.51;damageEnemy(b,b.max*.1,false);if(b.phaseT!==72||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);for(let t=0;t<72;t++)updEnemy(b);return b.hp===hp&&!b.invuln&&b.st==='rec'&&b.z===0})()`),true,'Safe phase transition');
+      const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
+      assert.equal(key,'phase'+(n+1));
+    }
+    for (const [width,height] of [[1920,1080],[1280,720],[844,390]]) {
+      await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
+      const layout=await evaluate(`(()=>{UX.options.touch=false;UX.applySettings?.();document.body.classList.remove('touch');$('skillbar').hidden=false;player=newPlayer();startStage(3);scene='play';enemies=[mkEnemy('boss4',430,420)];render();const c=cv.getBoundingClientRect(),s=$('skillbar').getBoundingClientRect();return {gap:s.top-(c.top+484*c.height/H),bottom:s.bottom<=c.bottom+1}})()`);
+      assert(layout.gap>=0 && layout.bottom,JSON.stringify(layout)+' Boss bar and skillbar do not overlap at '+width);
+      await screenshot('release-boss-'+width);
+    }
+    await evaluate(`(()=>{const b=enemies[0];drawBossBar(b);b.hp-=40;tick++;drawBossBar(b);if(!(b.hud.lag>b.hud.value&&b.hud.value>b.hp))throw Error('Damage trail');scene='pause';const v=b.hud.value;tick++;drawBossBar(b);if(b.hud.value!==v)throw Error('HUD changed during pause');scene='play';})()`);
+    console.log('PASS Phase backgrounds, bottom HUD layout, delayed damage and paused HUD');
+    await call('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false});
     console.log('PASS ' + await evaluate('(' + spriteChecks.toString() + ')()'));
     console.log('PASS ' + await evaluate('(' + legionChecks.toString() + ')()'));
     console.log('PASS Ten orchestral scores and boss music lifecycle: ' + JSON.stringify(await evaluate('(' + scoreChecks.toString() + ')()')));

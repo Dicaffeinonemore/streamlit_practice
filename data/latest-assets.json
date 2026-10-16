@@ -1,0 +1,2774 @@
+[
+  {
+    "source": "1스테이지 병사",
+    "bytes": 1288353,
+    "status": "applied: idle, walk, attack, hurt, death",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Matching JPG design verified against transparent PNG. Boundary fragments cleaned; RGB preserved.",
+    "role": "stage1 grunt/rogue/archer and grunt-derived heavy infantry",
+    "manifest": "data/stage-soldier-sources.json"
+  },
+  {
+    "source": "1스테이지 보스 고라스 모션.png",
+    "bytes": 1614244,
+    "status": "partially applied: selected named-source clips",
+    "format": "PNG",
+    "size": [
+      1448,
+      1086
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Dense adjoining cuts excluded from runtime clip lists; original RGBA retained.",
+    "role": "boss1: idle, walk, hurt, death, hook",
+    "manifest": "data/named-sprites.json"
+  },
+  {
+    "source": "1스테이지 보스 고라스 무브셋.png",
+    "bytes": 2587848,
+    "status": "partially applied: selected named-source clips",
+    "format": "PNG",
+    "size": [
+      1448,
+      1086
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Dense adjoining cuts excluded from runtime clip lists; original RGBA retained.",
+    "role": "boss1: sweep, slam, rage",
+    "manifest": "data/named-sprites.json"
+  },
+  {
+    "source": "1스테이지 보스 구간- 피의 처형장.png",
+    "bytes": 1269930,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      1536,
+      473
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/boss1.png",
+      "assets/release/boss1.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "1스테이지-처형자의 성채.png",
+    "bytes": 894762,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      1536,
+      317
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/field1.png",
+      "assets/release/field1.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "2스테이지 병사",
+    "bytes": 1314754,
+    "status": "applied: idle, walk, attack, hurt, death",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Matching JPG design verified against transparent PNG. Boundary fragments cleaned; RGB preserved.",
+    "role": "stage2 grunt/rogue/archer and grunt-derived heavy infantry",
+    "manifest": "data/stage-soldier-sources.json"
+  },
+  {
+    "source": "3스테이지 병사",
+    "bytes": 1604270,
+    "status": "applied: idle, walk, attack, hurt, death",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Matching JPG design verified against transparent PNG. Boundary fragments cleaned; RGB preserved.",
+    "role": "stage3 grunt/rogue/archer and grunt-derived heavy infantry",
+    "manifest": "data/stage-soldier-sources.json"
+  },
+  {
+    "source": "4스테이지 병사",
+    "bytes": 1890051,
+    "status": "applied: idle, walk, attack, hurt, death",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Matching JPG design verified against transparent PNG. Boundary fragments cleaned; RGB preserved.",
+    "role": "stage4 grunt/rogue/archer and grunt-derived heavy infantry",
+    "manifest": "data/stage-soldier-sources.json"
+  },
+  {
+    "source": "5스테이지 병사",
+    "bytes": 1441033,
+    "status": "applied: idle, walk, attack, hurt, death",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Matching JPG design verified against transparent PNG. Boundary fragments cleaned; RGB preserved.",
+    "role": "stage5 grunt/rogue/archer and grunt-derived heavy infantry",
+    "manifest": "data/stage-soldier-sources.json"
+  },
+  {
+    "source": "ChatGPT 이미지 2026년 10월 14일 오후 10_22_04-1.png",
+    "bytes": 1404521,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      724
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "outputs": [
+      "assets/release/continue.png",
+      "assets/release/continue.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "ChatGPT 이미지 2026년 10월 14일 오후 10_22_06-2.png",
+    "bytes": 1309911,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      724
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "outputs": [
+      "assets/release/newgame.png",
+      "assets/release/newgame.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "ChatGPT 이미지 2026년 10월 14일 오후 10_22_07-3.png",
+    "bytes": 1275269,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      724
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "outputs": [
+      "assets/release/settings.png",
+      "assets/release/settings.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "ChatGPT 이미지 2026년 10월 16일 오후 11_06_49-1.png",
+    "bytes": 2949987,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      724
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/field4.png",
+      "assets/release/boss4.png",
+      "assets/release/field4.png",
+      "assets/release/boss4.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "ChatGPT 이미지 2026년 10월 16일 오후 11_06_55-2.png",
+    "bytes": 3582129,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      724
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/phase4.png",
+      "assets/release/phase4.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "opening_movie_pixel_intro.gif",
+    "bytes": 11880406,
+    "status": "applied as six scene stills, not complete character animation",
+    "format": "GIF",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 22,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "source": "Stage2_Crow_Witch_Background_Concepts/README.txt",
+    "bytes": 609,
+    "status": "held",
+    "reason": "Unverified frame bounds / overlapping effects or reference artwork; keep existing runtime sprites. No Aseprite file supplied."
+  },
+  {
+    "source": "Stage2_Crow_Witch_Background_Concepts/Stage2_Boss_Arena_Panorama.png",
+    "bytes": 1142586,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      1938,
+      299
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/boss2.png",
+      "assets/release/boss2.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "Stage2_Crow_Witch_Background_Concepts/Stage2_Environment_Props_Reference.png",
+    "bytes": 458405,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1942,
+      175
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "reason": "Prop reference strip; individual props and depth layers are not supplied."
+  },
+  {
+    "source": "Stage2_Crow_Witch_Background_Concepts/Stage2_Field_Panorama.png",
+    "bytes": 1126080,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      1938,
+      295
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/field2.png",
+      "assets/release/field2.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "Stage3_Golden_King_Background_Concepts/Stage3_Boss_Throne_Arena.png",
+    "bytes": 1624979,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      362
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/boss3.png",
+      "assets/release/boss3.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "Stage3_Golden_King_Background_Concepts/Stage3_Field_Golden_Citadel.png",
+    "bytes": 3185953,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2167,
+      726
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/field3.png",
+      "assets/release/field3.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "Stage3_Golden_King_Background_Concepts/Stage3_Throne_Approach.png",
+    "bytes": 3303066,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2172,
+      724
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/approach3.png",
+      "assets/release/approach3.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "Stage3_Golden_King_Background_Concepts/README_ko.txt",
+    "bytes": 538,
+    "status": "held",
+    "reason": "Unverified frame bounds / overlapping effects or reference artwork; keep existing runtime sprites. No Aseprite file supplied."
+  },
+  {
+    "source": "게임 타이틀 화면.gif",
+    "bytes": 13786663,
+    "status": "applied",
+    "format": "GIF",
+    "size": [
+      720,
+      405
+    ],
+    "frames": 60,
+    "alpha": [
+      255,
+      255
+    ],
+    "reason": "Original baked menu covered by real accessible image buttons; reduced-motion uses first frame.",
+    "role": "animated title screen, distinct from opening"
+  },
+  {
+    "source": "까마귀 마녀 2페이즈 스프라이트 시트.png",
+    "bytes": 3677983,
+    "status": "partially applied: selected named-source clips",
+    "format": "PNG",
+    "size": [
+      1448,
+      1086
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Dense adjoining cuts excluded from runtime clip lists; original RGBA retained.",
+    "role": "boss2 phase two only",
+    "manifest": "data/named-sprites.json"
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/README_KO.txt",
+    "bytes": 941,
+    "status": "held",
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/CrowWitch_Concept_Reference.png",
+    "bytes": 2890153,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1536,
+      1024
+    ],
+    "frames": 1,
+    "alpha": [
+      5,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/animation_manifest.json",
+    "bytes": 23526,
+    "status": "held",
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/CrowWitch_Animation_Overview.png",
+    "bytes": 912637,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      900,
+      2600
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/CrowWitch_Skills_Reference.png",
+    "bytes": 3122944,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1536,
+      1024
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/CrowWitch_Stage2_Animation_References.aseprite",
+    "bytes": 2017404,
+    "status": "held",
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_05.png",
+    "bytes": 12039,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit_00.png",
+    "bytes": 12875,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_01.png",
+    "bytes": 13999,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_07.png",
+    "bytes": 12872,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_10.png",
+    "bytes": 19301,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_02.png",
+    "bytes": 15389,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_04.png",
+    "bytes": 19684,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_06.png",
+    "bytes": 14971,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_12.png",
+    "bytes": 17118,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_09.png",
+    "bytes": 14502,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_10.png",
+    "bytes": 13048,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_03.png",
+    "bytes": 18757,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_09.png",
+    "bytes": 20216,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_04.png",
+    "bytes": 18367,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_02.png",
+    "bytes": 14984,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_07.png",
+    "bytes": 19078,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_02.png",
+    "bytes": 18098,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_01.png",
+    "bytes": 17756,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_06.png",
+    "bytes": 13262,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      249
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_04.png",
+    "bytes": 14849,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_05.png",
+    "bytes": 20128,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit_05.png",
+    "bytes": 11816,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_02.png",
+    "bytes": 13412,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_01.png",
+    "bytes": 17506,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_01.png",
+    "bytes": 14864,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_05.png",
+    "bytes": 17704,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_07.png",
+    "bytes": 14670,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_06.png",
+    "bytes": 16834,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_03.png",
+    "bytes": 18320,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_00.png",
+    "bytes": 14160,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_07.png",
+    "bytes": 11779,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_06.png",
+    "bytes": 14818,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_00.png",
+    "bytes": 13296,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_08.png",
+    "bytes": 17724,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit_01.png",
+    "bytes": 11550,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_08.png",
+    "bytes": 19032,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_04.png",
+    "bytes": 15432,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_08.png",
+    "bytes": 14867,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_02.png",
+    "bytes": 17936,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_02.png",
+    "bytes": 12423,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_00.png",
+    "bytes": 14703,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_06.png",
+    "bytes": 13869,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_06.png",
+    "bytes": 13186,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_06.png",
+    "bytes": 13902,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_06.png",
+    "bytes": 13913,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_09.png",
+    "bytes": 12387,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      249
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_05.png",
+    "bytes": 19980,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_02.png",
+    "bytes": 14899,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_00.png",
+    "bytes": 18505,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_01.png",
+    "bytes": 12332,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      249
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_04.png",
+    "bytes": 12832,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_06.png",
+    "bytes": 17370,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_00.png",
+    "bytes": 16887,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_03.png",
+    "bytes": 13485,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_02.png",
+    "bytes": 13910,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_01.png",
+    "bytes": 16465,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_00.png",
+    "bytes": 14504,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit_04.png",
+    "bytes": 12636,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_13.png",
+    "bytes": 17130,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_07.png",
+    "bytes": 14512,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_01.png",
+    "bytes": 15525,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_05.png",
+    "bytes": 13116,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_05.png",
+    "bytes": 18297,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_01.png",
+    "bytes": 13348,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_04.png",
+    "bytes": 12840,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_14.png",
+    "bytes": 14704,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_07.png",
+    "bytes": 11699,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_03.png",
+    "bytes": 17812,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_04.png",
+    "bytes": 11784,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_04.png",
+    "bytes": 13529,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_06.png",
+    "bytes": 15076,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_07.png",
+    "bytes": 13791,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_08.png",
+    "bytes": 17056,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_00.png",
+    "bytes": 13504,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_06.png",
+    "bytes": 17875,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_09.png",
+    "bytes": 17537,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_00.png",
+    "bytes": 15660,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_04.png",
+    "bytes": 15576,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_03.png",
+    "bytes": 14809,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_03.png",
+    "bytes": 12406,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      249
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_08.png",
+    "bytes": 13467,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit_03.png",
+    "bytes": 13121,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_07.png",
+    "bytes": 14254,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_09.png",
+    "bytes": 12663,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_03.png",
+    "bytes": 13774,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_08.png",
+    "bytes": 12865,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_06.png",
+    "bytes": 18727,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_03.png",
+    "bytes": 12380,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_02.png",
+    "bytes": 11997,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_01.png",
+    "bytes": 16944,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_05.png",
+    "bytes": 13534,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_04.png",
+    "bytes": 14533,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_02.png",
+    "bytes": 14303,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_00.png",
+    "bytes": 12818,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_02.png",
+    "bytes": 17300,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_00.png",
+    "bytes": 18510,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_05.png",
+    "bytes": 14996,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_05.png",
+    "bytes": 14866,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_00.png",
+    "bytes": 18890,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_03.png",
+    "bytes": 17779,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit_02.png",
+    "bytes": 12389,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field_04.png",
+    "bytes": 17395,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_02.png",
+    "bytes": 18676,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush_09.png",
+    "bytes": 10789,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      248
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_05.png",
+    "bytes": 15754,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_08.png",
+    "bytes": 12725,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_07.png",
+    "bytes": 20500,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_01.png",
+    "bytes": 13712,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_01.png",
+    "bytes": 14570,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport_04.png",
+    "bytes": 17585,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      249
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle_00.png",
+    "bytes": 14804,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_05.png",
+    "bytes": 15533,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack_07.png",
+    "bytes": 19097,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon_03.png",
+    "bytes": 15684,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack_11.png",
+    "bytes": 19326,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack_03.png",
+    "bytes": 15696,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_03.png",
+    "bytes": 14628,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk_01.png",
+    "bytes": 15138,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death_05.png",
+    "bytes": 13761,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run_07.png",
+    "bytes": 13214,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate_11.png",
+    "bytes": 15629,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      176,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/hit.png",
+    "bytes": 71437,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1056,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/walk.png",
+    "bytes": 112194,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/dark_field.png",
+    "bytes": 173518,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/ultimate.png",
+    "bytes": 198663,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/idle.png",
+    "bytes": 113497,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_rush.png",
+    "bytes": 123823,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      250
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/basic_attack.png",
+    "bytes": 168196,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/run.png",
+    "bytes": 103337,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/fall_attack.png",
+    "bytes": 141971,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/combo_attack.png",
+    "bytes": 219595,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      252
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/crow_summon.png",
+    "bytes": 150513,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      432
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/teleport.png",
+    "bytes": 121822,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1232,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "까마귀 마녀 모르그라 작업자료/death.png",
+    "bytes": 102724,
+    "status": "held",
+    "format": "PNG",
+    "size": [
+      1408,
+      216
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      251
+    ],
+    "reason": "Reference-derived crops retain panel/background fragments and uncertain action boundaries. Existing verified witch animations remain active."
+  },
+  {
+    "source": "다크 기사 전투 스프라이트 시트.png",
+    "bytes": 1969297,
+    "status": "partially applied: selected named-source clips",
+    "format": "PNG",
+    "size": [
+      1448,
+      1086
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Dense adjoining cuts excluded from runtime clip lists; original RGBA retained.",
+    "role": "player: basic attacks and combat techniques; existing locomotion retained",
+    "manifest": "data/named-sprites.json"
+  },
+  {
+    "source": "붉은 월식 아래의 폐허와 공허-1.png",
+    "bytes": 2879785,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      1983,
+      793
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/field5.png",
+      "assets/release/boss5.png",
+      "assets/release/field5.png",
+      "assets/release/boss5.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "붕괴한 성좌의 고딕 아레나-2.png",
+    "bytes": 3107165,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      2068,
+      760
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/phase5.png",
+      "assets/release/phase5.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "얼음 망자의 왕 스프라이트 시트.png",
+    "bytes": 3572216,
+    "status": "partially applied: selected named-source clips",
+    "format": "PNG",
+    "size": [
+      1448,
+      1086
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Dense adjoining cuts excluded from runtime clip lists; original RGBA retained.",
+    "role": "boss4 Frozen Gravelord",
+    "manifest": "data/named-sprites.json"
+  },
+  {
+    "source": "폐허의 보랏빛 고딕 성당 арена.png",
+    "bytes": 2180712,
+    "status": "applied",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "frames": 1,
+    "alpha": [
+      255,
+      255
+    ],
+    "outputs": [
+      "assets/release/phase2.png",
+      "assets/release/phase2.png"
+    ],
+    "treatment": "Preserved source; explicit panel crop where necessary, nearest-neighbor reduction. Background only, no collision."
+  },
+  {
+    "source": "황금 왕 팔라딘 스프라이트 아틀라스.png",
+    "bytes": 3188605,
+    "status": "partially applied: selected named-source clips",
+    "format": "PNG",
+    "size": [
+      1448,
+      1086
+    ],
+    "frames": 1,
+    "alpha": [
+      0,
+      255
+    ],
+    "reason": "Dense adjoining cuts excluded from runtime clip lists; original RGBA retained.",
+    "role": "boss3 Aurelion",
+    "manifest": "data/named-sprites.json"
+  }
+]

@@ -1,0 +1,52 @@
+﻿v1.13 — 1~5스테이지 병사 디자인 전체 교체 (2026-10-17)
+
+적용
+1. Stage1_Executioner_Enemies.jpg → 처형군: 보병/창병/궁병
+2. Stage2_Crow_Witch_Enemies.jpg → 까마귀 군단: 보병/창병/궁병
+3. Stage3_Golden_King_Enemies.jpg → 황금 왕실: 보병/창병/궁병
+4. Stage4_Frozen_Enemies.jpg → 서리 망자: 보병/창병/궁병
+5. Stage5_Abyss_Enemies.jpg → 심연 군단: 보병/창병/궁병
+
+JPG는 알파가 없으므로 동일 디자인의 기존 투명 PNG 원본(1~5스테이지 병사)을 사용했다.
+두 자료 모두 1672x941이며, 투명 원본을 검정 배경에 합성한 결과와 JPG 사이의
+평균 채널 오차는 0.28~0.69 / 255다. JPEG 압축 차이 수준의 일치를 자동 검증했다.
+JPG 원본도 assets/named/jpg-references에 그대로 보존했다.
+검은색 픽셀을 일괄 투명 처리하지 않는다.
+
+동작
+- 전 스테이지 대기, 이동, 공격 준비/발동/후딜, 피격, 다운, 사망에 연결.
+- 이전 stage1 전용 조건을 스테이지별 명시적 연결로 변경.
+- 중갑병(brute)도 해당 스테이지 보병 원화를 1.12배로 사용한다.
+  별도 중갑병 원화가 제공된 것은 아니며, 기존 체력/공격 범위/속도/피해량은 유지한다.
+- 사망 모션이 마지막 프레임에 도달한 뒤 사라지도록 일반 병사 재생/페이드 시간 보정.
+- 프레임별 발 기준점과 같은 방향 반전을 적용하며 기존 깊이 이동/충돌 좌표는 보존.
+- 컷 경계에 걸친 작고 분리된 이웃 프레임 조각만 투명 처리하고 변경 픽셀 수를 기록.
+  원본 RGB 값은 모두 보존하며, 캐릭터 내부 검정색을 제거하지 않는다.
+- 검기/무기가 원화에 합쳐진 부분은 합성 프레임으로 유지한다.
+- 보스, 플레이어, 저장, 키보드/터치 조작, 기존 전투 수치는 변경하지 않는다.
+
+파일
+- named-runtime.js: 전 스테이지/중갑병 매핑, 병사 사망/다운/페이드 수정.
+- tools/build_named_sprites.py: 5개 투명 원본과 프레임 추출/경계 조각 정리.
+- data/stage-soldier-layout.json: 추가 스테이지의 명시적 컷과 발 기준점.
+- data/stage-soldier-sources.json: JPG → 투명 원본 대응, 해시와 적용 범위.
+- data/named-sprites.json, named-art.js, assets/named/: 갱신된 아틀라스와 번들.
+- tests/named-assets.py: RGB 보존, 기록된 알파 변경, 역할별 원본 연결 검사.
+- tests/stage-soldiers.py: 5개 JPG와 투명 원본 디자인 일치 검사.
+- tests/regression.cjs: 5스테이지 x 4병종 x 대기/준비/공격/후딜/피격/다운/사망 검증.
+- tools/review_stage_soldiers.py: 단계별 프레임 검수 이미지 생성.
+- data/latest-assets.json, README.md: 적용 상태 갱신.
+
+검증 결과
+- 변경 전/후 node tests/regression.cjs: 전체 통과.
+- python tests/named-assets.py: 395개 전체 캐릭터 프레임의 RGB/알파 검증 통과.
+- python tests/stage-soldiers.py: 다섯 JPG/PNG 대응 검사 통과.
+- 기존 5스테이지 자동 진행, 52 보스 패턴/페이즈, 저장/이어하기/설정/키 변경/터치,
+  단일 HTML 번들/브라우저 예외 검증 통과.
+- docs/screenshots/soldiers-stage-1.png ~ soldiers-stage-5.png에 실제 게임 화면 저장.
+- 이 테스트는 자동 검증이며 전 구간 수동 밸런스 플레이나 60FPS 성능 보증은 아니다.
+
+백업: backups/pre-stage-soldiers.zip
+실행: python server.py 또는 streamlit run server.py
+이 PC의 Python 별칭이 동작하지 않으면:
+& 'C:\Users\hoondo\AppData\Local\Python\bin\python.exe' server.py
