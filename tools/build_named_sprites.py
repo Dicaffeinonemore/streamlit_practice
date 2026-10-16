@@ -7,11 +7,14 @@ SOURCE=Path(r'C:/Users/hoondo/Desktop/흑월의 기사 이미지')
 out=ROOT/'assets/named';out.mkdir(exist_ok=True)
 files={**{f'soldiers{i}':f'{i}스테이지 병사' for i in range(2,6)},'soldiers1':'1스테이지 병사','gorath_motion':'1스테이지 보스 고라스 모션.png','gorath_moves':'1스테이지 보스 고라스 무브셋.png','player':'다크 기사 전투 스프라이트 시트.png','witch2':'까마귀 마녀 2페이즈 스프라이트 시트.png','ice':'얼음 망자의 왕 스프라이트 시트.png','gold':'황금 왕 팔라딘 스프라이트 아틀라스.png'}
 files['emperor']='5스테이지 보스.png'
+files['player_base']='어둠의 기사와 룬 대검 스프라이트 시트.png'
+files['player_moves']='다크 나이트 전투 스프라이트 시트.png'
 images={};sources={}
 for key,name in files.items():
  src=SOURCE/name
  if not src.exists():src=ROOT/'assets/incoming'/name
- data=src.read_bytes();dest=out/(key+'.png');dest.write_bytes(data)
+ data=src.read_bytes();dest=out/(key+'.png')
+ if not dest.exists() or dest.read_bytes()!=data:dest.write_bytes(data)
  images[key]=Image.open(io.BytesIO(data)).convert('RGBA');sources[key]={'filename':name,'path':str(dest.relative_to(ROOT)).replace('\\','/'),'sha256':hashlib.sha256(data).hexdigest(),'size':list(images[key].size)}
 clips={};frames=[]
 def remove_edge_fragments(im, margin=3):
@@ -53,7 +56,7 @@ def row(actor,clip,src,y0,y1,cuts,anchors,feet,scale):
    if clip in bounds:x0,x1=bounds[clip][j]
   rect=[x0,y0,x1,y1];im=images[src].crop(rect)
   removed=0
-  if src.startswith('soldiers') or src=='emperor':im,removed=remove_edge_fragments(im,24 if src=='emperor' else 3)
+  if src.startswith('soldiers') or src in ('emperor','player_moves'):im,removed=remove_edge_fragments(im,24 if src=='emperor' else 6 if src=='player_moves' else 3)
   # Only trim already-transparent margins, preserving all original opaque black pixels.
   bbox=im.getbbox()
   if not bbox:raise ValueError((actor,clip,j))
@@ -128,6 +131,23 @@ for entry in json.loads((ROOT/'data/stage-soldier-layout.json').read_text(encodi
 reviewed={'player':{'whirl':[0,4,5],'upper':[0,1,4]},'boss2p2':{'staff':[6],'awaken':[0,1,2]},'boss3':{'walk':[0], 'slash':[0,1,2,3,6,7], 'charge':[0,1], 'cast':[0,2,3]},'boss4':{'idle':[0,1,2,3,4,5], 'slash':[7,8], 'death':[0,1,2,3,4,5,6,7]}}
 for actor,groups in reviewed.items():
  for clip,indices in groups.items():clips[actor][clip]=[clips[actor][clip][i] for i in indices]
+# New hero: nonuniform source rectangles, feet and body centres explicitly aligned.
+row('player','idle','player_base',130,480,[0,365],[245],470,.36)
+row('player','walk','player_base',130,480,[420,815],[660],470,.36)
+row('player','crouch','player_base',200,480,[830,1190],[1035],470,.36)
+row('player','swing','player_base',195,480,[1230,1672],[1405],470,.36)
+row('player','overhead','player_base',480,900,[0,365],[225],887,.36)
+row('player','stab','player_base',630,905,[385,925],[595],887,.36)
+row('player','hurt','player_base',595,900,[925,1225],[1060],887,.36)
+row('player','death','player_base',730,920,[1225,1672],[1450],887,.36)
+row('player','dash','player_moves',0,185,[0,200,410,620,840,1047,1240,1450,1672],[140,350,565,778,995,1188,1380,1590],170,.72)
+row('player','rush','player_moves',190,375,[0,215,505,790,1120,1465,1672],[140,375,635,930,1235,1590],361,.72)
+row('player','whirl','player_moves',380,555,[0,220,550,825,1110,1460,1672],[140,400,665,935,1240,1590],549,.72)
+row('player','jump','player_moves',555,775,[235,470,695],[375,590],760,.72)
+row('player','plunge','player_moves',555,775,[695,895],[815],760,.72)
+row('player','impact','player_moves',555,775,[895,1237],[1055],760,.50)
+row('player','cast','player_moves',780,941,[0,220,505,790],[140,365,635],921,.72)
+row('player','wave','player_moves',790,930,[790,945,1120,1287,1455],[870,1030,1205,1370],858,.40)
 # Pack lossless crops into one atlas; original positions and foot anchors remain in JSON.
 x=y=h=0;placements=[]
 for f in frames:

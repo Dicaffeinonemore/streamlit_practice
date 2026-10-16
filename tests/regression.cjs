@@ -191,11 +191,31 @@ function combatChecks() {
     reset(); player.x = distance < 0 ? 400 : 200;
     enemies = [mkEnemy('grunt', player.x + distance, 420)]; startSkill('thrust');
     for (let i = 0; i < 50; i++) updPlayer();
-    check('Thrust reaches target once at distance ' + distance, enemies[0].hp === 22 && player.st === 'free');
+    check('Thrust reaches target once at distance ' + distance, enemies[0].hp === 12 && player.st === 'free');
   }
   reset(); player.x = 200; enemies = [mkEnemy('grunt', 300, 485)]; startSkill('thrust');
   for (let i = 0; i < 50; i++) updPlayer();
   check('Thrust respects lane', enemies[0].hp === 40);
+  reset(); player.x=200; player.face=1; enemies=[mkEnemy('grunt',320,420),mkEnemy('grunt',380,420)];
+  startSkill('slam'); for(let i=0;i<50;i++)updPlayer();
+  check('Slam expanded reach and outer limit', enemies[0].hp===16 && enemies[1].hp===40);
+  reset(); player.x=200; player.face=1; enemies=[mkEnemy('grunt',300,420),mkEnemy('grunt',100,420)];
+  startSkill('whirl'); player.t=11; updPlayer();
+  check('Whirl deals sixteen on both sides at expanded range', enemies.every(e=>e.hp===24));
+  for(const dir of [1,-1]) {
+    reset(); player.x=dir===1?100:700; player.face=dir;
+    enemies=[mkEnemy('grunt',player.x+dir*300,420),mkEnemy('grunt',player.x+dir*460,420),
+      mkEnemy('grunt',player.x+dir*300,480),mkEnemy('grunt',player.x+dir*300,420)];
+    enemies[3].z=100;
+    startSkill('redwave');
+    for(let i=0;i<17;i++)updPlayer();
+    check('Red wave has harmless windup '+dir, hazards.length===0);
+    for(let i=0;i<30;i++)updPlayer();
+    check('Red wave fires once and enters cooldown '+dir, hazards.length===1 && player.skillCd.redwave>0 && !canStartSkill('redwave'));
+    for(let i=0;i<65;i++)updHazards();
+    check('Red wave pierces once, respects depth and height, expires '+dir,
+      enemies[0].hp===16 && enemies[1].hp===16 && enemies[2].hp===40 && enemies[3].hp===40 && hazards.length===0);
+  }
   reset(); hitStop = 3;
   dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyJ' })); loop(last + MS * 1.1);
   check('Input survives hit stop', pressed.KeyJ > 0 && player.st === 'free');
@@ -334,7 +354,11 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;const b=mkEnemy(STAGES[${stage}].boss,430,420);b.p2shown=true;enemies=[b];for(const st of ['chase','hurt','dead']){b.st=st;b.t=10;if(!namedEnemyFrame(b))return false;render();}b.st='pat';for(const pat of Object.keys(b.d.pats)){b.pat=pat;b.pt=800;render()}return true})()`),true);
       await screenshot('named-boss-'+(stage+1));
     }
-    assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(0);scene='play';player.inv=0;for(const id of Object.keys(SKILLS)){player.st='skill';player.skill=id;player.t=20;if(namedPlayerFrame().source!=='player')return false;render()}player.st='free';return namedPlayerFrame()===null})()`),true);
+    assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(0);scene='play';player.inv=0;for(const id of Object.keys(SKILLS)){player.st='skill';player.skill=id;for(const t of [0,12,20,30,36]){player.t=t;if(!['player_base','player_moves'].includes(namedPlayerFrame().source))return false;render()}}player.st='free';return namedPlayerFrame()===namedClip('player','idle') && namedPlayerFrame().source==='player_base'})()`),true);
+    for(const state of ['idle','dash','thrust','slam','whirl','leap','air','redwave']) {
+      await evaluate(`player=newPlayer();startStage(0);scene='play';showScreen(null);player.inv=0;player.x=250;enemies=[];player.t=22;player.st=${JSON.stringify(state==='idle'?'free':state==='dash'?'dash':state==='air'?'atk':'skill')};player.skill=${JSON.stringify(state)};player.atk='air';player.z=${state==='air'?65:0};updateSkillButtons();render()`);
+      await screenshot('new-player-'+state);
+    }
     await screenshot('named-player');
     await evaluate('toTitle(); document.getElementById("namedTitleImage").decode()');
     assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundImage.startsWith('url(')`),true,'Settings uses supplied artwork');
@@ -392,6 +416,10 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     results.forEach(name => console.log('PASS ' + name));
     await ready(base); assert.deepEqual(await evaluate('({stage:UX.checkpoint().stage,score:UX.checkpoint().score})'), { stage: 1, score: 2345 });
     console.log('PASS Checkpoint persists across page reload');
+    await evaluate(`(()=>{const bindings={...UX.options.bindings};delete bindings.KeyL;bindings.KeyJ='KeyL';localStorage.setItem('bmk_settings',JSON.stringify({...UX.options,bindings}))})()`);
+    await ready(base);
+    assert.equal(await evaluate("UX.options.bindings.KeyJ==='KeyL' && UX.options.bindings.KeyL==='KeyB' && new Set(Object.values(UX.options.bindings)).size===14"),true);
+    console.log('PASS Legacy bindings preserve remaps and allocate an unused red-wave key');
     await evaluate("window.requestAnimationFrame=()=>0; $('btnTitleSettings').click(); document.querySelectorAll('#bindings button')[5].click()");
     await call('Input.dispatchKeyEvent', { type: 'keyDown', code: 'KeyF', key: 'f' });
     await call('Input.dispatchKeyEvent', { type: 'keyUp', code: 'KeyF', key: 'f' });
@@ -418,6 +446,14 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     assert.equal(await evaluate('!!keys.KeyU'), false);
     console.log('PASS Touch skill releases even when cooldown disables button');
+    await evaluate('clearInput();player.st="free";player.skillCd.redwave=0;updateSkillButtons()');
+    const redPoint=await evaluate('(()=>{const r=document.querySelector("[data-control=KeyL]").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,id:4};})()');
+    assert(redPoint.x<390 && redPoint.y<844);
+    await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[redPoint]});
+    assert.equal(await evaluate('updPlayer();player.skill'),'redwave');
+    await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    assert.equal(await evaluate('!!keys.KeyL'),false);
+    console.log('PASS Red wave is reachable and usable on mobile');
     await ready(base + '/embedded.html');
     assert.equal(await evaluate('scene'), 'title');
     await evaluate('window.requestAnimationFrame=()=>0;beginGame();scene="play";render()');
@@ -431,6 +467,8 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await screenshot('stage4');
     await evaluate('player=newPlayer();startStage(4);scene="play";player.x=210;player.inv=0;enemies=[mkEnemy("boss5",430,420)];render()');
     await screenshot('stage5-emperor');
+    await evaluate('player=newPlayer();startStage(0);scene="play";showScreen(null);player.inv=0;player.x=160;enemies=[];startSkill("redwave");for(let i=0;i<23;i++)updPlayer();for(let i=0;i<12;i++)updHazards();updateSkillButtons();render()');
+    await screenshot('red-wave');
     fs.writeFileSync(path.join(profile, 'reference-units.png'), Buffer.from(await evaluate('(' + referenceSheet.toString() + ')()'), 'base64'));
     await evaluate('toTitle();AUDIO.enable(false)');
     await evaluate('(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=()=>{throw new DOMException("blocked", "SecurityError")};try{beginGame();scene="play";render();}finally{Storage.prototype.setItem=original}})()');

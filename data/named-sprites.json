@@ -108,6 +108,24 @@
         1448,
         1086
       ]
+    },
+    "player_base": {
+      "filename": "어둠의 기사와 룬 대검 스프라이트 시트.png",
+      "path": "assets/named/player_base.png",
+      "sha256": "a82d03ed7582c106184e92f7994e69d660b53d08b89a8603e505bf635045242b",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "player_moves": {
+      "filename": "다크 나이트 전투 스프라이트 시트.png",
+      "path": "assets/named/player_moves.png",
+      "sha256": "d1c3156e47f4fe9c102c4edce221a89079786e84f94e7c3ac710e7b4072fcabd",
+      "size": [
+        1672,
+        941
+      ]
     }
   },
   "clips": {
@@ -178,17 +196,22 @@
     },
     "player": {
       "dash": [
-        47,
-        48,
-        49,
-        50,
-        51,
-        52
+        426,
+        427,
+        428,
+        429,
+        430,
+        431,
+        432,
+        433
       ],
       "whirl": [
-        53,
-        57,
-        58
+        440,
+        441,
+        442,
+        443,
+        444,
+        445
       ],
       "leap": [
         59,
@@ -206,6 +229,59 @@
         67,
         68,
         71
+      ],
+      "idle": [
+        418
+      ],
+      "walk": [
+        419
+      ],
+      "crouch": [
+        420
+      ],
+      "swing": [
+        421
+      ],
+      "overhead": [
+        422
+      ],
+      "stab": [
+        423
+      ],
+      "hurt": [
+        424
+      ],
+      "death": [
+        425
+      ],
+      "rush": [
+        434,
+        435,
+        436,
+        437,
+        438,
+        439
+      ],
+      "jump": [
+        446,
+        447
+      ],
+      "plunge": [
+        448
+      ],
+      "impact": [
+        449
+      ],
+      "cast": [
+        450,
+        451,
+        452
+      ],
+      "wave": [
+        453,
+        454,
+        455,
+        456
       ]
     },
     "boss2p2": {
@@ -9950,6 +10026,864 @@
         4944,
         172,
         144
+      ]
+    },
+    {
+      "id": 418,
+      "source": "player_base",
+      "rect": [
+        12,
+        143,
+        355,
+        480
+      ],
+      "anchor": [
+        233,
+        327
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        286,
+        4944,
+        343,
+        337
+      ]
+    },
+    {
+      "id": 419,
+      "source": "player_base",
+      "rect": [
+        429,
+        149,
+        814,
+        480
+      ],
+      "anchor": [
+        231,
+        321
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        631,
+        4944,
+        385,
+        331
+      ]
+    },
+    {
+      "id": 420,
+      "source": "player_base",
+      "rect": [
+        831,
+        212,
+        1164,
+        479
+      ],
+      "anchor": [
+        204,
+        258
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1018,
+        4944,
+        333,
+        267
+      ]
+    },
+    {
+      "id": 421,
+      "source": "player_base",
+      "rect": [
+        1247,
+        204,
+        1672,
+        474
+      ],
+      "anchor": [
+        158,
+        266
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1353,
+        4944,
+        425,
+        270
+      ]
+    },
+    {
+      "id": 422,
+      "source": "player_base",
+      "rect": [
+        20,
+        480,
+        364,
+        894
+      ],
+      "anchor": [
+        205,
+        407
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        0,
+        5283,
+        344,
+        414
+      ]
+    },
+    {
+      "id": 423,
+      "source": "player_base",
+      "rect": [
+        394,
+        652,
+        925,
+        892
+      ],
+      "anchor": [
+        201,
+        235
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        346,
+        5283,
+        531,
+        240
+      ]
+    },
+    {
+      "id": 424,
+      "source": "player_base",
+      "rect": [
+        925,
+        601,
+        1225,
+        892
+      ],
+      "anchor": [
+        135,
+        286
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        879,
+        5283,
+        300,
+        291
+      ]
+    },
+    {
+      "id": 425,
+      "source": "player_base",
+      "rect": [
+        1225,
+        741,
+        1672,
+        909
+      ],
+      "anchor": [
+        225,
+        146
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1181,
+        5283,
+        447,
+        168
+      ]
+    },
+    {
+      "id": 426,
+      "source": "player_moves",
+      "rect": [
+        19,
+        35,
+        200,
+        181
+      ],
+      "anchor": [
+        121,
+        135
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 10,
+      "atlas": [
+        1630,
+        5283,
+        181,
+        146
+      ]
+    },
+    {
+      "id": 427,
+      "source": "player_moves",
+      "rect": [
+        200,
+        37,
+        410,
+        182
+      ],
+      "anchor": [
+        150,
+        133
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 25,
+      "atlas": [
+        1813,
+        5283,
+        210,
+        145
+      ]
+    },
+    {
+      "id": 428,
+      "source": "player_moves",
+      "rect": [
+        410,
+        47,
+        620,
+        180
+      ],
+      "anchor": [
+        155,
+        123
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 5,
+      "atlas": [
+        0,
+        5699,
+        210,
+        133
+      ]
+    },
+    {
+      "id": 429,
+      "source": "player_moves",
+      "rect": [
+        620,
+        8,
+        834,
+        183
+      ],
+      "anchor": [
+        158,
+        162
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 18,
+      "atlas": [
+        212,
+        5699,
+        214,
+        175
+      ]
+    },
+    {
+      "id": 430,
+      "source": "player_moves",
+      "rect": [
+        840,
+        49,
+        1047,
+        182
+      ],
+      "anchor": [
+        155,
+        121
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 38,
+      "atlas": [
+        428,
+        5699,
+        207,
+        133
+      ]
+    },
+    {
+      "id": 431,
+      "source": "player_moves",
+      "rect": [
+        1047,
+        50,
+        1240,
+        180
+      ],
+      "anchor": [
+        141,
+        120
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 201,
+      "atlas": [
+        637,
+        5699,
+        193,
+        130
+      ]
+    },
+    {
+      "id": 432,
+      "source": "player_moves",
+      "rect": [
+        1240,
+        38,
+        1431,
+        182
+      ],
+      "anchor": [
+        140,
+        132
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 22,
+      "atlas": [
+        832,
+        5699,
+        191,
+        144
+      ]
+    },
+    {
+      "id": 433,
+      "source": "player_moves",
+      "rect": [
+        1450,
+        34,
+        1628,
+        179
+      ],
+      "anchor": [
+        140,
+        136
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 164,
+      "atlas": [
+        1025,
+        5699,
+        178,
+        145
+      ]
+    },
+    {
+      "id": 434,
+      "source": "player_moves",
+      "rect": [
+        27,
+        210,
+        209,
+        375
+      ],
+      "anchor": [
+        113,
+        151
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 3,
+      "atlas": [
+        1205,
+        5699,
+        182,
+        165
+      ]
+    },
+    {
+      "id": 435,
+      "source": "player_moves",
+      "rect": [
+        222,
+        196,
+        505,
+        369
+      ],
+      "anchor": [
+        153,
+        165
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 28,
+      "atlas": [
+        1389,
+        5699,
+        283,
+        173
+      ]
+    },
+    {
+      "id": 436,
+      "source": "player_moves",
+      "rect": [
+        505,
+        196,
+        790,
+        373
+      ],
+      "anchor": [
+        130,
+        165
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 16,
+      "atlas": [
+        1674,
+        5699,
+        285,
+        177
+      ]
+    },
+    {
+      "id": 437,
+      "source": "player_moves",
+      "rect": [
+        790,
+        210,
+        1120,
+        375
+      ],
+      "anchor": [
+        140,
+        151
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 134,
+      "atlas": [
+        0,
+        5878,
+        330,
+        165
+      ]
+    },
+    {
+      "id": 438,
+      "source": "player_moves",
+      "rect": [
+        1120,
+        210,
+        1465,
+        375
+      ],
+      "anchor": [
+        115,
+        151
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 11,
+      "atlas": [
+        332,
+        5878,
+        345,
+        165
+      ]
+    },
+    {
+      "id": 439,
+      "source": "player_moves",
+      "rect": [
+        1465,
+        220,
+        1636,
+        375
+      ],
+      "anchor": [
+        125,
+        141
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 7,
+      "atlas": [
+        679,
+        5878,
+        171,
+        155
+      ]
+    },
+    {
+      "id": 440,
+      "source": "player_moves",
+      "rect": [
+        31,
+        386,
+        220,
+        555
+      ],
+      "anchor": [
+        109,
+        163
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 8,
+      "atlas": [
+        852,
+        5878,
+        189,
+        169
+      ]
+    },
+    {
+      "id": 441,
+      "source": "player_moves",
+      "rect": [
+        224,
+        387,
+        550,
+        555
+      ],
+      "anchor": [
+        176,
+        162
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 89,
+      "atlas": [
+        1043,
+        5878,
+        326,
+        168
+      ]
+    },
+    {
+      "id": 442,
+      "source": "player_moves",
+      "rect": [
+        550,
+        402,
+        825,
+        555
+      ],
+      "anchor": [
+        115,
+        147
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 22,
+      "atlas": [
+        1371,
+        5878,
+        275,
+        153
+      ]
+    },
+    {
+      "id": 443,
+      "source": "player_moves",
+      "rect": [
+        825,
+        386,
+        1110,
+        555
+      ],
+      "anchor": [
+        110,
+        163
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 25,
+      "atlas": [
+        1648,
+        5878,
+        285,
+        169
+      ]
+    },
+    {
+      "id": 444,
+      "source": "player_moves",
+      "rect": [
+        1110,
+        386,
+        1460,
+        555
+      ],
+      "anchor": [
+        130,
+        163
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 3,
+      "atlas": [
+        0,
+        6049,
+        350,
+        169
+      ]
+    },
+    {
+      "id": 445,
+      "source": "player_moves",
+      "rect": [
+        1460,
+        396,
+        1640,
+        555
+      ],
+      "anchor": [
+        130,
+        153
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 7,
+      "atlas": [
+        352,
+        6049,
+        180,
+        159
+      ]
+    },
+    {
+      "id": 446,
+      "source": "player_moves",
+      "rect": [
+        240,
+        563,
+        464,
+        769
+      ],
+      "anchor": [
+        135,
+        197
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 5,
+      "atlas": [
+        534,
+        6049,
+        224,
+        206
+      ]
+    },
+    {
+      "id": 447,
+      "source": "player_moves",
+      "rect": [
+        470,
+        555,
+        689,
+        768
+      ],
+      "anchor": [
+        120,
+        205
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 36,
+      "atlas": [
+        760,
+        6049,
+        219,
+        213
+      ]
+    },
+    {
+      "id": 448,
+      "source": "player_moves",
+      "rect": [
+        695,
+        561,
+        895,
+        766
+      ],
+      "anchor": [
+        120,
+        199
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 15,
+      "atlas": [
+        981,
+        6049,
+        200,
+        205
+      ]
+    },
+    {
+      "id": 449,
+      "source": "player_moves",
+      "rect": [
+        895,
+        566,
+        1237,
+        774
+      ],
+      "anchor": [
+        160,
+        194
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 9,
+      "atlas": [
+        1183,
+        6049,
+        342,
+        208
+      ]
+    },
+    {
+      "id": 450,
+      "source": "player_moves",
+      "rect": [
+        19,
+        780,
+        220,
+        930
+      ],
+      "anchor": [
+        121,
+        141
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 5,
+      "atlas": [
+        1527,
+        6049,
+        201,
+        150
+      ]
+    },
+    {
+      "id": 451,
+      "source": "player_moves",
+      "rect": [
+        220,
+        790,
+        505,
+        927
+      ],
+      "anchor": [
+        145,
+        131
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 1,
+      "atlas": [
+        1730,
+        6049,
+        285,
+        137
+      ]
+    },
+    {
+      "id": 452,
+      "source": "player_moves",
+      "rect": [
+        505,
+        797,
+        790,
+        927
+      ],
+      "anchor": [
+        130,
+        124
+      ],
+      "scale": 0.72,
+      "edgeFragmentPixels": 4,
+      "atlas": [
+        0,
+        6264,
+        285,
+        130
+      ]
+    },
+    {
+      "id": 453,
+      "source": "player_moves",
+      "rect": [
+        790,
+        790,
+        945,
+        913
+      ],
+      "anchor": [
+        80,
+        68
+      ],
+      "scale": 0.4,
+      "edgeFragmentPixels": 11,
+      "atlas": [
+        287,
+        6264,
+        155,
+        123
+      ]
+    },
+    {
+      "id": 454,
+      "source": "player_moves",
+      "rect": [
+        945,
+        792,
+        1120,
+        912
+      ],
+      "anchor": [
+        85,
+        66
+      ],
+      "scale": 0.4,
+      "edgeFragmentPixels": 2,
+      "atlas": [
+        444,
+        6264,
+        175,
+        120
+      ]
+    },
+    {
+      "id": 455,
+      "source": "player_moves",
+      "rect": [
+        1120,
+        796,
+        1287,
+        903
+      ],
+      "anchor": [
+        85,
+        62
+      ],
+      "scale": 0.4,
+      "edgeFragmentPixels": 8,
+      "atlas": [
+        621,
+        6264,
+        167,
+        107
+      ]
+    },
+    {
+      "id": 456,
+      "source": "player_moves",
+      "rect": [
+        1293,
+        806,
+        1451,
+        917
+      ],
+      "anchor": [
+        77,
+        52
+      ],
+      "scale": 0.4,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        790,
+        6264,
+        158,
+        111
       ]
     }
   ],

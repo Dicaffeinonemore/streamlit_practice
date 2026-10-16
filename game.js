@@ -176,12 +176,13 @@ const SPECIAL = { dur: 2100, slash: 7, fin: 30 };
 const MAGIC = { max: 3, dur: 640, fire: 380, bossPct: 0.12 };
 // 첨부 보스전의 전투 기술. 일반 공격보다 강하지만 각각 독립 쿨다운이 있다.
 const SKILLS = {
-  thrust: { name: '돌진 찌르기', key: 'U', cd: 4600, dur: 700 },
+  thrust: { name: '돌진 베기', key: 'U', cd: 4600, dur: 700 },
   slam:   { name: '내려찍기', key: 'H', cd: 6000, dur: 820 },
   whirl:  { name: '회전 베기', key: 'O', cd: 7000, dur: 760 },
   leap:   { name: '점프 강하', key: 'P', cd: 8000, dur: 960 },
+  redwave:{ name: '붉은 파동', key: 'L', cd: 6500, dur: 720 },
 };
-const SKILL_KEYS = { KeyU: 'thrust', KeyH: 'slam', KeyO: 'whirl', KeyP: 'leap' };
+const SKILL_KEYS = { KeyU: 'thrust', KeyH: 'slam', KeyO: 'whirl', KeyP: 'leap', KeyL: 'redwave' };
 const INTRO_MS = 2000;                 // 보스 등장 연출 길이
 const CHAIN_MS = 1700;                 // 이 시간 안에 다시 때리면 연속 히트가 이어진다
 
@@ -207,7 +208,7 @@ function newPlayer(score = 0) {
   return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
     inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
-    skill: null, skillCd: { thrust: 0, slam: 0, whirl: 0, leap: 0 }, skillHits: new Set(), skillDest: 0,
+    skill: null, skillCd: Object.fromEntries(Object.keys(SKILLS).map(id => [id, 0])), skillHits: new Set(), skillDest: 0,
     spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
 }
 
@@ -375,7 +376,7 @@ function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life:
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
 function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
-function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0 }); }
+function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, named: id==='player'?namedPlayerFrame():null }); }
 function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
 function dropItem(type, x, y) {
@@ -603,7 +604,7 @@ function updSkill() {
       const u = ease((t - 180) / 180);
       p.x = lerp(p.x0, p.skillDest, u); p.inv = Math.max(p.inv, 4);
       if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#ff6b78', 210);
-      if (t >= 240) skillStrike(0, 18, 68, 8, false, 1);
+      if (t >= 240) skillStrike(0, 28, 68, 8, false, 1);
       if (prev < 240 && t >= 240) {
         impact(p.x + p.face * 42, p.y, 55, 1, p.face);
         burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); sfx('hit', 2);
@@ -611,16 +612,23 @@ function updSkill() {
     }
   } else if (id === 'slam') {
     if (prev < 330 && t >= 330) {
-      skillStrike(0, 24, 92, 10, true, 2); groundSmash(p.x + p.face * 64, p.y);
+      skillStrike(0, 24, 130, 10, true, 2); groundSmash(p.x + p.face * 84, p.y);
     }
   } else if (id === 'whirl') {
     if (t >= 100 && t < 540) p.inv = Math.max(p.inv, 4);
     [200, 330, 460].forEach((at, k) => {
       if (prev < at && t >= at) {
-        skillStrike(k, 8, 82, 82, false, 1); sfx('swing', k === 1 ? 2 : 1);
+        skillStrike(k, 16, 110, 110, false, 1); sfx('swing', k === 1 ? 2 : 1);
         impact(p.x + p.face * (k === 1 ? -14 : 20), p.y, 54, 1, p.face);
       }
     });
+  } else if (id === 'redwave') {
+    if (prev < 300 && t >= 300) {
+      hazards.push({ type: 'pwave', red: true, x: p.x + p.face * 32, y: p.y,
+        h: 44, dir: p.face, age: 0, travel: 0, hits: new Set(),
+        damage: Math.round(24 * (p.buff > 0 ? 1.5 : 1)) });
+      sfx('pwave');
+    }
   } else if (id === 'leap') {
     if (t >= 120 && t < 560) {
       const u = (t - 120) / 440;
@@ -1387,6 +1395,19 @@ function updHazards() {
         if (z.age > 2600 || off(z)) z.dead = true;
         break;
       case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
+        if (z.red) {
+          const from = z.x, step = Math.min(9, 520 - z.travel);
+          z.x += z.dir * step; z.travel += step;
+          for (const e of enemies) {
+            if (!canHit(e) || z.hits.has(e.id) || Math.abs(e.y - z.y) >= 26 ||
+                Math.abs(e.z + 44 - z.h) >= 38 ||
+                e.x + e.hw < Math.min(from, z.x) - 14 || e.x - e.hw > Math.max(from, z.x) + 14) continue;
+            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1);
+            p.sp = Math.min(SP_MAX, p.sp + 4);
+          }
+          if (z.travel >= 520) z.dead = true;
+          break;
+        }
         z.x += z.dir * 110 * SC / 1000 * MS;
         for (const e of enemies) {
           if (!canHit(e) || Math.abs(e.x - z.x) > e.hw || Math.abs(e.y - z.y) > 26) continue;
@@ -1967,6 +1988,7 @@ function drawEnemy(e) {
   present(F, sx, e.y - e.z + bob, alpha, lying, e.face, S.gy);
 }
 function drawGhost(g) {
+  if(g.named && paintNamedFrame(g.named,{...g,alpha:.3*(1-g.age/g.life)}))return;
   if (HD[g.id]) {                                  // 고해상도: 대시·돌진 프레임으로 잔상
     const F = hdFigure(g.id, HD_GHOST[g.id], g.face, { wash: g.wash, washA: 0.55 });
     present(F, g.x - camX, g.y - g.z, (g.id === 'player' ? 0.4 : 0.35) * (1 - g.age / g.life), false, g.face, 0, HD_SCALE[g.id] || 1);
@@ -2375,6 +2397,16 @@ function drawTopFx(L) {
     }
     else if (z.type === 'pwave') {
       const y = fxY(z.y, z.h);
+      if (z.red) {
+        if (NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth && namedClip('player','wave')) continue;
+        const count = UX.options.lowFx ? 1 : 3;
+        for (let k = count - 1; k >= 0; k--) {
+          L.disc(x - z.dir * k * 7, y, 10 - k, k ? '#761729' : '#c92242', .8 - k * .18);
+          L.arc(x - z.dir * k * 5, y, 13, (z.dir > 0 ? -72 : 108) * RAD,
+            (z.dir > 0 ? 72 : 252) * RAD, k ? '#ff2345' : '#ffb5b9', 2, 1 - k * .2);
+        }
+        continue;
+      }
       for (let k = 0; k < 3; k++) L.arc(x - z.dir * k * 4, y, 11, (z.dir > 0 ? -58 : 122) * RAD, (z.dir > 0 ? 58 : 238) * RAD, k ? '#7f98d8' : '#ffffff', 2, 1 - k * 0.25);
     }
   }
@@ -2398,14 +2430,16 @@ function drawTopFx(L) {
     }
     if (sp >= 1570 && sp < 1950) moon(L, cx, cy, Math.round(lerp(8, 32, ease((sp - 1570) / 220))), (sp - 1570) / 380, f < 0);
   }
-  if (p.st === 'skill') {
+  if (p.st === 'skill' && !(NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth && namedPlayerFrame())) {
     const t = p.t * MS, px = fxX(p.x), py = fxY(p.y, p.z + 54), f = p.face;
     if (p.skill === 'thrust' && t >= 170 && t < 470) {
       const a = 1 - (t - 170) / 300;
       for (let i = 0; i < 4; i++) L.line(px - f * (8 + i * 8), py - 4 + i * 2, px + f * (20 - i * 2), py - 4 + i * 2, i ? '#ff6b78' : '#ffffff', 1, a);
     } else if (p.skill === 'whirl' && t >= 140 && t < 600) {
       const a0 = (t * 0.55) % 360;
-      for (let i = 0; i < 3; i++) L.arc(px, py, 24 - i * 3, (a0 + i * 35) * RAD, (a0 + 245 + i * 35) * RAD, i ? '#ff7a88' : '#ffffff', 2, 0.9 - i * 0.2);
+      for (let i = 0; i < 3; i++) L.arc(px, py, 33 - i * 3, (a0 + i * 35) * RAD, (a0 + 245 + i * 35) * RAD, i ? '#ff7a88' : '#ffffff', 2, 0.9 - i * 0.2);
+    } else if (p.skill === 'redwave' && t < 300) {
+      L.disc(px + f * 15, py, Math.round(3 + t / 50), '#c92242', .65);
     } else if ((p.skill === 'slam' && t >= 280 && t < 610) || (p.skill === 'leap' && t >= 520 && t < 790)) {
       const age = p.skill === 'slam' ? t - 280 : t - 520;
       const r = 10 + age * 0.09;
@@ -2518,6 +2552,15 @@ function portraitHD(id) {
   return c;
 }
 function portrait(id) {
+  if(id==='player' && NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth) {
+    if(portraitCache.playerNamed)return portraitCache.playerNamed;
+    const f=namedClip('player','idle');
+    if(f && f.source==='player_base') {
+      const c=document.createElement('canvas');c.width=c.height=64;c.hd=true;
+      c.getContext('2d').drawImage(NAMED_ATLAS,f.atlas[0]+195-f.rect[0],f.atlas[1]+140-f.rect[1],140,140,0,0,64,64);
+      return portraitCache.playerNamed=c;
+    }
+  }
   if (portraitCache[id]) return portraitCache[id];
   if (HD[id]) return (portraitCache[id] = portraitHD(id));
   const [sx, sy, w, h] = PORTRAIT[id], src = sprite(id, 0), L = new Layer(w + 2, h + 2);
@@ -2724,6 +2767,7 @@ function render() {
     }
     for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
     fxTop.L.clear(); drawTopFx(fxTop.L); presentFx(fxTop);
+    for(const z of hazards)if(z.type==='pwave' && z.red)drawNamedWave(z);
     enemies.forEach(drawEnemyOverlay);
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }

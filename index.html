@@ -105,7 +105,7 @@
   #touchControls button.active { background: #805025; }
   #touchControls button:disabled { opacity: .45; border-color: #494153; }
   .dpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 3px; }
-  .touch-actions { display: grid; grid-template-columns: repeat(3, minmax(44px, 1fr)); gap: 5px; flex: 1; max-width: 380px; }
+  .touch-actions { display: grid; grid-template-columns: repeat(4, minmax(44px, 1fr)); gap: 5px; flex: 1; max-width: 380px; }
   body { flex-direction: column; }
   body.touch #wrap { width: min(100vw, calc((100dvh - 180px) * 16 / 9)); }
   body.touch #skillbar { display: none; }
@@ -166,10 +166,11 @@
   <button id="playPause" class="btn small-btn secondary" hidden aria-label="일시정지">Ⅱ</button>
   <div id="practiceGuide" hidden><p id="practiceText" aria-live="polite"></p><div class="actions"><button id="btnPracticeGo" class="btn small-btn">실전 시작</button><button id="btnPracticeHelp" class="btn small-btn secondary">조작 안내</button></div></div>
   <div id="skillbar" aria-label="전투 기술" hidden>
-    <button class="skillbtn" data-skill="thrust"><span class="key">U</span><span class="name">돌진 찌르기</span><span class="cool"></span></button>
+    <button class="skillbtn" data-skill="thrust"><span class="key">U</span><span class="name">돌진 베기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="slam"><span class="key">H</span><span class="name">내려찍기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="whirl"><span class="key">O</span><span class="name">회전 베기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="leap"><span class="key">P</span><span class="name">점프 강하</span><span class="cool"></span></button>
+    <button class="skillbtn" data-skill="redwave"><span class="key">L</span><span class="name">붉은 파동</span><span class="cool"></span></button>
   </div>
 
   <!-- 타이틀 -->
@@ -216,8 +217,8 @@
       <div class="keys"><span class="cap" data-k="KeyI">I</span><span class="or">또는</span><span class="cap" data-k="KeyV">V</span></div>
       <div class="desc"><b>마법 뇌격</b> — 두루마리 1개로 화면 안의 모든 적에게 번개! (최대 3개)</div>
 
-      <div class="keys"><span class="cap" data-k="KeyU">U</span><span class="cap" data-k="KeyH">H</span><span class="cap" data-k="KeyO">O</span><span class="cap" data-k="KeyP">P</span></div>
-      <div class="desc"><b>전투 기술</b> — 돌진 찌르기 · 내려찍기 · 회전 베기 · 점프 강하</div>
+      <div class="keys"><span class="cap" data-k="KeyU">U</span><span class="cap" data-k="KeyH">H</span><span class="cap" data-k="KeyO">O</span><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="KeyL">L</span></div>
+      <div class="desc"><b>전투 기술</b> — 돌진 베기 · 내려찍기 · 회전 베기 · 점프 강하 · 붉은 파동(장거리 관통, 재사용 6.5초)</div>
 
       <div class="keys"><span class="cap" data-k="Escape">ESC</span><span class="cap" data-k="KeyM">M</span></div>
       <div class="desc"><b>일시정지</b> · <b>M</b> 소리 켜기/끄기</div>
@@ -271,7 +272,7 @@
 </div>
 <div id="touchControls" aria-label="터치 조작" hidden>
   <div class="dpad"><span></span><button data-control="KeyW" aria-label="위로 이동">↑</button><span></span><button data-control="KeyA" aria-label="왼쪽 이동">←</button><button data-control="ShiftLeft">대시</button><button data-control="KeyD" aria-label="오른쪽 이동">→</button><span></span><button data-control="KeyS" aria-label="아래로 이동">↓</button></div>
-  <div class="touch-actions"><button data-control="KeyJ">공격</button><button data-control="Space">점프</button><button data-control="KeyK">필살기</button><button data-control="KeyU">찌르기</button><button data-control="KeyH">강타</button><button data-control="KeyI">뇌격</button><button data-control="KeyO">회전</button><button data-control="KeyP">강하</button><button id="touchPause">정지</button></div>
+  <div class="touch-actions"><button data-control="KeyJ">공격</button><button data-control="Space">점프</button><button data-control="KeyK">필살기</button><button data-control="KeyU">돌진</button><button data-control="KeyH">강타</button><button data-control="KeyI">뇌격</button><button data-control="KeyO">회전</button><button data-control="KeyP">강하</button><button data-control="KeyL">붉은 파동</button><button id="touchPause">정지</button></div>
 </div>
 <script src="motion.js"></script>
 <script src="sprites.js"></script>

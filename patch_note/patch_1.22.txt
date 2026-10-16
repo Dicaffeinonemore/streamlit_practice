@@ -1,0 +1,43 @@
+흑월의 기사 v1.17 — 새 흑기사 디자인 및 전투 모션 적용
+
+원본 확인 및 적용
+- 어둠의 기사와 룬 대검 스프라이트 시트.png → assets/named/player_base.png
+  좌상단 원본 자세를 대기로 지정. 이동 자세, 기본 공격, 피격, 다운/사망,
+  준비 자세와 HUD 초상화에 같은 디자인 사용.
+- 다크 나이트 전투 스프라이트 시트.png → assets/named/player_moves.png
+  대시 8, 돌진 6, 회전 6, 점프 2, 강하 1, 착지 충격 1,
+  붉은 파동 시전 3, 독립 발사체 4프레임을 연결.
+- 두 원본은 바이트 그대로 보존. 프레임마다 명시적 영역/몸 중심/발 기준점/배율 기록.
+  검은 갑옷 RGB와 원본 투명도 유지. 경계에 붙은 작은 이웃 프레임 조각만
+  알파 제거하고 제거 픽셀 수를 data/named-sprites.json에 기록.
+- 대시와 스킬 잔상도 해당 신규 프레임 사용. 시트에 포함된 검기와 기존
+  Canvas 검기가 중복되지 않도록 새 시트 로딩 시 중복 스킬 효과 억제.
+- 붉은 파동의 원본 발사체는 이동 방향에 따라 반전, 4프레임 반복 및 끝부분 페이드.
+  이미지 미로딩 시 기존 Canvas 발사체와 기존 캐릭터 렌더러로 폴백.
+
+기존 v1.16 기능 유지
+돌진 피해 28, 내려찍기 전방 범위 130, 회전 타격당 피해 16/앞뒤 범위 110.
+붉은 파동 L키: 피해 24, 이동 거리 520, 재사용 6.5초, 관통 및 대상당 1회 피해.
+기존 저장 데이터, 키 변경, 터치, 스테이지/보스 진행 유지.
+
+제약
+첫 시트에는 완전한 보행 연속 프레임이 없어 이동은 제공된 이동 자세를 사용한다.
+검기/먼지가 캐릭터와 합쳐진 프레임은 원본 그대로 사용한다.
+이번 적용으로 v1.16의 원본 경로 미확인/이미지 미적용 항목은 해결됨.
+
+변경 파일
+tools/build_named_sprites.py, named-runtime.js, named-art.js, game.js,
+data/named-sprites.json, assets/named/combat.png, assets/named/player_base.png,
+assets/named/player_moves.png, tests/named-assets.py, tests/regression.cjs,
+patch_note/patch_1.17.txt.
+복구 지점: backups/pre-player-design.zip.
+
+검증
+tests/named-assets.py: 457프레임의 원본 해시/RGB/기록된 알파 변경/역할 검사.
+tests/regression.cjs: 새 플레이어 모든 스킬 원본 연결, 대기 자세 지정,
+5스테이지 진행, 보스 52패턴/페이즈, 저장/키 호환, 터치 및 단일 HTML 검사.
+실제 브라우저에서 대기/대시/돌진/내려찍기/회전/점프/파동 화면 캡처.
+
+실행: python server.py 또는 python -m streamlit run server.py.
+이 PC에서 python 별칭이 작동하지 않으면 PowerShell에서:
+& 'C:\Users\hoondo\AppData\Local\Python\bin\python.exe' server.py
