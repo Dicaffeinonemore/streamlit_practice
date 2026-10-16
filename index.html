@@ -126,10 +126,41 @@
     #practiceGuide .btn { padding: 5px 10px; font-size: 12px; }
   }
   body.reduce-motion .blink, body.reduce-motion #cutin.show { animation: none; }
+
+  canvas { image-rendering: pixelated; }
+  :root { --steel: #93828a; --blood: #9b263e; }
+  .screen h2 { color: #e6d6d0; font-family: Batang, Georgia, serif; }
+  .btn { border-radius: 2px; border-color: #86727b; background: linear-gradient(#38222d,#160e16); color: #eee0da; box-shadow: inset 0 0 0 2px #150f18, 0 4px 12px #0008; }
+  .btn:hover { background: #63263a; transform: translateY(-1px); }
+  .dialog { background: linear-gradient(135deg,#19131cf5,#08070bf8); border: 1px solid #62505e; }
+  #skillbar { top: auto; bottom: 1%; gap: .5cqw; }
+  .skillbtn { width: 9cqw; min-width: 54px; height: 4.5cqw; min-height: 30px; border-radius: 2px; background: linear-gradient(#28202b,#100d15); }
+  .skillbtn .state { font-size: clamp(7px,.85cqw,12px); }
+  #title .art-button { width: 22cqw; height: 6cqw; padding: 0; margin: 0; border: 0; background-color: transparent; background-size: 100% 100%; color: transparent; box-shadow: none; }
+  #title .art-button:focus-visible { outline-color: #e4b8c1; }
+  #openingSkip { position: absolute; right: 3%; bottom: 4%; z-index: 15; }
+  @media(max-width:700px) { #title .art-button { width: 230px; height: 68px; } }
+
+  #title.named-title { background: #070509; padding: 0; overflow: hidden; }
+  #namedTitleImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+  #title.named-title .logo { position: absolute; inset: 0; }
+  #title.named-title .moon, #title.named-title h1, #title.named-title .en, #title.named-title .sub { display: none; }
+  #title.named-title .logo::before { content: ''; position: absolute; left: 52%; top: 60%; width: 29%; height: 31%; background: linear-gradient(90deg,transparent,#10080b 8%,#10080b 90%,transparent); }
+  #title.named-title .actions { display: contents; }
+  #title.named-title .art-button { position: absolute; left: 47%; width: 36%; height: 10%; background-color: transparent !important; background-repeat: no-repeat; background-size: contain; background-position: center; }
+  #title.named-title #btnStart { top: 60%; }
+  #title.named-title #btnContinue { top: 69%; }
+  #title.named-title #btnTitleSettings { top: 78%; }
+  #title.named-title #recordSummary { position: absolute; bottom: 3%; right: 3%; margin: 0; font-size: 1.1cqw; }
+  #title.named-title #saveStatus { position: absolute; bottom: 7%; right: 3%; margin: 0; font-size: 1.1cqw; }
+  #title.named-title .logo > p:last-child { display: none; }
+  #title.named-title #referenceLabLink { position: absolute; bottom: 3%; left: 3%; font-size: 1.2cqw; background: #080508c0; }
+  @media(max-width:700px) { #title.named-title { position: absolute; height: 100%; } }
 </style>
 </head>
 <body>
 <div id="wrap">
+  <button id="openingSkip" class="btn small-btn" hidden>건너뛰기 · Enter / Space</button>
   <canvas id="c" width="960" height="540"></canvas>
   <div id="cutin" aria-hidden="true"><span>흑월참</span><small>DARK MOON SLASH</small></div>
   <button id="playPause" class="btn small-btn secondary" hidden aria-label="일시정지">Ⅱ</button>
@@ -208,7 +239,8 @@
     <p class="tips">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
   </div>
   <div class="screen dialog" id="settings"><h2>설정</h2><div class="dialog-body">
-    <label class="setting-row">음악 <input id="musicVolume" aria-label="음악 음량" type="range" min="0" max="100"></label>
+    <div class="setting-row"><label for="lowFx">이펙트 감소 (저사양)</label><input id="lowFx" type="checkbox"></div>
+<label class="setting-row">음악 <input id="musicVolume" aria-label="음악 음량" type="range" min="0" max="100"></label>
     <label class="setting-row">효과음 <input id="sfxVolume" aria-label="효과음 음량" type="range" min="0" max="100"></label>
     <label class="setting-row">화면 흔들림 <input id="screenShake" type="checkbox"></label>
     <label class="setting-row">화면 섬광 <input id="screenFlash" type="checkbox"></label>
@@ -249,6 +281,12 @@
 <script src="hd_sprites.js"></script>
 <script src="legion_sprites.js"></script>
 <script src="game-ui.js"></script>
+<script src="release-art.js"></script>
+<script src="release.js"></script>
+<script src="named-art.js"></script>
+<script src="named-runtime.js"></script>
+<script src="floor-art.js"></script>
+<script src="floor-runtime.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

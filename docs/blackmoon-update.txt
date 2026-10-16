@@ -1,0 +1,95 @@
+﻿흑월의 기사 통합 작업 기록 — 2026-10-17
+
+상태
+기존 HTML5 Canvas 게임에 실제 코드를 반영한 플레이 가능한 통합 버전이다.
+요청된 모든 고품질 그래픽/모션 제작이 끝난 최종 완성판은 아니다.
+엔진 변경, 저장 스키마 변경, 기존 논리 해상도(960x540) 변경 없음.
+백업: backups/pre-blackmoon-update.zip (변경 전 프로젝트, Git 제외).
+
+분석
+- game.js: 5개 스테이지, 웨이브 잠금, 보스 진입/클리어, 깊이 이동, 3타 콤보,
+  대시/공중 공격, 4스킬과 필살기/뇌격, 입력 버퍼, 스킬 캔슬, 히트스톱이 이미 존재.
+- motion.js/sprites.js/hd_sprites.js/legion_sprites.js: 기존 픽셀 버퍼와 프레임 아틀라스 유지.
+- backgrounds.js: 기존 절차적 배경 폴백과 전투 바닥 유지.
+- game-ui.js: localStorage 설정/체크포인트/기록, 키 재설정, 터치 유지.
+- audio.js/score.js: Web Audio 합성음과 10개 전투/스테이지 악보 유지.
+- server.py: 로컬 정적 서버와 Streamlit 단일 HTML 번들 모두 유지.
+- 새 ZIP: PNG, 확장자 없는 PNG, GIF, 중첩 ZIP과 참고 자료 확인. Aseprite 원본 없음.
+
+변경 파일
+- game.js: 하단 보스 HUD 연결, 새 배경 연결, 오프닝 진입,
+  스테이지 명칭, 1스테이지 궁병, 군단별 이름/색조, 안전한 2페이즈 전환.
+- game-ui.js: 저장 호환 이펙트 감소 옵션.
+- index.html: 금속/적색 메뉴 스타일, 하단 스킬바, 픽셀 보간, 오프닝 건너뛰기,
+  저사양 옵션과 새 스크립트 로딩.
+- server.py: release-art.js와 release.js를 단일 HTML에 포함.
+- release.js: 배경 선택/블렌드, 75% 폭 하단 보스바, 지연 피해/보간/사망 페이드,
+  페이즈 색상, 18초 장면 기반 오프닝, UI 버튼 이미지.
+- release-art.js: 외부 요청 없이 로드되는 배포용 이미지 데이터.
+- tests/regression.cjs: 이미지 디코딩, 오프닝 완료/스킵, 안전한 각성,
+  2/4/5 보스 배경, FHD/HD/가로 모바일 HUD 간격, 체력 지연/일시정지 검사 추가.
+- tools/inspect_latest_assets.py, tools/build_release_art.py: 자료 분석/배포 이미지 생성.
+- data/latest-assets.json: 원본 이름/크기/포맷/알파/적용 여부/보류 이유.
+- assets/incoming: 원본 보존. assets/release: 파생 PNG.
+- docs/screenshots: 실제 브라우저 캡처.
+
+새 동작
+- 모든 보스 체력바가 화면 하단 중앙, 너비 75%로 표시된다.
+  등장 중 페이드인, 현재 HP 보간, 피해 게이지 지연, 사망 페이드아웃.
+  스킬바는 더 아래에 배치하고 터치 버튼은 기존 외부 패널 유지.
+- 보스2/4/5는 50% 미만 첫 진입 시 72틱 동안 각성한다.
+  진행 중 패턴과 적 투사체를 정리하고 플레이어 보호 후 후딜에서 재개한다.
+  전용 배경으로 블렌드하며 기존 강화 패턴을 재사용한다.
+- 새 게임의 조작 안내 후 시작하면 오프닝. Enter/Space/Escape 또는 버튼으로 스킵.
+  이어하기와 재도전은 오프닝을 반복하지 않는다.
+- 배경은 단일 이미지의 비율을 보존한 크롭/팬이다. 다층 패럴랙스를 구현했다고 주장하지 않는다.
+
+적용 리소스
+- 1: 처형자의 성채, 피의 처형장.
+- 2: Field/Boss Panorama, 보랏빛 고딕 성당의 흰 여백을 제외한 영역(2페이즈).
+- 3: Golden Citadel, Throne Approach, Boss Throne Arena.
+- 4: 10월16일 11_06_49/55 이미지: 얼음 왕좌와 강화 배경.
+  일반 구간과 보스1페이즈는 같은 원본을 공유한다.
+- 5: 붉은 월식 아래의 폐허와 공허의 두 패널 분리, 붕괴한 성좌(2페이즈).
+- 10월14일 제작된 이어하기/새게임/설정 이미지.
+- opening_movie_pixel_intro.gif의 여섯 시점: 팬/줌/페이드/자막.
+  실제 걷기/일어서기 애니메이션을 완성한 것이 아니다.
+
+보류 및 남은 문제
+- 신규 플레이어/병사/보스 시트: 프레임별 발 기준/영역과 액션 연결이 미검증이며
+  일부 공격 프레임은 무기/효과가 겹친다. 기존 검증 애니메이션을 유지한다.
+- 까마귀 마녀 작업자료: 잘린 패널/배경 조각이 남은 후보 프레임이 있어 실전 적용 보류.
+- 타이틀 GIF는 버튼/글씨가 포함된 영상이므로 접근 가능한 실제 DOM 버튼으로 대체.
+- 보병/창병/궁병의 새 원본 외형 교체는 미완료. 이번 버전은 기존 외형에 색조만 적용.
+- 전용 날개 변신/왕좌 결정 폭주/아레나 파괴 프레임은 미구현. 기존 보스 패턴 강화 재사용.
+- 배경 장식 바닥과 절차적 실제 전투 바닥의 시각적 연결은 추가 아트 작업이 필요하다.
+- 최하단 깊이에서 캐릭터 발/하체가 하단 HUD 뒤에 들어갈 수 있다.
+  HUD와 스킬/터치 버튼의 겹침은 검사했지만 캐릭터 전체 동선의 HUD 비가림은 미완료.
+- 60FPS 목표의 실기기 성능 측정/장시간 수동 밸런스 플레이는 수행하지 않았다.
+- 이미지 포함 Streamlit 번들은 약 21MB여서 초기 파싱/메모리 비용이 있다.
+- 저사양 옵션은 장식 버스트 수와 배경 블렌드를 줄인다. 공격 예고/판정은 유지.
+
+검증
+변경 전: node tests/regression.cjs 전체 통과.
+변경 후:
+- node tests/regression.cjs 전체 통과 (5스테이지 강제 처치 진행, 52 패턴/페이즈,
+  저장/이어하기/키 재설정/멀티터치/사운드/일시정지/단일 HTML/브라우저 예외).
+- python tests/reference-assets.py 통과.
+- node tests/reference-runtime.cjs 통과.
+- node tests/sprite-lab.cjs 통과 (Streamlit 참고 뷰어 포함).
+- server.build_single_html(): 스크립트 인라인 포함, 외부 script src 없음 확인.
+- 1920x1080,1280x720,844x390 하단 HUD와 스킬바 간격 검사.
+  기존 테스트의 세로 모바일/튜토리얼 레이아웃 검사도 유지.
+- 브라우저 캡처 실제 확인: docs/screenshots/release-boss-1920.png.
+- 자동 진행 검증은 수동으로 5스테이지를 끝까지 플레이한 것과 다르다.
+
+실행
+python server.py
+또는 streamlit run server.py
+이 PC에서 WindowsApps python 별칭이 접근 실패하면:
+& 'C:\Users\hoondo\AppData\Local\Python\bin\python.exe' server.py
+
+이미지 재생성
+python tools/build_release_art.py
+원본은 assets/incoming에서 읽고 파생 이미지와 release-art.js를 만든다.
+관리 파일을 재생성하므로 수동 검수 기록은 먼저 보존한다.

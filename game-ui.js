@@ -18,6 +18,7 @@ const UX = (() => {
   const saved = read('settings') || {};
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const options = { music: number(saved.music, 0, 1) ? saved.music : .7, sfx: number(saved.sfx, 0, 1) ? saved.sfx : .8,
+    lowFx: typeof saved.lowFx === 'boolean' ? saved.lowFx : reduced,
     shake: typeof saved.shake === 'boolean' ? saved.shake : !reduced,
     flash: typeof saved.flash === 'boolean' ? saved.flash : !reduced,
     touch: typeof saved.touch === 'boolean' ? saved.touch : matchMedia('(pointer: coarse)').matches,
@@ -58,6 +59,8 @@ const UX = (() => {
   function applySettings() {
     AUDIO.setVolumes(options.music, options.sfx);
     document.body.classList.toggle('reduce-motion', !options.shake);
+    const titleImage = document.getElementById('namedTitleImage');
+    if (titleImage) { const src = options.shake ? NAMED_ART.title : NAMED_ART.titleStill; if (titleImage.src !== src) titleImage.src = src; }
     document.body.classList.toggle('touch', options.touch);
   }
   function bindingButtons() {
@@ -96,7 +99,7 @@ const UX = (() => {
       const el = document.getElementById(id); el.value = options[key] * 100;
       el.oninput = () => { options[key] = Number(el.value) / 100; applySettings(); write('settings', options); };
     }
-    for (const [id, key] of [['screenShake', 'shake'], ['screenFlash', 'flash'], ['touchEnabled', 'touch']]) {
+    for (const [id, key] of [['lowFx', 'lowFx'], ['screenShake', 'shake'], ['screenFlash', 'flash'], ['touchEnabled', 'touch']]) {
       const el = document.getElementById(id); el.checked = options[key];
       el.onchange = () => { options[key] = el.checked; clearInput(); applySettings(); write('settings', options); };
     }
