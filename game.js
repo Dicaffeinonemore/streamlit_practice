@@ -84,9 +84,9 @@ const ET = {
   // 궁병: 거리를 두고 같은 줄(깊이)에 서서 활을 당긴 뒤(예고) 화살을 쏜다. 줄을 바꾸거나 점프하면 피할 수 있다
   archer: { name: '망령 궁수', sprite: 'archer', hp: 30, spd: 1.5, dmg: 7, range: 260, wind: 42, act: 6, rec: 46, kb: 3, score: 200,
            h: 96, s: 1, hw: 18, ranged: true },
-  boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 400, spd: 1.05, range: 62, score: 2000, kd: true,
+  boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 700, spd: 1.05, range: 62, score: 2000, kd: true,
            h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진', hook: '갈고리 끌어오기', meat: '고기 덩어리 투척' } },
-  boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 480, spd: 1.2, range: 64, score: 3500, kd: true,
+  boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 850, spd: 1.2, range: 64, score: 3500, kd: true,
            h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼', feather: '깃털 투척', staff: '지팡이 강타', soul: '영혼 추수' } },
   boss3: { name: '황금왕 아우렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 1500, spd: 1.3, range: 68, score: 6000, kd: true,
            h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '황금 기둥', charge: '왕의 돌진', cleave: '황금 중파참', whirl: '황금 선풍' } },
@@ -173,9 +173,9 @@ const ATK = {
 };
 const LINK_MS = 420, BUF_MS = 220;      // 다음 타 연결 허용 시간 / 선입력 유지 시간
 // 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
-const SPECIAL = { dur: 2100, slash: 7, fin: 30 };
+const SPECIAL = { dur: 2100, slash: 14, fin: 70 };
 // 마법 "뇌격": 두루마리 1개로 화면 안의 모든 적에게 번개. 잡몹은 쓰러지고 보스는 최대 체력의 12% 피해
-const MAGIC = { max: 3, dur: 640, fire: 380, bossPct: 0.12 };
+const MAGIC = { max: 3, dur: 640, fire: 380, damage: 80 };
 // 첨부 보스전의 전투 기술. 일반 공격보다 강하지만 각각 독립 쿨다운이 있다.
 const SKILLS = {
   thrust: { name: '돌진 베기', key: 'U', cd: 4600, dur: 700 },
@@ -386,18 +386,20 @@ function dropItem(type, x, y) {
 }
 function dropFrom(e) {
   const r = Math.random();
-  if (e.boss) { dropItem('coin', e.x - 20, e.y); dropItem('big', e.x + 20, e.y); return; }
+  if (e.boss) { dropItem('gold', e.x - 20, e.y); dropItem('big', e.x + 20, e.y); return; }
   stat.kills++;
   if (stat.kills % 6 === 1) { dropItem('scroll', e.x, e.y); return; }   // 6마리마다 한 번은 마법 두루마리
   if (r < 0.07) dropItem('big', e.x, e.y);
   else if (r < 0.28) dropItem('potion', e.x, e.y);
   else if (r < 0.34) dropItem('power', e.x, e.y);
   else if (r < 0.42) dropItem('crystal', e.x, e.y);
-  else if (r < 0.60) dropItem('coin', e.x, e.y);
+  else if (r < 0.53) dropItem('coin', e.x, e.y);
+  else if (r < 0.58) dropItem('coinBag', e.x, e.y);
+  else if (r < 0.60) dropItem('gold', e.x, e.y);
 }
 function dropFromBarrel(b) {
   const r = Math.random();
-  dropItem(r < 0.4 ? 'potion' : r < 0.52 ? 'big' : r < 0.64 ? 'power' : r < 0.76 ? 'scroll' : r < 0.86 ? 'crystal' : 'coin', b.x, b.y);
+  dropItem(r < 0.4 ? 'potion' : r < 0.52 ? 'big' : r < 0.64 ? 'power' : r < 0.76 ? 'scroll' : r < 0.86 ? 'crystal' : r < 0.94 ? 'coin' : r < 0.98 ? 'coinBag' : 'gold', b.x, b.y);
 }
 
 // ---------------------------------------------------------------- 판정 도우미
@@ -539,8 +541,8 @@ function fireBolts() {
   for (const e of enemies) {
     if (e.st === 'dead' || e.st === 'intro' || e.x < camX - 20 || e.x > camX + VW + 20) continue;
     xs.push([e.x, e.y]);
-    if (e.boss) { if (!e.invuln && e.alpha >= 0.9) damageEnemy(e, Math.round(e.max * MAGIC.bossPct), false, 2); }
-    else { e.bolted = true; e.inv = 0; damageEnemy(e, e.hp, true, 2); }
+    if (e.boss) { if (!e.invuln && e.alpha >= 0.9) damageEnemy(e, MAGIC.damage, false, 2, true); }
+    else { e.bolted = true; e.inv = 0; damageEnemy(e, MAGIC.damage, true, 2, true); }
   }
   const c = xs.length ? xs[0] : [p.x + p.face * 120, p.y];
   xs.push([clamp(c[0] - 72, camX + 16, camX + VW - 16), c[1]], [clamp(c[0] + 72, camX + 16, camX + VW - 16), c[1]]);
@@ -774,7 +776,7 @@ function updPlayer() {
       it.gone = true; sfx('pickup');
       if (it.type === 'potion') { heal(30); }
       else if (it.type === 'big') { heal(60); }
-      else if (it.type === 'coin') { p.score += 500; floatText(p.x, p.y - 90, '+500', '#ffd23f'); }
+      else if (Object.hasOwn(SCORE_ITEMS, it.type)) { const points = SCORE_ITEMS[it.type]; p.score += points; floatText(p.x, p.y - 90, '+' + points, '#ffd23f'); }
       else if (it.type === 'power') { p.buff = 900; floatText(p.x, p.y - 90, 'POWER UP!', '#ffe14d'); }
       else if (it.type === 'scroll') { p.mg = Math.min(MAGIC.max, p.mg + 1); floatText(p.x, p.y - 90, '뇌격 두루마리', '#9cc3ff'); }
       else if (it.type === 'crystal') { p.sp = Math.min(SP_MAX, p.sp + 25); floatText(p.x, p.y - 90, 'SP +25', '#cfc0ff'); }
@@ -790,13 +792,13 @@ function heal(n) {
 
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
-function damageEnemy(e, dmg, kd, kind = 0) {
+function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   if (e.phaseT > 0 || e.st === 'reviving' || e.st === 'dead' || e.invuln) return;
   const p = player;
   if (practice) practiceDone.add(p.st === 'skill' ? 'skill' : 'attack');
   const stunned = e.st === 'stun';
-  if (stunned) dmg = Math.round(dmg * 1.5);           // 기절 중에는 추가 피해
-  if (e.boss) dmg = Math.round(dmg * (1 + Math.min(0.5, 0.05 * chain.n)));   // 연속 히트가 이어질수록 보스에게 최대 +50%
+  if (stunned && !fixedDamage) dmg = Math.round(dmg * 1.5);           // 기절 중에는 추가 피해
+  if (e.boss && !fixedDamage) dmg = Math.round(dmg * (1 + Math.min(0.5, 0.05 * chain.n)));   // 연속 히트가 이어질수록 보스에게 최대 +50%
   chain.n++; chain.t = CHAIN_MS; chain.max = Math.max(chain.max, chain.n);
   e.hp -= dmg; e.flash = 6;
   hitStop = Math.max(hitStop, kd ? 6 : 3);
@@ -1592,7 +1594,7 @@ const srng = seed => { let v = seed >>> 0; return () => ((v = (Math.imul(v, 1664
 const floorCache = {};
 function drawBackdrop(theme, scroll) {
   if (drawReleaseBackdrop(theme, scroll)) return;
-  const img = getBackdrop(theme, tick * MS), off = scroll * 0.35, first = Math.floor(off / BG_W);
+  const img = getBackdrop(theme, tick * MS), off = scroll, first = Math.floor(off / BG_W);
   ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = img.topColor; rect(0, 0, W, BG_Y + 1);   // 하늘 위쪽 여백은 한 가지 색으로 (맨 윗줄을 늘이면 별이 세로줄이 된다)
   for (let n = first; n <= first + 2; n++) {
@@ -2368,15 +2370,20 @@ const fxGround = mkFx(), fxTop = mkFx();       // 캐릭터 뒤(바닥 표식·�
 const fxX = x => (x - camX) / SC, fxY = (y, h) => (y - (h || 0) - OY) / SC;
 function presentFx(F) { fxCtx.putImageData(F.img, 0, 0); ctx.imageSmoothingEnabled = false; ctx.drawImage(fxCanvas, 0, OY, VW, VH); }
 
+function riftWarningAlpha(z) {
+  if (z.age >= z.delay) return 1;
+  return Math.floor(z.age / 150) % 2 === 0 ? .95 : .24;
+}
 function drawGroundFx(L) {
   for (const z of hazards) {
     if (z.type === 'rift') {
       const active = z.age >= z.delay, c = z.kind === 'frost' ? '#7ad8ff' : z.kind === 'abyss' ? '#ce8cff' : '#ff965c';
       const x = fxX(z.x), y = fxY(z.y - z.depth), w = z.width / SC, h = z.depth * 2 / SC;
-      L.rect(x, y, w, h, c, active ? .65 : .2);
-      L.line(x, y, x + w, y, c, 2); L.line(x, y + h, x + w, y + h, c, 2);
-      L.line(x, y, x, y + h, c, 2); L.line(x + w, y, x + w, y + h, c, 2);
-      for (let dx = 5; dx < w; dx += 16) L.line(x + dx, y + 2, x + Math.min(w, dx + 8), y + h - 2, c, 1, .65);
+      const warning = riftWarningAlpha(z);
+      L.rect(x, y, w, h, c, active ? .65 : .38 * warning);
+      L.line(x, y, x + w, y, c, 2, warning); L.line(x, y + h, x + w, y + h, c, 2, warning);
+      L.line(x, y, x, y + h, c, 2, warning); L.line(x + w, y, x + w, y + h, c, 2, warning);
+      for (let dx = 5; dx < w; dx += 16) L.line(x + dx, y + 2, x + Math.min(w, dx + 8), y + h - 2, c, 1, .65 * warning);
     } else if (z.type === 'eclipse') {
       const active = z.age >= z.delay, radius = active ? 35 + clamp((z.age - z.delay) / z.life, 0, 1) * 280 : 35;
       const c = active ? '#ff9aa6' : '#ce8cff';
@@ -2516,6 +2523,7 @@ function drawBolt(L, b) {
 function drawBarrel(b) {
   const sx = b.x - camX, y = b.y;
   ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(sx, y, 20, 6, 0, 0, Math.PI * 2); ctx.fill();
+  if (drawItemSprite('box', sx, y, 48, 48, b.flash > 0)) return;
   ctx.fillStyle = b.flash ? '#fff' : '#8d5a2b'; rect(sx - 16, y - 44, 32, 44);
   ctx.fillStyle = b.flash ? '#fff' : '#5d3a1a'; rect(sx - 17, y - 36, 34, 5); rect(sx - 17, y - 14, 34, 5);
   ctx.fillStyle = b.flash ? '#fff' : '#a8723a'; rect(sx - 14, y - 44, 6, 44);
@@ -2524,7 +2532,15 @@ function drawBarrel(b) {
 function drawItem(it) {
   const sx = it.x - camX, bob = it.z === 0 ? Math.sin(it.t * 0.1) * 3 : 0, y = it.y - it.z - 14 + bob;
   if (it.life < 200 && Math.floor(it.life / 6) % 2) return;
-  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(sx, it.y, 12, 4, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.save();
+  const shadowScale = Math.max(.55, 1 - it.z / 150);
+  ctx.translate(sx + 3, it.y + 1); ctx.scale(16 * shadowScale, 5 * shadowScale);
+  const shadow = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+  shadow.addColorStop(0, 'rgba(5,3,12,.58)'); shadow.addColorStop(1, 'rgba(5,3,12,0)');
+  ctx.fillStyle = shadow; ctx.beginPath(); ctx.arc(0, 0, 1, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  const size = it.type === 'big' ? [38, 32] : it.type === 'potion' ? [38, 24] : it.type === 'gold' ? [36, 24] : it.type === 'scroll' ? [36, 30] : [28, 32];
+  if (drawItemSprite(it.type, sx, y + 12, size[0], size[1])) return;
   if (it.type === 'potion' || it.type === 'big') {
     const big = it.type === 'big', k = big ? 1.4 : 1;
     ctx.shadowColor = big ? '#4dd2ff' : '#ff4d6d'; ctx.shadowBlur = 10;
@@ -2544,7 +2560,7 @@ function drawItem(it) {
     ctx.fillStyle = '#6a4ccc'; ctx.beginPath(); ctx.moveTo(sx, y - 14); ctx.lineTo(sx + 9, y); ctx.lineTo(sx, y + 10); ctx.lineTo(sx - 9, y); ctx.closePath(); ctx.fill();
     ctx.shadowBlur = 0; ctx.fillStyle = '#a88cff'; ctx.beginPath(); ctx.moveTo(sx, y - 14); ctx.lineTo(sx + 9, y); ctx.lineTo(sx, y); ctx.lineTo(sx - 9, y); ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#ffffff'; rect(sx - 3, y - 8, 2, 4);
-  } else if (it.type === 'coin') {
+  } else if (Object.hasOwn(SCORE_ITEMS, it.type)) {
     ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.ellipse(sx, y, Math.abs(Math.cos(it.t * 0.08)) * 9 + 1, 9, 0, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 2; ctx.stroke();
   } else {
