@@ -1,0 +1,109 @@
+{
+ "id": "death",
+ "name": "사망",
+ "sprite": "death.png",
+ "cell": [
+  354,
+  247
+ ],
+ "pivot": [
+  181,
+  238
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 121,
+ "loop": false,
+ "invulnerable": [
+  [
+   0,
+   120
+  ]
+ ],
+ "hold_last_drawing": true,
+ "events": [
+  {
+   "frame": 0,
+   "type": "slowmo",
+   "frames": 60
+  },
+  {
+   "frame": 84,
+   "type": "shake",
+   "strength": 10
+  },
+  {
+   "frame": 84,
+   "type": "sfx",
+   "id": "armor_fall"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 14,
+   "start": 0,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 20,
+   "start": 14,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 20,
+   "start": 34,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 16,
+   "start": 54,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 14,
+   "start": 70,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 12,
+   "start": 84,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 24,
+   "start": 96,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 1,
+   "start": 120,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "왕의 몰락: 무릎 꿇고 검을 짚었다가 앞으로 쓰러진다. 마지막 그림 유지"
+ ]
+}

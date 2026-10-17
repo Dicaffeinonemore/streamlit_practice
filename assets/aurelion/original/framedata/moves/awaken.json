@@ -1,0 +1,130 @@
+{
+ "id": "awaken",
+ "name": "각성 (2페이즈)",
+ "sprite": "awaken.png",
+ "cell": [
+  472,
+  302
+ ],
+ "pivot": [
+  238,
+  292
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 142,
+ "loop": false,
+ "invulnerable": [
+  [
+   0,
+   141
+  ]
+ ],
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "heavy_breath"
+  },
+  {
+   "frame": 46,
+   "type": "spawn",
+   "id": "royal_halo",
+   "at": "head",
+   "offset": [
+    -37,
+    216
+   ]
+  },
+  {
+   "frame": 46,
+   "type": "spawn",
+   "id": "gold_aura",
+   "at": "feet",
+   "offset": [
+    0,
+    0
+   ]
+  },
+  {
+   "frame": 46,
+   "type": "shake",
+   "strength": 14
+  },
+  {
+   "frame": 46,
+   "type": "sfx",
+   "id": "royal_roar"
+  },
+  {
+   "frame": 46,
+   "type": "ui",
+   "id": "phase2_banner"
+  },
+  {
+   "frame": 100,
+   "type": "sfx",
+   "id": "blade_charge"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 30,
+   "start": 0,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 16,
+   "start": 30,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 40,
+   "start": 46,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 14,
+   "start": 86,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 20,
+   "start": 100,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 10,
+   "start": 120,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 12,
+   "start": 130,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "2페이즈 각성 142f, 전 구간 무적. 3번 포효에 후광·금빛 불꽃이 켜지고 2페이즈 내내 유지"
+ ]
+}

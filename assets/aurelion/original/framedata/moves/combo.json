@@ -1,0 +1,342 @@
+{
+ "id": "combo",
+ "name": "왕검 3연참",
+ "sprite": "combo.png",
+ "cell": [
+  384,
+  334
+ ],
+ "pivot": [
+  197,
+  324
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 87,
+ "loop": false,
+ "phases": {
+  "startup": [
+   0,
+   15
+  ],
+  "active": [
+   16,
+   60
+  ],
+  "recovery": [
+   61,
+   86
+  ]
+ },
+ "telegraph": {
+  "flash": null,
+  "flash_frames": null,
+  "warning_icon_frames": [
+   0,
+   15
+  ]
+ },
+ "punish_window": {
+  "frames": [
+   61,
+   86
+  ],
+  "length": 26
+ },
+ "attack": {
+  "damage": 9,
+  "hitstop": 4,
+  "hitstun": 20,
+  "knockback": [
+   4,
+   0
+  ],
+  "knockdown": false,
+  "depth": 18,
+  "multi_hit": true
+ },
+ "hit_attacks": {
+  "5": {
+   "damage": 10,
+   "knockback": [
+    5,
+    0
+   ],
+   "hitstun": 22
+  },
+  "8": {
+   "damage": 14,
+   "hitstop": 7,
+   "hitstun": 32,
+   "knockback": [
+    6,
+    9
+   ],
+   "knockdown": true
+  }
+ },
+ "sequences": {
+  "full": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "stop1": [
+   1,
+   2,
+   3,
+   10
+  ],
+  "stop2": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   10
+  ]
+ },
+ "move": {
+  "per_drawing": {
+   "2": 5,
+   "5": 4,
+   "8": 4
+  }
+ },
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "swing_heavy"
+  },
+  {
+   "frame": 16,
+   "type": "spawn",
+   "id": "gold_slash",
+   "at": "blade_tip",
+   "offset": [
+    145,
+    44
+   ]
+  },
+  {
+   "frame": 32,
+   "type": "spawn",
+   "id": "gold_slash",
+   "at": "blade_tip",
+   "offset": [
+    178,
+    139
+   ]
+  },
+  {
+   "frame": 56,
+   "type": "spawn",
+   "id": "gold_slash",
+   "at": "blade_tip",
+   "offset": [
+    87,
+    278
+   ]
+  },
+  {
+   "frame": 56,
+   "type": "shake",
+   "strength": 5
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 16,
+   "start": 0,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -49,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 4,
+   "start": 16,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -46,
+     0,
+     100,
+     199
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      48,
+      12,
+      94,
+      135
+     ],
+     "depth": 18
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "duration": 6,
+   "start": 20,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -37,
+     0,
+     100,
+     183
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 6,
+   "start": 26,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -52,
+     0,
+     100,
+     201
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 4,
+   "start": 32,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -42,
+     0,
+     100,
+     191
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      52,
+      42,
+      121,
+      111
+     ],
+     "depth": 18
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "duration": 6,
+   "start": 36,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -76,
+     0,
+     100,
+     173
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 14,
+   "start": 42,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     11,
+     0,
+     100,
+     146
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 5,
+   "start": 56,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -66,
+     0,
+     100,
+     210
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      27,
+      23,
+      68,
+      239
+     ],
+     "depth": 18
+    }
+   ]
+  },
+  {
+   "index": 9,
+   "duration": 14,
+   "start": 61,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -50,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 10,
+   "duration": 12,
+   "start": 75,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -64,
+     0,
+     100,
+     218
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "왕검 3연참: 사선 베기 → 되베기 → 웅크렸다 올려치기(넉다운)",
+  "1·2타에서 멈추기도 한다 (stop1 / stop2). 멈춘 경우엔 틈이 짧다 → 끝까지 보고 3타 뒤 26f에 반격",
+  "7번 웅크림 14f가 3타 예고. 슈퍼아머 없음: 1타를 맞히면 끊긴다"
+ ]
+}

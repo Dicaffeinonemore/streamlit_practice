@@ -1,0 +1,252 @@
+{
+ "id": "guard",
+ "name": "수호의 자세",
+ "sprite": "guard.png",
+ "cell": [
+  364,
+  297
+ ],
+ "pivot": [
+  156,
+  287
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 130,
+ "loop": false,
+ "phases": {
+  "startup": [
+   0,
+   39
+  ],
+  "active": [
+   40,
+   45
+  ],
+  "recovery": [
+   46,
+   129
+  ]
+ },
+ "telegraph": {
+  "flash": "gold",
+  "flash_frames": [
+   0,
+   27
+  ],
+  "warning_icon_frames": null
+ },
+ "attack": {
+  "damage": 16,
+  "hitstop": 8,
+  "hitstun": 34,
+  "knockback": [
+   10,
+   6
+  ],
+  "knockdown": true,
+  "depth": 20
+ },
+ "sequences": {
+  "guard": [
+   1,
+   2
+  ],
+  "parry": [
+   3,
+   4,
+   5,
+   6
+  ],
+  "broken": [
+   7,
+   8,
+   9
+  ],
+  "timeout": [
+   9
+  ]
+ },
+ "move": {
+  "per_drawing": {
+   "4": 10,
+   "5": 6
+  }
+ },
+ "guard_frames": 60,
+ "timeout_punish": 24,
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "guard_ring"
+  },
+  {
+   "frame": 28,
+   "type": "spawn",
+   "id": "parry_flash",
+   "at": "blade_tip",
+   "offset": [
+    83,
+    53
+   ]
+  },
+  {
+   "frame": 28,
+   "type": "sfx",
+   "id": "parry_clang"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 14,
+   "start": 0,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -66,
+     0,
+     100,
+     205
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 14,
+   "start": 14,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -69,
+     0,
+     100,
+     207
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 8,
+   "start": 28,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -69,
+     0,
+     100,
+     202
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 4,
+   "start": 36,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -16,
+     0,
+     100,
+     171
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 6,
+   "start": 40,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -43,
+     0,
+     100,
+     175
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      52,
+      64,
+      141,
+      83
+     ],
+     "depth": 20
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "duration": 14,
+   "start": 46,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -61,
+     0,
+     100,
+     200
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 40,
+   "start": 60,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -47,
+     0,
+     100,
+     194
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 14,
+   "start": 100,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -52,
+     0,
+     100,
+     182
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 9,
+   "duration": 16,
+   "start": 114,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -61,
+     0,
+     100,
+     192
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "수호의 자세: 금빛 깜빡임. 60f 동안 1·2번 반복하며 기다린다",
+  "일반 공격으로 치면 받아치기(3번) → 반격 찌르기(4·5번, 16 넉다운). 바렐 공격은 무효",
+  "넉다운 속성 기술(3타 참격·찌르기·내려찍기·강하·필살)로 치면 자세 붕괴(7~9번 70f, 그로기 +25) = 큰 틈",
+  "60f 동안 안 치면 자세를 풀며 9번 24f 틈. 정답: 참거나, 무거운 기술로 깨기"
+ ]
+}

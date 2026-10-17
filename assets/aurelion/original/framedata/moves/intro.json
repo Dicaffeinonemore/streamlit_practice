@@ -1,0 +1,121 @@
+{
+ "id": "intro",
+ "name": "등장",
+ "sprite": "intro.png",
+ "cell": [
+  317,
+  259
+ ],
+ "pivot": [
+  147,
+  249
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 142,
+ "loop": false,
+ "invulnerable": [
+  [
+   0,
+   141
+  ]
+ ],
+ "events": [
+  {
+   "frame": 0,
+   "type": "shake",
+   "strength": 6
+  },
+  {
+   "frame": 50,
+   "type": "sfx",
+   "id": "armor_rise"
+  },
+  {
+   "frame": 80,
+   "type": "sfx",
+   "id": "royal_decree"
+  },
+  {
+   "frame": 80,
+   "type": "spawn",
+   "id": "royal_halo",
+   "at": "head",
+   "offset": [
+    -1,
+    213
+   ]
+  },
+  {
+   "frame": 80,
+   "type": "shake",
+   "strength": 5
+  },
+  {
+   "frame": 132,
+   "type": "ui",
+   "id": "boss_bar_in"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 30,
+   "start": 0,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 20,
+   "start": 30,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 16,
+   "start": 50,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 14,
+   "start": 66,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 40,
+   "start": 80,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 12,
+   "start": 120,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 10,
+   "start": 132,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "무릎 꿇은 채 검을 짚고 있다가 일어나 검을 겨누며 선언 (142f)",
+  "5번에서 후광이 잠깐 뜬다"
+ ]
+}

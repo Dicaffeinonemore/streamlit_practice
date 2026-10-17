@@ -1,0 +1,213 @@
+{
+ "id": "sword_wave",
+ "name": "황금 검기",
+ "sprite": "sword_wave.png",
+ "cell": [
+  507,
+  273
+ ],
+ "pivot": [
+  190,
+  263
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 56,
+ "loop": false,
+ "phases": {
+  "startup": [
+   0,
+   21
+  ],
+  "active": [
+   22,
+   25
+  ],
+  "recovery": [
+   26,
+   55
+  ]
+ },
+ "telegraph": {
+  "flash": null,
+  "flash_frames": null,
+  "warning_icon_frames": [
+   0,
+   21
+  ]
+ },
+ "punish_window": {
+  "frames": [
+   34,
+   55
+  ],
+  "length": 22
+ },
+ "sequences": {
+  "phase1": [
+   1,
+   2,
+   3,
+   4,
+   1,
+   2,
+   3,
+   4,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "phase2": [
+   1,
+   2,
+   3,
+   4,
+   1,
+   2,
+   3,
+   4,
+   1,
+   2,
+   3,
+   4,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ]
+ },
+ "move": {
+  "per_drawing": {
+   "3": 3
+  }
+ },
+ "repeat_windup": 10,
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "blade_charge"
+  },
+  {
+   "frame": 22,
+   "type": "spawn",
+   "id": "gold_wave",
+   "at": "ground_front",
+   "offset": [
+    261,
+    0
+   ]
+  },
+  {
+   "frame": 22,
+   "type": "sfx",
+   "id": "wave_release"
+  },
+  {
+   "frame": 22,
+   "type": "shake",
+   "strength": 3
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 18,
+   "start": 0,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -69,
+     0,
+     100,
+     219
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 4,
+   "start": 18,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -55,
+     0,
+     100,
+     214
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 4,
+   "start": 22,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     80,
+     0,
+     100,
+     184
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 8,
+   "start": 26,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -69,
+     0,
+     100,
+     235
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 12,
+   "start": 34,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     34,
+     0,
+     100,
+     216
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 10,
+   "start": 46,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -67,
+     0,
+     100,
+     232
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "황금 검기: 땅을 타고 가는 초승달 검기를 3번(2페이즈 4번) 연속으로 쏜다",
+  "검기는 깊이 판정이 좁다(16) → 줄을 바꾸면 모두 피한다. 반복할 때 1번 자세는 10f로 짧아짐",
+  "마지막 검기 뒤 5·6번 22f는 멀어서 닿기 어려움 → 쏘는 동안 사선으로 접근"
+ ]
+}

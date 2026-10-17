@@ -2,6 +2,7 @@
 import argparse, base64, io, json, zipfile
 from pathlib import Path
 from PIL import Image
+from boss_art_common import pack_tiles
 
 parser=argparse.ArgumentParser()
 parser.add_argument('sprites',type=Path)
@@ -26,11 +27,7 @@ for m in catalog['motions']+fx['effects']+fx['parts']:
         tile=tile.resize((round(cell[0]*.55),round(cell[1]*.55)),Image.Resampling.NEAREST)
         f={'atlas':[0,0,*tile.size],'anchor':[round(pivot[0]*.55),round(pivot[1]*.55)]}
         clips[key].append(f);tiles.append((f,tile))
-atlas=Image.new('RGBA',(2048,4096));x=y=rh=0
-for f,tile in tiles:
-    if x+tile.width+2>2048:x=0;y+=rh+2;rh=0
-    f['atlas'][:2]=[x,y];atlas.paste(tile,(x,y));x+=tile.width+2;rh=max(rh,tile.height)
-atlas=atlas.crop((0,0,2048,y+rh+2));atlas.save(out/'atlas.png')
+atlas=pack_tiles(tiles);atlas.save(out/'atlas.png')
 meta={'clips':clips,'timing':timing,'scale':.55,'idleHeight':121,'projectiles':json.loads(data.read('game/data/bosses/morgra/projectiles.json')),'boss':json.loads(data.read('game/data/bosses/morgra/morgra_boss.json'))}
 (out/'frames.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
 b=io.BytesIO();atlas.save(b,format='PNG');meta['atlas']='data:image/png;base64,'+base64.b64encode(b.getvalue()).decode()

@@ -10,14 +10,14 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const scripts = JSON.parse(fs.readFileSync(path.join(root, 'server.py'), 'utf8').match(/SCRIPTS = (\[.*?\])/)[1]);
 for (const name of scripts) new vm.Script(fs.readFileSync(path.join(root, name), 'utf8'), { filename: name });
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.AURELION_V133==='false'?'<script>globalThis.AURELION_V133_OVERRIDE=false</script>':''));
 const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), html);
 const allowed = new Set(['index.html', ...scripts]);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
   if (name !== 'embedded.html' && !allowed.has(name)) { res.writeHead(404).end(); return; }
   res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
-  res.end(name === 'embedded.html' ? embedded : fs.readFileSync(path.join(root, name)));
+  res.end(name === 'embedded.html' ? embedded : (name==='index.html'?html:fs.readFileSync(path.join(root, name))));
 });
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-test-'));
 const browserPath = process.env.BROWSER_PATH || [
@@ -293,7 +293,7 @@ function combatChecks() {
     reset(); startStage(s); scene = 'play'; hitStop = 0;
     for (let w = 0; w < stage.waves.length; w++) {
       camX = stage.waves[w].at; player.x = camX + 256; camLock = false; waveIdx = w; enemies = []; update();
-      if (scene === 'bossintro') for (let i = 0; i < 121; i++) update();
+      if (scene === 'bossintro') for (let i = 0; i < Math.ceil(aurelionIntroDuration(introBoss)/MS)+1; i++) update();
       for (const e of [...enemies]) if (e.st !== 'dead') damageEnemy(e, 1e6, true);
       for(const e of enemies)if(e.st==='reviving'){
         for(let i=0;i<261;i++)updEnemy(e);
@@ -310,7 +310,7 @@ function combatChecks() {
   reset(); player.score = 2345; startStage(1); toTitle();
   return passed;
 }
-const timeout = setTimeout(() => { console.error('Browser test timed out'); browser?.kill(); server.close(); process.exit(1); }, 90000);
+const timeout = setTimeout(() => { console.error('Browser test timed out'); browser?.kill(); server.close(); process.exit(1); }, process.env.AURELION_SUITE?360000:90000);
 (async () => {
   try {
     await new Promise(r => server.listen(0, '127.0.0.1', r));
@@ -331,6 +331,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await call('Page.enable'); await call('Runtime.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.AURELION_SUITE){await ready(base+'/embedded.html');await require('./aurelion.cjs')({evaluate,call,errors,root});return;}
     await ready(base); await evaluate('window.requestAnimationFrame=()=>0; toTutorial()');
     for (const [width, height] of [[1280, 720], [960, 540], [390, 844], [844, 390]]) {
       await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
@@ -415,7 +416,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate('scene'), 'intro');
     console.log('PASS Opening skip and automatic completion start stage one');
     for (const n of [0,2,3,4]) {
-      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.51;damageEnemy(b,b.max*.1,false);if(b.phaseT!==72||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);for(let t=0;t<72;t++)updEnemy(b);return b.hp===hp&&!b.invuln&&b.st==='rec'&&b.z===0})()`),true,'Safe phase transition');
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.51;damageEnemy(b,b.max*.1,false);const duration=isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);for(let t=0;t<duration;t++)updEnemy(b);return b.hp===hp&&!b.invuln&&b.st==='rec'&&b.z===0})()`),true,'Safe phase transition');
       const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
       assert.equal(key,[3,4].includes(n)?'phase'+(n+1):'boss'+(n+1));
     }
@@ -696,6 +697,28 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate('scene'), 'play');
     assert.equal(await evaluate('$("saveStatus").textContent.includes("저장할 수 없습니다")'), true);
     console.log('PASS Storage restrictions leave game playable with clear status');
+    assert.equal(await evaluate(`(()=>{
+      player=newPlayer();startStage(0);scene='play';enemies=[];hazards=[];parts=[];bolts=[];ghosts=[];startSpecial();
+      const original=barelEffect,seen=[];barelEffect=(...args)=>seen.push(args);
+      try{for(const t of [300,900,1600]){player.t=t/MS;player.z=50;drawBarelPlayer();}}
+      finally{barelEffect=original;}
+      if(seen.length!==3||seen.some(a=>a[3]!==player.y+a[5]*.3))return false;
+      player.t=30;updSpecial();if(ghosts.length)return false;
+      const p0=morgraIntroPose(0),p1=morgraIntroPose(900),p2=morgraIntroPose(INTRO_MS);
+      if(p0.alpha!==0||p2.alpha!==1||p2.offset!==0||p1.offset>=p0.offset)return false;
+      startStage(1);spawnWave({e:[['boss2',1]],boss:true});
+      if(introBoss.z!==0)return false;
+      for(let i=0;i<120;i++){updIntro();if(introBoss.z!==0||introLand)return false;}
+      return scene==='play';
+    })()`),true,'Grounded special effects, no old special ghosts, Morgra rises without falling or landing');
+    for(const ms of [300,900,1600]){
+      await evaluate(`player=newPlayer();startStage(0);scene='play';showScreen(null);enemies=[];startSpecial();player.t=${ms}/MS;flashT=0;shake=0;render()`);
+      await screenshot('special-ground-'+ms);
+    }
+    for(const ms of [200,700,1200,1800]){
+      await evaluate(`player=newPlayer();startStage(1);spawnWave({e:[['boss2',1]],boss:true});introT=${ms};introBoss.z=0;showScreen(null);flashT=0;shake=0;render()`);
+      await screenshot('morgra-circle-intro-'+ms);
+    }
     assert.deepEqual(errors, [], 'No browser exceptions');
     console.log('PASS No browser exceptions. Screenshots: ' + profile);
   } catch (e) { console.error(e); if (errors.length) console.error(errors); process.exitCode = 1; }

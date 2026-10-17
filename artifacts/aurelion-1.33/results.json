@@ -1,0 +1,446 @@
+{
+  "patterns": [
+    {
+      "id": "combo",
+      "phase": 1,
+      "ticks": 87,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 3
+    },
+    {
+      "id": "sword_wave",
+      "phase": 1,
+      "ticks": 108,
+      "waves": 3,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "cleave",
+      "phase": 1,
+      "ticks": 121,
+      "waves": 0,
+      "shocks": 4,
+      "opportunities": 1
+    },
+    {
+      "id": "charge",
+      "phase": 1,
+      "ticks": 82,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 3
+    },
+    {
+      "id": "judgment",
+      "phase": 1,
+      "ticks": 114,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "guard",
+      "phase": 1,
+      "ticks": 84,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "whirl",
+      "phase": 1,
+      "ticks": 140,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 12
+    },
+    {
+      "id": "taunt",
+      "phase": 1,
+      "ticks": 86,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "combo",
+      "phase": 2,
+      "ticks": 83,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 3
+    },
+    {
+      "id": "sword_wave",
+      "phase": 2,
+      "ticks": 129,
+      "waves": 4,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "cleave",
+      "phase": 2,
+      "ticks": 116,
+      "waves": 0,
+      "shocks": 7,
+      "opportunities": 1
+    },
+    {
+      "id": "charge",
+      "phase": 2,
+      "ticks": 79,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 3
+    },
+    {
+      "id": "judgment",
+      "phase": 2,
+      "ticks": 107,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "guard",
+      "phase": 2,
+      "ticks": 84,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 0
+    },
+    {
+      "id": "whirl",
+      "phase": 2,
+      "ticks": 137,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 12
+    },
+    {
+      "id": "taunt",
+      "phase": 2,
+      "ticks": 86,
+      "waves": 0,
+      "shocks": 0,
+      "opportunities": 0
+    }
+  ],
+  "multihit": [
+    {
+      "id": "combo",
+      "phase": 1,
+      "hits": [
+        {
+          "move": "combo",
+          "frame": 16,
+          "baseDamage": 9,
+          "damage": 9
+        },
+        {
+          "move": "combo",
+          "frame": 56,
+          "baseDamage": 14,
+          "damage": 14
+        }
+      ]
+    },
+    {
+      "id": "whirl",
+      "phase": 1,
+      "hits": [
+        {
+          "move": "whirl",
+          "frame": 22,
+          "baseDamage": 7,
+          "damage": 7
+        },
+        {
+          "move": "whirl",
+          "frame": 62,
+          "baseDamage": 7,
+          "damage": 7
+        }
+      ]
+    },
+    {
+      "id": "combo",
+      "phase": 2,
+      "hits": [
+        {
+          "move": "combo",
+          "frame": 14,
+          "baseDamage": 9,
+          "damage": 12
+        },
+        {
+          "move": "combo",
+          "frame": 54,
+          "baseDamage": 14,
+          "damage": 18
+        }
+      ]
+    },
+    {
+      "id": "whirl",
+      "phase": 2,
+      "hits": [
+        {
+          "move": "whirl",
+          "frame": 19,
+          "baseDamage": 7,
+          "damage": 9
+        },
+        {
+          "move": "whirl",
+          "frame": 59,
+          "baseDamage": 7,
+          "damage": 9
+        }
+      ]
+    }
+  ],
+  "punish": [
+    {
+      "id": "combo",
+      "phase": 1,
+      "distance": 56.1,
+      "lane": 0,
+      "window": 26,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "combo",
+      "phase": 2,
+      "distance": 56.1,
+      "lane": 0,
+      "window": 26,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "sword_wave",
+      "phase": 1,
+      "distance": 121.55,
+      "lane": 32,
+      "window": 22,
+      "firstHit": 8,
+      "walkTicks": 14,
+      "dashTicks": 24,
+      "possible": true
+    },
+    {
+      "id": "sword_wave",
+      "phase": 2,
+      "distance": 121.55,
+      "lane": 32,
+      "window": 22,
+      "firstHit": 8,
+      "walkTicks": 14,
+      "dashTicks": 24,
+      "possible": true
+    },
+    {
+      "id": "cleave",
+      "phase": 1,
+      "distance": 60.78,
+      "lane": 40,
+      "window": 66,
+      "firstHit": 8,
+      "walkTicks": 15,
+      "dashTicks": 15,
+      "possible": true
+    },
+    {
+      "id": "cleave",
+      "phase": 2,
+      "distance": 60.78,
+      "lane": 40,
+      "window": 66,
+      "firstHit": 8,
+      "walkTicks": 15,
+      "dashTicks": 15,
+      "possible": true
+    },
+    {
+      "id": "charge",
+      "phase": 1,
+      "distance": 56.1,
+      "lane": 34,
+      "window": 38,
+      "firstHit": 8,
+      "walkTicks": 13,
+      "dashTicks": 13,
+      "possible": true
+    },
+    {
+      "id": "charge",
+      "phase": 2,
+      "distance": 56.1,
+      "lane": 34,
+      "window": 38,
+      "firstHit": 8,
+      "walkTicks": 13,
+      "dashTicks": 13,
+      "possible": true
+    },
+    {
+      "id": "judgment",
+      "phase": 1,
+      "distance": 74.8,
+      "lane": 0,
+      "window": 54,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "judgment",
+      "phase": 2,
+      "distance": 74.8,
+      "lane": 0,
+      "window": 54,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "guard_timeout",
+      "phase": 1,
+      "distance": 51.43,
+      "lane": 0,
+      "window": 24,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "guard_timeout",
+      "phase": 2,
+      "distance": 51.43,
+      "lane": 0,
+      "window": 24,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "guard_broken",
+      "phase": 1,
+      "distance": 37.4,
+      "lane": 0,
+      "window": 70,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "guard_broken",
+      "phase": 2,
+      "distance": 37.4,
+      "lane": 0,
+      "window": 70,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "whirl",
+      "phase": 1,
+      "distance": 93.5,
+      "lane": 0,
+      "window": 60,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "whirl",
+      "phase": 2,
+      "distance": 93.5,
+      "lane": 0,
+      "window": 60,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "taunt",
+      "phase": 1,
+      "distance": 93.5,
+      "lane": 0,
+      "window": 86,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    },
+    {
+      "id": "taunt",
+      "phase": 2,
+      "distance": 93.5,
+      "lane": 0,
+      "window": 86,
+      "firstHit": 8,
+      "walkTicks": 8,
+      "dashTicks": 8,
+      "possible": true
+    }
+  ],
+  "killEstimate": [
+    {
+      "type": "boss2",
+      "hits": 117,
+      "ticks": 3456,
+      "seconds": 57.6
+    },
+    {
+      "type": "boss3",
+      "hits": 89,
+      "ticks": 2668,
+      "seconds": 44.47
+    }
+  ],
+  "benchmark": [
+    {
+      "type": "boss1",
+      "seconds": 60.00079999998808,
+      "frames": 3600,
+      "meanFrameMs": 16.66688888888558,
+      "meanUpdateRenderMs": 1.679194444782204,
+      "p95UpdateRenderMs": 3
+    },
+    {
+      "type": "boss2",
+      "seconds": 60.00519999998808,
+      "frames": 3597,
+      "meanFrameMs": 16.682012788431493,
+      "meanUpdateRenderMs": 1.6641089782338359,
+      "p95UpdateRenderMs": 3
+    },
+    {
+      "type": "boss3",
+      "seconds": 60.00520000000001,
+      "frames": 3601,
+      "meanFrameMs": 16.663482366009443,
+      "meanUpdateRenderMs": 1.767397945174175,
+      "p95UpdateRenderMs": 4.5
+    }
+  ]
+}

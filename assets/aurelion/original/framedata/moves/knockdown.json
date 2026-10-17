@@ -1,0 +1,155 @@
+{
+ "id": "knockdown",
+ "name": "넉다운·기상",
+ "sprite": "knockdown.png",
+ "cell": [
+  347,
+  283
+ ],
+ "pivot": [
+  165,
+  273
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 100,
+ "loop": false,
+ "super_armor": [
+  [
+   82,
+   99
+  ]
+ ],
+ "invulnerable": [
+  [
+   14,
+   81
+  ]
+ ],
+ "events": [
+  {
+   "frame": 14,
+   "type": "shake",
+   "strength": 8
+  },
+  {
+   "frame": 14,
+   "type": "sfx",
+   "id": "armor_fall"
+  },
+  {
+   "frame": 14,
+   "type": "spawn",
+   "id": "impact_dust",
+   "at": "feet",
+   "offset": [
+    0,
+    0
+   ]
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 6,
+   "start": 0,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -38,
+     0,
+     100,
+     182
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 8,
+   "start": 6,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -52,
+     0,
+     100,
+     148
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 6,
+   "start": 14,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 24,
+   "start": 20,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 14,
+   "start": 44,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 12,
+   "start": 58,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 12,
+   "start": 70,
+   "phase": "N",
+   "hurtboxes": [],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 10,
+   "start": 82,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -47,
+     0,
+     100,
+     193
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 9,
+   "duration": 8,
+   "start": 92,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -46,
+     0,
+     100,
+     195
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "1·2번 공중, 3~7번 무적(누움·검 짚고 일어남), 8·9번 기상 슈퍼아머"
+ ]
+}

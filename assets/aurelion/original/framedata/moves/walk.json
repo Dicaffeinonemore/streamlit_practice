@@ -1,0 +1,144 @@
+{
+ "id": "walk",
+ "name": "걷기",
+ "sprite": "walk.png",
+ "cell": [
+  310,
+  275
+ ],
+ "pivot": [
+  171,
+  265
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 56,
+ "loop": true,
+ "move": {
+  "vx": 2.0,
+  "vz": 1.2
+ },
+ "events": [],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 7,
+   "start": 0,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -59,
+     0,
+     100,
+     229
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 7,
+   "start": 7,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -58,
+     0,
+     100,
+     227
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 7,
+   "start": 14,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -58,
+     0,
+     100,
+     227
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 7,
+   "start": 21,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -54,
+     0,
+     100,
+     228
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 7,
+   "start": 28,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -56,
+     0,
+     100,
+     226
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 7,
+   "start": 35,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -56,
+     0,
+     100,
+     232
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 7,
+   "start": 42,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -57,
+     0,
+     100,
+     235
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 7,
+   "start": 49,
+   "phase": "L",
+   "hurtboxes": [
+    [
+     -55,
+     0,
+     100,
+     235
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": []
+}

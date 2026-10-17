@@ -1,0 +1,202 @@
+{
+ "character": "aurelion",
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "moves": [
+  {
+   "id": "idle",
+   "name": "대기",
+   "total_frames": 54,
+   "phases": null,
+   "punish": null
+  },
+  {
+   "id": "walk",
+   "name": "걷기",
+   "total_frames": 56,
+   "phases": null,
+   "punish": null
+  },
+  {
+   "id": "intro",
+   "name": "등장",
+   "total_frames": 142,
+   "phases": null,
+   "punish": null
+  },
+  {
+   "id": "combo",
+   "name": "왕검 3연참",
+   "total_frames": 87,
+   "phases": {
+    "startup": [
+     0,
+     15
+    ],
+    "active": [
+     16,
+     60
+    ],
+    "recovery": [
+     61,
+     86
+    ]
+   },
+   "punish": 26
+  },
+  {
+   "id": "sword_wave",
+   "name": "황금 검기",
+   "total_frames": 56,
+   "phases": {
+    "startup": [
+     0,
+     21
+    ],
+    "active": [
+     22,
+     25
+    ],
+    "recovery": [
+     26,
+     55
+    ]
+   },
+   "punish": 22
+  },
+  {
+   "id": "cleave",
+   "name": "황금중파참",
+   "total_frames": 121,
+   "phases": {
+    "startup": [
+     0,
+     48
+    ],
+    "active": [
+     49,
+     54
+    ],
+    "recovery": [
+     55,
+     120
+    ]
+   },
+   "punish": 66
+  },
+  {
+   "id": "charge",
+   "name": "왕의 돌진",
+   "total_frames": 82,
+   "phases": {
+    "startup": [
+     0,
+     25
+    ],
+    "active": [
+     26,
+     43
+    ],
+    "recovery": [
+     44,
+     81
+    ]
+   },
+   "punish": 38
+  },
+  {
+   "id": "judgment",
+   "name": "황금의 엄벌",
+   "total_frames": 114,
+   "phases": {
+    "startup": [
+     0,
+     53
+    ],
+    "active": [
+     54,
+     59
+    ],
+    "recovery": [
+     60,
+     113
+    ]
+   },
+   "punish": 54
+  },
+  {
+   "id": "guard",
+   "name": "수호의 자세",
+   "total_frames": 130,
+   "phases": {
+    "startup": [
+     0,
+     39
+    ],
+    "active": [
+     40,
+     45
+    ],
+    "recovery": [
+     46,
+     129
+    ]
+   },
+   "punish": null
+  },
+  {
+   "id": "taunt",
+   "name": "도발",
+   "total_frames": 86,
+   "phases": null,
+   "punish": 86
+  },
+  {
+   "id": "hurt",
+   "name": "피격",
+   "total_frames": 40,
+   "phases": null,
+   "punish": null
+  },
+  {
+   "id": "knockdown",
+   "name": "넉다운·기상",
+   "total_frames": 100,
+   "phases": null,
+   "punish": null
+  },
+  {
+   "id": "awaken",
+   "name": "각성 (2페이즈)",
+   "total_frames": 142,
+   "phases": null,
+   "punish": null
+  },
+  {
+   "id": "whirl",
+   "name": "황금 선풍",
+   "total_frames": 108,
+   "phases": {
+    "startup": [
+     0,
+     21
+    ],
+    "active": [
+     22,
+     37
+    ],
+    "recovery": [
+     38,
+     107
+    ]
+   },
+   "punish": 60
+  },
+  {
+   "id": "death",
+   "name": "사망",
+   "total_frames": 121,
+   "phases": null,
+   "punish": null
+  }
+ ]
+}

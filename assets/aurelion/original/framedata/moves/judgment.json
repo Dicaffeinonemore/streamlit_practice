@@ -1,0 +1,197 @@
+{
+ "id": "judgment",
+ "name": "황금의 엄벌",
+ "sprite": "judgment.png",
+ "cell": [
+  276,
+  397
+ ],
+ "pivot": [
+  154,
+  387
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 114,
+ "loop": false,
+ "phases": {
+  "startup": [
+   0,
+   53
+  ],
+  "active": [
+   54,
+   59
+  ],
+  "recovery": [
+   60,
+   113
+  ]
+ },
+ "telegraph": {
+  "flash": "red",
+  "flash_frames": [
+   0,
+   53
+  ],
+  "warning_icon_frames": [
+   0,
+   53
+  ]
+ },
+ "punish_window": {
+  "frames": [
+   60,
+   113
+  ],
+  "length": 54
+ },
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "holy_chant"
+  },
+  {
+   "frame": 16,
+   "type": "spawn",
+   "id": "judge_mark",
+   "at": "player",
+   "offset": [
+    0,
+    0
+   ]
+  },
+  {
+   "frame": 54,
+   "type": "spawn",
+   "id": "judge_pillar",
+   "at": "marks",
+   "offset": [
+    0,
+    0
+   ]
+  },
+  {
+   "frame": 54,
+   "type": "shake",
+   "strength": 10
+  },
+  {
+   "frame": 54,
+   "type": "sfx",
+   "id": "holy_strike"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 16,
+   "start": 0,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -71,
+     0,
+     100,
+     233
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 10,
+   "start": 16,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -76,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 14,
+   "start": 26,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -75,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 14,
+   "start": 40,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -67,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 6,
+   "start": 54,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -35,
+     0,
+     100,
+     202
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 40,
+   "start": 60,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -42,
+     0,
+     100,
+     203
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 14,
+   "start": 100,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -57,
+     0,
+     100,
+     210
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "황금의 엄벌: 빨간 깜빡임. 2번에 플레이어 자리 + 좌우에 표식 3개(2페이즈 5개, 위아래 줄 포함)",
+  "표식은 따라오지 않음. 표식이 뜨고 38f 뒤 5번에 빛기둥이 떨어진다 → 표식 밖으로 한 발",
+  "6번 검을 짚고 숨 고르기 40f + 7번 14f = 54f 반격 틈"
+ ]
+}

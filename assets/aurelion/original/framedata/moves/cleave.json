@@ -1,0 +1,249 @@
+{
+ "id": "cleave",
+ "name": "황금중파참",
+ "sprite": "cleave.png",
+ "cell": [
+  371,
+  292
+ ],
+ "pivot": [
+  183,
+  282
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 121,
+ "loop": false,
+ "phases": {
+  "startup": [
+   0,
+   48
+  ],
+  "active": [
+   49,
+   54
+  ],
+  "recovery": [
+   55,
+   120
+  ]
+ },
+ "telegraph": {
+  "flash": "white",
+  "flash_frames": [
+   8,
+   48
+  ],
+  "warning_icon_frames": [
+   8,
+   45
+  ]
+ },
+ "super_armor": [
+  [
+   8,
+   54
+  ]
+ ],
+ "punish_window": {
+  "frames": [
+   55,
+   120
+  ],
+  "length": 66
+ },
+ "attack": {
+  "damage": 20,
+  "hitstop": 10,
+  "hitstun": 40,
+  "knockback": [
+   6,
+   8
+  ],
+  "knockdown": true,
+  "depth": 20
+ },
+ "events": [
+  {
+   "frame": 8,
+   "type": "sfx",
+   "id": "grunt_lift"
+  },
+  {
+   "frame": 49,
+   "type": "spawn",
+   "id": "gold_shock",
+   "at": "blade_ground",
+   "offset": [
+    129,
+    0
+   ]
+  },
+  {
+   "frame": 49,
+   "type": "shake",
+   "strength": 12
+  },
+  {
+   "frame": 49,
+   "type": "sfx",
+   "id": "slam_impact"
+  },
+  {
+   "frame": 55,
+   "type": "sfx",
+   "id": "blade_stuck"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 8,
+   "start": 0,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -51,
+     0,
+     100,
+     192
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 26,
+   "start": 8,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -69,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 12,
+   "start": 34,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -58,
+     0,
+     100,
+     230
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 3,
+   "start": 46,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -57,
+     0,
+     100,
+     193
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 6,
+   "start": 49,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -88,
+     0,
+     100,
+     153
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      7,
+      8,
+      129,
+      136
+     ],
+     "depth": 20
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "duration": 22,
+   "start": 55,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -59,
+     0,
+     100,
+     169
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 22,
+   "start": 77,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -1,
+     0,
+     100,
+     200
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 12,
+   "start": 99,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -73,
+     0,
+     100,
+     207
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 9,
+   "duration": 10,
+   "start": 111,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -63,
+     0,
+     100,
+     234
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "황금중파참: 흰 깜빡임 = 2~5번 슈퍼아머. 46f 예고 (가장 길다)",
+  "칼이 박힌 자리에서 앞으로 황금 충격파가 4번 터지며 나아간다 (낮은 판정 → 점프로 넘거나 줄 바꾸기)",
+  "6~9번 66f 동안 칼이 박혀 있음 = 가장 큰 반격 틈. 2페이즈엔 뒤쪽으로도 충격파"
+ ]
+}

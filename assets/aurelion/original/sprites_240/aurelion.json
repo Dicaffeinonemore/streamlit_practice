@@ -1,0 +1,249 @@
+{
+ "character": "aurelion",
+ "idle_height": 240,
+ "idle_height_rule": "crown top to feet, sword not counted",
+ "facing": "right",
+ "pivot": "ground under the body",
+ "motions": [
+  {
+   "id": "idle",
+   "name": "대기",
+   "file": "idle.png",
+   "frames": 6,
+   "cell": [
+    153,
+    286
+   ],
+   "pivot": [
+    86,
+    276
+   ],
+   "scale_from_source": 0.5333,
+   "sheet_scale_vs_idle": 1.002
+  },
+  {
+   "id": "walk",
+   "name": "걷기",
+   "file": "walk.png",
+   "frames": 8,
+   "cell": [
+    310,
+    275
+   ],
+   "pivot": [
+    171,
+    265
+   ],
+   "scale_from_source": 0.6593,
+   "sheet_scale_vs_idle": 0.811
+  },
+  {
+   "id": "intro",
+   "name": "등장",
+   "file": "intro.png",
+   "frames": 7,
+   "cell": [
+    317,
+    259
+   ],
+   "pivot": [
+    147,
+    249
+   ],
+   "scale_from_source": 0.5783,
+   "sheet_scale_vs_idle": 0.924
+  },
+  {
+   "id": "combo",
+   "name": "왕검 3연참",
+   "file": "combo.png",
+   "frames": 10,
+   "cell": [
+    384,
+    334
+   ],
+   "pivot": [
+    197,
+    324
+   ],
+   "scale_from_source": 0.6838,
+   "sheet_scale_vs_idle": 0.782
+  },
+  {
+   "id": "sword_wave",
+   "name": "황금 검기",
+   "file": "sword_wave.png",
+   "frames": 6,
+   "cell": [
+    507,
+    273
+   ],
+   "pivot": [
+    190,
+    263
+   ],
+   "scale_from_source": 0.6061,
+   "sheet_scale_vs_idle": 0.882
+  },
+  {
+   "id": "cleave",
+   "name": "황금중파참",
+   "file": "cleave.png",
+   "frames": 9,
+   "cell": [
+    371,
+    292
+   ],
+   "pivot": [
+    183,
+    282
+   ],
+   "scale_from_source": 0.6266,
+   "sheet_scale_vs_idle": 0.853
+  },
+  {
+   "id": "charge",
+   "name": "왕의 돌진",
+   "file": "charge.png",
+   "frames": 8,
+   "cell": [
+    408,
+    258
+   ],
+   "pivot": [
+    196,
+    248
+   ],
+   "scale_from_source": 0.6704,
+   "sheet_scale_vs_idle": 0.797
+  },
+  {
+   "id": "judgment",
+   "name": "황금의 엄벌",
+   "file": "judgment.png",
+   "frames": 7,
+   "cell": [
+    276,
+    397
+   ],
+   "pivot": [
+    154,
+    387
+   ],
+   "scale_from_source": 0.6316,
+   "sheet_scale_vs_idle": 0.846
+  },
+  {
+   "id": "guard",
+   "name": "수호의 자세",
+   "file": "guard.png",
+   "frames": 9,
+   "cell": [
+    364,
+    297
+   ],
+   "pivot": [
+    156,
+    287
+   ],
+   "scale_from_source": 0.6612,
+   "sheet_scale_vs_idle": 0.808
+  },
+  {
+   "id": "taunt",
+   "name": "도발",
+   "file": "taunt.png",
+   "frames": 6,
+   "cell": [
+    411,
+    279
+   ],
+   "pivot": [
+    156,
+    270
+   ],
+   "scale_from_source": 0.5854,
+   "sheet_scale_vs_idle": 0.913
+  },
+  {
+   "id": "hurt",
+   "name": "피격",
+   "file": "hurt.png",
+   "frames": 6,
+   "cell": [
+    432,
+    282
+   ],
+   "pivot": [
+    244,
+    272
+   ],
+   "scale_from_source": 0.6557,
+   "sheet_scale_vs_idle": 0.815
+  },
+  {
+   "id": "knockdown",
+   "name": "넉다운·기상",
+   "file": "knockdown.png",
+   "frames": 9,
+   "cell": [
+    347,
+    283
+   ],
+   "pivot": [
+    165,
+    273
+   ],
+   "scale_from_source": 0.7477,
+   "sheet_scale_vs_idle": 0.715
+  },
+  {
+   "id": "awaken",
+   "name": "각성 (2페이즈)",
+   "file": "awaken.png",
+   "frames": 7,
+   "cell": [
+    472,
+    302
+   ],
+   "pivot": [
+    238,
+    292
+   ],
+   "scale_from_source": 0.7038,
+   "sheet_scale_vs_idle": 0.759
+  },
+  {
+   "id": "whirl",
+   "name": "황금 선풍",
+   "file": "whirl.png",
+   "frames": 9,
+   "cell": [
+    420,
+    258
+   ],
+   "pivot": [
+    208,
+    248
+   ],
+   "scale_from_source": 0.6997,
+   "sheet_scale_vs_idle": 0.764
+  },
+  {
+   "id": "death",
+   "name": "사망",
+   "file": "death.png",
+   "frames": 8,
+   "cell": [
+    354,
+    247
+   ],
+   "pivot": [
+    181,
+    238
+   ],
+   "scale_from_source": 0.7229,
+   "sheet_scale_vs_idle": 0.739
+  }
+ ]
+}

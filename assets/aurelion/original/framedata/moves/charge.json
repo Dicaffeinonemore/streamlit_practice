@@ -1,0 +1,289 @@
+{
+ "id": "charge",
+ "name": "왕의 돌진",
+ "sprite": "charge.png",
+ "cell": [
+  408,
+  258
+ ],
+ "pivot": [
+  196,
+  248
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 82,
+ "loop": false,
+ "phases": {
+  "startup": [
+   0,
+   25
+  ],
+  "active": [
+   26,
+   43
+  ],
+  "recovery": [
+   44,
+   81
+  ]
+ },
+ "telegraph": {
+  "flash": "white",
+  "flash_frames": [
+   0,
+   19
+  ],
+  "warning_icon_frames": [
+   0,
+   19
+  ]
+ },
+ "super_armor": [
+  [
+   20,
+   43
+  ]
+ ],
+ "punish_window": {
+  "frames": [
+   44,
+   81
+  ],
+  "length": 38
+ },
+ "attack": {
+  "damage": 18,
+  "hitstop": 8,
+  "hitstun": 34,
+  "knockback": [
+   12,
+   6
+  ],
+  "knockdown": true,
+  "depth": 18
+ },
+ "body_attack": {
+  "drawings": [
+   3,
+   4
+  ],
+  "damage": 12,
+  "hitstop": 5,
+  "hitstun": 24,
+  "knockback": [
+   10,
+   5
+  ],
+  "knockdown": true,
+  "depth": 22
+ },
+ "move": {
+  "per_drawing": {
+   "2": 8,
+   "3": 11,
+   "4": 11,
+   "5": 7,
+   "6": 4,
+   "7": 1
+  }
+ },
+ "run_loop": {
+  "drawings": [
+   3,
+   4
+  ],
+  "max_cycles": 4,
+  "until": "distance_to_player < 130"
+ },
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "roar_short"
+  },
+  {
+   "frame": 20,
+   "type": "spawn",
+   "id": "dash_dust_gold",
+   "at": "feet",
+   "offset": [
+    0,
+    0
+   ]
+  },
+  {
+   "frame": 36,
+   "type": "spawn",
+   "id": "gold_slash",
+   "at": "blade_tip",
+   "offset": [
+    186,
+    57
+   ]
+  },
+  {
+   "frame": 36,
+   "type": "shake",
+   "strength": 6
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 20,
+   "start": 0,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -40,
+     0,
+     100,
+     151
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 6,
+   "start": 20,
+   "phase": "S",
+   "hurtboxes": [
+    [
+     -50,
+     0,
+     100,
+     178
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 5,
+   "start": 26,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -51,
+     0,
+     100,
+     172
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      -51,
+      28,
+      129,
+      180
+     ],
+     "depth": 22,
+     "kind": "body"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "duration": 5,
+   "start": 31,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -54,
+     0,
+     100,
+     153
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      -54,
+      28,
+      129,
+      180
+     ],
+     "depth": 22,
+     "kind": "body"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "duration": 8,
+   "start": 36,
+   "phase": "A",
+   "hurtboxes": [
+    [
+     -42,
+     0,
+     100,
+     181
+    ]
+   ],
+   "hitboxes": [
+    {
+     "box": [
+      53,
+      63,
+      125,
+      84
+     ],
+     "depth": 18
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "duration": 14,
+   "start": 44,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -48,
+     0,
+     100,
+     180
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 7,
+   "duration": 14,
+   "start": 58,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -43,
+     0,
+     100,
+     220
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 8,
+   "duration": 10,
+   "start": 72,
+   "phase": "R",
+   "hurtboxes": [
+    [
+     -47,
+     0,
+     100,
+     202
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "왕의 돌진: 흰 깜빡임 웅크림 20f를 보고 줄을 바꾼다. 달리는 몸통도 판정(12)",
+  "가까워질 때까지 3·4번을 최대 4번 반복 → 마지막 찌르기(18)",
+  "6~8번 38f 반격 틈 (미끄러져 멈춘 자리)"
+ ]
+}

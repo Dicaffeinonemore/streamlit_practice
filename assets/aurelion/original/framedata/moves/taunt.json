@@ -1,0 +1,125 @@
+{
+ "id": "taunt",
+ "name": "도발",
+ "sprite": "taunt.png",
+ "cell": [
+  411,
+  279
+ ],
+ "pivot": [
+  156,
+  270
+ ],
+ "units": "frames@60fps; px in sprites_240 (crown top -> feet 240px); x forward, y up; box=[x,y,w,h]",
+ "total_frames": 86,
+ "loop": false,
+ "punish_window": {
+  "frames": [
+   0,
+   85
+  ],
+  "length": 86
+ },
+ "events": [
+  {
+   "frame": 0,
+   "type": "sfx",
+   "id": "kneel_voice"
+  }
+ ],
+ "drawings": [
+  {
+   "index": 1,
+   "duration": 12,
+   "start": 0,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -50,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 2,
+   "duration": 24,
+   "start": 12,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -29,
+     0,
+     100,
+     212
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 3,
+   "duration": 16,
+   "start": 36,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -72,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 4,
+   "duration": 16,
+   "start": 52,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     40,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 5,
+   "duration": 10,
+   "start": 68,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -65,
+     0,
+     100,
+     240
+    ]
+   ],
+   "hitboxes": []
+  },
+  {
+   "index": 6,
+   "duration": 8,
+   "start": 78,
+   "phase": "N",
+   "hurtboxes": [
+    [
+     -59,
+     0,
+     100,
+     231
+    ]
+   ],
+   "hitboxes": []
+  }
+ ],
+ "notes": [
+  "'무릎을 꿇어라' 86f. 슈퍼아머 없음 = 공짜 반격 시간 (맞으면 끊김)"
+ ]
+}

@@ -1,0 +1,166 @@
+{
+ "idle_height": 240,
+ "units": "px in sprites_240; pivot = anchor point inside each cell",
+ "effects": [
+  {
+   "id": "gold_slash",
+   "name": "황금 검격 궤적",
+   "frames": 4,
+   "frame_duration": 3,
+   "loop": false,
+   "anchor": "center",
+   "files": {
+    "add": "fx/gold_slash_add.png",
+    "alpha": "fx/gold_slash_alpha.png"
+   },
+   "cell": [
+    264,
+    156
+   ],
+   "pivot": [
+    99,
+    99
+   ]
+  },
+  {
+   "id": "gold_wave",
+   "name": "황금 검기 (투사체)",
+   "frames": 4,
+   "frame_duration": 4,
+   "loop": true,
+   "anchor": "bottom_front",
+   "files": {
+    "add": "fx/gold_wave_add.png",
+    "alpha": "fx/gold_wave_alpha.png"
+   },
+   "cell": [
+    324,
+    198
+   ],
+   "pivot": [
+    241,
+    193
+   ]
+  },
+  {
+   "id": "gold_shock",
+   "name": "황금 충격파",
+   "frames": 5,
+   "frame_duration": 5,
+   "loop": false,
+   "anchor": "bottom_center",
+   "files": {
+    "add": "fx/gold_shock_add.png",
+    "alpha": "fx/gold_shock_alpha.png"
+   },
+   "cell": [
+    308,
+    148
+   ],
+   "pivot": [
+    154,
+    143
+   ]
+  },
+  {
+   "id": "parry_flash",
+   "name": "받아치기 섬광",
+   "frames": 4,
+   "frame_duration": 3,
+   "loop": false,
+   "anchor": "center",
+   "files": {
+    "add": "fx/parry_flash_add.png",
+    "alpha": "fx/parry_flash_alpha.png"
+   },
+   "cell": [
+    181,
+    122
+   ],
+   "pivot": [
+    94,
+    60
+   ]
+  },
+  {
+   "id": "judge_mark",
+   "name": "엄벌 표식",
+   "frames": 3,
+   "frame_duration": 6,
+   "loop": false,
+   "anchor": "center",
+   "files": {
+    "add": "fx/judge_mark_add.png",
+    "alpha": "fx/judge_mark_alpha.png"
+   },
+   "cell": [
+    158,
+    65
+   ],
+   "pivot": [
+    79,
+    39
+   ]
+  },
+  {
+   "id": "judge_pillar",
+   "name": "엄벌 빛기둥",
+   "frames": 5,
+   "frame_duration": 4,
+   "loop": false,
+   "anchor": "bottom_burst",
+   "files": {
+    "add": "fx/judge_pillar_add.png",
+    "alpha": "fx/judge_pillar_alpha.png"
+   },
+   "cell": [
+    592,
+    338
+   ],
+   "pivot": [
+    304,
+    333
+   ]
+  },
+  {
+   "id": "royal_halo",
+   "name": "왕의 후광",
+   "frames": 4,
+   "frame_duration": 6,
+   "loop": true,
+   "anchor": "center",
+   "files": {
+    "add": "fx/royal_halo_add.png",
+    "alpha": "fx/royal_halo_alpha.png"
+   },
+   "cell": [
+    159,
+    99
+   ],
+   "pivot": [
+    95,
+    51
+   ]
+  },
+  {
+   "id": "gold_aura",
+   "name": "황금 불꽃 기운",
+   "frames": 4,
+   "frame_duration": 5,
+   "loop": true,
+   "anchor": "bottom_center",
+   "files": {
+    "add": "fx/gold_aura_add.png",
+    "alpha": "fx/gold_aura_alpha.png"
+   },
+   "cell": [
+    428,
+    308
+   ],
+   "pivot": [
+    213,
+    303
+   ]
+  }
+ ]
+}
