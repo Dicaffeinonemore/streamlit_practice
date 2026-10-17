@@ -1,0 +1,34 @@
+흑월의 기사 v1.24 — 플레이어 8프레임 보행 사이클
+
+적용 리소스
+암흑 기사 대검 보행 사이클 스프라이트.png
+원본 보존: assets/named/player_walk.png (원본 바이트 그대로).
+위쪽 4자세, 아래쪽 4자세 순서로 총 8프레임 연결.
+프레임별 원본 영역/몸 중심/발 위치/배율/해시는 data/named-sprites.json에 기록.
+원본 RGB와 투명도 유지. 기존 대기 자세와 동일 배율(.36) 사용.
+
+동작
+- 기존 단일 이동 자세를 8프레임 반복 보행으로 교체.
+- 프레임당 100ms, 1사이클 800ms. 지상 이동 중에만 보행 시계 진행.
+- 정지하면 기존 대기 자세로 복귀. 재이동 시 첫 프레임부터 시작.
+- 좌우 방향 반전과 위아래 깊이 이동에 적용.
+- 일시정지/히트 스톱은 기존 업데이트 정지 규칙을 따름.
+- 점프/대시/공격/스킬/피격/사망 및 이동 속도와 충돌 판정 유지.
+- 원본 미로딩 시 기존 캐릭터 렌더러 폴백 유지.
+- 이전 1.23 중기사 변경 사항 유지.
+
+변경 파일
+game.js, named-runtime.js, named-art.js, tools/build_named_sprites.py,
+data/named-sprites.json, assets/named/combat.png, assets/named/player_walk.png,
+tests/named-assets.py, tests/regression.cjs, patch_note/patch_1.24.txt.
+복구용 백업: backups/pre-player-walk-1.24.zip.
+
+검증
+변경 전 node tests/regression.cjs 통과.
+tests/named-assets.py: 총 549프레임 원본 해시/RGB/알파 및 역할 검사 통과.
+변경 후 회귀 테스트에 8프레임 도달, 정지 시 대기 복귀, 재시작과 좌측 반전,
+깊이 이동의 보행 연결 검사를 추가. 좌우 이동 화면을 브라우저에서 캡처 확인.
+
+실행: python server.py 또는 python -m streamlit run server.py.
+이 PC에서 python 별칭이 작동하지 않으면 PowerShell:
+& 'C:\Users\hoondo\AppData\Local\Python\bin\python.exe' server.py

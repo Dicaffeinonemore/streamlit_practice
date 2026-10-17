@@ -187,6 +187,17 @@ function combatChecks() {
   const passed = [];
   const check = (name, condition) => { if (!condition) throw new Error(name); passed.push(name); };
   const reset = () => { beginGame(); scene = 'play'; showScreen(null); hitStop = 0; acc = 0; player.inv = 0; };
+  reset(); player.x=250; inputDown('KeyD');
+  const walkFrames=new Set();
+  for(let i=0;i<55;i++){updPlayer();walkFrames.add(namedPlayerFrame().id);}
+  check('Player walking reaches all eight supplied frames',walkFrames.size===8 && namedPlayerFrame().source==='player_walk');
+  clearInput();updPlayer();
+  check('Walking stops at the original idle pose',namedPlayerFrame()===namedClip('player','idle') && player.walkTime===0);
+  inputDown('KeyA');updPlayer();
+  check('Walking restarts at frame zero and faces left',player.face===-1 && namedPlayerFrame()===namedClip('player','walk',0));
+  clearInput();updPlayer();inputDown('KeyW');updPlayer();
+  check('Depth movement also uses walking animation',namedPlayerFrame().source==='player_walk');
+  clearInput();
   for (const distance of [40, 100, 160, 260, 310, -100, -260]) {
     reset(); player.x = distance < 0 ? 400 : 200;
     enemies = [mkEnemy('grunt', player.x + distance, 420)]; startSkill('thrust');
@@ -360,6 +371,10 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       await screenshot('new-player-'+state);
     }
     await screenshot('named-player');
+    for(const face of [-1,1]) {
+      await evaluate(`player=newPlayer();startStage(0);scene='play';showScreen(null);player.inv=0;player.x=300;player.walk=true;player.walkTime=350;player.face=${face};enemies=[];render()`);
+      await screenshot('player-walk-'+face);
+    }
     await evaluate('toTitle(); document.getElementById("namedTitleImage").decode()');
     assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundImage.startsWith('url(')`),true,'Settings uses supplied artwork');
     assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundSize`),'contain','Settings art is fitted inside button');
@@ -371,8 +386,11 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await call('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false});
     await screenshot('named-title');
     for(let stage=0;stage<5;stage++) {
-      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;enemies=['grunt','rogue','archer','brute'].map((type,i)=>mkEnemy(type,230+i*110,420));for(const e of enemies){for(const st of ['chase','wind','act','rec','hurt','down','dead']){e.st=st;e.t=4;const f=namedEnemyFrame(e);if(!f||f.source!=='soldiers${stage+1}')return false;render()}e.st='chase';e.walk=false;}render();return true})()`),true,'All soldier states use stage '+(stage+1)+' art');
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;enemies=['grunt','rogue','archer','brute'].map((type,i)=>mkEnemy(type,230+i*110,420));for(const e of enemies){for(const st of ['chase','wind','act','rec','hurt','down','dead']){e.st=st;e.t=4;const f=namedEnemyFrame(e);if(!f||f.source!==(e.type==='brute'?'heavy${stage+1}':'soldiers${stage+1}'))return false;render()}e.st='chase';e.walk=false;}render();return true})()`),true,'All soldier states use stage '+(stage+1)+' art');
       await screenshot('soldiers-stage-'+(stage+1));
+      assert.equal(await evaluate(`(()=>{const e=enemies[3],actor=namedEnemyRole(e);if(actor!=='stage${stage+1}_brute')return false;const ids=[];for(const [st,t] of [['wind',0],['wind',30],['act',0],['act',8],['rec',0]]){e.st=st;e.t=t;ids.push(namedEnemyFrame(e).id)}if(new Set(ids).size!==5)return false;e.st='chase';e.walk=true;for(const tickValue of [0,12,24,36]){tick=tickValue;if(namedEnemyFrame(e).source!=='heavy${stage+1}')return false;}e.st='dead';e.t=35;return namedEnemyFrame(e).id===NAMED_SPRITES.clips[actor].death.at(-1)})()`),true,'Heavy knight windup, active, recovery, walk and final death '+(stage+1));
+      await evaluate(`enemies=['chase','wind','act','hurt','dead'].map((st,i)=>{const e=mkEnemy('brute',100+i*110,420);e.st=st;e.t=st==='dead'?30:4;e.face=i===3?-1:1;return e});player.x=40;render()`);
+      await screenshot('heavy-knights-stage-'+(stage+1));
     }
     assert.equal(await evaluate(`(()=>{const e=enemies[0];e.st='dead';e.t=60;const f=namedEnemyFrame(e);const ids=NAMED_SPRITES.clips[namedEnemyRole(e)].death;return f.id===ids.at(-1)})()`),true,'Soldier death reaches final frame before removal');
     console.log('PASS All five soldier themes, all states, heavy infantry and completed death animation');

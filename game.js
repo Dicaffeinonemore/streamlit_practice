@@ -207,7 +207,7 @@ let arena = null;
 function newPlayer(score = 0) {
   return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
-    inv: 0, flash: 0, buff: 0, score, walk: false, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
+    inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
     skill: null, skillCd: Object.fromEntries(Object.keys(SKILLS).map(id => [id, 0])), skillHits: new Set(), skillDest: 0,
     spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
 }
@@ -650,6 +650,7 @@ function updPlayer() {
   if (p.buf > 0) p.buf -= MS;
   if (p.dashCd > 0) p.dashCd--;
   for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
+  const wasWalking = p.walk;
   p.walk = false;
   for (const code in SKILL_KEYS) {
     if (canStartSkill(SKILL_KEYS[code]) && hit(code) && startSkill(SKILL_KEYS[code])) return;
@@ -677,6 +678,7 @@ function updPlayer() {
       p.x += ax * sp; p.y += ay * sp * 0.75;
       if (ax) p.face = ax;
       p.walk = !!(ax || ay);
+      p.walkTime = p.walk && p.z === 0 ? (wasWalking ? p.walkTime + MS : 0) : 0;
       p.t++;
       if (p.comboT > 0) p.comboT--;
       if (p.z === 0 && hit(...JUMP_KEYS)) { p.vz = 9.6; sfx('jump'); }

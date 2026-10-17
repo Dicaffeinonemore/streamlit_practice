@@ -9,6 +9,8 @@ files={**{f'soldiers{i}':f'{i}스테이지 병사' for i in range(2,6)},'soldier
 files['emperor']='5스테이지 보스.png'
 files['player_base']='어둠의 기사와 룬 대검 스프라이트 시트.png'
 files['player_moves']='다크 나이트 전투 스프라이트 시트.png'
+files['player_walk']='암흑 기사 대검 보행 사이클 스프라이트.png'
+files.update({f'heavy{i}':f'{i}스테이지 중기사.png' for i in range(1,6)})
 images={};sources={}
 for key,name in files.items():
  src=SOURCE/name
@@ -56,7 +58,7 @@ def row(actor,clip,src,y0,y1,cuts,anchors,feet,scale):
    if clip in bounds:x0,x1=bounds[clip][j]
   rect=[x0,y0,x1,y1];im=images[src].crop(rect)
   removed=0
-  if src.startswith('soldiers') or src in ('emperor','player_moves'):im,removed=remove_edge_fragments(im,24 if src=='emperor' else 6 if src=='player_moves' else 3)
+  if src.startswith(('soldiers','heavy')) or src in ('emperor','player_moves'):im,removed=remove_edge_fragments(im,24 if src=='emperor' else 6 if src=='player_moves' or src.startswith('heavy') else 3)
   # Only trim already-transparent margins, preserving all original opaque black pixels.
   bbox=im.getbbox()
   if not bbox:raise ValueError((actor,clip,j))
@@ -133,7 +135,10 @@ for actor,groups in reviewed.items():
  for clip,indices in groups.items():clips[actor][clip]=[clips[actor][clip][i] for i in indices]
 # New hero: nonuniform source rectangles, feet and body centres explicitly aligned.
 row('player','idle','player_base',130,480,[0,365],[245],470,.36)
-row('player','walk','player_base',130,480,[420,815],[660],470,.36)
+row('player','walk','player_walk',140,490,[0,425,855,1260,1672],[275,695,1105,1525],478,.36)
+walk_first=clips['player']['walk'][:]
+row('player','walk','player_walk',550,900,[0,435,855,1265,1672],[275,695,1105,1525],880,.36)
+clips['player']['walk']=walk_first+clips['player']['walk']
 row('player','crouch','player_base',200,480,[830,1190],[1035],470,.36)
 row('player','swing','player_base',195,480,[1230,1672],[1405],470,.36)
 row('player','overhead','player_base',480,900,[0,365],[225],887,.36)
@@ -149,6 +154,41 @@ row('player','impact','player_moves',555,775,[895,1237],[1055],760,.50)
 row('player','cast','player_moves',780,941,[0,220,505,790],[140,365,635],921,.72)
 row('player','wave','player_moves',790,930,[790,945,1120,1287,1455],[870,1030,1205,1370],858,.40)
 # Pack lossless crops into one atlas; original positions and foot anchors remain in JSON.
+heavy_layout={
+ 1: [
+  ('idle',0,240,[0,283,526,815],[135,389,630],238,.53),
+  ('walk',240,455,[0,300,555,800,1100],[152,405,660,914],450,.53),
+  ('attack',455,680,[0,280,570,970,1340,1672],[158,410,680,1065,1445],675,.53),
+  ('hurt',680,920,[0,305,565],[155,418],895,.53),
+  ('death',680,925,[565,895,1250,1672],[707,1040,1450],900,.53)],
+ 2: [
+  ('idle',70,340,[25,285,495,705],[174,390,610],331,.50),
+  ('walk',70,340,[715,975,1190,1415,1672],[865,1095,1305,1515],331,.50),
+  ('attack',360,665,[25,280,560,885,1360,1672],[175,425,720,1010,1505],657,.50),
+  ('hurt',680,915,[25,325,620],[188,480],899,.50),
+  ('death',685,920,[620,925,1210,1672],[775,1060,1450],899,.50)],
+ 3: [
+  ('idle',55,340,[0,235,445,660],[140,350,560],331,.48),
+  ('walk',70,345,[725,990,1210,1430,1672],[880,1105,1325,1545],332,.48),
+  ('attack',345,675,[0,325,600,1015,1375,1672],[195,475,810,1145,1505],663,.48),
+  ('hurt',680,925,[0,305,565],[175,445],910,.48),
+  ('death',700,930,[565,930,1240,1672],[755,1100,1460],910,.48)],
+ 4: [
+  ('idle',60,360,[0,275,500,730],[170,390,620],350,.45),
+  ('walk',60,360,[735,1018,1230,1440,1672],[900,1135,1350,1560],350,.45),
+  ('attack',380,670,[0,280,645,965,1410,1672],[175,440,820,1120,1540],662,.45),
+  ('hurt',680,935,[0,310,600],[190,450],917,.45),
+  ('death',700,935,[600,910,1210,1672],[780,1070,1440],918,.45)],
+ 5: [
+  ('idle',105,355,[0,245,480,720],[155,390,620],344,.54),
+  ('walk',110,355,[765,1015,1235,1445,1672],[935,1150,1360,1580],344,.54),
+  ('attack',365,670,[0,285,625,1000,1340,1672],[165,425,775,1100,1505],659,.54),
+  ('hurt',700,905,[0,300,590],[170,450],889,.54),
+  ('death',700,915,[590,930,1240,1672],[780,1100,1450],890,.54)]
+}
+for stage,entries in heavy_layout.items():
+ for clip,y0,y1,cuts,anchors,feet,scale in entries:
+  row(f'stage{stage}_brute',clip,f'heavy{stage}',y0,y1,cuts,anchors,feet,scale)
 x=y=h=0;placements=[]
 for f in frames:
  im=f['image'];w,hh=im.size

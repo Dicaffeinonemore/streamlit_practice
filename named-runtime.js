@@ -33,17 +33,22 @@ function namedPlayerFrame() {
     if(t<1260)return namedAt('player','rush',(t-620)/640);
     return namedClip('player',t<1650?'overhead':t<1900?'plunge':'idle');
   }
-  if(p.st==='free')return p.z>0 ? namedClip('player','jump',p.vz>0?0:1) : namedClip('player',p.walk?'walk':'idle');
+  if(p.st==='free')return p.z>0 ? namedClip('player','jump',p.vz>0?0:1) : p.walk ? namedAt('player','walk',(p.walkTime||0)/800,true) : namedClip('player','idle');
   return null;
 }
 function namedEnemyRole(e) {
-  if(['grunt','rogue','archer','brute'].includes(e.type))return 'stage'+(stageIdx+1)+'_'+(e.type==='brute'?'grunt':e.type);
+  if(['grunt','rogue','archer','brute'].includes(e.type))return 'stage'+(stageIdx+1)+'_'+e.type;
   if(e.type==='boss2')return e.p2shown ? 'boss2p2' : null;
   return ['boss1','boss3','boss4','boss5'].includes(e.type) ? e.type : null;
 }
 function namedEnemyFrame(e) {
   const actor=namedEnemyRole(e); if(!actor)return null;
   if(!e.boss && ['wind','act','rec'].includes(e.st)) {
+    if(e.type==='brute') {
+      if(e.st==='wind')return namedClip(actor,'attack',e.t/e.d.wind<.6?0:1);
+      if(e.st==='act')return namedClip(actor,'attack',e.t/e.d.act<.6?2:3);
+      return namedClip(actor,'attack',4);
+    }
     if(e.st==='wind')return namedClip(actor,'attack',0);
     if(e.st==='act')return namedAt(actor,'attack',.34+e.t/e.d.act*.65);
     return namedClip(actor,'idle',0);
@@ -74,7 +79,7 @@ function namedEnemyFrame(e) {
 }
 function paintNamedFrame(frame, actor, shadow=false) {
   if(!frame || !NAMED_ATLAS.complete || !NAMED_ATLAS.naturalWidth)return false;
-  const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=frame.scale*(actor.type==='brute'?1.12:1);
+  const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=frame.scale*(actor.type==='brute' && !frame.source.startsWith('heavy')?1.12:1);
   if(shadow)drawShadow(actor.x-camX,actor.y,SPRITES[actor.d.sprite].sh,actor.z);
   ctx.save();
   const hurt=actor.hr<220 ? Math.cos(actor.hr*.03)*Math.exp(-actor.hr/150)*(actor.hdir||1)*3 : 0;
