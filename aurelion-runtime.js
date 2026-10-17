@@ -54,6 +54,7 @@ function setAurelionTimeline(e,id,mode) {
   let timeline=aurelionTimeline(id,aurelionSequence(e,id,mode),e.p2shown,{compress:id!=='guard',...(mode==='timeout'?{duration:aurelionMoves.guard.timeout_punish}:{})});
   if(id==='guard'&&a.guard==='guard')timeline=aurelionTimeline(id,[1,2,1,2,1],false).slice(0,aurelionMoves.guard.guard_frames);
   a.timeline=timeline;a.cursor=0;a.processed=-1;a.current=timeline[0];a.hitInstances=new Set();a.seenInstances=new Set();a.token=(a.token||0)+1;
+  a.whirlLanded=false;
   e.pt=0;e.invuln=false;
 }
 function initAurelionPattern(e) {
@@ -202,7 +203,12 @@ function runAurelionPattern(e) {
     if(entry.d.hitboxes?.length&&!a.seenInstances.has(entry.instance)){a.seenInstances.add(entry.instance);a.stats.opportunities++;}
     if(!a.hitInstances.has(entry.instance))for(const hb of entry.d.hitboxes||[]) {
       const attack={...m.attack,...(hb.kind==='body'?m.body_attack:m.hit_attacks?.[entry.index])};
-      if(aurelionBoxHit(hb.box,hb.depth,e.x,e.y,e.face)&&aurelionHurtPlayer(e,attack)){a.hitInstances.add(entry.instance);break;}
+      // Upgrade the first successful hit, even if the opening swings were dodged.
+      if(a.move==='whirl'&&!a.whirlLanded){attack.damage=16;attack.knockdown=true;}
+      if(aurelionBoxHit(hb.box,hb.depth,e.x,e.y,e.face)&&aurelionHurtPlayer(e,attack)){
+        if(a.move==='whirl')a.whirlLanded=true;
+        a.hitInstances.add(entry.instance);break;
+      }
     }
     if(a.token!==token)return;
     a.cursor++;
