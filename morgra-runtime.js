@@ -172,6 +172,7 @@ function updateMorgraHazard(z) {
 }
 function drawMorgra(e) {
   if(e.type!=='boss2'||!MORGRA_ATLAS.naturalWidth)return false;
+  if(e.st==='intro'){drawMorgraIntro(e);return true;}
   let id=e.p2shown?'p2_idle':e.walk?'walk':'idle',f=tick;
   if(e.st==='reviving') {const start=MORGRA_REVIVE.death+MORGRA_REVIVE.wait;id=e.t<start?'death':'revive';f=e.t<start?Math.min(e.t,109):e.t-start;}
   else if(e.st==='dead'){id=e.p2shown?'p2_death':'death';f=e.t;}
@@ -185,6 +186,26 @@ function drawMorgra(e) {
   ctx.restore();
   if(e.st==='reviving'&&e.t>=217&&e.t<241)paintMorgra(morgraFxFrame('teleport_burst',(e.t-217)/6),e.x,e.y);
   return true;
+}
+function morgraIntroPose(time) {
+  const u=clamp(time/INTRO_MS,0,1),rise=ease(clamp((u-.12)/.76,0,1));
+  return {rise,offset:150*(1-rise),alpha:rise,circleAlpha:Math.min(1,u/.12,(1-u)/.12)};
+}
+function drawMorgraIntro(e) {
+  const pose=morgraIntroPose(introT),x=e.x-camX,y=e.y;
+  ctx.save();ctx.globalAlpha=pose.circleAlpha;ctx.strokeStyle='#ba8cff';ctx.fillStyle='rgba(76,29,125,.4)';
+  ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,66,23,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.ellipse(x,y,49,17,0,0,Math.PI*2);ctx.stroke();
+  for(let i=0;i<8;i++){
+    const a=i*Math.PI/4+introT*.0005;
+    ctx.beginPath();ctx.moveTo(x+Math.cos(a)*50,y+Math.sin(a)*17);
+    ctx.lineTo(x+Math.cos(a+.1)*61,y+Math.sin(a+.1)*21);ctx.stroke();
+  }
+  ctx.restore();
+  // Reveal above the ground plane as the body rises out of the circle.
+  ctx.save();ctx.beginPath();ctx.rect(x-200,y-210,400,213);ctx.clip();
+  paintMorgra(morgraFrame('intro',introT/MS),e.x,y+pose.offset,e.face,pose.alpha);
+  ctx.restore();
 }
 function drawMorgraHazards() {
   for(const z of hazards) {

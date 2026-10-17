@@ -57,9 +57,12 @@ function drawBarelPlayer() {
   }
   if(p.st==='cast' && t>180)fx('lightning',(t-180)/(MAGIC.dur-180),0,210,270);
   if(p.st==='special') {
-    if(t<620)fx('moon',t/620,0,270,240);
-    else if(t<1260)fx('slash',((t-620)%160)/160,80,300,220);
-    else fx('impact',(t-1260)/740,50,330,270);
+    // These sheets have space below the luminous core. Lower that core toward
+    // the floor and keep the effect grounded even during the finishing leap.
+    const groundFx=(name,u,dx,w,h)=>barelEffect(name,u,p.x+p.face*dx,p.y+h*.3,w,h);
+    if(t<620)groundFx('moon',t/620,0,270,240);
+    else if(t<1260)groundFx('slash',((t-620)%160)/160,80,300,220);
+    else groundFx('impact',(t-1260)/740,50,330,270);
   }
   return true;
 }

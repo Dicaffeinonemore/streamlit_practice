@@ -349,7 +349,7 @@ function spawnWave(w) {
   for (const [type, side] of w.e) {
     if (ET[type].boss) {                           // 보스: 하늘에서 떨어져 착지 → 포효 → 이름 카드
       const b = mkEnemy(type, camX + VW * 0.72, clamp(player.y, GTOP + 40, GBOT - 30));
-      b.st = 'intro'; b.z = 360; b.face = -1;
+      b.st = 'intro'; b.z = type === 'boss2' ? 0 : 360; b.face = -1;
       enemies.push(b); introBoss = b; introT = 0; introLand = false; scene = 'bossintro';
       AUDIO.bossMusic(stageIdx);
       continue;
@@ -359,7 +359,7 @@ function spawnWave(w) {
   }
 }
 function mkEnemy(type, x, y) {
-  const base = ET[type];
+  const base = type==='boss3'&&USE_AURELION_V133?{...ET[type],h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
   const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
@@ -378,7 +378,7 @@ function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life:
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
 function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
-function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, barel: id==='player'?barelPlayerFrame():null, named: id==='player'?namedPlayerFrame():null }); }
+function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'&&USE_AURELION_V133?aurelionGhostFrame():null, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, barel: id==='player'?barelPlayerFrame():null, named: id==='player'?namedPlayerFrame():null }); }
 function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
 function dropItem(type, x, y) {
@@ -414,8 +414,8 @@ function canHit(e) { return e.st !== 'dead' && e.st !== 'down' && e.inv <= 0 && 
 function startAtk(n) {
   const p = player;
   p.st = 'atk'; p.t = 0; p.buf = 0; p.hitSet = new Set(); p.x0 = p.x; p.wave = false; p.smash = false;
-  if (n === 'air') { p.atk = 'air'; sfx('swing', 2); return; }
-  p.combo = n; p.atk = ['c1', 'c2', 'c3'][n];
+  if (n === 'air') { p.atk = 'air';reactAurelionAttack(); sfx('swing', 2); return; }
+  p.combo = n; p.atk = ['c1', 'c2', 'c3'][n];reactAurelionAttack();
   sfx('swing', n);
 }
 
@@ -481,7 +481,7 @@ function startDash(d) {
 
 function startSpecial() {
   const p = player;
-  p.st = 'special'; p.t = 0; p.sp = 0; p.vx = 0; p.combo = 0; p.buf = 0; p.spHits = 0; p.spFin = false; p.spDash = false;
+  p.st = 'special'; p.t = 0; p.sp = 0; p.vx = 0; p.combo = 0; p.buf = 0; p.spHits = 0; p.spFin = false; p.spDash = false;reactAurelionAttack();
   // 목표: 바라보는 쪽에서 가장 가까운 적 (뒤쪽 적은 우선순위를 낮춘다)
   let best = null, bd = 1e9;
   for (const e of enemies) {
@@ -502,7 +502,6 @@ function updSpecial() {
   if (t >= 450 && t < 620) {                                     // 돌진: 목표 앞까지 순간 이동하며 붉은 잔상
     const u = ease((t - 450) / 150);
     p.x = lerp(p.spX0, p.spX - f * 52, u); p.y = lerp(p.spY0, p.spY, u);
-    if (every(t, 26)) ghost(p.x, p.y, p.z, 'player', f, '#ff3a4a', 240);
   }
   for (let k = 0; k < 4; k++) {                                  // 4연 베기: 각 베기의 스윙 중간에 적중
     const st = 620 + k * 160;
@@ -530,7 +529,7 @@ function specialHit(last, k) {
 
 function startCast() {
   const p = player;
-  p.st = 'cast'; p.t = 0; p.mg--; p.castFired = false; p.combo = 0; p.buf = 0; p.vx = 0;
+  p.st = 'cast'; p.t = 0; p.mg--; p.castFired = false; p.combo = 0; p.buf = 0; p.vx = 0;reactAurelionAttack();
   p.inv = Math.max(p.inv, 48);
   sfx('mcharge');
 }
@@ -576,6 +575,7 @@ function startSkill(id) {
   if (targets[0]) p.face = targets[0].x >= p.x ? 1 : -1;
   p.skillDest = clamp(targets[0] ? targets[0].x - p.face * 44 : p.x + p.face * 160,
     camX + 24, Math.min(camX + VW - 24, stage.len - 24));
+  reactAurelionAttack();
   if (id === 'thrust' || id === 'leap') sfx('spdash');
   else sfx('swing', id === 'slam' ? 2 : 1);
   return true;
@@ -793,6 +793,7 @@ function heal(n) {
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
 function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
+  if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
   if (e.phaseT > 0 || e.st === 'reviving' || e.st === 'dead' || e.invuln) return;
   const p = player;
   if (practice) practiceDone.add(p.st === 'skill' ? 'skill' : 'attack');
@@ -824,7 +825,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
     if (e.type!=='boss2' && !e.p2shown && e.hp <= e.max*.5) {
       e.p2shown=true;e.gr=0;e.grT=0;resetBossFx(e);
-      e.phaseT=72;e.st='rec';e.t=0;e.recT=36;e.z=e.vz=e.vx=0;e.invuln=true;
+      e.phaseT=72;if(isAurelion(e))beginAurelionTransition(e);e.st='rec';e.t=0;e.recT=36;e.z=e.vz=e.vx=0;e.invuln=true;
       hazards=hazards.filter(h=>h.type==='pwave');player.inv=Math.max(player.inv,90);
       sfx('phase2');floatText(e.x,e.y-e.d.h-40,'PHASE 2','#ff5a6a');return;
     }
@@ -845,7 +846,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
       if (e.type === 'boss3') spawnAdds(['rogue', 'rogue']);
       else if (e.type === 'boss4') spawnAdds(['archer', 'grunt']);
       else if (e.type === 'boss5') spawnAdds(['brute', 'archer']);
-    } else if (e.st === 'chase' || e.st === 'rec') { e.st = 'hurt'; e.t = 0; e.vx = dir; }
+    } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken')) { if(isAurelion(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
   if (e.type === 'brute' && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
@@ -875,8 +876,9 @@ function startAttack(e, pat) {
 // 체력 절반 이하(2페이즈)에서는 탄 수가 늘고 쿨타임이 짧아진다
 function bossColors(e) { return e.type === 'boss4' ? ['#eaf8ff','#7ad8ff','#365caa'] : e.type === 'boss5' ? ['#ffe4fa','#ff498d','#691a52'] : ['#fff3b8','#f3d26a','#d4a437']; }
 function phase2(e) { return !!e.p2shown; }
-function resetBossFx(e) { e.pat = null; e.bdx = 0; e.bdy = 0; e.alpha = 1; e.wash = null; e.invuln = false; e.hot = false; }
+function resetBossFx(e) { resetAurelionPattern(e); e.pat = null; e.bdx = 0; e.bdy = 0; e.alpha = 1; e.wash = null; e.invuln = false; e.hot = false; }
 function pickPat(e, adx, ady, p2) {
+  if(isAurelion(e))return pickAurelionPattern(e,adx,ady);
   if(e.type==='boss2')return pickMorgraPattern(e,adx,ady);
   p2=false;
   const near = adx < (e.type === 'boss1' ? 110 : 130) && ady < 34;   // 고라스 휩쓸기 사거리 ≈ 108px
@@ -904,15 +906,17 @@ function startPat(e, pat) {
   e.st = 'pat'; e.pat = pat; e.pt = 0; e.marks = {}; e.last = pat;
   e.face = player.x >= e.x ? 1 : -1;
   if(e.type==='boss2')initMorgraPattern(e);
+  if(isAurelion(e))initAurelionPattern(e);
   sfx('bwind');
 }
 function endPat(e, next) {
   resetBossFx(e);
   e.st = 'chase'; e.t = 0; e.wait = 0;
-  e.atkCd = Math.round((700 + Math.random() * 600) * (e.type==='boss2' && phase2(e) ? 0.8 : 1) / MS);
+  e.atkCd = isAurelion(e)?aurelionAttackGap(e):Math.round((700 + Math.random() * 600) * (e.type==='boss2' && phase2(e) ? 0.8 : 1) / MS);
   if (next) startPat(e, next);
 }
 function bossChase(e) {
+  if(isAurelion(e)){chaseAurelion(e);return;}
   const p = player, d = e.d, dx = p.x - e.x, dy = p.y - e.y, adx = Math.abs(dx);
   e.face = dx >= 0 ? 1 : -1;
   if (p.st === 'dead') return;
@@ -934,7 +938,7 @@ function alignY(e, k) { e.y += clamp(player.y - e.y, -k, k); }   // 근접 패�
 
 function runPat(e) {
   const count=hazards.length;
-  if(e.type==='boss2')runMorgraPattern(e);else runLegacyPat(e);
+  if(isAurelion(e))runAurelionPattern(e);else if(e.type==='boss2')runMorgraPattern(e);else runLegacyPat(e);
   for(let i=count;i<hazards.length;i++) {
     hazards[i].owner ??= e;
     hazards[i].damageScale ??= e.p2shown?(e.type==='boss2'?1.5:1.3):1;
@@ -1174,6 +1178,7 @@ function slamImpact(e) {
 }
 
 function updEnemy(e) {
+  if(updateAurelionState(e))return;
   if(e.st==='reviving'){updateMorgraRevival(e);return;}
   if(e.morgraCooldown>0)e.morgraCooldown--;
   if (e.phaseT > 0 && e.st !== 'dead') {
@@ -1306,7 +1311,7 @@ function updHazards() {
   const p = player, off = z => z.x < camX - 60 || z.x > camX + VW + 60;
   for (const z of hazards) {
     z.age += MS;
-    if(updateMorgraHazard(z))continue;
+    if(updateAurelionHazard(z)||updateMorgraHazard(z))continue;
     if (z.owner && ['dead', 'down', 'stun'].includes(z.owner.st) && ['rift', 'eclipse'].includes(z.type)) { z.dead = true; continue; }
     switch (z.type) {
       case 'rift': {
@@ -1535,9 +1540,10 @@ function updFx() {
 function updIntro() {
   const b = introBoss;
   introT += MS;
-  const u = introT / INTRO_MS;
-  b.z = b.type === 'boss3' ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
-  if (!introLand && u >= 0.25) {
+  const duration=aurelionIntroDuration(b),u = introT / duration;
+  if(isAurelion(b))updateAurelionIntro(b);
+  b.z = (b.type === 'boss2' || b.type === 'boss3') ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
+  if (!introLand && u >= 0.25 && b.type !== 'boss2' && !isAurelion(b)) {
     introLand = true; b.z = 0; shake = 22; sfx('land');
     for (let k = 0; k < 7; k++) burst(b.x + (k - 3) * 10, b.y, 4, ['#fff0c0', '#c8b890', '#8a7a5a']);
     impact(b.x, b.y, 10, 2, 1);
@@ -1545,7 +1551,7 @@ function updIntro() {
   if (shake > 0) shake *= 0.85;
   if (flashT > 0) flashT -= MS;
   updFx();
-  if (introT >= INTRO_MS) { scene = 'play'; b.st = 'chase'; b.atkCd = 40; player.inv = Math.max(player.inv, 18); }
+  if (introT + .001 >= duration) { scene = 'play'; b.st = 'chase'; b.atkCd = 40; player.inv = Math.max(player.inv, 18); }
 }
 function introPoseT(u) { return u < 0.28 ? 0 : u < 0.5 ? 500 * ease((u - 0.28) / 0.22) : u < 0.8 ? 500 : 500 * (1 - ease((u - 0.8) / 0.2)); }
 // Recovery never erases damage/death penalties. S/A require a deathless stage.
@@ -1960,6 +1966,7 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if(drawAurelion(e))return;
   if(drawMorgra(e))return;
   if (drawGorath(e)) return;
   if (drawNamedEnemy(e)) return;
@@ -2020,6 +2027,7 @@ function drawEnemy(e) {
   present(F, sx, e.y - e.z + bob, alpha, lying, e.face, S.gy, SC * (e.boss ? BOSS_VISUAL_SCALE : 1));
 }
 function drawGhost(g) {
+  if(g.aurelion&&paintAurelion(g.aurelion,g.x,g.y-g.z,g.face,.3*(1-g.age/g.life)))return;
   if(g.gorath && paintGorath(g.gorath,g.x,g.y-g.z,g.face,.3*(1-g.age/g.life),BOSS_VISUAL_SCALE))return;
   if(g.barel && paintBarel(g.barel,g,.3*(1-g.age/g.life)))return;
   if(g.named && paintNamedFrame(g.named,{...g,alpha:.3*(1-g.age/g.life)}))return;
@@ -2454,23 +2462,10 @@ function drawTopFx(L) {
   for (const e of enemies) {                       // 황금왕 2페이즈: 왕관에서 불티
     if (e.type === 'boss5' && e.st !== 'dead')
       for (let i = 0; i < 4; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 50, fxY(e.y, e.z + 60 + Math.random() * 100), Math.random() < 0.5 ? '#ff498d' : '#c48adb');
-    if (e.type === 'boss3' && phase2(e) && e.st !== 'dead')
+    if (e.type === 'boss3' && !isAurelion(e) && phase2(e) && e.st !== 'dead')
       for (let i = 0; i < 5; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 16, fxY(e.y, e.z + 138) - Math.random() * 12, Math.random() < 0.5 ? '#ffd23a' : '#ff7a1a');
   }
   const p = player;
-  if (p.st === 'special') {
-    const sp = p.t * MS, f = p.face, px = fxX(p.x), py = fxY(p.y, p.z);
-    if (sp < 640) aura(L, px, py - 2, sp, '#ff3a4a', '#ff9aa6');
-    if (sp >= 450 && sp < 620 && Math.floor(sp / 24) % 2 === 0) {
-      for (let i = 0; i < 4; i++) L.line(px - f * (12 + i * 5), py - 34 + i * 8, px - f * (26 + i * 7), py - 34 + i * 8, '#ff9aa6');
-    }
-    const cx = fxX(p.spX), cy = fxY(p.spY, 68), AN = [-40, 40, 0, -18];
-    for (let k = 0; k < 4; k++) {                  // 4연 베기의 붉은 베기 선
-      const age = sp - (700 + k * 160), u = Math.cos(AN[k] * RAD) * f, v = Math.sin(AN[k] * RAD);
-      if (age >= 0 && age <= 220) slashLine(L, cx - u * 30, cy + v * 30, cx + u * 30, cy - v * 30, Math.min(1, age / 50));
-    }
-    if (sp >= 1570 && sp < 1950) moon(L, cx, cy, Math.round(lerp(8, 32, ease((sp - 1570) / 220))), (sp - 1570) / 380, f < 0);
-  }
   if (p.st === 'skill' && !(NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth && namedPlayerFrame())) {
     const t = p.t * MS, px = fxX(p.x), py = fxY(p.y, p.z + 54), f = p.face;
     if (p.skill === 'thrust' && t >= 170 && t < 470) {
@@ -2602,6 +2597,7 @@ function portraitHD(id) {
   return c;
 }
 function portrait(id) {
+  if(id==='boss3'&&getAurelionPortrait())return getAurelionPortrait();
   if(id==='boss2' && getMorgraPortrait())return getMorgraPortrait();
   if(id==='boss1' && getGorathPortrait())return getGorathPortrait();
   if(id==='player' && BAREL_PORTRAIT.naturalWidth)return BAREL_PORTRAIT;
@@ -2771,7 +2767,7 @@ function updateSkillButtons() {
 
 function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별, 공격 예고 !
   if (e.st === 'dead') return;
-  const h = e.d.h * e.d.s, sx = e.x - camX, top = e.y - e.z - h;
+  const h = isAurelion(e)?240*AURELION_K:e.d.h * e.d.s, sx = e.x - camX, top = e.y - e.z - h;
   if (e.st === 'stun') {
     for (let i = 0; i < 4; i++) {
       const a = tick * 0.12 + i * Math.PI / 2;
@@ -2779,7 +2775,7 @@ function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별,
     }
   }
   const tele=e.type==='boss2'?(morgraMoves[e.morgraMove]?.phases?.startup?.[1]+1||0)*MS:(TELE[e.pat]||0);
-  const warnNow = (e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
+  const warnNow = isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
   if (warnNow) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
 }
 
@@ -2827,6 +2823,7 @@ function render() {
     enemies.forEach(drawEnemyOverlay);
     drawGorathHazards();
     drawMorgraHazards();
+    drawAurelionHazards();
     drawGorathGrab();
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }
@@ -2834,7 +2831,7 @@ function render() {
   drawVignette();
   ctx.restore();
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
-  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / INTRO_MS); if (introBoss) drawBossBar(introBoss); }
+  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / aurelionIntroDuration(introBoss)); if (introBoss) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
 
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
