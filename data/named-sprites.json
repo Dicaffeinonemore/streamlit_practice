@@ -126,6 +126,60 @@
         1672,
         941
       ]
+    },
+    "player_walk": {
+      "filename": "암흑 기사 대검 보행 사이클 스프라이트.png",
+      "path": "assets/named/player_walk.png",
+      "sha256": "055e16da579705d5c942cdb4f043c94ce101073d32bac9a4ecf9a64170e68faa",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "heavy1": {
+      "filename": "1스테이지 중기사.png",
+      "path": "assets/named/heavy1.png",
+      "sha256": "ae9e6319cb2caf9da9b92ec02a8afa2784da6eb24269bf64a13cebf78e08f049",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "heavy2": {
+      "filename": "2스테이지 중기사.png",
+      "path": "assets/named/heavy2.png",
+      "sha256": "92c95c9eca676e51422ce0bacd296eb6cb99bbaa67d4e77ba7db64a6ba9fb9c3",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "heavy3": {
+      "filename": "3스테이지 중기사.png",
+      "path": "assets/named/heavy3.png",
+      "sha256": "e32733d4b8cda7bed2cf625964e27684b6f8a58cde58d8f7f18dfe9fe84c9d57",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "heavy4": {
+      "filename": "4스테이지 중기사.png",
+      "path": "assets/named/heavy4.png",
+      "sha256": "46d4ab84fd74480238a830f429b2bde47b7e7c975a2238a1d381b8dc649bb42d",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "heavy5": {
+      "filename": "5스테이지 중기사.png",
+      "path": "assets/named/heavy5.png",
+      "sha256": "e8837afbbff9cc65c3f368a02bc89d034b58089a6263aee253ee770fce84b5a9",
+      "size": [
+        1672,
+        941
+      ]
     }
   },
   "clips": {
@@ -196,22 +250,22 @@
     },
     "player": {
       "dash": [
-        426,
-        427,
-        428,
-        429,
-        430,
-        431,
-        432,
-        433
+        433,
+        434,
+        435,
+        436,
+        437,
+        438,
+        439,
+        440
       ],
       "whirl": [
-        440,
-        441,
-        442,
-        443,
-        444,
-        445
+        447,
+        448,
+        449,
+        450,
+        451,
+        452
       ],
       "leap": [
         59,
@@ -234,54 +288,61 @@
         418
       ],
       "walk": [
-        419
+        419,
+        420,
+        421,
+        422,
+        423,
+        424,
+        425,
+        426
       ],
       "crouch": [
-        420
+        427
       ],
       "swing": [
-        421
+        428
       ],
       "overhead": [
-        422
+        429
       ],
       "stab": [
-        423
+        430
       ],
       "hurt": [
-        424
+        431
       ],
       "death": [
-        425
+        432
       ],
       "rush": [
-        434,
-        435,
-        436,
-        437,
-        438,
-        439
+        441,
+        442,
+        443,
+        444,
+        445,
+        446
       ],
       "jump": [
-        446,
-        447
+        453,
+        454
       ],
       "plunge": [
-        448
+        455
       ],
       "impact": [
-        449
+        456
       ],
       "cast": [
-        450,
-        451,
-        452
+        457,
+        458,
+        459
       ],
       "wave": [
-        453,
-        454,
-        455,
-        456
+        460,
+        461,
+        462,
+        463
       ]
     },
     "boss2p2": {
@@ -828,6 +889,151 @@
       "death": [
         416,
         417
+      ]
+    },
+    "stage1_brute": {
+      "idle": [
+        464,
+        465,
+        466
+      ],
+      "walk": [
+        467,
+        468,
+        469,
+        470
+      ],
+      "attack": [
+        471,
+        472,
+        473,
+        474,
+        475
+      ],
+      "hurt": [
+        476,
+        477
+      ],
+      "death": [
+        478,
+        479,
+        480
+      ]
+    },
+    "stage2_brute": {
+      "idle": [
+        481,
+        482,
+        483
+      ],
+      "walk": [
+        484,
+        485,
+        486,
+        487
+      ],
+      "attack": [
+        488,
+        489,
+        490,
+        491,
+        492
+      ],
+      "hurt": [
+        493,
+        494
+      ],
+      "death": [
+        495,
+        496,
+        497
+      ]
+    },
+    "stage3_brute": {
+      "idle": [
+        498,
+        499,
+        500
+      ],
+      "walk": [
+        501,
+        502,
+        503,
+        504
+      ],
+      "attack": [
+        505,
+        506,
+        507,
+        508,
+        509
+      ],
+      "hurt": [
+        510,
+        511
+      ],
+      "death": [
+        512,
+        513,
+        514
+      ]
+    },
+    "stage4_brute": {
+      "idle": [
+        515,
+        516,
+        517
+      ],
+      "walk": [
+        518,
+        519,
+        520,
+        521
+      ],
+      "attack": [
+        522,
+        523,
+        524,
+        525,
+        526
+      ],
+      "hurt": [
+        527,
+        528
+      ],
+      "death": [
+        529,
+        530,
+        531
+      ]
+    },
+    "stage5_brute": {
+      "idle": [
+        532,
+        533,
+        534
+      ],
+      "walk": [
+        535,
+        536,
+        537,
+        538
+      ],
+      "attack": [
+        539,
+        540,
+        541,
+        542,
+        543
+      ],
+      "hurt": [
+        544,
+        545
+      ],
+      "death": [
+        546,
+        547,
+        548
       ]
     }
   },
@@ -10052,28 +10258,182 @@
     },
     {
       "id": 419,
-      "source": "player_base",
+      "source": "player_walk",
       "rect": [
-        429,
-        149,
-        814,
-        480
+        24,
+        140,
+        418,
+        489
       ],
       "anchor": [
-        231,
-        321
+        251,
+        338
       ],
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
         631,
         4944,
-        385,
-        331
+        394,
+        349
       ]
     },
     {
       "id": 420,
+      "source": "player_walk",
+      "rect": [
+        433,
+        140,
+        852,
+        490
+      ],
+      "anchor": [
+        262,
+        338
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1027,
+        4944,
+        419,
+        350
+      ]
+    },
+    {
+      "id": 421,
+      "source": "player_walk",
+      "rect": [
+        865,
+        143,
+        1256,
+        487
+      ],
+      "anchor": [
+        240,
+        335
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1448,
+        4944,
+        391,
+        344
+      ]
+    },
+    {
+      "id": 422,
+      "source": "player_walk",
+      "rect": [
+        1266,
+        143,
+        1654,
+        490
+      ],
+      "anchor": [
+        259,
+        335
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        0,
+        5296,
+        388,
+        347
+      ]
+    },
+    {
+      "id": 423,
+      "source": "player_walk",
+      "rect": [
+        31,
+        562,
+        416,
+        898
+      ],
+      "anchor": [
+        244,
+        318
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        390,
+        5296,
+        385,
+        336
+      ]
+    },
+    {
+      "id": 424,
+      "source": "player_walk",
+      "rect": [
+        443,
+        551,
+        855,
+        900
+      ],
+      "anchor": [
+        252,
+        329
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        777,
+        5296,
+        412,
+        349
+      ]
+    },
+    {
+      "id": 425,
+      "source": "player_walk",
+      "rect": [
+        867,
+        559,
+        1227,
+        890
+      ],
+      "anchor": [
+        238,
+        321
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1191,
+        5296,
+        360,
+        331
+      ]
+    },
+    {
+      "id": 426,
+      "source": "player_walk",
+      "rect": [
+        1287,
+        551,
+        1659,
+        890
+      ],
+      "anchor": [
+        238,
+        329
+      ],
+      "scale": 0.36,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        1553,
+        5296,
+        372,
+        339
+      ]
+    },
+    {
+      "id": 427,
       "source": "player_base",
       "rect": [
         831,
@@ -10088,14 +10448,14 @@
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
-        1018,
-        4944,
+        0,
+        5647,
         333,
         267
       ]
     },
     {
-      "id": 421,
+      "id": 428,
       "source": "player_base",
       "rect": [
         1247,
@@ -10110,14 +10470,14 @@
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
-        1353,
-        4944,
+        335,
+        5647,
         425,
         270
       ]
     },
     {
-      "id": 422,
+      "id": 429,
       "source": "player_base",
       "rect": [
         20,
@@ -10132,14 +10492,14 @@
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
-        0,
-        5283,
+        762,
+        5647,
         344,
         414
       ]
     },
     {
-      "id": 423,
+      "id": 430,
       "source": "player_base",
       "rect": [
         394,
@@ -10154,14 +10514,14 @@
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
-        346,
-        5283,
+        1108,
+        5647,
         531,
         240
       ]
     },
     {
-      "id": 424,
+      "id": 431,
       "source": "player_base",
       "rect": [
         925,
@@ -10176,14 +10536,14 @@
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
-        879,
-        5283,
+        1641,
+        5647,
         300,
         291
       ]
     },
     {
-      "id": 425,
+      "id": 432,
       "source": "player_base",
       "rect": [
         1225,
@@ -10198,14 +10558,14 @@
       "scale": 0.36,
       "edgeFragmentPixels": 0,
       "atlas": [
-        1181,
-        5283,
+        0,
+        6063,
         447,
         168
       ]
     },
     {
-      "id": 426,
+      "id": 433,
       "source": "player_moves",
       "rect": [
         19,
@@ -10220,14 +10580,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 10,
       "atlas": [
-        1630,
-        5283,
+        449,
+        6063,
         181,
         146
       ]
     },
     {
-      "id": 427,
+      "id": 434,
       "source": "player_moves",
       "rect": [
         200,
@@ -10242,14 +10602,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 25,
       "atlas": [
-        1813,
-        5283,
+        632,
+        6063,
         210,
         145
       ]
     },
     {
-      "id": 428,
+      "id": 435,
       "source": "player_moves",
       "rect": [
         410,
@@ -10264,14 +10624,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 5,
       "atlas": [
-        0,
-        5699,
+        844,
+        6063,
         210,
         133
       ]
     },
     {
-      "id": 429,
+      "id": 436,
       "source": "player_moves",
       "rect": [
         620,
@@ -10286,14 +10646,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 18,
       "atlas": [
-        212,
-        5699,
+        1056,
+        6063,
         214,
         175
       ]
     },
     {
-      "id": 430,
+      "id": 437,
       "source": "player_moves",
       "rect": [
         840,
@@ -10308,14 +10668,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 38,
       "atlas": [
-        428,
-        5699,
+        1272,
+        6063,
         207,
         133
       ]
     },
     {
-      "id": 431,
+      "id": 438,
       "source": "player_moves",
       "rect": [
         1047,
@@ -10330,14 +10690,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 201,
       "atlas": [
-        637,
-        5699,
+        1481,
+        6063,
         193,
         130
       ]
     },
     {
-      "id": 432,
+      "id": 439,
       "source": "player_moves",
       "rect": [
         1240,
@@ -10352,14 +10712,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 22,
       "atlas": [
-        832,
-        5699,
+        1676,
+        6063,
         191,
         144
       ]
     },
     {
-      "id": 433,
+      "id": 440,
       "source": "player_moves",
       "rect": [
         1450,
@@ -10374,14 +10734,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 164,
       "atlas": [
-        1025,
-        5699,
+        0,
+        6240,
         178,
         145
       ]
     },
     {
-      "id": 434,
+      "id": 441,
       "source": "player_moves",
       "rect": [
         27,
@@ -10396,14 +10756,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 3,
       "atlas": [
-        1205,
-        5699,
+        180,
+        6240,
         182,
         165
       ]
     },
     {
-      "id": 435,
+      "id": 442,
       "source": "player_moves",
       "rect": [
         222,
@@ -10418,14 +10778,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 28,
       "atlas": [
-        1389,
-        5699,
+        364,
+        6240,
         283,
         173
       ]
     },
     {
-      "id": 436,
+      "id": 443,
       "source": "player_moves",
       "rect": [
         505,
@@ -10440,14 +10800,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 16,
       "atlas": [
-        1674,
-        5699,
+        649,
+        6240,
         285,
         177
       ]
     },
     {
-      "id": 437,
+      "id": 444,
       "source": "player_moves",
       "rect": [
         790,
@@ -10462,14 +10822,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 134,
       "atlas": [
-        0,
-        5878,
+        936,
+        6240,
         330,
         165
       ]
     },
     {
-      "id": 438,
+      "id": 445,
       "source": "player_moves",
       "rect": [
         1120,
@@ -10484,14 +10844,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 11,
       "atlas": [
-        332,
-        5878,
+        1268,
+        6240,
         345,
         165
       ]
     },
     {
-      "id": 439,
+      "id": 446,
       "source": "player_moves",
       "rect": [
         1465,
@@ -10506,14 +10866,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 7,
       "atlas": [
-        679,
-        5878,
+        1615,
+        6240,
         171,
         155
       ]
     },
     {
-      "id": 440,
+      "id": 447,
       "source": "player_moves",
       "rect": [
         31,
@@ -10528,14 +10888,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 8,
       "atlas": [
-        852,
-        5878,
+        1788,
+        6240,
         189,
         169
       ]
     },
     {
-      "id": 441,
+      "id": 448,
       "source": "player_moves",
       "rect": [
         224,
@@ -10550,14 +10910,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 89,
       "atlas": [
-        1043,
-        5878,
+        0,
+        6419,
         326,
         168
       ]
     },
     {
-      "id": 442,
+      "id": 449,
       "source": "player_moves",
       "rect": [
         550,
@@ -10572,14 +10932,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 22,
       "atlas": [
-        1371,
-        5878,
+        328,
+        6419,
         275,
         153
       ]
     },
     {
-      "id": 443,
+      "id": 450,
       "source": "player_moves",
       "rect": [
         825,
@@ -10594,14 +10954,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 25,
       "atlas": [
-        1648,
-        5878,
+        605,
+        6419,
         285,
         169
       ]
     },
     {
-      "id": 444,
+      "id": 451,
       "source": "player_moves",
       "rect": [
         1110,
@@ -10616,14 +10976,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 3,
       "atlas": [
-        0,
-        6049,
+        892,
+        6419,
         350,
         169
       ]
     },
     {
-      "id": 445,
+      "id": 452,
       "source": "player_moves",
       "rect": [
         1460,
@@ -10638,14 +10998,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 7,
       "atlas": [
-        352,
-        6049,
+        1244,
+        6419,
         180,
         159
       ]
     },
     {
-      "id": 446,
+      "id": 453,
       "source": "player_moves",
       "rect": [
         240,
@@ -10660,14 +11020,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 5,
       "atlas": [
-        534,
-        6049,
+        1426,
+        6419,
         224,
         206
       ]
     },
     {
-      "id": 447,
+      "id": 454,
       "source": "player_moves",
       "rect": [
         470,
@@ -10682,14 +11042,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 36,
       "atlas": [
-        760,
-        6049,
+        1652,
+        6419,
         219,
         213
       ]
     },
     {
-      "id": 448,
+      "id": 455,
       "source": "player_moves",
       "rect": [
         695,
@@ -10704,14 +11064,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 15,
       "atlas": [
-        981,
-        6049,
+        0,
+        6634,
         200,
         205
       ]
     },
     {
-      "id": 449,
+      "id": 456,
       "source": "player_moves",
       "rect": [
         895,
@@ -10726,14 +11086,14 @@
       "scale": 0.5,
       "edgeFragmentPixels": 9,
       "atlas": [
-        1183,
-        6049,
+        202,
+        6634,
         342,
         208
       ]
     },
     {
-      "id": 450,
+      "id": 457,
       "source": "player_moves",
       "rect": [
         19,
@@ -10748,14 +11108,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 5,
       "atlas": [
-        1527,
-        6049,
+        546,
+        6634,
         201,
         150
       ]
     },
     {
-      "id": 451,
+      "id": 458,
       "source": "player_moves",
       "rect": [
         220,
@@ -10770,14 +11130,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 1,
       "atlas": [
-        1730,
-        6049,
+        749,
+        6634,
         285,
         137
       ]
     },
     {
-      "id": 452,
+      "id": 459,
       "source": "player_moves",
       "rect": [
         505,
@@ -10792,14 +11152,14 @@
       "scale": 0.72,
       "edgeFragmentPixels": 4,
       "atlas": [
-        0,
-        6264,
+        1036,
+        6634,
         285,
         130
       ]
     },
     {
-      "id": 453,
+      "id": 460,
       "source": "player_moves",
       "rect": [
         790,
@@ -10814,14 +11174,14 @@
       "scale": 0.4,
       "edgeFragmentPixels": 11,
       "atlas": [
-        287,
-        6264,
+        1323,
+        6634,
         155,
         123
       ]
     },
     {
-      "id": 454,
+      "id": 461,
       "source": "player_moves",
       "rect": [
         945,
@@ -10836,14 +11196,14 @@
       "scale": 0.4,
       "edgeFragmentPixels": 2,
       "atlas": [
-        444,
-        6264,
+        1480,
+        6634,
         175,
         120
       ]
     },
     {
-      "id": 455,
+      "id": 462,
       "source": "player_moves",
       "rect": [
         1120,
@@ -10858,14 +11218,14 @@
       "scale": 0.4,
       "edgeFragmentPixels": 8,
       "atlas": [
-        621,
-        6264,
+        1657,
+        6634,
         167,
         107
       ]
     },
     {
-      "id": 456,
+      "id": 463,
       "source": "player_moves",
       "rect": [
         1293,
@@ -10880,10 +11240,1880 @@
       "scale": 0.4,
       "edgeFragmentPixels": 0,
       "atlas": [
-        790,
-        6264,
+        1826,
+        6634,
         158,
         111
+      ]
+    },
+    {
+      "id": 464,
+      "source": "heavy1",
+      "rect": [
+        17,
+        7,
+        283,
+        240
+      ],
+      "anchor": [
+        118,
+        231
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 328,
+      "atlas": [
+        0,
+        6844,
+        266,
+        233
+      ]
+    },
+    {
+      "id": 465,
+      "source": "heavy1",
+      "rect": [
+        283,
+        9,
+        526,
+        240
+      ],
+      "anchor": [
+        106,
+        229
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 9,
+      "atlas": [
+        268,
+        6844,
+        243,
+        231
+      ]
+    },
+    {
+      "id": 466,
+      "source": "heavy1",
+      "rect": [
+        526,
+        9,
+        813,
+        240
+      ],
+      "anchor": [
+        104,
+        229
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 3,
+      "atlas": [
+        513,
+        6844,
+        287,
+        231
+      ]
+    },
+    {
+      "id": 467,
+      "source": "heavy1",
+      "rect": [
+        17,
+        240,
+        300,
+        455
+      ],
+      "anchor": [
+        135,
+        210
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 124,
+      "atlas": [
+        802,
+        6844,
+        283,
+        215
+      ]
+    },
+    {
+      "id": 468,
+      "source": "heavy1",
+      "rect": [
+        300,
+        240,
+        555,
+        455
+      ],
+      "anchor": [
+        105,
+        210
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 204,
+      "atlas": [
+        1087,
+        6844,
+        255,
+        215
+      ]
+    },
+    {
+      "id": 469,
+      "source": "heavy1",
+      "rect": [
+        555,
+        240,
+        800,
+        455
+      ],
+      "anchor": [
+        105,
+        210
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 130,
+      "atlas": [
+        1344,
+        6844,
+        245,
+        215
+      ]
+    },
+    {
+      "id": 470,
+      "source": "heavy1",
+      "rect": [
+        800,
+        242,
+        1093,
+        455
+      ],
+      "anchor": [
+        114,
+        208
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 9,
+      "atlas": [
+        1591,
+        6844,
+        293,
+        213
+      ]
+    },
+    {
+      "id": 471,
+      "source": "heavy1",
+      "rect": [
+        0,
+        455,
+        280,
+        680
+      ],
+      "anchor": [
+        158,
+        220
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 19,
+      "atlas": [
+        0,
+        7079,
+        280,
+        225
+      ]
+    },
+    {
+      "id": 472,
+      "source": "heavy1",
+      "rect": [
+        280,
+        467,
+        570,
+        680
+      ],
+      "anchor": [
+        130,
+        208
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 20,
+      "atlas": [
+        282,
+        7079,
+        290,
+        213
+      ]
+    },
+    {
+      "id": 473,
+      "source": "heavy1",
+      "rect": [
+        570,
+        461,
+        970,
+        680
+      ],
+      "anchor": [
+        110,
+        214
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 2,
+      "atlas": [
+        574,
+        7079,
+        400,
+        219
+      ]
+    },
+    {
+      "id": 474,
+      "source": "heavy1",
+      "rect": [
+        970,
+        463,
+        1340,
+        680
+      ],
+      "anchor": [
+        95,
+        212
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 145,
+      "atlas": [
+        976,
+        7079,
+        370,
+        217
+      ]
+    },
+    {
+      "id": 475,
+      "source": "heavy1",
+      "rect": [
+        1340,
+        463,
+        1666,
+        680
+      ],
+      "anchor": [
+        105,
+        212
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 211,
+      "atlas": [
+        1348,
+        7079,
+        326,
+        217
+      ]
+    },
+    {
+      "id": 476,
+      "source": "heavy1",
+      "rect": [
+        17,
+        680,
+        305,
+        911
+      ],
+      "anchor": [
+        138,
+        215
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 71,
+      "atlas": [
+        1676,
+        7079,
+        288,
+        231
+      ]
+    },
+    {
+      "id": 477,
+      "source": "heavy1",
+      "rect": [
+        305,
+        680,
+        565,
+        909
+      ],
+      "anchor": [
+        113,
+        215
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 116,
+      "atlas": [
+        0,
+        7312,
+        260,
+        229
+      ]
+    },
+    {
+      "id": 478,
+      "source": "heavy1",
+      "rect": [
+        565,
+        729,
+        887,
+        923
+      ],
+      "anchor": [
+        142,
+        171
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 5,
+      "atlas": [
+        262,
+        7312,
+        322,
+        194
+      ]
+    },
+    {
+      "id": 479,
+      "source": "heavy1",
+      "rect": [
+        895,
+        706,
+        1250,
+        923
+      ],
+      "anchor": [
+        145,
+        194
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 6,
+      "atlas": [
+        586,
+        7312,
+        355,
+        217
+      ]
+    },
+    {
+      "id": 480,
+      "source": "heavy1",
+      "rect": [
+        1250,
+        688,
+        1655,
+        925
+      ],
+      "anchor": [
+        200,
+        212
+      ],
+      "scale": 0.53,
+      "edgeFragmentPixels": 3,
+      "atlas": [
+        943,
+        7312,
+        405,
+        237
+      ]
+    },
+    {
+      "id": 481,
+      "source": "heavy2",
+      "rect": [
+        37,
+        80,
+        285,
+        340
+      ],
+      "anchor": [
+        137,
+        251
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 244,
+      "atlas": [
+        1350,
+        7312,
+        248,
+        260
+      ]
+    },
+    {
+      "id": 482,
+      "source": "heavy2",
+      "rect": [
+        285,
+        78,
+        495,
+        340
+      ],
+      "anchor": [
+        105,
+        253
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 88,
+      "atlas": [
+        1600,
+        7312,
+        210,
+        262
+      ]
+    },
+    {
+      "id": 483,
+      "source": "heavy2",
+      "rect": [
+        495,
+        76,
+        699,
+        340
+      ],
+      "anchor": [
+        115,
+        255
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 50,
+      "atlas": [
+        1812,
+        7312,
+        204,
+        264
+      ]
+    },
+    {
+      "id": 484,
+      "source": "heavy2",
+      "rect": [
+        716,
+        78,
+        975,
+        340
+      ],
+      "anchor": [
+        149,
+        253
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 42,
+      "atlas": [
+        0,
+        7578,
+        259,
+        262
+      ]
+    },
+    {
+      "id": 485,
+      "source": "heavy2",
+      "rect": [
+        975,
+        90,
+        1190,
+        340
+      ],
+      "anchor": [
+        120,
+        241
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 53,
+      "atlas": [
+        261,
+        7578,
+        215,
+        250
+      ]
+    },
+    {
+      "id": 486,
+      "source": "heavy2",
+      "rect": [
+        1190,
+        80,
+        1415,
+        340
+      ],
+      "anchor": [
+        115,
+        251
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 66,
+      "atlas": [
+        478,
+        7578,
+        225,
+        260
+      ]
+    },
+    {
+      "id": 487,
+      "source": "heavy2",
+      "rect": [
+        1415,
+        76,
+        1646,
+        340
+      ],
+      "anchor": [
+        100,
+        255
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 13,
+      "atlas": [
+        705,
+        7578,
+        231,
+        264
+      ]
+    },
+    {
+      "id": 488,
+      "source": "heavy2",
+      "rect": [
+        29,
+        360,
+        280,
+        665
+      ],
+      "anchor": [
+        146,
+        297
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 807,
+      "atlas": [
+        938,
+        7578,
+        251,
+        305
+      ]
+    },
+    {
+      "id": 489,
+      "source": "heavy2",
+      "rect": [
+        280,
+        366,
+        560,
+        665
+      ],
+      "anchor": [
+        145,
+        291
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 424,
+      "atlas": [
+        1191,
+        7578,
+        280,
+        299
+      ]
+    },
+    {
+      "id": 490,
+      "source": "heavy2",
+      "rect": [
+        560,
+        366,
+        885,
+        665
+      ],
+      "anchor": [
+        160,
+        291
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 770,
+      "atlas": [
+        1473,
+        7578,
+        325,
+        299
+      ]
+    },
+    {
+      "id": 491,
+      "source": "heavy2",
+      "rect": [
+        885,
+        366,
+        1360,
+        665
+      ],
+      "anchor": [
+        125,
+        291
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 116,
+      "atlas": [
+        0,
+        7885,
+        475,
+        299
+      ]
+    },
+    {
+      "id": 492,
+      "source": "heavy2",
+      "rect": [
+        1360,
+        368,
+        1654,
+        665
+      ],
+      "anchor": [
+        145,
+        289
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 20,
+      "atlas": [
+        477,
+        7885,
+        294,
+        297
+      ]
+    },
+    {
+      "id": 493,
+      "source": "heavy2",
+      "rect": [
+        31,
+        680,
+        318,
+        910
+      ],
+      "anchor": [
+        157,
+        219
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 1,
+      "atlas": [
+        773,
+        7885,
+        287,
+        230
+      ]
+    },
+    {
+      "id": 494,
+      "source": "heavy2",
+      "rect": [
+        331,
+        680,
+        614,
+        912
+      ],
+      "anchor": [
+        149,
+        219
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 22,
+      "atlas": [
+        1062,
+        7885,
+        283,
+        232
+      ]
+    },
+    {
+      "id": 495,
+      "source": "heavy2",
+      "rect": [
+        620,
+        691,
+        925,
+        911
+      ],
+      "anchor": [
+        155,
+        208
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 13,
+      "atlas": [
+        1347,
+        7885,
+        305,
+        220
+      ]
+    },
+    {
+      "id": 496,
+      "source": "heavy2",
+      "rect": [
+        925,
+        699,
+        1210,
+        915
+      ],
+      "anchor": [
+        135,
+        200
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 46,
+      "atlas": [
+        1654,
+        7885,
+        285,
+        216
+      ]
+    },
+    {
+      "id": 497,
+      "source": "heavy2",
+      "rect": [
+        1210,
+        715,
+        1644,
+        912
+      ],
+      "anchor": [
+        240,
+        184
+      ],
+      "scale": 0.5,
+      "edgeFragmentPixels": 17,
+      "atlas": [
+        0,
+        8186,
+        434,
+        197
+      ]
+    },
+    {
+      "id": 498,
+      "source": "heavy3",
+      "rect": [
+        0,
+        63,
+        235,
+        340
+      ],
+      "anchor": [
+        140,
+        268
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 9,
+      "atlas": [
+        436,
+        8186,
+        235,
+        277
+      ]
+    },
+    {
+      "id": 499,
+      "source": "heavy3",
+      "rect": [
+        235,
+        65,
+        445,
+        340
+      ],
+      "anchor": [
+        115,
+        266
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 4,
+      "atlas": [
+        673,
+        8186,
+        210,
+        275
+      ]
+    },
+    {
+      "id": 500,
+      "source": "heavy3",
+      "rect": [
+        445,
+        64,
+        653,
+        340
+      ],
+      "anchor": [
+        115,
+        267
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 20,
+      "atlas": [
+        885,
+        8186,
+        208,
+        276
+      ]
+    },
+    {
+      "id": 501,
+      "source": "heavy3",
+      "rect": [
+        726,
+        80,
+        990,
+        344
+      ],
+      "anchor": [
+        154,
+        252
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 7,
+      "atlas": [
+        1095,
+        8186,
+        264,
+        264
+      ]
+    },
+    {
+      "id": 502,
+      "source": "heavy3",
+      "rect": [
+        990,
+        80,
+        1210,
+        344
+      ],
+      "anchor": [
+        115,
+        252
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 16,
+      "atlas": [
+        1361,
+        8186,
+        220,
+        264
+      ]
+    },
+    {
+      "id": 503,
+      "source": "heavy3",
+      "rect": [
+        1210,
+        80,
+        1430,
+        345
+      ],
+      "anchor": [
+        115,
+        252
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 9,
+      "atlas": [
+        1583,
+        8186,
+        220,
+        265
+      ]
+    },
+    {
+      "id": 504,
+      "source": "heavy3",
+      "rect": [
+        1430,
+        76,
+        1646,
+        344
+      ],
+      "anchor": [
+        115,
+        256
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 9,
+      "atlas": [
+        1805,
+        8186,
+        216,
+        268
+      ]
+    },
+    {
+      "id": 505,
+      "source": "heavy3",
+      "rect": [
+        17,
+        374,
+        325,
+        667
+      ],
+      "anchor": [
+        178,
+        289
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 2,
+      "atlas": [
+        0,
+        8465,
+        308,
+        293
+      ]
+    },
+    {
+      "id": 506,
+      "source": "heavy3",
+      "rect": [
+        325,
+        345,
+        600,
+        667
+      ],
+      "anchor": [
+        150,
+        318
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 48,
+      "atlas": [
+        310,
+        8465,
+        275,
+        322
+      ]
+    },
+    {
+      "id": 507,
+      "source": "heavy3",
+      "rect": [
+        600,
+        372,
+        1015,
+        668
+      ],
+      "anchor": [
+        210,
+        291
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 11,
+      "atlas": [
+        587,
+        8465,
+        415,
+        296
+      ]
+    },
+    {
+      "id": 508,
+      "source": "heavy3",
+      "rect": [
+        1015,
+        420,
+        1375,
+        668
+      ],
+      "anchor": [
+        130,
+        243
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 803,
+      "atlas": [
+        1004,
+        8465,
+        360,
+        248
+      ]
+    },
+    {
+      "id": 509,
+      "source": "heavy3",
+      "rect": [
+        1375,
+        377,
+        1611,
+        669
+      ],
+      "anchor": [
+        130,
+        286
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 40,
+      "atlas": [
+        1366,
+        8465,
+        236,
+        292
+      ]
+    },
+    {
+      "id": 510,
+      "source": "heavy3",
+      "rect": [
+        15,
+        683,
+        305,
+        923
+      ],
+      "anchor": [
+        160,
+        227
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 8,
+      "atlas": [
+        1604,
+        8465,
+        290,
+        240
+      ]
+    },
+    {
+      "id": 511,
+      "source": "heavy3",
+      "rect": [
+        305,
+        697,
+        565,
+        925
+      ],
+      "anchor": [
+        140,
+        213
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 4,
+      "atlas": [
+        0,
+        8789,
+        260,
+        228
+      ]
+    },
+    {
+      "id": 512,
+      "source": "heavy3",
+      "rect": [
+        565,
+        711,
+        930,
+        913
+      ],
+      "anchor": [
+        190,
+        199
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        262,
+        8789,
+        365,
+        202
+      ]
+    },
+    {
+      "id": 513,
+      "source": "heavy3",
+      "rect": [
+        930,
+        761,
+        1240,
+        925
+      ],
+      "anchor": [
+        170,
+        149
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 3,
+      "atlas": [
+        629,
+        8789,
+        310,
+        164
+      ]
+    },
+    {
+      "id": 514,
+      "source": "heavy3",
+      "rect": [
+        1240,
+        717,
+        1664,
+        923
+      ],
+      "anchor": [
+        220,
+        193
+      ],
+      "scale": 0.48,
+      "edgeFragmentPixels": 0,
+      "atlas": [
+        941,
+        8789,
+        424,
+        206
+      ]
+    },
+    {
+      "id": 515,
+      "source": "heavy4",
+      "rect": [
+        7,
+        64,
+        275,
+        360
+      ],
+      "anchor": [
+        163,
+        286
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 46,
+      "atlas": [
+        1367,
+        8789,
+        268,
+        296
+      ]
+    },
+    {
+      "id": 516,
+      "source": "heavy4",
+      "rect": [
+        275,
+        63,
+        500,
+        360
+      ],
+      "anchor": [
+        115,
+        287
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 26,
+      "atlas": [
+        1637,
+        8789,
+        225,
+        297
+      ]
+    },
+    {
+      "id": 517,
+      "source": "heavy4",
+      "rect": [
+        500,
+        64,
+        730,
+        360
+      ],
+      "anchor": [
+        120,
+        286
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 47,
+      "atlas": [
+        0,
+        9088,
+        230,
+        296
+      ]
+    },
+    {
+      "id": 518,
+      "source": "heavy4",
+      "rect": [
+        735,
+        66,
+        1018,
+        360
+      ],
+      "anchor": [
+        165,
+        284
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 26,
+      "atlas": [
+        232,
+        9088,
+        283,
+        294
+      ]
+    },
+    {
+      "id": 519,
+      "source": "heavy4",
+      "rect": [
+        1018,
+        69,
+        1230,
+        360
+      ],
+      "anchor": [
+        117,
+        281
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 275,
+      "atlas": [
+        517,
+        9088,
+        212,
+        291
+      ]
+    },
+    {
+      "id": 520,
+      "source": "heavy4",
+      "rect": [
+        1230,
+        66,
+        1440,
+        360
+      ],
+      "anchor": [
+        120,
+        284
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 25,
+      "atlas": [
+        731,
+        9088,
+        210,
+        294
+      ]
+    },
+    {
+      "id": 521,
+      "source": "heavy4",
+      "rect": [
+        1440,
+        66,
+        1656,
+        360
+      ],
+      "anchor": [
+        120,
+        284
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 2,
+      "atlas": [
+        943,
+        9088,
+        216,
+        294
+      ]
+    },
+    {
+      "id": 522,
+      "source": "heavy4",
+      "rect": [
+        15,
+        387,
+        280,
+        669
+      ],
+      "anchor": [
+        160,
+        275
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 248,
+      "atlas": [
+        1161,
+        9088,
+        265,
+        282
+      ]
+    },
+    {
+      "id": 523,
+      "source": "heavy4",
+      "rect": [
+        280,
+        386,
+        645,
+        670
+      ],
+      "anchor": [
+        160,
+        276
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 313,
+      "atlas": [
+        1428,
+        9088,
+        365,
+        284
+      ]
+    },
+    {
+      "id": 524,
+      "source": "heavy4",
+      "rect": [
+        645,
+        398,
+        965,
+        669
+      ],
+      "anchor": [
+        175,
+        264
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 247,
+      "atlas": [
+        0,
+        9386,
+        320,
+        271
+      ]
+    },
+    {
+      "id": 525,
+      "source": "heavy4",
+      "rect": [
+        965,
+        388,
+        1410,
+        665
+      ],
+      "anchor": [
+        155,
+        274
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 50,
+      "atlas": [
+        322,
+        9386,
+        445,
+        277
+      ]
+    },
+    {
+      "id": 526,
+      "source": "heavy4",
+      "rect": [
+        1410,
+        386,
+        1652,
+        666
+      ],
+      "anchor": [
+        130,
+        276
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 153,
+      "atlas": [
+        769,
+        9386,
+        242,
+        280
+      ]
+    },
+    {
+      "id": 527,
+      "source": "heavy4",
+      "rect": [
+        17,
+        680,
+        310,
+        929
+      ],
+      "anchor": [
+        173,
+        237
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 31,
+      "atlas": [
+        1013,
+        9386,
+        293,
+        249
+      ]
+    },
+    {
+      "id": 528,
+      "source": "heavy4",
+      "rect": [
+        310,
+        680,
+        600,
+        929
+      ],
+      "anchor": [
+        140,
+        237
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 63,
+      "atlas": [
+        1308,
+        9386,
+        290,
+        249
+      ]
+    },
+    {
+      "id": 529,
+      "source": "heavy4",
+      "rect": [
+        600,
+        706,
+        910,
+        933
+      ],
+      "anchor": [
+        180,
+        212
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 78,
+      "atlas": [
+        1600,
+        9386,
+        310,
+        227
+      ]
+    },
+    {
+      "id": 530,
+      "source": "heavy4",
+      "rect": [
+        910,
+        707,
+        1210,
+        930
+      ],
+      "anchor": [
+        160,
+        211
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 5,
+      "atlas": [
+        0,
+        9668,
+        300,
+        223
+      ]
+    },
+    {
+      "id": 531,
+      "source": "heavy4",
+      "rect": [
+        1210,
+        721,
+        1659,
+        929
+      ],
+      "anchor": [
+        230,
+        197
+      ],
+      "scale": 0.45,
+      "edgeFragmentPixels": 2,
+      "atlas": [
+        302,
+        9668,
+        449,
+        208
+      ]
+    },
+    {
+      "id": 532,
+      "source": "heavy5",
+      "rect": [
+        9,
+        115,
+        243,
+        355
+      ],
+      "anchor": [
+        146,
+        229
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 279,
+      "atlas": [
+        753,
+        9668,
+        234,
+        240
+      ]
+    },
+    {
+      "id": 533,
+      "source": "heavy5",
+      "rect": [
+        245,
+        113,
+        474,
+        355
+      ],
+      "anchor": [
+        145,
+        231
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 13,
+      "atlas": [
+        989,
+        9668,
+        229,
+        242
+      ]
+    },
+    {
+      "id": 534,
+      "source": "heavy5",
+      "rect": [
+        480,
+        111,
+        709,
+        355
+      ],
+      "anchor": [
+        140,
+        233
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 10,
+      "atlas": [
+        1220,
+        9668,
+        229,
+        244
+      ]
+    },
+    {
+      "id": 535,
+      "source": "heavy5",
+      "rect": [
+        767,
+        129,
+        1015,
+        355
+      ],
+      "anchor": [
+        168,
+        215
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 18,
+      "atlas": [
+        1451,
+        9668,
+        248,
+        226
+      ]
+    },
+    {
+      "id": 536,
+      "source": "heavy5",
+      "rect": [
+        1015,
+        127,
+        1235,
+        355
+      ],
+      "anchor": [
+        135,
+        217
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 22,
+      "atlas": [
+        1701,
+        9668,
+        220,
+        228
+      ]
+    },
+    {
+      "id": 537,
+      "source": "heavy5",
+      "rect": [
+        1235,
+        115,
+        1445,
+        355
+      ],
+      "anchor": [
+        125,
+        229
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 8,
+      "atlas": [
+        0,
+        9914,
+        210,
+        240
+      ]
+    },
+    {
+      "id": 538,
+      "source": "heavy5",
+      "rect": [
+        1445,
+        124,
+        1672,
+        355
+      ],
+      "anchor": [
+        135,
+        220
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 11,
+      "atlas": [
+        212,
+        9914,
+        227,
+        231
+      ]
+    },
+    {
+      "id": 539,
+      "source": "heavy5",
+      "rect": [
+        8,
+        365,
+        274,
+        669
+      ],
+      "anchor": [
+        157,
+        294
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 1,
+      "atlas": [
+        441,
+        9914,
+        266,
+        304
+      ]
+    },
+    {
+      "id": 540,
+      "source": "heavy5",
+      "rect": [
+        285,
+        372,
+        625,
+        670
+      ],
+      "anchor": [
+        140,
+        287
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 29,
+      "atlas": [
+        709,
+        9914,
+        340,
+        298
+      ]
+    },
+    {
+      "id": 541,
+      "source": "heavy5",
+      "rect": [
+        625,
+        374,
+        1000,
+        670
+      ],
+      "anchor": [
+        150,
+        285
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 32,
+      "atlas": [
+        1051,
+        9914,
+        375,
+        296
+      ]
+    },
+    {
+      "id": 542,
+      "source": "heavy5",
+      "rect": [
+        1000,
+        380,
+        1340,
+        669
+      ],
+      "anchor": [
+        100,
+        279
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 1714,
+      "atlas": [
+        1428,
+        9914,
+        340,
+        289
+      ]
+    },
+    {
+      "id": 543,
+      "source": "heavy5",
+      "rect": [
+        1340,
+        372,
+        1672,
+        669
+      ],
+      "anchor": [
+        165,
+        287
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 39,
+      "atlas": [
+        0,
+        10220,
+        332,
+        297
+      ]
+    },
+    {
+      "id": 544,
+      "source": "heavy5",
+      "rect": [
+        0,
+        700,
+        300,
+        899
+      ],
+      "anchor": [
+        170,
+        189
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 62,
+      "atlas": [
+        334,
+        10220,
+        300,
+        199
+      ]
+    },
+    {
+      "id": 545,
+      "source": "heavy5",
+      "rect": [
+        304,
+        709,
+        583,
+        896
+      ],
+      "anchor": [
+        146,
+        180
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 71,
+      "atlas": [
+        636,
+        10220,
+        279,
+        187
+      ]
+    },
+    {
+      "id": 546,
+      "source": "heavy5",
+      "rect": [
+        594,
+        707,
+        930,
+        899
+      ],
+      "anchor": [
+        186,
+        183
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 16,
+      "atlas": [
+        917,
+        10220,
+        336,
+        192
+      ]
+    },
+    {
+      "id": 547,
+      "source": "heavy5",
+      "rect": [
+        930,
+        707,
+        1240,
+        913
+      ],
+      "anchor": [
+        170,
+        183
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 141,
+      "atlas": [
+        1255,
+        10220,
+        310,
+        206
+      ]
+    },
+    {
+      "id": 548,
+      "source": "heavy5",
+      "rect": [
+        1240,
+        709,
+        1663,
+        909
+      ],
+      "anchor": [
+        210,
+        181
+      ],
+      "scale": 0.54,
+      "edgeFragmentPixels": 18,
+      "atlas": [
+        1567,
+        10220,
+        423,
+        200
       ]
     }
   ],

@@ -1,0 +1,55 @@
+흑월의 기사 v1.23 — 1~5스테이지 중기사 전용 디자인 적용
+
+변경 사항
+- 기존 보병 이미지를 확대하던 중기사(brute)를 스테이지별 전용 역할로 분리.
+- 1스테이지: 붉은 망토와 뿔 투구, 양손 도끼창 중기사.
+- 2스테이지: 까마귀 깃털 갑옷, 검과 방패 중기사.
+- 3스테이지: 황금 갑옷, 대형 방패와 철퇴 중기사.
+- 4스테이지: 얼음 갑옷, 서리 검과 방패 중기사.
+- 5스테이지: 심연 갑옷, 자주색 검기와 방패 중기사.
+- 각 시트에서 대기 3, 이동 4, 공격 5, 피격 2, 사망 3프레임 적용.
+  총 85프레임 추가. 공격은 기존 준비/발동/후딜 타이밍에 맞춰 연결.
+- 다운, 기절, 좌우 반전, 피격 섬광, 사망 페이드도 전용 이미지로 표시.
+- 원본 비율을 유지하고 스테이지별 몸 중심/발 기준점/배율을 지정.
+  전용 중기사에는 기존 보병 확대 배율을 중복 적용하지 않음.
+- 기존 체력, 피해량, 공격 범위, AI, 스폰, 점수, 스테이지 진행 유지.
+
+적용 리소스
+바탕화면/흑월의 기사 이미지/1~5스테이지 중기사.png
+원본 보존: assets/named/heavy1.png ~ heavy5.png (원본 바이트 그대로).
+런타임 아틀라스: assets/named/combat.png 및 named-art.js.
+관리 파일: data/named-sprites.json.
+원본 파일명/SHA-256/크기, 각 프레임 영역/기준점/배율/정리 픽셀 수 기록.
+검은 갑옷의 RGB를 유지하며 검은색 전체를 투명 처리하지 않음.
+작은 이웃 프레임 조각은 경계 연결요소 검사로 알파만 정리.
+캐릭터에 합쳐진 검기/서리/깃털 이펙트는 원본 프레임에 포함된 상태로 사용.
+이미지 로딩 실패 시 기존 캐릭터 렌더러 폴백 유지.
+
+수정/추가 파일
+tools/build_named_sprites.py
+named-runtime.js, named-art.js
+data/named-sprites.json
+assets/named/combat.png, assets/named/heavy1.png ~ heavy5.png
+tests/named-assets.py, tests/regression.cjs
+patch_note/patch_1.23.txt
+
+복구 지점
+backups/pre-heavy-knights-1.23.zip: 수정 전 코드/아틀라스/관리 파일/테스트.
+기존 patch_1.22.txt는 수정하지 않음.
+
+검증
+- 변경 전 node tests/regression.cjs 통과.
+- 변경 후 tests/named-assets.py: 총 542프레임의 원본 해시/RGB/알파 정리 기록/
+  역할별 원본 연결 검사 통과.
+- 변경 후 node tests/regression.cjs: 스테이지별 중기사 모든 상태의 원본 연결,
+  준비 2/발동 2/후딜 1프레임, 이동, 최종 사망 프레임 검사 통과.
+- 5스테이지 클리어, 보스 52패턴/페이즈, 저장/이어하기, 키 설정,
+  키보드/터치, 단일 HTML 실행 회귀 검사 통과.
+- 브라우저에서 5스테이지 각각 대기/준비/공격/피격/사망 화면 캡처 확인.
+- git diff --check 통과.
+
+실행
+python server.py
+또는 python -m streamlit run server.py
+이 PC에서 python 별칭이 작동하지 않으면 PowerShell:
+& 'C:\Users\hoondo\AppData\Local\Python\bin\python.exe' server.py
