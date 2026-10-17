@@ -50,8 +50,9 @@ function drawBossBar(boss) {
   lifeBar(x + 10, y + 21, w - 20, 10, clamp(h.value / boss.max, 0, 1), clamp(h.lag / boss.max, 0, 1), [color, BOSS_COLORS[stageIdx]]);
   const r = boss.st === 'stun' ? 1 - boss.t / GROGGY_TICKS : boss.gr / boss.grMax;
   ctx.fillStyle = '#cfab70'; rect(x + 10, y + 34, (w - 20) * clamp(r, 0, 1), 2);
-  if (boss.phaseT > 0) krText('각성 · 잠시 후 공격이 재개됩니다', W / 2, y - 8, color, 13, 'center');
-  else if (boss.st === 'pat') krText(boss.d.pats[boss.pat] || '', W / 2, y - 8, color, 13, 'center');
+  if (boss.st === 'reviving') krText(boss.t<155?'쓰러진 모르그라 · 어둠이 모입니다':'모르그라 부활 · 두 번째 전투', W / 2, y - 8, '#d8bfff', 13, 'center');
+  else if (boss.phaseT > 0) krText('각성 · 잠시 후 공격이 재개됩니다', W / 2, y - 8, color, 13, 'center');
+  else if (boss.st === 'pat') krText((boss.type==='boss2'?morgraMoves[boss.morgraMove]?.name:null)||boss.d.pats[boss.pat] || '', W / 2, y - 8, color, 13, 'center');
   ctx.restore();
 }
 let openingTime = 0;

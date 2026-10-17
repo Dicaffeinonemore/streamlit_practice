@@ -202,17 +202,17 @@ function combatChecks() {
     reset(); player.x = distance < 0 ? 400 : 200;
     enemies = [mkEnemy('grunt', player.x + distance, 420)]; startSkill('thrust');
     for (let i = 0; i < 50; i++) updPlayer();
-    check('Thrust reaches target once at distance ' + distance, enemies[0].hp === 12 && player.st === 'free');
+    check('Thrust reaches target once at distance ' + distance, enemies[0].hp === enemies[0].max-28 && player.st === 'free');
   }
   reset(); player.x = 200; enemies = [mkEnemy('grunt', 300, 485)]; startSkill('thrust');
   for (let i = 0; i < 50; i++) updPlayer();
-  check('Thrust respects lane', enemies[0].hp === 40);
+  check('Thrust respects lane', enemies[0].hp === enemies[0].max);
   reset(); player.x=200; player.face=1; enemies=[mkEnemy('grunt',320,420),mkEnemy('grunt',380,420)];
   startSkill('slam'); for(let i=0;i<50;i++)updPlayer();
-  check('Slam expanded reach and outer limit', enemies[0].hp===16 && enemies[1].hp===40);
+  check('Slam expanded reach and outer limit', enemies[0].hp===enemies[0].max-24 && enemies[1].hp===enemies[1].max);
   reset(); player.x=200; player.face=1; enemies=[mkEnemy('grunt',300,420),mkEnemy('grunt',100,420)];
   startSkill('whirl'); player.t=11; updPlayer();
-  check('Whirl deals sixteen on both sides at expanded range', enemies.every(e=>e.hp===24));
+  check('Whirl deals sixteen on both sides at expanded range', enemies.every(e=>e.hp===e.max-16));
   for(const dir of [1,-1]) {
     reset(); player.x=dir===1?100:700; player.face=dir;
     enemies=[mkEnemy('grunt',player.x+dir*300,420),mkEnemy('grunt',player.x+dir*460,420),
@@ -225,7 +225,7 @@ function combatChecks() {
     check('Red wave fires once and enters cooldown '+dir, hazards.length===1 && player.skillCd.redwave>0 && !canStartSkill('redwave'));
     for(let i=0;i<65;i++)updHazards();
     check('Red wave pierces once, respects depth and height, expires '+dir,
-      enemies[0].hp===16 && enemies[1].hp===16 && enemies[2].hp===40 && enemies[3].hp===40 && hazards.length===0);
+      enemies[0].hp===enemies[0].max-24 && enemies[1].hp===enemies[1].max-24 && enemies[2].hp===enemies[2].max && enemies[3].hp===enemies[3].max && hazards.length===0);
   }
   reset(); hitStop = 3;
   dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyJ' })); loop(last + MS * 1.1);
@@ -284,7 +284,7 @@ function combatChecks() {
   let patterns = 0;
   for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const pat of Object.keys(ET[type].pats)) for (const p2 of [false, true]) {
     reset(); startStage(Number(type.slice(-1)) - 1); scene = 'play'; player.x = 210; player.inv = 99999;
-    const b = mkEnemy(type, 370, 420); enemies = [b]; if (p2) b.hp = b.max * .4; startPat(b, pat);
+    const b = mkEnemy(type, 370, 420); enemies = [b]; if (p2) {b.hp = b.max * .4;b.p2shown=true;} startPat(b, pat);
     for (let i = 0; i < 270 && b.st === 'pat'; i++) { updEnemy(b); updHazards(); updFx(); if (i % 45 === 0) render(); }
     patterns++;
   }
@@ -295,6 +295,10 @@ function combatChecks() {
       camX = stage.waves[w].at; player.x = camX + 256; camLock = false; waveIdx = w; enemies = []; update();
       if (scene === 'bossintro') for (let i = 0; i < 121; i++) update();
       for (const e of [...enemies]) if (e.st !== 'dead') damageEnemy(e, 1e6, true);
+      for(const e of enemies)if(e.st==='reviving'){
+        for(let i=0;i<261;i++)updEnemy(e);
+        damageEnemy(e,1e6,true);
+      }
       for (let i = 0; i < 400 && scene === 'play'; i++) update();
     }
     check('Stage ' + (s + 1) + ' completes', scene === (s < 4 ? 'clear' : 'ending'));
@@ -410,10 +414,10 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('beginGame(true); openingTime=17999; update()');
     assert.equal(await evaluate('scene'), 'intro');
     console.log('PASS Opening skip and automatic completion start stage one');
-    for (const n of [1,3,4]) {
+    for (const n of [0,2,3,4]) {
       assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.51;damageEnemy(b,b.max*.1,false);if(b.phaseT!==72||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);for(let t=0;t<72;t++)updEnemy(b);return b.hp===hp&&!b.invuln&&b.st==='rec'&&b.z===0})()`),true,'Safe phase transition');
       const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
-      assert.equal(key,'phase'+(n+1));
+      assert.equal(key,[3,4].includes(n)?'phase'+(n+1):'boss'+(n+1));
     }
     for (const [width,height] of [[1920,1080],[1280,720],[844,390]]) {
       await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
@@ -476,7 +480,122 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate('scene'), 'title');
     await evaluate('window.requestAnimationFrame=()=>0;beginGame();scene="play";render()');
     console.log('PASS Single HTML bundle initializes and renders');
+    assert.equal(await evaluate(`BAREL_ATLAS.naturalWidth > 0 && BAREL_PORTRAIT.naturalWidth > 0`), true);
+    assert.equal(await evaluate(`document.querySelectorAll('.skill-icon').length`), 5);
+    assert.equal(await evaluate(`(()=>{
+      player=newPlayer();scene='play';player.inv=0;
+      for(const st of ['free','atk','skill','dash','hurt','down','dead','cast','special']) {
+        player.st=st;player.atk='c1';player.combo=0;player.skill='thrust';
+        for(const t of [0,5,15,30,60]) {player.t=t;if(!barelPlayerFrame() || !drawBarelPlayer())return false;}
+      }
+      for(const id of Object.keys(SKILLS)) {player.st='skill';player.skill=id;player.t=25;drawBarelPlayer();}
+      player.st='free';player.skillCd.thrust=2300;updateSkillButtons();
+      return document.querySelector('[data-skill=thrust]').dataset.cooldown==='2.3';
+    })()`), true);
+    console.log('PASS Barel atlas, portrait, all player states, five effect icons and cooldown labels');
+
+    assert.equal(await evaluate(`(()=>{
+      practice=false;player=newPlayer();startStage(0);scene='play';camX=0;
+      player.x=220;player.y=420;player.inv=0;
+      const b=mkEnemy('boss1',100,420);enemies=[b];startPat(b,'hook');b.pt=500;
+      const h={type:'hook',owner:b,x:200,y:420,h:62,dir:1,age:0,out:true,hit:false};hazards=[h];
+      updHazards();
+      if(player.st!=='grabbed'||player.hp!==player.max||player.x!==220||canStartSkill('thrust'))return false;
+      inputDown('KeyJ');for(let i=0;i<4;i++)updPlayer();
+      if(player.grab.presses!==1||player.x>=220)return false;
+      inputUp('KeyJ');
+      for(let i=0;i<7;i++){inputDown('KeyJ');updPlayer();inputUp('KeyJ');}
+      return player.st==='free'&&!player.grab&&h.dead&&b.gr===40&&b.st==='hurt';
+    })()`),true,'Hook pulls gradually, locks skills, and eight fresh presses escape');
+    assert.equal(await evaluate(`(()=>{
+      function setup(dy=0,z=0,inv=0){
+        clearInput();player=newPlayer();player.x=220;player.y=420+dy;player.z=z;player.inv=inv;
+        const b=mkEnemy('boss1',100,420);enemies=[b];startPat(b,'hook');b.pt=500;
+        const h={type:'hook',owner:b,x:200,y:420,h:62,dir:1,age:0,out:true,hit:false};hazards=[h];return {b,h};
+      }
+      for(const args of [[15,0,0],[0,40,0],[0,0,10]]){setup(...args);updHazards();if(player.st==='grabbed')return false;}
+      let {b,h}=setup();updHazards();const hp=player.hp;
+      for(let i=0;i<100&&player.grab;i++)updPlayer();
+      if(player.hp!==hp-20||player.st!=='down'||player.grab||!h.dead)return false;
+      ({b,h}=setup());updHazards();scene='pause';const x=player.x;for(let i=0;i<20;i++)update();
+      if(player.x!==x||player.grab.hold!==0)return false;
+      scene='play';b.st='dead';updHazards();
+      return player.st==='free'&&!player.grab&&h.dead;
+    })()`),true,'Hook avoids other lanes, jumping and invulnerability; timeout hits once; pause/death release safely');
+    assert.equal(await evaluate(`(()=>{
+      if(!GORATH_ATLAS.naturalWidth||GORATH_ART.idleHeight<=142*BAREL_PLAYER_SCALE)return false;
+      player=newPlayer();player.inv=0;player.x=200;player.y=420;
+      const b=mkEnemy('boss1',400,420);enemies=[b];hazards=[];
+      for(const pat of ['sweep','slam','rage','hook','meat']) {
+        startPat(b,pat);for(const time of [0,250,500,670,1000]){b.pt=time;if(!gorathEnemyFrame(b)||!drawGorath(b))return false;}
+      }
+      return true;
+    })()`),true,'New Gorath atlas is larger than Barel and all five attacks render');
+    console.log('PASS Gorath design and hook grab / escape / failure / cancellation');
+    assert.equal(await evaluate(`(()=>{
+      practice=false;player=newPlayer();startStage(1);scene='play';player.inv=0;chain.n=0;
+      const b=mkEnemy('boss2',400,420);enemies=[b];b.gr=90;
+      damageEnemy(b,b.max*.55,false);if(b.p2shown||b.st==='reviving')return false;
+      b.inv=0;b.invuln=false;b.st='chase';const score=player.score;
+      damageEnemy(b,99999,false);
+      if(b.st!=='reviving'||b.hp!==0||b.p2shown||b.remove||player.score!==score||canHit(b))return false;
+      damageEnemy(b,99999,true);if(player.score!==score)return false;
+      for(let i=0;i<260;i++)updEnemy(b);
+      if(b.st!=='reviving'||b.hp!==0)return false;
+      updEnemy(b);
+      if(!b.p2shown||b.hp!==840||b.max!==840||b.gr!==0||b.grMax!==240||!phase2(b)||b.invuln)return false;
+      player.inv=0;const hp=player.hp;hurtPlayer(10,1,false,b);if(hp-player.hp!==15)return false;
+      damageEnemy(b,99999,true);const award=player.score;damageEnemy(b,99999,true);
+      return b.st==='dead'&&award===score+b.d.score&&player.score===award;
+    })()`),true,'Morgra dies fully, waits, revives at full enhanced stats, awards only final death');
+    assert.equal(await evaluate(`(()=>{
+      for(const type of ['boss1','boss3','boss4','boss5']) {
+        player=newPlayer();const b=mkEnemy(type,400,420);enemies=[b];chain.n=0;b.gr=90;b.hp=b.max*.51;
+        const max=b.max,grMax=b.grMax;damageEnemy(b,b.max*.02,false);const hp=b.hp;
+        if(!b.p2shown||b.gr!==0||b.max!==max||b.grMax!==grMax)return false;
+        for(let i=0;i<72;i++)updEnemy(b);
+        if(b.hp!==hp)return false;
+        player.inv=0;const health=player.hp;hurtPlayer(10,1,false,b);if(health-player.hp!==13)return false;
+      }
+      let previous=0,previousD=0;
+      for(let s=0;s<5;s++){stageIdx=s;const e=mkEnemy('grunt',0,420);if(e.max<=previous||e.d.dmg<=previousD)return false;previous=e.max;previousD=e.d.dmg;}
+      return ET.boss1.hp<ET.boss2.hp&&ET.boss2.hp<ET.boss3.hp&&ET.boss3.hp<ET.boss4.hp&&ET.boss4.hp<ET.boss5.hp;
+    })()`),true,'Stage difficulty increases; other bosses only reset groggy and boost phase damage');
+    assert.equal(await evaluate(`(()=>{
+      player=newPlayer();startStage(1);scene='play';player.inv=0;player.x=220;player.y=420;
+      const b=mkEnemy('boss2',100,420);enemies=[b];hazards=[];startPat(b,'magic_bolt');
+      b.pt=27*MS;runPat(b);if(hazards.some(h=>h.kind==='bolt'))return false;
+      b.pt=28*MS;runPat(b);runPat(b);if(hazards.filter(h=>h.kind==='bolt').length!==1)return false;
+      hazards=[];startPat(b,'curtain');b.pt=36*MS;runPat(b);const h=hazards.find(h=>h.kind==='pillar');
+      const hp=player.hp;h.age=(h.delay+5)*MS;updateMorgraHazard(h);if(player.hp!==hp)return false;
+      player.x+=100;h.age=(h.delay+6)*MS;updateMorgraHazard(h);if(player.hp!==hp||h.x!==220)return false;
+      player.x=220;updateMorgraHazard(h);const loss=hp-player.hp;updateMorgraHazard(h);
+      if(loss!==14||player.hp!==hp-14)return false;
+      player=newPlayer();player.inv=0;player.x=220;player.y=420;
+      const moon={type:'morgra',kind:'moon_field',age:102*MS,delay:96,life:120,safe:[{x:220,y:420}],owner:b,damageScale:1.5};
+      updateMorgraHazard(moon);if(player.hp!==player.max)return false;
+      player.x=330;updateMorgraHazard(moon);return player.hp===player.max-33;
+    })()`),true,'Morgra event timing, single spawn, pillar warning/lane and moon safety match damage');
+    assert.equal(await evaluate('MORGRA_ART.clips.moon.length===7 && MORGRA_ART.clips.fx_moon.length===3 && !!morgraFrame("p2_curtain",28) && !!morgraFrame("moon",124)'),true,'Morgra character moon and effect moon remain distinct');
+    console.log('PASS Morgra resurrection, frame combat and progressive difficulty');
+
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
+    await evaluate('player=newPlayer();startStage(0);scene="play";showScreen(null);player.x=230;player.inv=0;player.y=420;enemies=[mkEnemy("boss1",400,420)];hazards=[];render()');
+    await screenshot('gorath-design');
+    await evaluate('startPat(enemies[0],"slam");enemies[0].pt=720;render()');
+    await screenshot('gorath-slam');
+    await evaluate('startPat(enemies[0],"hook");enemies[0].face=-1;enemies[0].pt=600;hazards=[{type:"hook",owner:enemies[0],x:player.x,y:player.y,h:58,dir:-1,age:0,out:true,hit:false}];catchGorathHook(hazards[0]);render()');
+    await screenshot('gorath-grab');
+    await evaluate('UX.options.touch=false;document.body.classList.remove("touch");player=newPlayer();startStage(1);scene="play";showScreen(null);player.x=210;player.y=420;player.inv=0;enemies=[mkEnemy("boss2",410,420)];hazards=[];render()');
+    await screenshot('morgra-phase1');
+    await evaluate('damageEnemy(enemies[0],99999,true);enemies[0].t=210;render()');
+    await screenshot('morgra-revive');
+    await evaluate('enemies[0].t=260;updEnemy(enemies[0]);startPat(enemies[0],"p2_curtain");enemies[0].pt=28*MS;runPat(enemies[0]);render()');
+    await screenshot('morgra-phase2');
+    await evaluate('hazards=[];startPat(enemies[0],"moon");enemies[0].pt=28*MS;runPat(enemies[0]);render()');
+    await screenshot('morgra-moon');
+    await evaluate('hazards=[];enemies=[];player.st="dash";player.t=5;render()');
+    await screenshot('barel-dash-feet');
     await evaluate('UX.options.touch=false;document.body.classList.remove("touch");player=newPlayer();startStage(2);scene="play";player.x=210;player.inv=0;enemies=[mkEnemy("boss3",430,420)];render()');
     await screenshot('stage3-king');
     await evaluate('startPat(enemies[0],"cleave");enemies[0].pt=820;render()');

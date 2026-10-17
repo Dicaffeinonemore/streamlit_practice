@@ -79,7 +79,7 @@ function namedEnemyFrame(e) {
 }
 function paintNamedFrame(frame, actor, shadow=false) {
   if(!frame || !NAMED_ATLAS.complete || !NAMED_ATLAS.naturalWidth)return false;
-  const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=frame.scale*(actor.type==='brute' && !frame.source.startsWith('heavy')?1.12:1);
+  const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=frame.scale*(actor.type==='brute' && !frame.source.startsWith('heavy')?1.12:1)*(actor.boss?BOSS_VISUAL_SCALE:1);
   if(shadow)drawShadow(actor.x-camX,actor.y,SPRITES[actor.d.sprite].sh,actor.z);
   ctx.save();
   const hurt=actor.hr<220 ? Math.cos(actor.hr*.03)*Math.exp(-actor.hr/150)*(actor.hdir||1)*3 : 0;
