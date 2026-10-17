@@ -20,9 +20,16 @@ function drawReleaseBackdrop(theme, scroll) {
   const paint = image => {
     const height = HORIZON + 4, scale = Math.max(W / image.naturalWidth, height / image.naturalHeight);
     const dw = image.naturalWidth * scale, dh = image.naturalHeight * scale;
-    const progress = stage ? clamp(camX / Math.max(1, stage.len - VW), 0, 1) : .25;
     ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(image, -Math.round((dw - W) * progress), height - dh, dw, dh);
+    const offset = stage ? scroll : 0, first = Math.floor(offset / dw);
+    for (let n = first; n * dw - offset < W; n++) {
+      const left = Math.round(n * dw - offset), right = Math.round((n + 1) * dw - offset);
+      ctx.save();
+      ctx.translate(n % 2 ? right : left, height - dh);
+      if (n % 2) ctx.scale(-1, 1);
+      ctx.drawImage(image, 0, 0, right - left, dh);
+      ctx.restore();
+    }
   };
   const previous = RELEASE_IMAGES[releaseBG.previous];
   ctx.save();

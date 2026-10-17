@@ -19,11 +19,15 @@ for key,name in files.items():
  if not dest.exists() or dest.read_bytes()!=data:dest.write_bytes(data)
  images[key]=Image.open(io.BytesIO(data)).convert('RGBA');sources[key]={'filename':name,'path':str(dest.relative_to(ROOT)).replace('\\','/'),'sha256':hashlib.sha256(data).hexdigest(),'size':list(images[key].size)}
 clips={};frames=[]
-def remove_edge_fragments(im, margin=3):
+def remove_edge_fragments(im, margin=3, main_only=False):
  # Keep original RGB/alpha in the main sprite. Only discard disconnected small
  # components that touch a frame border (pieces of the neighbouring pose).
+ # All regular soldiers can contain neighbouring weapons away from the borders.
+ # Keep the body and its connected equipment, including during attacks/death.
  from collections import deque
  a=im.getchannel('A');w,h=im.size;alpha=list(a.tobytes());seen=bytearray(w*h);groups=[]
+ original_alpha=alpha[:]
+ if main_only:alpha=[v if v>=64 else 0 for v in alpha]
  for start,value in enumerate(alpha):
   if not value or seen[start]:continue
   todo=[start];seen[start]=1;group=[];edge=False
@@ -37,10 +41,23 @@ def remove_edge_fragments(im, margin=3):
   groups.append((group,edge))
  largest=max((len(g) for g,e in groups),default=0);removed=[]
  for g,edge in groups:
-  if edge and len(g)<largest*.22:
+  if (main_only and len(g)<largest) or (not main_only and edge and len(g)<largest*.22):
    for i in g:alpha[i]=0
    removed.extend(g)
- if removed:
+ if main_only:
+  # Faint alpha bridges from neighbouring poses must not join their silhouettes.
+  # Restore two connected edge pixels of the original antialiasing around the body.
+  kept={i for i,v in enumerate(alpha) if v}
+  for _ in range(2):
+   extra=set()
+   for i in kept:
+    x=i%w;y=i//w
+    for nx,ny in ((x-1,y),(x+1,y),(x,y-1),(x,y+1)):
+     j=ny*w+nx
+     if 0<=nx<w and 0<=ny<h and original_alpha[j]:extra.add(j)
+   kept.update(extra)
+  alpha=[v if i in kept else 0 for i,v in enumerate(original_alpha)]
+ if removed or main_only:
   a.putdata(alpha);im.putalpha(a)
  return im,len(removed)
 
@@ -58,7 +75,7 @@ def row(actor,clip,src,y0,y1,cuts,anchors,feet,scale):
    if clip in bounds:x0,x1=bounds[clip][j]
   rect=[x0,y0,x1,y1];im=images[src].crop(rect)
   removed=0
-  if src.startswith(('soldiers','heavy')) or src in ('emperor','player_moves'):im,removed=remove_edge_fragments(im,24 if src=='emperor' else 6 if src=='player_moves' or src.startswith('heavy') else 3)
+  if src.startswith(('soldiers','heavy')) or src in ('emperor','player_moves'):im,removed=remove_edge_fragments(im,24 if src=='emperor' else 6 if src=='player_moves' or src.startswith('heavy') else 3,main_only=actor.startswith('stage'))
   # Only trim already-transparent margins, preserving all original opaque black pixels.
   bbox=im.getbbox()
   if not bbox:raise ValueError((actor,clip,j))

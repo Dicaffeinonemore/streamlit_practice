@@ -480,6 +480,90 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate('scene'), 'title');
     await evaluate('window.requestAnimationFrame=()=>0;beginGame();scene="play";render()');
     console.log('PASS Single HTML bundle initializes and renders');
+    assert.equal(await evaluate(`(()=>{
+      player=newPlayer();startStage(0);scene='play';player.buff=0;
+      if(mkEnemy('boss1',350,420).max!==700 || mkEnemy('boss2',350,420).max!==850)return false;
+      const e=mkEnemy('brute',350,420);enemies=[e];barrels=[];e.hp=1000;e.max=1000;
+      player.spX=e.x;player.spY=e.y;
+      for(let k=0;k<4;k++){e.inv=0;e.st='chase';specialHit(false,k);}
+      e.inv=0;e.st='chase';specialHit(true,4);
+      if(e.hp!==874)return false;
+      const b=mkEnemy('boss2',400,420);b.p2shown=true;b.hp=b.max=1200;
+      if(pickMorgraPattern(b,250,0)!=='moon')return false;
+      b.pat='moon';initMorgraPattern(b);
+      if(b.morgraCooldown!==600 || pickMorgraPattern(b,250,0)==='moon')return false;
+      b.morgraCooldown=0;if(pickMorgraPattern(b,60,0)!=='moon')return false;
+      for(const kind of ['fire','frost','abyss']) {
+        const alphas=[];const layer={rect:(...args)=>alphas.push(args[5]),line:()=>{}};
+        hazards=[{type:'rift',kind,x:0,y:420,width:VW,depth:23,age:0,delay:1200}];
+        enemies=[];drawGroundFx(layer);hazards[0].age=150;drawGroundFx(layer);
+        if(alphas[0]<=alphas[1])return false;
+        hazards[0].age=1200;if(riftWarningAlpha(hazards[0])!==1)return false;
+      }
+      const positions=[],original=ctx.translate;
+      try {
+        ctx.translate=function(x,y){positions.push(x);return original.call(this,x,y);};
+        releaseBG.key=releaseBackdropKey();releaseBG.blend=1;
+        drawReleaseBackdrop('stage1',0);const x0=positions[0];positions.length=0;
+        drawReleaseBackdrop('stage1',120);if(positions[0]-x0!==-120)return false;
+      } finally {ctx.translate=original;}
+      hazards=[];return true;
+    })()`),true,'Special damage, boss HP, phase-two moon cadence, hazard blinking and backdrop scroll');
+    assert.equal(await evaluate(`(()=>{
+      player=newPlayer();startStage(4);scene='play';camX=0;
+      const regular=mkEnemy('brute',300,420), boss=mkEnemy('boss5',450,420);
+      const weak=mkEnemy('archer',500,420), outside=mkEnemy('brute',VW+100,420);
+      const immune=mkEnemy('boss3',550,420);
+      enemies=[regular,boss,weak,outside,immune];
+      for(const e of enemies){e.st='chase';e.alpha=1;e.phaseT=0;e.invuln=false;}
+      regular.hp=200;regular.st='stun';boss.hp=1000;boss.st='stun';weak.hp=70;
+      immune.invuln=true;const immuneHP=immune.hp,outsideHP=outside.hp;
+      chain.n=20;fireBolts();
+      return regular.hp===120 && boss.hp===920 && weak.hp===0 && weak.st==='dead'
+        && outside.hp===outsideHP && immune.hp===immuneHP;
+    })()`),true,'Lightning deals exactly 80 regardless of combo/stun; range and immunity preserved');
+    console.log('PASS Fixed lightning damage against regular enemies and bosses');
+    assert.equal(await evaluate(`(async()=>{
+      await ITEM_READY;
+      if(Object.keys(ITEM_SPRITES).length!==8) return false;
+      for(const s of Object.values(ITEM_SPRITES)) {
+        if(s.w<=0 || s.h<=0 || s.w>=s.image.width || s.h>=s.image.height) return false;
+        if(s.image.getContext('2d').getImageData(0,0,1,1).data[3]!==0) return false;
+      }
+      for(const key of Object.keys(keys)) delete keys[key];
+      for(const key of Object.keys(pressed)) delete pressed[key];
+      dashReq=0; player=newPlayer(); items=[];
+      for(const [type,points] of Object.entries(SCORE_ITEMS)) {
+        const before=player.score; dropItem(type,player.x,player.y); updPlayer();
+        if(player.score-before!==points) return false;
+        updPlayer(); if(player.score-before!==points) return false;
+      }
+      for(const [type,hp] of [['potion',30],['big',60]]) {
+        player.hp=1; dropItem(type,player.x,player.y); updPlayer();
+        if(player.hp!==1+hp) return false;
+      }
+      player.sp=0;dropItem('crystal',player.x,player.y);updPlayer();
+      if(player.sp!==25) return false;
+      player.mg=0;dropItem('scroll',player.x,player.y);updPlayer();
+      if(player.mg!==1) return false;
+      const random=Math.random;
+      try {
+        for(const [r,type] of [[.45,'coin'],[.55,'coinBag'],[.59,'gold']]) {
+          items=[];stat.kills=2;Math.random=()=>r;dropFrom({x:300,y:300});
+          if(items[0]?.type!==type) return false;
+        }
+        for(const [r,type] of [[.90,'coin'],[.96,'coinBag'],[.99,'gold']]) {
+          items=[];Math.random=()=>r;dropFromBarrel({x:300,y:300});
+          if(items[0]?.type!==type) return false;
+        }
+        items=[];dropFrom({boss:true,x:300,y:300});
+        if(items[0]?.type!=='gold') return false;
+      } finally {Math.random=random;}
+      items=[];return true;
+    })()`), true);
+    await evaluate(`ctx.fillStyle='#24202e';ctx.fillRect(0,0,960,540);Object.keys(ITEM_SPRITES).forEach((key,i)=>{drawItemSprite(key,65+i*116,280,80,80);outlineText(key,65+i*116,310);})`);
+    await screenshot('item-sprites');
+    console.log('PASS Item sprites, exact scores, single pickup, healing, SP, scroll and drop tables');
     assert.equal(await evaluate(`BAREL_ATLAS.naturalWidth > 0 && BAREL_PORTRAIT.naturalWidth > 0`), true);
     assert.equal(await evaluate(`document.querySelectorAll('.skill-icon').length`), 5);
     assert.equal(await evaluate(`(()=>{
@@ -543,7 +627,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       for(let i=0;i<260;i++)updEnemy(b);
       if(b.st!=='reviving'||b.hp!==0)return false;
       updEnemy(b);
-      if(!b.p2shown||b.hp!==840||b.max!==840||b.gr!==0||b.grMax!==240||!phase2(b)||b.invuln)return false;
+      if(!b.p2shown||b.hp!==1200||b.max!==1200||b.gr!==0||b.grMax!==240||!phase2(b)||b.invuln)return false;
       player.inv=0;const hp=player.hp;hurtPlayer(10,1,false,b);if(hp-player.hp!==15)return false;
       damageEnemy(b,99999,true);const award=player.score;damageEnemy(b,99999,true);
       return b.st==='dead'&&award===score+b.d.score&&player.score===award;

@@ -21,3 +21,18 @@ for actor,clips in m['clips'].items():
   expected={'boss1':{'gorath_motion','gorath_moves'},'boss2p2':{'witch2'},'boss3':{'gold'},'boss4':{'ice'},'boss5':{'emperor'},'player':{'player','player_base','player_moves','player_walk'}}.get(actor,({('heavy' if actor.endswith('_brute') else 'soldiers')+actor[5]} if actor.startswith('stage') else set()))
   assert all(m['frames'][i]['source'] in expected for i in ids),(actor,clip)
 print('PASS named source hashes,',len(m['frames']),'RGB-preserving crops, recorded edge-alpha cleanup, anchors and exclusive role mappings')
+for actor,clips in m['clips'].items():
+ if not actor.startswith('stage'):continue
+ for ids in clips.values():
+  for i in ids:
+   x,y,w,h=m['frames'][i]['atlas']
+   alpha=a.crop((x,y,x+w,y+h)).getchannel('A').tobytes()
+   opaque={n for n,v in enumerate(alpha) if v}
+   todo=[next(iter(opaque))];opaque.remove(todo[0])
+   while todo:
+    n=todo.pop();px=n%w;py=n//w
+    for nx,ny in ((px-1,py),(px+1,py),(px,py-1),(px,py+1)):
+     q=ny*w+nx
+     if 0<=nx<w and 0<=ny<h and q in opaque:opaque.remove(q);todo.append(q)
+   assert not opaque,('Detached soldier fragment',actor,i)
+print('PASS all 20 soldier roles: every animation frame has no detached fragments')

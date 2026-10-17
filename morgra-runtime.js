@@ -1,6 +1,6 @@
 'use strict';
 const MORGRA_ATLAS=new Image();MORGRA_ATLAS.src=MORGRA_ART.atlas;
-const MORGRA_REVIVE={death:110,wait:45,rise:106,hp:840,groggy:240};
+const MORGRA_REVIVE={death:110,wait:45,rise:106,hp:1200,groggy:240};
 const morgraScale=()=>MORGRA_ART.scale*BOSS_VISUAL_SCALE;
 const morgraMoves={...MORGRA_ART.timing};
 for(const [id,d] of Object.entries(MORGRA_ART.boss.derived_moves)) {
@@ -49,10 +49,11 @@ function morgraResolve(e,pat) {
 }
 function initMorgraPattern(e) {
   e.morgraMove=morgraResolve(e,e.pat);e.morgraX=e.x;e.morgraLane=e.y;e.morgraHit=false;
-  if(e.morgraMove==='moon'){e.moonUsed=true;e.morgraCooldown=900;}
+  if(e.morgraMove==='moon'){e.moonUsed=true;e.morgraCooldown=600;}
 }
 function pickMorgraPattern(e,dx,dy) {
-  if(e.p2shown&&e.hp<=e.max*.35&&(!e.moonUsed||!e.morgraCooldown))return 'moon';
+  // Use judgment throughout phase two, then repeat at the next decision after 10s.
+  if(e.p2shown&&(!e.moonUsed||!e.morgraCooldown))return 'moon';
   const choices=e.p2shown?(dx<115&&dy<25?['aerial_slash','aerial_slash','p2_teleport','p2_bolt']:
     ['crow_rush','p2_bolt','p2_curtain','p2_summon']):(dx<110&&dy<25?['staff_swing','staff_swing','teleport']:
     ['magic_bolt','magic_bolt','curtain','summon']);
