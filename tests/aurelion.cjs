@@ -2,7 +2,7 @@
 // $env:AURELION_SUITE='1'; node tests/regression.cjs
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,errors,root})=>{
-  const out=path.join(root,'artifacts/aurelion-1.33');fs.mkdirSync(out,{recursive:true});
+  const out=path.join(root,'artifacts/aurelion-1.35');fs.mkdirSync(out,{recursive:true});
   await evaluate(`window.testRAF=window.requestAnimationFrame.bind(window);window.requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();startStage(2);scene='play';showScreen(null);AURELION_READY`);
   const result=await evaluate(`(${checks.toString()})()`);
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(result,null,2));
@@ -26,7 +26,7 @@ module.exports=async({evaluate,call,errors,root})=>{
 };
 function checks(){
   const check=(c,msg)=>{if(!c)throw Error(msg);},results={patterns:[],multihit:[]};
-  function setup(p2=false,x=200){clearInput();practice=false;scene='play';player=newPlayer();player.x=x;player.y=420;player.inv=9999;chain.n=0;hazards=[];const e=mkEnemy('boss3',300,420);e.p2shown=p2;enemies=[e];return e;}
+  function setup(p2=false,x=200){clearInput();practice=false;scene='play';player=newPlayer();player.x=x;player.y=420;player.inv=9999;chain.n=0;chain.t=0;hitStop=0;hazards=[];const e=mkEnemy('boss3',300,420);e.p2shown=p2;enemies=[e];return e;}
   check(AURELION_SHEETS.every(i=>i.naturalWidth&&i.naturalWidth<=4096&&i.naturalHeight<=4096),'sheet decode');
   for(const p2 of [false,true])for(const id of AURELION_ATTACKS){
     const e=setup(p2);startPat(e,id);if(id==='combo')setAurelionTimeline(e,id,'full');
@@ -42,29 +42,40 @@ function checks(){
   // A repeated event is emitted once per drawing instance, never twice by re-evaluation/rewind.
   {const e=setup(true);startPat(e,'sword_wave');e.pt=1000;runPat(e);const n=hazards.length;runPat(e);e.pt=100;runPat(e);e.pt=1000;runPat(e);check(hazards.length===n,'crossing events do not replay');}
   {const e=setup();player.inv=0;player.x=250;player.st='atk';player.atk='c1';player.combo=0;startPat(e,'guard');const old=[e.hp,e.gr,player.score,chain.n,player.hp,player.inv];damageEnemy(e,10,false);check(JSON.stringify(old)===JSON.stringify([e.hp,e.gr,player.score,chain.n,player.hp,player.inv]),'parry no side effects');check(e.aurelion.guard==='parry'&&player.st==='hurt','parry animation');for(let i=0;i<20;i++){updEnemy(e);if(player.inv>0)player.inv--;}check(player.hp<old[4],'counterattack lands');}
-  for(const mode of ['heavy','special','lightning']){const e=setup();player.st=mode==='special'?'special':'atk';startPat(e,'guard');damageEnemy(e,10,mode==='heavy',0,mode==='lightning');check(e.hp===1490&&e.gr===39&&e.aurelion.guard==='broken','break '+mode);}
+  for(const mode of ['heavy','special','lightning']){const e=setup();player.st=mode==='special'?'special':'atk';startPat(e,'guard');damageEnemy(e,10,mode==='heavy',0,mode==='lightning');check(e.hp===e.max-10&&e.gr===39&&e.aurelion.guard==='broken','break '+mode);}
   {const e=setup();startPat(e,'guard');for(let i=0;i<61;i++)updEnemy(e);check(e.aurelion.guard==='timeout','guard timeout');}
   {const e=setup();startPat(e,'combo');setAurelionTimeline(e,'combo','stop1');check(e.aurelion.timeline.filter(t=>t.d.hitboxes.length&&t.source===t.d.start).length===1,'combo stop1');setAurelionTimeline(e,'combo','stop2');check(e.aurelion.timeline.filter(t=>t.d.hitboxes.length&&t.source===t.d.start).length===2,'combo stop2');}
   {const e=setup();player.x=620;startPat(e,'charge');for(let i=0;i<180&&e.st==='pat';i++)updEnemy(e);check(e.aurelion.stats.opportunities===9,'charge maximum four body cycles plus stab');}
   {const e=setup();const random=Math.random;Math.random=()=>0;try{player.x=250;startAtk(0);check(e.pat==='guard','reactive guard at attack start');}finally{Math.random=random;}}
   {const e=setup();for(let i=0;i<3;i++)damageEnemy(e,1,false);check(e.aurelion.forceGuard&&pickAurelionPattern(e,50,0)==='guard','pressure forces next guard');}
   {const e=setup();startPat(e,'taunt');damageEnemy(e,1,false);check(e.st==='hurt','taunt interruptible');}
-  {const e=setup();e.st='stun';e.t=10;updEnemy(e);check(!e.invuln&&canHit(e),'groggy keeps common vulnerability');damageEnemy(e,10,false);check(e.hp===1485,'common 1.5 groggy multiplier');}
+  {const e=setup();e.st='stun';e.t=10;updEnemy(e);check(!e.invuln&&canHit(e),'groggy keeps common vulnerability');damageEnemy(e,10,false);check(e.hp===e.max-15,'common 1.5 groggy multiplier');}
   {const e=setup();introBoss=e;e.st='intro';scene='bossintro';introT=0;introLand=false;for(let i=0;i<141;i++)updIntro();check(scene==='bossintro','intro holds 141 ticks');updIntro();check(scene==='play','intro ends at 142');e.p2shown=true;e.aurelion.halo=true;check(aurelionHaloVisible(e),'phase2 halo');for(const st of ['down','stun','dead']){e.st=st;check(!aurelionHaloVisible(e),'hide halo '+st);}}
   for(const kind of ['gold_wave','gold_shock','judge_pillar'])for(const lane of [0,40]){const e=setup();player.x=300;player.y=420+lane;player.inv=0;const z=spawnAurelionFx(e,kind,300,420);z.age=4*MS;updateAurelionHazard(z);check((player.hp<player.max)===(lane===0),kind+' lane '+lane);}
   {const e=setup();player.x=300;player.z=70;player.inv=0;const z=spawnAurelionFx(e,'gold_shock',300,420);z.age=4*MS;updateAurelionHazard(z);check(player.hp===player.max,'jump clears shock');}
   {const e=setup();player.x=300;player.inv=0;inputDown('ArrowUp');for(let i=0;i<15;i++)updPlayer();clearInput();const z=spawnAurelionFx(e,'gold_wave',300,420);z.age=4*MS;updateAurelionHazard(z);check(player.hp===player.max&&420-player.y>24,'walking changes lane safely');}
   {const e=setup();player.x=300;player.inv=0;inputDown('Space');for(let i=0;i<19;i++)updPlayer();clearInput();const z=spawnAurelionFx(e,'gold_shock',300,420);z.age=4*MS;updateAurelionHazard(z);check(player.z>64*AURELION_K&&player.hp===player.max,'actual jump apex clears shock');}
   {const e=setup(true);startPat(e,'judgment');spawnAurelionEvent(e,{type:'spawn',id:'judge_mark'});const marks=JSON.stringify(e.aurelion.marks);player.x+=100;player.y+=40;updHazards();check(marks===JSON.stringify(e.aurelion.marks),'marks fixed');check(e.aurelion.marks.length===5,'five marks');player.inv=0;spawnAurelionEvent(e,{type:'spawn',id:'judge_pillar'});for(let i=0;i<15;i++)updHazards();check(player.hp===player.max,'outside marks safe');resetBossFx(e);check(!hazards.some(z=>z.kind==='judge_mark'&&!z.dead),'cancel markers');}
-  {const e=setup();e.hp=760;damageEnemy(e,10,false,0,true);check(e.hp===750&&e.phaseT===242&&e.invuln,'phase threshold');for(let i=0;i<146;i++)updEnemy(e);check(!e.aurelion.halo,'halo not early');updEnemy(e);check(e.aurelion.halo,'awaken third drawing halo');for(let i=147;i<242;i++)updEnemy(e);check(!e.phaseT&&!e.invuln,'242 ticks');damageEnemy(e,99999,true);for(let i=0;i<170;i++)updEnemy(e);check(!e.remove&&aurelionPose(e).f===120,'last death frame held');updEnemy(e);check(e.remove,'death removed after 121+50');}
+  {const e=setup();check(e.max===1800,"selected HP 1800");e.hp=910;damageEnemy(e,10,false,0,true);check(e.hp===900&&e.phaseT===242&&e.invuln,'phase threshold');for(let i=0;i<146;i++)updEnemy(e);check(!e.aurelion.halo,'halo not early');updEnemy(e);check(e.aurelion.halo,'awaken third drawing halo');for(let i=147;i<242;i++)updEnemy(e);check(!e.phaseT&&!e.invuln,'242 ticks');damageEnemy(e,99999,true);for(let i=0;i<170;i++)updEnemy(e);check(!e.remove&&aurelionPose(e).f===120,'last death frame held');updEnemy(e);check(e.remove,'death removed after 121+50');}
   for(const p2 of [false,true])for(const id of ['combo','whirl']){
     const e=setup(p2);player.inv=0;player.hp=1000;startPat(e,id);if(id==='combo')setAurelionTimeline(e,id,'full');
+    let downOnFirstHit=false,blocked=0;
+    const originalHurt=hurtPlayer;
+    hurtPlayer=(...args)=>{const immune=player.inv>0||player.st==='down',hit=originalHurt(...args);if(immune&&!hit)blocked++;return hit;};
     for(let i=0;e.st==='pat'&&i<400;i++){const a=e.aurelion,entry=a.timeline[a.cursor],hb=entry?.d.hitboxes?.[0];if(hb){player.x=e.x+e.face*(hb.box[0]+hb.box[2]/2)*AURELION_K;player.y=e.y;}
       // Keep the target in range; preserve real 40-tick invulnerability and down recovery.
       updPlayer();updEnemy(e);
+      if(a.stats.hits.length===1&&player.st==='down')downOnFirstHit=true;
     }
-    results.multihit.push({id,phase:p2?2:1,hits:e.aurelion.stats.hits});
+    hurtPlayer=originalHurt;
+    if(id==='whirl'){check(downOnFirstHit,'whirl first hit knocks down');check(blocked>0,'whirl later hits rejected by existing immunity');check(e.aurelion.stats.hits.length===1,'whirl hits only once through common down immunity');check(e.aurelion.stats.hits[0].damage===(p2?21:16),'whirl damage with common phase multiplier');}
+    results.multihit.push({id,phase:p2?2:1,hits:e.aurelion.stats.hits,blocked});
   }
+  {const e=setup(true);startPat(e,'whirl');for(let i=0;i<31;i++)updEnemy(e);player.inv=0;player.st='free';let ticks=0;
+    while(e.st==='pat'&&ticks++<200){const hb=e.aurelion.timeline[e.aurelion.cursor]?.d.hitboxes?.[0];if(hb){player.x=e.x+e.face*(hb.box[0]+hb.box[2]/2)*AURELION_K;player.y=e.y;}updPlayer();updEnemy(e);}
+    check(e.aurelion.stats.hits.length===1&&e.aurelion.stats.hits[0].baseDamage===16,'dodging early swings still upgrades first successful hit');
+  }
+  check(aurelionMoves.sword_wave.punish_window.length===22,'sword wave recovery stays 22 ticks');
   results.punish=punish();results.killEstimate=killEstimate();return results;
   function punish(){
     const rows=[];

@@ -1,13 +1,13 @@
 # 흑월의 기사 — BLACK MOON KNIGHT
 
-## v1.33 실행 및 보스 목록
+## v1.35 실행 및 보스 목록
 
 `python server.py`로 로컬 실행하거나 `streamlit run server.py`로 실행합니다.
 Streamlit에서는 이미지와 JavaScript를 단일 HTML에 포함하며 외부 CDN이나 fetch가 필요하지 않습니다.
 
 - 1스테이지: 도살자 고라스 — HP 700, `gorath-art.js` / `gorath-runtime.js`
 - 2스테이지: 모르그라 — HP 850 → 부활 후 1,200, `morgra-art.js` / `morgra-runtime.js`
-- 3스테이지: 황금왕 아우렐리온 — HP 1,500, 750에서 2페이즈, `aurelion-art.js` / `aurelion-runtime.js`
+- 3스테이지: 황금왕 아우렐리온 — HP 1,800, 900에서 2페이즈, `aurelion-art.js` / `aurelion-runtime.js`
 - 4·5스테이지: 기존 프로즌 그레이브로드·블랙 문 엠페러 유지
 
 아우렐리온은 `aurelion-runtime.js`의 `USE_AURELION_V133`을 `false`로 바꾸면

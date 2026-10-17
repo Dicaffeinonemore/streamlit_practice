@@ -359,7 +359,7 @@ function spawnWave(w) {
   }
 }
 function mkEnemy(type, x, y) {
-  const base = type==='boss3'&&USE_AURELION_V133?{...ET[type],h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
+  const base = type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
   const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
