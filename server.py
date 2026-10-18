@@ -86,13 +86,21 @@ def run_streamlit():
     import streamlit as st
 
     st.set_page_config(page_title="흑월의 기사 - BLACK MOON KNIGHT", page_icon="🌑", layout="wide")
+    # 좌우 여백 최소화: 기본 block-container 의 max-width / 좌우 padding 제거
     st.markdown(
-        "<style>.block-container{padding-top:1rem;max-width:1200px}</style>",
+        "<style>.block-container,.stMainBlockContainer{padding:1rem .5rem .5rem;max-width:100%}</style>",
         unsafe_allow_html=True,
     )
     review = st.radio("화면", ["게임", "원본 스프라이트 검수"], horizontal=True) == "원본 스프라이트 검수"
     if not review:
         st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
+        # iframe 을 브라우저 크기에 맞춰 16:9 로 확대한다. 너비는 가로폭과 (화면 높이 - 상단 UI) 중 작은 쪽.
+        # 캔버스 내부 해상도(960x540)는 그대로이고, index.html 의 #wrap 이 CSS 로만 늘어나므로 판정 좌표는 변하지 않는다.
+        st.markdown(
+            "<style>.block-container iframe,.stMainBlockContainer iframe{display:block;margin:0 auto;"
+            "width:min(100%,calc((100vh - 130px)*16/9))!important;height:auto!important;aspect-ratio:16/9}</style>",
+            unsafe_allow_html=True,
+        )
     html = build_reference_html() if review else build_single_html()
     height = 1000 if review else 680
     if hasattr(st, "iframe"):          # 최신 Streamlit (components.v1.html 은 제거 예정)
