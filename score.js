@@ -60,7 +60,44 @@
     }
     return { bus, voice, drum, dispose() { for(const n of nodes){try{n.stop();}catch{}n.disconnect();}nodes.clear();bus.disconnect();reverb.disconnect();wet.disconnect(); } };
   }
+  // 승리 BGM: 장조. 처음 2마디는 금관 팡파르, 그 뒤 I-V-vi-IV 개선 행진이 8마디 단위로 반복된다.
+  const victory = {
+    victory: { name: '승리의 개선가', bpm: 96, root: 41, chords: [0,7,9,5], victory: true },
+    ending:   { name: '새벽을 여는 기사', bpm: 80, root: 41, chords: [0,7,9,5], victory: true, final: true },
+  };
+  const MELODY = [[0,4,7,12],[11,7,4,7],[7,11,14,11],[14,null,11,7],[9,12,16,12],[9,null,7,4],[5,9,12,9],[7,5,2,null]];
+  function victoryStep(engine, T, st, t, sixteenth) {
+    const beat=sixteenth*4, s=st%16, bar=Math.floor(st/16), R=T.root;
+    if(bar===0) {                                   // 팡파르: 스네어 롤 위로 상승하는 금관, 박자 3에서 화음 폭발
+      const run={0:0,2:4,4:7,6:12};
+      if(s in run) engine.voice(R+12+run[s],t,beat*(s===6?1.4:.45),'brass',.06,(s/6-.5)*.4);
+      if(s<8&&s%2===0) engine.drum(t,.12,true);
+      if(s===8){[0,4,7].forEach((n,i)=>engine.voice(R+24+n,t,beat*1.9,'brass',.045,(i-1)*.4));engine.drum(t,.5);}
+      return;
+    }
+    if(bar===1) {                                   // 팡파르 끝: 으뜸화음을 길게
+      if(s===0){
+        [0,4,7,12].forEach((n,i)=>engine.voice(R+12+n,t,beat*3.6,'brass',.04,(i-1.5)*.3));
+        engine.voice(R-12,t,beat*3.8,'strings',.08);
+        [0,7,12].forEach((n,i)=>engine.voice(R+12+n,t,beat*3.8,'choir',.02,(i-1)*.3));
+        engine.drum(t,.55);
+      }
+      if(s===12) engine.drum(t,.2,true);
+      return;
+    }
+    const b=(bar-2)%8, deg=T.chords[Math.floor(b/2)%4], root=R+deg, tri=deg===9?[0,3,7]:[0,4,7];
+    if(s===0){
+      engine.voice(root-12,t,beat*3.8,'strings',.07,-.12);
+      tri.forEach((n,i)=>engine.voice(root+12+n,t,beat*3.7,'strings',.022,(i-1)*.55));
+      if(b%2===0) tri.forEach((n,i)=>engine.voice(root+12+n,t,beat*7.3,'choir',T.final?.026:.016,(i-1)*.3));
+      engine.drum(t,T.final?.26:.34);
+    }
+    if(s===8) engine.drum(t,T.final?.14:.22,true);
+    if(s%4===2) engine.voice(root+12+tri[(s>>2)%3],t,beat*.5,'strings',.02,s%8===2?-.3:.3);
+    if(s%4===0){const n=MELODY[b][s/4]; if(n!==null) engine.voice(R+24+n,t,beat*(T.final?1.4:.9),'brass',.04,-.05);}
+  }
   function step(engine, T, st, t, sixteenth) {
+    if(T.victory) return victoryStep(engine, T, st, t, sixteenth);
     const bar=Math.floor(st/16)%16,s=st%16,beat=sixteenth*4,root=T.root+T.chords[Math.floor(bar/2)%4];
     const lift=bar>=8?1.12:.9;
     if(s===0){
@@ -81,5 +118,5 @@
     }
     if(T.boss && s===10 && bar%2) engine.voice(T.root+12+T.motif[(bar+1)%4],t,beat*1.2,'brass',.038,.16);
   }
-  global.SCORE={ tracks, create, step };
+  global.SCORE={ tracks, victory, create, step };
 })(window);

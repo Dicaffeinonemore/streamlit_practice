@@ -52,6 +52,7 @@ function inputDown(code) {
 }
 function inputUp(code) { keys[code] = false; if (scene === 'tutorial') lightCaps(code, false); }
 addEventListener('keydown', e => {
+  if(!e.repeat&&vargulDebugKey(e.code)){e.preventDefault();return;}
   if (e.target.closest?.('input, select, textarea, button') && scene !== 'play' && !['Escape', 'KeyM'].includes(e.code)) return;
   if (e.metaKey || e.altKey) return;
   const code = UX.mapKey(e.code);
@@ -220,7 +221,14 @@ function showScreen(id) {
   screens.forEach(s => $(s).classList.toggle('show', s === id));
   $('skillbar').hidden = !!id; $('playPause').hidden = !!id;
   $('practiceGuide').hidden = !!id || !practice;
-  $('touchControls').hidden = !!id || !UX.options.touch;
+  syncTouchControls(id === 'settings' || (!id && scene === 'play'), id === 'settings');
+}
+// 모바일 키: 플레이 중에 표시하고, 설정 화면에서는 켜자마자 미리보기로 보여준다.
+function syncTouchControls(show = scene === 'play' || scene === 'settings', preview = scene === 'settings') {
+  const editing = UX.touchEditing;              // 배치 편집 중에는 끈 상태여도 보여 준다
+  $('touchControls').hidden = !editing && (!UX.options.touch || !show);
+  $('touchControls').classList.toggle('preview', preview && !editing);
+  $('touchControls').classList.toggle('editing', editing);
 }
 
 function toTutorial(from = 'title') {
@@ -282,7 +290,7 @@ $('btnPractice').onclick = beginPractice;
 $('btnPracticeGo').onclick = () => beginGame(true);
 $('btnPracticeHelp').onclick = () => { pauseGame(); toTutorial('pause'); };
 $('btnResume').onclick = resumeGame;
-$('playPause').onclick = () => pauseGame(); $('touchPause').onclick = () => pauseGame();
+$('playPause').onclick = () => pauseGame();
 $('btnPauseTitle').onclick = toTitle;
 $('btnRestart').onclick = () => { AUDIO.pause(false); if (practice) beginPractice(); else retryStage(); };
 $('btnTitleSettings').onclick = () => openSettings('title');
@@ -310,13 +318,14 @@ function onKeyOnce(code) {
   if (code === 'Escape') {
     if (['play', 'intro', 'bossintro'].includes(scene)) pauseGame();
     else if (scene === 'pause') resumeGame();
-    else if (scene === 'settings') closeSettings();
+    else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else closeSettings(); }
     else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else toTitle(); }
   }
 }
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
+  vargulRemains=[];
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
   arena = null;
@@ -349,7 +358,7 @@ function spawnWave(w) {
   for (const [type, side] of w.e) {
     if (ET[type].boss) {                           // 보스: 하늘에서 떨어져 착지 → 포효 → 이름 카드
       const b = mkEnemy(type, camX + VW * 0.72, clamp(player.y, GTOP + 40, GBOT - 30));
-      b.st = 'intro'; b.z = type === 'boss2' ? 0 : 360; b.face = -1;
+      b.st = 'intro'; b.z = type === 'boss2'||isVargul(b) ? 0 : 360; b.face = -1;
       enemies.push(b); introBoss = b; introT = 0; introLand = false; scene = 'bossintro';
       AUDIO.bossMusic(stageIdx);
       continue;
@@ -359,7 +368,10 @@ function spawnWave(w) {
   }
 }
 function mkEnemy(type, x, y) {
-  const base = type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
+  // The retained ET.boss4 / runLegacyPat / named renderer are bypassed only
+  // while USE_VARGUL_V136 is enabled; VARGUL_V136_OVERRIDE=false restores them.
+  const base = type==='boss4'&&USE_VARGUL_V136?{...ET[type],name:'바르굴, 얼어붙은 묘지왕',en:'VARGUL, THE FROZEN GRAVELORD',hp:2000,h:VARGUL_ART.worldHeight,hw:19,pats:VARGUL_RULES.names}:
+    type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
   const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
@@ -441,6 +453,7 @@ function hurtPlayer(dmg, dir, kd, source=null) {
 function playerStrike(A) {
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
   strikeMorgraCrows(A.reach);
+  strikeVargulOrbs(A.reach);
   let landed = false;
   for (const e of enemies) {
     if (!canHit(e) || p.hitSet.has(e)) continue;
@@ -514,6 +527,7 @@ function updSpecial() {
 function specialHit(last, k) {
   const p = player, f = p.face, mul = p.buff > 0 ? 1.5 : 1;
   const dmg = Math.round((last ? SPECIAL.fin : SPECIAL.slash) * mul), rx = last ? 110 : 80, ry = last ? 60 : 44;
+  strikeVargulOrbs(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry});
   let any = false;
   for (const e of enemies) {
     if (!canHit(e)) continue;
@@ -537,6 +551,7 @@ function fireBolts() {
   const p = player, xs = [];
   p.castFired = true; flashT = 200; flashCol = '207,224,255'; shake = Math.max(shake, 22); hitStop = Math.max(hitStop, 4);
   sfx('bolt');
+  strikeVargulOrbs(0,0,new Set(),{global:true});
   for (const e of enemies) {
     if (e.st === 'dead' || e.st === 'intro' || e.x < camX - 20 || e.x > camX + VW + 20) continue;
     xs.push([e.x, e.y]);
@@ -569,7 +584,7 @@ function startSkill(id) {
   if (!canStartSkill(id)) return false;
   const p = player;
   p.st = 'skill'; p.skill = id; p.t = 0; p.x0 = p.x; p.vx = 0; p.vz = 0; p.z = 0;
-  p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false; p.skillHits = new Set(); p.skillCd[id] = SKILLS[id].cd;
+  p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false; p.skillHits = new Set(); p.vargulSkillHits = new Map(); p.skillCd[id] = SKILLS[id].cd;
   const targets = enemies.filter(e => e.st !== 'dead' && Math.abs(e.y - p.y) < 60 && Math.abs(e.x - p.x) < 320)
     .sort((a, b) => Math.abs(a.x - p.x) - Math.abs(b.x - p.x));
   if (targets[0]) p.face = targets[0].x >= p.x ? 1 : -1;
@@ -583,6 +598,9 @@ function startSkill(id) {
 function skillStrike(phase, dmg, reach, behind, kd, fx) {
   strikeMorgraCrows(reach,behind);
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
+  p.vargulSkillHits ||= new Map();
+  if(!p.vargulSkillHits.has(phase))p.vargulSkillHits.set(phase,new Set());
+  strikeVargulOrbs(reach,behind,p.vargulSkillHits.get(phase),{depth:38});
   let landed = false;
   for (const e of enemies) {
     const key = phase + ':' + e.id;
@@ -793,6 +811,7 @@ function heal(n) {
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
 function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
+  if(isVargul(e)&&interceptVargulDamage(e))return;
   if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
   if (e.phaseT > 0 || e.st === 'reviving' || e.st === 'dead' || e.invuln) return;
   const p = player;
@@ -812,7 +831,9 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   if (!e.boss) target = { e, t: 150 };
 
   if (e.hp <= 0) {
+    if(isVargul(e)&&!e.p2shown){beginVargulTransition(e);return;}
     if(e.type==='boss2'&&!e.p2shown){beginMorgraRevival(e);return;}
+    if(e.type==='boss3'&&!e.p2shown){beginBossPhase2(e,true);return;}   // 아우렐리온: 1페이즈 체력을 다 깎으면 완전 회복 후 각성
     e.hp = 0; e.st = 'dead'; e.t = 0; e.pat = null;
     if (practice) return;
     p.score += e.d.score; dropFrom(e);
@@ -823,12 +844,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
     return;
   }
   if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
-    if (e.type!=='boss2' && !e.p2shown && e.hp <= e.max*.5) {
-      e.p2shown=true;e.gr=0;e.grT=0;resetBossFx(e);
-      e.phaseT=72;if(isAurelion(e))beginAurelionTransition(e);e.st='rec';e.t=0;e.recT=36;e.z=e.vz=e.vx=0;e.invuln=true;
-      hazards=hazards.filter(h=>h.type==='pwave');player.inv=Math.max(player.inv,90);
-      sfx('phase2');floatText(e.x,e.y-e.d.h-40,'PHASE 2','#ff5a6a');return;
-    }
+    if (e.type!=='boss2' && e.type!=='boss3' && !isVargul(e) && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
     if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
     e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
     if (e.gr >= e.grMax) {
@@ -844,9 +860,9 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
       resetBossFx(e);
       e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 3;
       if (e.type === 'boss3') spawnAdds(['rogue', 'rogue']);
-      else if (e.type === 'boss4') spawnAdds(['archer', 'grunt']);
+      else if (e.type === 'boss4'&&!isVargul(e)) spawnAdds(['archer', 'grunt']);
       else if (e.type === 'boss5') spawnAdds(['brute', 'archer']);
-    } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken')) { if(isAurelion(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
+    } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken') || (isVargul(e)&&e.st==='pat'&&!vargulArmored(e))) { if(isAurelion(e)||isVargul(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
   if (e.type === 'brute' && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
@@ -876,8 +892,19 @@ function startAttack(e, pat) {
 // 체력 절반 이하(2페이즈)에서는 탄 수가 늘고 쿨타임이 짧아진다
 function bossColors(e) { return e.type === 'boss4' ? ['#eaf8ff','#7ad8ff','#365caa'] : e.type === 'boss5' ? ['#ffe4fa','#ff498d','#691a52'] : ['#fff3b8','#f3d26a','#d4a437']; }
 function phase2(e) { return !!e.p2shown; }
-function resetBossFx(e) { resetAurelionPattern(e); e.pat = null; e.bdx = 0; e.bdy = 0; e.alpha = 1; e.wash = null; e.invuln = false; e.hot = false; }
+// 2페이즈 돌입: 그로기 게이지를 비우고 각성 모션(무적) 뒤 공격 재개.
+// refill(아우렐리온)이면 최대 체력을 AURELION_P2_HP 로 늘려 가득 채운다.
+const AURELION_P2_HP = 2200;
+function beginBossPhase2(e, refill) {
+  if (refill) { e.max = e.hp = AURELION_P2_HP; e.nextKd = e.max * 0.75; }
+  e.p2shown=true;e.gr=0;e.grT=0;resetBossFx(e);
+  e.phaseT=72;if(isAurelion(e))beginAurelionTransition(e);e.st='rec';e.t=0;e.recT=36;e.z=e.vz=e.vx=0;e.invuln=true;
+  hazards=hazards.filter(h=>h.type==='pwave');player.inv=Math.max(player.inv,90);
+  sfx('phase2');floatText(e.x,e.y-e.d.h-40,'PHASE 2','#ff5a6a');
+}
+function resetBossFx(e) { resetVargulPattern(e); resetAurelionPattern(e); e.pat = null; e.bdx = 0; e.bdy = 0; e.alpha = 1; e.wash = null; e.invuln = false; e.hot = false; }
 function pickPat(e, adx, ady, p2) {
+  if(isVargul(e))return pickVargulPattern(e,adx,ady);
   if(isAurelion(e))return pickAurelionPattern(e,adx,ady);
   if(e.type==='boss2')return pickMorgraPattern(e,adx,ady);
   p2=false;
@@ -907,15 +934,17 @@ function startPat(e, pat) {
   e.face = player.x >= e.x ? 1 : -1;
   if(e.type==='boss2')initMorgraPattern(e);
   if(isAurelion(e))initAurelionPattern(e);
+  if(isVargul(e))initVargulPattern(e);
   sfx('bwind');
 }
 function endPat(e, next) {
   resetBossFx(e);
   e.st = 'chase'; e.t = 0; e.wait = 0;
-  e.atkCd = isAurelion(e)?aurelionAttackGap(e):Math.round((700 + Math.random() * 600) * (e.type==='boss2' && phase2(e) ? 0.8 : 1) / MS);
+  e.atkCd = isVargul(e)?vargulAttackGap(e):isAurelion(e)?aurelionAttackGap(e):Math.round((700 + Math.random() * 600) * (e.type==='boss2' && phase2(e) ? 0.8 : 1) / MS);
   if (next) startPat(e, next);
 }
 function bossChase(e) {
+  if(isVargul(e)){chaseVargul(e);return;}
   if(isAurelion(e)){chaseAurelion(e);return;}
   const p = player, d = e.d, dx = p.x - e.x, dy = p.y - e.y, adx = Math.abs(dx);
   e.face = dx >= 0 ? 1 : -1;
@@ -938,7 +967,7 @@ function alignY(e, k) { e.y += clamp(player.y - e.y, -k, k); }   // 근접 패�
 
 function runPat(e) {
   const count=hazards.length;
-  if(isAurelion(e))runAurelionPattern(e);else if(e.type==='boss2')runMorgraPattern(e);else runLegacyPat(e);
+  if(isVargul(e))runVargulPattern(e);else if(isAurelion(e))runAurelionPattern(e);else if(e.type==='boss2')runMorgraPattern(e);else runLegacyPat(e);
   for(let i=count;i<hazards.length;i++) {
     hazards[i].owner ??= e;
     hazards[i].damageScale ??= e.p2shown?(e.type==='boss2'?1.5:1.3):1;
@@ -1178,6 +1207,7 @@ function slamImpact(e) {
 }
 
 function updEnemy(e) {
+  if(updateVargulState(e))return;
   if(updateAurelionState(e))return;
   if(e.st==='reviving'){updateMorgraRevival(e);return;}
   if(e.morgraCooldown>0)e.morgraCooldown--;
@@ -1311,7 +1341,7 @@ function updHazards() {
   const p = player, off = z => z.x < camX - 60 || z.x > camX + VW + 60;
   for (const z of hazards) {
     z.age += MS;
-    if(updateAurelionHazard(z)||updateMorgraHazard(z))continue;
+    if(updateVargulHazard(z)||updateAurelionHazard(z)||updateMorgraHazard(z))continue;
     if (z.owner && ['dead', 'down', 'stun'].includes(z.owner.st) && ['rift', 'eclipse'].includes(z.type)) { z.dead = true; continue; }
     switch (z.type) {
       case 'rift': {
@@ -1320,7 +1350,7 @@ function updHazards() {
         if (z.age >= z.delay && z.age <= z.delay + z.life && !z.hit && p.x >= z.x && p.x <= z.x + z.width && Math.abs(p.y - z.y) < z.depth && p.z < jumpLimit) {
           if (hurtPlayer(12, p.x < z.x + z.width / 2 ? -1 : 1, true, z)) z.hit = true;
         }
-        if (z.age > z.delay + z.life) z.dead = true;
+        if (z.age > z.delay + z.life + ZONE_FADE) z.dead = true;   // 지대 그림(잔불 프레임)이 사라질 시간
         break;
       }
       case 'eclipse': {
@@ -1429,6 +1459,8 @@ function updHazards() {
         if (z.age > 2600 || off(z)) z.dead = true;
         break;
       case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
+        z.vargulHits ||= new Set();
+        strikeVargulOrbs(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26});
         if (z.red) {
           const from = z.x, step = Math.min(9, 520 - z.travel);
           z.x += z.dir * step; z.travel += step;
@@ -1502,7 +1534,7 @@ function update() {
   updHazards();
 
   // 스테이지 클리어 판정 (보스 사망)
-  if (clearT === 0 && waveIdx >= waves.length && !camLock && enemies.length === 0) { clearT = 1; AUDIO.stop(0.4); sfx('victory'); }
+  if (clearT === 0 && waveIdx >= waves.length && !camLock && enemies.length === 0) { clearT = 1; AUDIO.victoryMusic(stageIdx, stageIdx + 1 >= STAGES.length); }   // 승리 BGM: 팡파르 → 개선 행진 (마지막은 엔딩곡)
   if (clearT > 0 && ++clearT > 200) finishStage();
 
   // 통 / 아이템
@@ -1540,10 +1572,11 @@ function updFx() {
 function updIntro() {
   const b = introBoss;
   introT += MS;
-  const duration=aurelionIntroDuration(b),u = introT / duration;
+  const duration=vargulIntroDuration(b),u = introT / duration;
+  if(isVargul(b))updateVargulIntro(b);
   if(isAurelion(b))updateAurelionIntro(b);
-  b.z = (b.type === 'boss2' || b.type === 'boss3') ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
-  if (!introLand && u >= 0.25 && b.type !== 'boss2' && !isAurelion(b)) {
+  b.z = (b.type === 'boss2' || b.type === 'boss3'||isVargul(b)) ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
+  if (!introLand && u >= 0.25 && b.type !== 'boss2' && !isAurelion(b)&&!isVargul(b)) {
     introLand = true; b.z = 0; shake = 22; sfx('land');
     for (let k = 0; k < 7; k++) burst(b.x + (k - 3) * 10, b.y, 4, ['#fff0c0', '#c8b890', '#8a7a5a']);
     impact(b.x, b.y, 10, 2, 1);
@@ -1966,6 +1999,7 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if(drawVargul(e))return;
   if(drawAurelion(e))return;
   if(drawMorgra(e))return;
   if (drawGorath(e)) return;
@@ -2388,7 +2422,8 @@ function drawGroundFx(L) {
       const active = z.age >= z.delay, c = z.kind === 'frost' ? '#7ad8ff' : z.kind === 'abyss' ? '#ce8cff' : '#ff965c';
       const x = fxX(z.x), y = fxY(z.y - z.depth), w = z.width / SC, h = z.depth * 2 / SC;
       const warning = riftWarningAlpha(z);
-      L.rect(x, y, w, h, c, active ? .65 : .38 * warning);
+      if (active && z.age > z.delay + z.life) continue;          // 판정이 끝난 뒤에는 지대 그림만 사라지며 남는다
+      L.rect(x, y, w, h, c, active ? (ZONE_IMAGES[z.kind]?.naturalWidth ? .3 : .65) : .38 * warning);
       L.line(x, y, x + w, y, c, 2, warning); L.line(x, y + h, x + w, y + h, c, 2, warning);
       L.line(x, y, x, y + h, c, 2, warning); L.line(x + w, y, x + w, y + h, c, 2, warning);
       for (let dx = 5; dx < w; dx += 16) L.line(x + dx, y + 2, x + Math.min(w, dx + 8), y + h - 2, c, 1, .65 * warning);
@@ -2597,6 +2632,7 @@ function portraitHD(id) {
   return c;
 }
 function portrait(id) {
+  if(id==='boss4'&&USE_VARGUL_V136&&getVargulPortrait())return getVargulPortrait();
   if(id==='boss3'&&getAurelionPortrait())return getAurelionPortrait();
   if(id==='boss2' && getMorgraPortrait())return getMorgraPortrait();
   if(id==='boss1' && getGorathPortrait())return getGorathPortrait();
@@ -2760,9 +2796,15 @@ function updateSkillButtons() {
       const cd = player ? player.skillCd[id] : 0;
       b.disabled = !canStartSkill(id);
       b.title = cd > 0 ? `${(cd / 1000).toFixed(1)}초` : b.disabled ? '동작 종료 후 사용' : '준비 완료';
-      b.textContent = b.dataset.label + (cd > 0 ? ` ${Math.ceil(cd / 1000)}` : '');
+      b.style.setProperty('--cool', clamp(cd / SKILLS[id].cd, 0, 1).toFixed(3));
+      b.dataset.cooldown = cd > 0 ? Math.ceil(cd / 1000) : '';
+      b.classList.toggle('ready', !b.disabled);
     }
   });
+  if (player) {
+    $('touchPad').querySelector('.t-special').classList.toggle('ready', player.sp >= SP_MAX);
+    $('touchPad').querySelector('.t-magic').dataset.count = player.mg;
+  }
 }
 
 function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별, 공격 예고 !
@@ -2775,7 +2817,7 @@ function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별,
     }
   }
   const tele=e.type==='boss2'?(morgraMoves[e.morgraMove]?.phases?.startup?.[1]+1||0)*MS:(TELE[e.pat]||0);
-  const warnNow = isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
+  const warnNow = isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
   if (warnNow) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
 }
 
@@ -2796,6 +2838,7 @@ function render() {
   drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY);         // ↓ 월드 좌표 (1.5배 줌)
   drawFloor(theme);
+  drawVargulRemains();drawVargulHazards(true);
   if (stage) {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
     const sp = player.st === 'special' ? player.t * MS : -1;
@@ -2804,6 +2847,7 @@ function render() {
     barrels.forEach(b => list.push({ y: b.y, f: () => drawBarrel(b) }));
     items.forEach(i => list.push({ y: i.y, f: () => drawItem(i) }));
     enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemy(e) }));
+    hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, f: () => drawZoneEruption(z) }); });
     ghosts.forEach(g => { if (sp < 0 || g.id !== 'player') list.push({ y: g.y - 0.5, f: () => drawGhost(g) }); });
     if (sp < 0) list.push({ y: player.y, f: drawPlayer });
     list.sort((a, b) => a.y - b.y).forEach(l => l.f());
@@ -2824,6 +2868,7 @@ function render() {
     drawGorathHazards();
     drawMorgraHazards();
     drawAurelionHazards();
+    drawVargulHazards(false);
     drawGorathGrab();
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }
@@ -2831,7 +2876,7 @@ function render() {
   drawVignette();
   ctx.restore();
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
-  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / aurelionIntroDuration(introBoss)); if (introBoss) drawBossBar(introBoss); }
+  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / vargulIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
 
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
@@ -2842,6 +2887,7 @@ function render() {
     ctx.globalAlpha = 1;
   }
   if (clearT > 20 && scene === 'play') outlineText('VICTORY!', W / 2, H / 2 - 20, '#ffd23f', 'bold 64px sans-serif');
+  drawVargulDebug();
 }
 
 // 보스 등장: 위아래 검은 띠(시네마 화면) + 미끄러져 들어오는 이름 카드
@@ -2894,7 +2940,7 @@ function loop(t) {
   else render();
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
   $('skillbar').hidden = scene !== 'play';
-  $('touchControls').hidden = !UX.options.touch || scene !== 'play';
+  syncTouchControls();
   $('practiceGuide').hidden = !practice || scene !== 'play';
   requestAnimationFrame(loop);
 }
