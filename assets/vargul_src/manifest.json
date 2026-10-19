@@ -1,0 +1,614 @@
+{
+  "version": 1,
+  "game_version": "1.36",
+  "authority": "2026-10-19 사용자 결정 사항과 1단계 그림 처리 표",
+  "source_archive": "Vargul_All_Images_Collection_UPDATED.zip",
+  "original_policy": "original/ 및 원본 ZIP 보존; 이름별 사본을 사용",
+  "units": {
+    "damage": 1.0,
+    "x_height_speed": 0.5112,
+    "depth": 1.0,
+    "depth_basis": {
+      "wave": [
+        16,
+        16
+      ],
+      "shock": [
+        24,
+        24
+      ]
+    },
+    "time": 1.0
+  },
+  "barel_height_world": 102.24,
+  "target_body_world": 127.8,
+  "entries": [
+    {
+      "source": "original/녹색_배경의_얼음_왕실_병사_스프라이트_시트.png",
+      "file": "motion/p1_idle.png",
+      "id": "p1_idle",
+      "rows": [
+        5,
+        4
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "루프",
+      "sha256": "a72a3fa2aacce2fd39673881ce95c83e680ab8df908879a209fc5e428fd75cc0",
+      "frames": 9
+    },
+    {
+      "source": "original/초록_배경의_얼음_군주_걷기_스프라이트_시트.png",
+      "file": "motion/p1_walk.png",
+      "id": "p1_walk",
+      "rows": [
+        5,
+        4
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "루프",
+      "sha256": "a716e3d644200848b558e231ea07d6bf8173a489424b4ab077abe48c8fca89c8",
+      "frames": 9
+    },
+    {
+      "source": "original/Vargul_P1_INTRO_Ice_Throne_16frames_NEW.png",
+      "file": "motion/p1_intro.png",
+      "id": "p1_intro",
+      "rows": [
+        8,
+        8
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "uniform",
+      "notes": "얼음 왕좌까지 캐릭터에 포함. 그림끼리 붙어 있으니 균등 칸으로 자름",
+      "sha256": "219a684f7a8f8644eec454bf26da0ae302db3ae1800194eb58db63a0bef09295",
+      "frames": 16
+    },
+    {
+      "source": "original/얼음_창기사_스프라이트_시트.png",
+      "file": "motion/p1_spear_combo.png",
+      "id": "p1_spear_combo",
+      "rows": [
+        3,
+        3,
+        3
+      ],
+      "row_count": 3,
+      "role": "motion",
+      "reference_first": true,
+      "split": "components_then_uniform",
+      "notes": "첫 그림 = 크기 기준(버림). 동작 8장",
+      "sha256": "d14d07343cdd1c05f2b19bc3a22bda12f56a34496c4428c9942407a59c2839be",
+      "frames": 8
+    },
+    {
+      "source": "original/wide_flat_game_sprite_sheet_style_image_on_a_bri.png",
+      "file": "motion/p1_dash.png",
+      "id": "p1_dash",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "a1b9e85a6d197511db9b55411fa2dddb4c1e3e64ef84ef78cc6cdffb3a5c8393",
+      "frames": 16
+    },
+    {
+      "source": "original/wide_flat_sprite_sheet_style_image_on_a_bright_gr.png",
+      "file": "motion/p1_sword_summon.png",
+      "id": "p1_sword_summon",
+      "rows": [
+        8,
+        8
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "seeded_geodesic",
+      "notes": "사용자 추가 정정: y464에서 분리, 몸통 씨앗으로16장 경계 추출. 가려진 옷은 그리지 않음. 심한 손상5장 이상 중단.",
+      "sha256": "dadf61dac83450b86ad9e26e2db4ac7bc3dda883f81adec99aceb7ec3c65b617",
+      "frames": 16
+    },
+    {
+      "source": "original/wide_horizontal_sprite_sheet_style_image_on_a_bri.png",
+      "file": "motion/p1_cross.png",
+      "id": "p1_cross",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "118858b4908492891695d7f36da4b3134fd2892ba4f8a8947fb12fe45eef3172",
+      "frames": 16
+    },
+    {
+      "source": "original/초록_배경의_얼음_군주_스프라이트_시트.png",
+      "file": "motion/p1_orb_summon.png",
+      "id": "p1_orb_summon",
+      "rows": [
+        4,
+        4
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "29ab0b59956469dd56d726bfb2fdb3bc29bd901ee2798e26fc7ff8978fb9a319",
+      "frames": 8
+    },
+    {
+      "source": "original/wide_bright_chroma_key_green_background_with_a_ti.png",
+      "file": "motion/p1_sweep.png",
+      "id": "p1_sweep",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "b019ac4de4f877a8ecd988163ebb2853317ae455a0df595efab7c70077e8e5ba",
+      "frames": 16
+    },
+    {
+      "source": "original/얼음_왕의_아홉_가지_소환_동작.png",
+      "file": "motion/p1_taunt.png",
+      "id": "p1_taunt",
+      "rows": [
+        3,
+        3,
+        3
+      ],
+      "row_count": 3,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "7114060365ba6c3acc87600a696ee2c6528d1d577fbfe407829d74f0accfbe22",
+      "frames": 9
+    },
+    {
+      "source": "original/a_wide_sprite_sheet_style_image_on_a_bright_chroma.png",
+      "file": "motion/p1_hurt.png",
+      "id": "p1_hurt",
+      "rows": [
+        7,
+        7
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "1줄 = 상단 피격, 2줄 = 하단 피격",
+      "sha256": "8ff35bb2680a6d5c7a9c71188656a482f68ed504b7fc6add97b22092e951d7d0",
+      "frames": 14
+    },
+    {
+      "source": "original/a_wide_green_screen_sprite_sheet_animation_keyfram.png",
+      "file": "motion/p1_knockdown.png",
+      "id": "p1_knockdown",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "4c676971da98433b207e47dbbcbafa4461cfc77859625f456de016f864076bb1",
+      "frames": 16
+    },
+    {
+      "source": "original/얼음_왕의_점진적_변신_스프라이트_시트.png",
+      "file": "motion/awaken.png",
+      "id": "awaken",
+      "rows": [
+        4,
+        4
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "1→2페이즈. 끝나면 p2_idle로 8틱 크로스페이드",
+      "sha256": "ba4b0dd885b6d90546d5934d240bddc431632a1cd832b37283cf46f2ffd087cf",
+      "frames": 8
+    },
+    {
+      "source": "original/초록_배경의_얼음_전사_스프라이트_시트.png",
+      "file": "motion/p2_idle.png",
+      "id": "p2_idle",
+      "rows": [
+        5,
+        4
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "루프",
+      "sha256": "d70658348e5df8b1f73141c411c3041ed4eb95ae83c2ae68c48e3f1cc57de57c",
+      "frames": 9
+    },
+    {
+      "source": "original/a_wide_sprite_sheet_style_image_overall_scene_is.png",
+      "file": "motion/p2_walk.png",
+      "id": "p2_walk",
+      "rows": [
+        4,
+        4,
+        4
+      ],
+      "row_count": 3,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "루프",
+      "sha256": "fb8c0534379ced2c13e139a5896057974a2230c278865a8b1a6504a263db5b4b",
+      "frames": 12
+    },
+    {
+      "source": "original/a_wide_bright_green_screen_background_image_with.png",
+      "file": "motion/p2_combo.png",
+      "id": "p2_combo",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "85f0ce727985ecbf11366a426617c9fb751f8a19ab456b20d8cbf5b5b54e5b45",
+      "frames": 16
+    },
+    {
+      "source": "original/a_wide_flat_compositing_sprite_sheet_style_image.png",
+      "file": "motion/p2_dash.png",
+      "id": "p2_dash",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "12장째 회전",
+      "sha256": "c67bd5107e698e59af6b9e3706d72967451ae5f588994a877dcb341c00075e71",
+      "frames": 16
+    },
+    {
+      "source": "original/a_wide_2d_sprite_sheet_style_image_on_a_solid_brig.png",
+      "file": "motion/p2_cast.png",
+      "id": "p2_cast",
+      "rows": [
+        5,
+        5,
+        5,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "사용자 정정: 19장 모두 동작. 4줄은 덩어리 추출. 크기 기준 d19. 시전1–8, 집중9–12, 가리키기·회수13–19; 십자 표식d8.",
+      "sha256": "aa1861a82f07d446727801bc1ff7aad1346cc64183405bbc1302958e0f407518",
+      "frames": 19
+    },
+    {
+      "source": "original/a_wide_green_screen_sprite_sheet_game_animation.png",
+      "file": "motion/p2_cast_b.png",
+      "id": "p2_cast_b",
+      "rows": [
+        4,
+        4,
+        4
+      ],
+      "row_count": 3,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "구슬",
+      "sha256": "ae0ffc5109f0aaea99d3e3fb745761b6311ca254a6fc2089bc873ffe44f81ce3",
+      "frames": 12
+    },
+    {
+      "source": "original/얼음_창_전사의_스프라이트_시퀀스.png",
+      "file": "motion/p2_sweep.png",
+      "id": "p2_sweep",
+      "rows": [
+        5,
+        4
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "86c916f96ff4176079fd9ee84d880a967dd8e9fb669b8c04bf9e46270d02f2fa",
+      "frames": 9
+    },
+    {
+      "source": "original/초록_배경의_얼음_전사_16연속_스프라이트.png",
+      "file": "motion/ultimate.png",
+      "id": "ultimate",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "21e2702fd0844dc2995799b64f8d47b33764ccb317b35fe14efe7ded688459cd",
+      "frames": 16
+    },
+    {
+      "source": "original/a_wide_flat_game_sprite_sheet_style_image_overa.png",
+      "file": "motion/p2_hurt.png",
+      "id": "p2_hurt",
+      "rows": [
+        6,
+        8
+      ],
+      "row_count": 2,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "c41b57aa046d5e21d632b7138a1a2ef359cee2daec1849e045251a6a96ad370b",
+      "frames": 14
+    },
+    {
+      "source": "original/a_wide_high_resolution_sprite_sheet_style_image_o.png",
+      "file": "motion/p2_knockdown.png",
+      "id": "p2_knockdown",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "",
+      "sha256": "f0a6ca9f14a6b46ae035e1748d13e796b836ef74c09c0abda41db353bd360d18",
+      "frames": 16
+    },
+    {
+      "source": "original/Vargul_P2_DEATH_16frames_chromakey.png",
+      "file": "motion/death.png",
+      "id": "death",
+      "rows": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "row_count": 4,
+      "role": "motion",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "초록 배경판",
+      "sha256": "0b3c73d78ff95e3798017c5e4c6ad27c6430885573b7c6ca79abeecfba898478",
+      "frames": 16
+    },
+    {
+      "source": "original/a_wide_high_resolution_clean_black_background_sp.png",
+      "file": "fx/fx_sheet_A.png",
+      "id": "fx_sheet_A",
+      "rows": [
+        16,
+        13,
+        13,
+        11,
+        16,
+        15
+      ],
+      "row_count": 6,
+      "role": "fx",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "찌르기 섬광 / 돌진 서리 / 얼음 구슬 / 파편 / 빙검 낙하(예비) / 빨간 타원 표식",
+      "sha256": "71154f2708a709e36b376cbd7924f511e0a9f2815ec04ea35527e58f34a62aea",
+      "frames": 84,
+      "count_origin": "??? ?? ?? ?. ?? ??/??? ?? ??. ??? x/y ?? processing.json."
+    },
+    {
+      "source": "original/wide_black_background_sprite_sheet_concept_art_c.png",
+      "file": "fx/fx_sheet_B.png",
+      "id": "fx_sheet_B",
+      "rows": [
+        17,
+        13,
+        15,
+        13,
+        16
+      ],
+      "row_count": 5,
+      "role": "fx",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "빙검 낙하·충돌 / 얼음 폭발 / 빨간 타원 표식 / 빨간 십자 표식 / 십자 분출",
+      "sha256": "69130db3e843f8ae55ddc86067cf9c28f74c63c6c2ff5db35bf99749b881a828",
+      "frames": 74,
+      "count_origin": "??? ?? ?? ?. ?? ??/??? ?? ??. ??? x/y ?? processing.json."
+    },
+    {
+      "source": "original/a_high_resolution_dark_fantasy_game_vfx_sprite_sh.png",
+      "file": "fx/fx_sheet_C.png",
+      "id": "fx_sheet_C",
+      "rows": [
+        21,
+        13,
+        11,
+        16
+      ],
+      "row_count": 4,
+      "role": "fx",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "거대 얼음창 낙하 / 빙하 충돌 / 궁극기 표식(빨강) / 서리 오라 루프",
+      "sha256": "95dfe8caf024f4f69d7a9f247665367fe35540df48fd23b4c4f3d976e79701d0",
+      "frames": 61,
+      "count_origin": "??? ?? ?? ?. ?? ??/??? ?? ??. ??? x/y ?? processing.json."
+    },
+    {
+      "source": "original/빙결_왕자의_장엄한_얼음창.png",
+      "file": "reference/master_p1.png",
+      "id": "master_p1",
+      "rows": [],
+      "row_count": 0,
+      "role": "reference",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "게임에 안 씀",
+      "sha256": "bc73f8524f4c7e77401be83e06434fe83728c9071ebf74a6ff9f58c72b39933f"
+    },
+    {
+      "source": "original/얼음_왕의_창날_전투_자세.png",
+      "file": "reference/master_p2.png",
+      "id": "master_p2",
+      "rows": [],
+      "row_count": 0,
+      "role": "reference",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "문신 색 기준으로만 사용",
+      "sha256": "693addf749f9ae367b8339245d0d34e422a092f61dbc1e565bb7d2612580ec8d"
+    },
+    {
+      "source": "original/wide_horizontal_image_of_a_pixel_art_character_co.png",
+      "file": "reference/concept_sheet.png",
+      "id": "concept_sheet",
+      "rows": [],
+      "row_count": 0,
+      "role": "reference",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "안 씀",
+      "sha256": "d19b98fca4c35394195e344ebaec2618a04f51024dbbc52aea809b1d4b601449"
+    },
+    {
+      "source": "original/빙결왕자_2D픽셀_960x540.png",
+      "file": "reference/pixel_preview.png",
+      "id": "pixel_preview",
+      "rows": [],
+      "row_count": 0,
+      "role": "reference",
+      "reference_first": false,
+      "split": "components_then_uniform",
+      "notes": "안 씀",
+      "sha256": "43904aecb96dab07caf98564288d061786de61bbf9835c9812cced5ed7c899cd"
+    },
+    {
+      "source": "original/a_bright_green_chroma_key_background_with_a_sprite.png",
+      "file": "unused/a_bright_green_chroma_key_background_with_a_sprite.png",
+      "id": "a_bright_green_chroma_key_background_with_a_sprite",
+      "role": "unused",
+      "rows": [],
+      "notes": "사용자가 지정한 미사용 원본. 게임 번들에 포함하지 않음.",
+      "sha256": "37a7872e9bfecbd11b768f1694b2fc46872de87c005ab16fd47f28c59e3d7141"
+    },
+    {
+      "source": "original/a_wide_black_background_sprite_sheet_style_image.png",
+      "file": "unused/a_wide_black_background_sprite_sheet_style_image.png",
+      "id": "a_wide_black_background_sprite_sheet_style_image",
+      "role": "unused",
+      "rows": [],
+      "notes": "사용자가 지정한 미사용 원본. 게임 번들에 포함하지 않음.",
+      "sha256": "5c58d3819345593a841a609a373094b4cfb3abe2e40062c7556a9d9917d6b910"
+    },
+    {
+      "source": "original/a_wide_green_screen_sprite_sheet_concept_art_gri.png",
+      "file": "unused/a_wide_green_screen_sprite_sheet_concept_art_gri.png",
+      "id": "a_wide_green_screen_sprite_sheet_concept_art_gri",
+      "role": "unused",
+      "rows": [],
+      "notes": "사용자가 지정한 미사용 원본. 게임 번들에 포함하지 않음.",
+      "sha256": "6f227de639380cca6294fe506c0ee776986562acdc723656b4b9f323e6d7e2cb"
+    },
+    {
+      "source": "original/a_wide_sprite_sheet_style_image_on_a_bright_green.png",
+      "file": "unused/a_wide_sprite_sheet_style_image_on_a_bright_green.png",
+      "id": "a_wide_sprite_sheet_style_image_on_a_bright_green",
+      "role": "unused",
+      "rows": [],
+      "notes": "사용자가 지정한 미사용 원본. 게임 번들에 포함하지 않음.",
+      "sha256": "f1334a45c32003eeff1beb0f5234a5d1da6389dfd82e3b59c5d14375dbb7e6d5"
+    },
+    {
+      "source": "original/wide_green_screen_sprite_sheet_frame_by_frame_ga.png",
+      "file": "unused/wide_green_screen_sprite_sheet_frame_by_frame_ga.png",
+      "id": "wide_green_screen_sprite_sheet_frame_by_frame_ga",
+      "role": "unused",
+      "rows": [],
+      "notes": "사용자가 지정한 미사용 원본. 게임 번들에 포함하지 않음.",
+      "sha256": "ee10e80bfc6bffa257b0e2797947f5ed78de805c080b1f9e4935c34d862db746"
+    },
+    {
+      "source": "original/초록_배경의_얼음_창_기사_걷기_스프라이트_시트.png",
+      "file": "unused/초록_배경의_얼음_창_기사_걷기_스프라이트_시트.png",
+      "id": "초록_배경의_얼음_창_기사_걷기_스프라이트_시트",
+      "role": "unused",
+      "rows": [],
+      "notes": "사용자가 지정한 미사용 원본. 게임 번들에 포함하지 않음.",
+      "sha256": "fd40ef7218dba6ca10197ce24bd4f7cb74002f442d5fdf739a6112ff211e3364"
+    }
+  ],
+  "corrections": [
+    "p2_cast는 사용자 추가 답변에 따라 19장(5,5,5,4)."
+  ],
+  "decisions": {
+    "phase1_hp": 2000,
+    "phase2_refill_hp": 2500,
+    "transition_at": "phase1_depleted",
+    "ultimate_first_threshold": "phase2_hp <= 35%",
+    "rules_reference": "Actual in-game Aurelion; logic not connected in stage 1",
+    "p1_third_hit": "deep_thrust d7-8; windup hold d7 for 14 ticks; reach x1.2",
+    "p2_combo_third_hit": "uppercut",
+    "stage_order": [
+      "art",
+      "data_logic",
+      "validation"
+    ]
+  }
+}

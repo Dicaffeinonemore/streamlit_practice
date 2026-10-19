@@ -10,11 +10,16 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const scripts = JSON.parse(fs.readFileSync(path.join(root, 'server.py'), 'utf8').match(/SCRIPTS = (\[.*?\])/)[1]);
 for (const name of scripts) new vm.Script(fs.readFileSync(path.join(root, name), 'utf8'), { filename: name });
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.AURELION_V133==='false'?'<script>globalThis.AURELION_V133_OVERRIDE=false</script>':''));
-const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), html);
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.AURELION_V133==='false'?'<script>globalThis.AURELION_V133_OVERRIDE=false</script>':'')+(process.env.VARGUL_V136==='false'?'<script>globalThis.VARGUL_V136_OVERRIDE=false</script>':'')+(process.env.VARGUL_SUITE?'<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>':''));
+const bgmPath=path.join(root,'assets/bgm/boss.mp3');
+const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
+const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
 const allowed = new Set(['index.html', ...scripts]);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
+  if(name==='favicon.ico'){res.writeHead(204).end();return;}
+  if(name==='assets/bgm/boss.mp3'&&fs.existsSync(bgmPath)){res.setHeader('Content-Type','audio/mpeg');res.end(fs.readFileSync(bgmPath));return;}
+  if(name==='production.html'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(embedded.replace('<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>',''));return;}
   if (name !== 'embedded.html' && !allowed.has(name)) { res.writeHead(404).end(); return; }
   res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
   res.end(name === 'embedded.html' ? embedded : (name==='index.html'?html:fs.readFileSync(path.join(root, name))));
@@ -152,6 +157,24 @@ async function scoreChecks() {
     AUDIO.stop(0); AUDIO.enable(false); AUDIO.enable(true);
     check(AUDIO.currentMusic() === null, 'Stopped score cannot restart after mute');
   }
+  const wins = new Set();
+  for (const win of ['victory', 'ending']) {
+    const data = (await AUDIO.renderPreview(win, false, 10)).getChannelData(0);
+    let peak = 0, energy = 0, hash = 0;
+    for (let i = 0; i < data.length; i++) { check(Number.isFinite(data[i]), 'Finite victory samples'); peak = Math.max(peak, Math.abs(data[i])); energy += data[i] * data[i]; if (i % 997 === 0) hash += data[i] * i; }
+    const rms = Math.sqrt(energy / data.length);
+    check(peak < .98 && rms > .005, 'Audible, unclipped ' + win + ' score (rms ' + rms + ', peak ' + peak + ')');
+    wins.add(hash.toFixed(4)); results.push({ win, rms: +rms.toFixed(4), peak: +peak.toFixed(4) });
+  }
+  check(wins.size === 2, 'Victory and ending are distinct');
+  for (const s of [0, 4]) {
+    startStage(s); waveIdx = stage.waves.length; camLock = false; enemies = []; clearT = 0; scene = 'play'; update();
+    const m = AUDIO.currentMusic();
+    check(clearT > 0 && m?.victory === (s === 4 ? 'ending' : 'victory'), 'Clearing a stage starts the victory score');
+    const name = m.name; AUDIO.enable(true); AUDIO.enable(false); AUDIO.enable(true);
+    check(AUDIO.currentMusic()?.name === name, 'Mute/resume retains victory score');
+  }
+  startStage(1); check(AUDIO.currentMusic()?.victory === null && AUDIO.currentMusic()?.boss === false, 'Next stage replaces victory score');
   AUDIO.silence(); AUDIO.enable(false); toTitle();
   return results;
 }
@@ -282,7 +305,7 @@ function combatChecks() {
   const missing = new Set(), originalFrame = hdFrame;
   hdFrame = (id, name) => { if (HD[id].N[name] === undefined) missing.add(id + ':' + name); return originalFrame(id, name); };
   let patterns = 0;
-  for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const pat of Object.keys(ET[type].pats)) for (const p2 of [false, true]) {
+  for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const p2 of [false, true]) for (const pat of Object.keys(type==='boss4'&&USE_VARGUL_V136?VARGUL_TIMELINES[p2?1:0]:ET[type].pats)) {
     reset(); startStage(Number(type.slice(-1)) - 1); scene = 'play'; player.x = 210; player.inv = 99999;
     const b = mkEnemy(type, 370, 420); enemies = [b]; if (p2) {b.hp = b.max * .4;b.p2shown=true;} startPat(b, pat);
     for (let i = 0; i < 270 && b.st === 'pat'; i++) { updEnemy(b); updHazards(); updFx(); if (i % 45 === 0) render(); }
@@ -293,10 +316,14 @@ function combatChecks() {
     reset(); startStage(s); scene = 'play'; hitStop = 0;
     for (let w = 0; w < stage.waves.length; w++) {
       camX = stage.waves[w].at; player.x = camX + 256; camLock = false; waveIdx = w; enemies = []; update();
-      if (scene === 'bossintro') for (let i = 0; i < Math.ceil(aurelionIntroDuration(introBoss)/MS)+1; i++) update();
+      if (scene === 'bossintro') for (let i = 0; i < Math.ceil(vargulIntroDuration(introBoss)/MS)+1; i++) update();
       for (const e of [...enemies]) if (e.st !== 'dead') damageEnemy(e, 1e6, true);
       for(const e of enemies)if(e.st==='reviving'){
         for(let i=0;i<261;i++)updEnemy(e);
+        damageEnemy(e,1e6,true);
+      }
+      for(const e of enemies)if((e.type==='boss3'||isVargul(e))&&e.st!=='dead'){   // Refilled bosses require a second depletion.
+        for(let i=0;i<300&&e.phaseT>0;i++)updEnemy(e);
         damageEnemy(e,1e6,true);
       }
       for (let i = 0; i < 400 && scene === 'play'; i++) update();
@@ -310,7 +337,7 @@ function combatChecks() {
   reset(); player.score = 2345; startStage(1); toTitle();
   return passed;
 }
-const timeout = setTimeout(() => { console.error('Browser test timed out'); browser?.kill(); server.close(); process.exit(1); }, process.env.AURELION_SUITE?360000:90000);
+const timeout = setTimeout(() => { console.error('Browser test timed out'); browser?.kill(); server.close(); process.exit(1); }, process.env.AURELION_SUITE||process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4?360000:90000);
 (async () => {
   try {
     await new Promise(r => server.listen(0, '127.0.0.1', r));
@@ -325,12 +352,18 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       const m = JSON.parse(data);
       if (m.id) { const h = pending.get(m.id); if (h) { pending.delete(m.id); m.error ? h.reject(m.error) : h.resolve(m.result); } }
       else if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
+      else if((process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE)&&m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')errors.push(m.params.args.map(a=>a.value||a.description).join(' '));
+      else if((process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE)&&m.method==='Log.entryAdded'&&m.params.entry.level==='error')errors.push(m.params.entry.text);
     };
     const target = await call('Target.createTarget', { url: 'about:blank' }, null);
     session = (await call('Target.attachToTarget', { targetId: target.targetId, flatten: true }, null)).sessionId;
     await call('Page.enable'); await call('Runtime.enable');
+    if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.VARGUL_STAGE4){await ready(base+'/embedded.html');await require('./vargul-stage4.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.VARGUL_STAGE3){await ready(base+'/embedded.html');await require('./vargul-stage3.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.VARGUL_SUITE){await ready(base+'/embedded.html');await require('./vargul.cjs')({evaluate,call,errors,root,base,ready});return;}
     if(process.env.AURELION_SUITE){await ready(base+'/embedded.html');await require('./aurelion.cjs')({evaluate,call,errors,root});return;}
     await ready(base); await evaluate('window.requestAnimationFrame=()=>0; toTutorial()');
     for (const [width, height] of [[1280, 720], [960, 540], [390, 844], [844, 390]]) {
@@ -416,7 +449,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate('scene'), 'intro');
     console.log('PASS Opening skip and automatic completion start stage one');
     for (const n of [0,2,3,4]) {
-      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.51;damageEnemy(b,b.max*.1,false);const duration=isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);for(let t=0;t<duration;t++)updEnemy(b);return b.hp===hp&&!b.invuln&&b.st==='rec'&&b.z===0})()`),true,'Safe phase transition');
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];const v=isVargul(b);b.hp=b.type==='boss3'||v?b.max*.05:b.max*.51;damageEnemy(b,b.max*.1,false);const duration=v?288:isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);if(b.hp!==hp)return false;for(let t=0;t<duration;t++)updEnemy(b);return b.hp===(v?2500:hp)&&!b.invuln&&b.st===(v?'chase':'rec')&&b.z===0})()`),true,'Safe phase transition');
       const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
       assert.equal(key,[3,4].includes(n)?'phase'+(n+1):'boss'+(n+1));
     }
@@ -432,7 +465,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     console.log('PASS ' + await evaluate('(' + spriteChecks.toString() + ')()'));
     console.log('PASS ' + await evaluate('(' + legionChecks.toString() + ')()'));
     console.log('PASS Ten orchestral scores and boss music lifecycle: ' + JSON.stringify(await evaluate('(' + scoreChecks.toString() + ')()')));
-    for (const [stage, boss, name] of [[0, false, 'stage-march'], [2, true, 'boss-aurelion']]) {
+    for (const [stage, boss, name] of [[0, false, 'stage-march'], [2, true, 'boss-aurelion'], ["'victory'", false, 'victory'], ["'ending'", false, 'ending']]) {
       fs.writeFileSync(path.join(profile, name + '.wav'), Buffer.from(await evaluate('(' + scorePreviewWav.toString() + ')(' + stage + ',' + boss + ')'), 'base64'));
     }
     const results = await evaluate('(' + combatChecks.toString() + ')()');
@@ -455,12 +488,54 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('toTitle();openSettings("title");$("btnResetKeys").click();$("touchEnabled").checked=true;$("touchEnabled").onchange();closeSettings();beginGame();scene="play";showScreen(null);render()');
     await call('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
     await call('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
-    const points = await evaluate(`['KeyD','KeyJ'].map((k,i)=>{const r=document.querySelector('[data-control="'+k+'"]').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,id:i+1};})`);
+    const points = await evaluate(`(()=>{const s=$('touchStick').getBoundingClientRect(),j=document.querySelector('[data-control="KeyJ"]').getBoundingClientRect();return [{x:s.x+s.width*.9,y:s.y+s.height/2,id:1},{x:j.x+j.width/2,y:j.y+j.height/2,id:2}];})()`);
+    assert.equal(await evaluate('getComputedStyle($("touchStick")).opacity'), '0.55');
+    assert.equal(await evaluate('!!document.querySelector("[data-control=KeyJ] svg") && !!document.querySelector("[data-control=KeyU] .skill-icon")'), true);
     await call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points });
     assert.equal(await evaluate('!!keys.KeyD && !!keys.KeyJ'), true);
     await call('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
     assert.equal(await evaluate('!!keys.KeyD || !!keys.KeyJ'), false);
     console.log('PASS Multi-touch movement/attack and pointer cancellation'); await screenshot('touch');
+    const stickAt = (fx, fy) => evaluate(`(()=>{const s=$('touchStick').getBoundingClientRect();return {x:s.x+s.width*${fx},y:s.y+s.height*${fy},id:5};})()`);
+    await call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [await stickAt(.15, .15)] });
+    assert.equal(await evaluate('[keys.KeyA,keys.KeyW,keys.KeyD,keys.KeyS].map(Boolean).join()'), 'true,true,false,false');
+    await call('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [await stickAt(.5, .95)] });
+    assert.equal(await evaluate('[keys.KeyA,keys.KeyW,keys.KeyD,keys.KeyS].map(Boolean).join()'), 'false,false,false,true');
+    await call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    assert.equal(await evaluate('!!(keys.KeyA||keys.KeyW||keys.KeyD||keys.KeyS)'), false);
+    console.log('PASS Touch lever maps diagonals and releases on lift');
+    await evaluate('openSettings("pause");$("touchEnabled").checked=false;$("touchEnabled").onchange()');
+    assert.equal(await evaluate('$("touchControls").hidden'), true);
+    await evaluate('$("touchEnabled").checked=true;$("touchEnabled").onchange()');
+    assert.equal(await evaluate('!$("touchControls").hidden && $("touchControls").classList.contains("preview")'), true);
+    await evaluate('closeSettings();scene="play";showScreen(null)');
+    console.log('PASS Mobile keys appear immediately when enabled in settings');
+    await evaluate('openSettings("pause");$("btnTouchEdit").click()');
+    assert.equal(await evaluate('$("touchControls").classList.contains("editing") && !$("settings").classList.contains("show") && !$("touchEditBar").hidden'), true);
+    const atk0 = await evaluate('(()=>{const r=document.querySelector("[data-control=KeyJ]").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,w:r.width};})()');
+    await call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: atk0.x, y: atk0.y, id: 7 }] });
+    await call('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: atk0.x - 60, y: atk0.y - 120, id: 7 }] });
+    await call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    assert.equal(await evaluate('!!keys.KeyJ'), false);
+    await evaluate('document.querySelector("[data-edit=bigger]").click();document.querySelector("[data-edit=bigger]").click()');
+    const atk1 = await evaluate('(()=>{const r=document.querySelector("[data-control=KeyJ]").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,w:r.width};})()');
+    assert(Math.abs(atk1.x - (atk0.x - 60)) < 2 && Math.abs(atk1.y - (atk0.y - 120)) < 2, JSON.stringify([atk0, atk1]));
+    assert(Math.abs(atk1.w / atk0.w - 1.2) < .02);
+    await screenshot('touch-edit');
+    await evaluate('openSettings("pause")');
+    await evaluate('const b=document.querySelector("[data-control=KeyO]");b.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,pointerId:9}));document.querySelector("[data-edit=hide]").click();document.querySelector("[data-edit=done]").click()');
+    assert.equal(await evaluate('!$("touchControls").classList.contains("editing") && $("settings").classList.contains("show")'), true);
+    const savedLayout = await evaluate('JSON.parse(localStorage.getItem("bmk_settings")).touchLayout');
+    assert(savedLayout.items.KeyJ.k === 1.2 && savedLayout.items.KeyO.hide === true, JSON.stringify(savedLayout));
+    {
+      await evaluate('$("touchAlpha").value=70;$("touchAlpha").oninput();$("touchScale").value=120;$("touchScale").oninput()');
+      assert.equal(await evaluate('getComputedStyle($("touchStick")).opacity'), '0.3');
+      await evaluate('$("btnTouchReset").click()');
+      assert.equal(await evaluate('getComputedStyle($("touchStick")).opacity + "," + $("touchAlpha").value + "," + JSON.stringify(UX.options.touchLayout.items)'), '0.55,45,{}');
+    }
+    await evaluate('closeSettings();scene="play";showScreen(null)');
+    assert.equal(await evaluate('getComputedStyle(document.querySelector("[data-control=KeyO]")).display !== "none"'), true);
+    console.log('PASS Mobile key layout: drag, resize, hide, opacity, size, save and reset');
     await evaluate('clearInput();player.st="free";player.z=0;player.skillCd.thrust=0;updateSkillButtons()');
     const skillPoint = await evaluate('(()=>{const r=document.querySelector("[data-control=KeyU]").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,id:3};})()');
     await call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [skillPoint] });
@@ -477,6 +552,25 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     assert.equal(await evaluate('!!keys.KeyL'),false);
     console.log('PASS Red wave is reachable and usable on mobile');
+    const bgm = await evaluate(`(async()=>{
+      const n=4000,b=new ArrayBuffer(44+n*2),v=new DataView(b),str=(at,t)=>[...t].forEach((c,i)=>v.setUint8(at+i,c.charCodeAt(0)));
+      str(0,'RIFF');v.setUint32(4,36+n*2,true);str(8,'WAVE');str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+      v.setUint32(24,8000,true);v.setUint32(28,16000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);str(36,'data');v.setUint32(40,n*2,true);
+      for(let i=0;i<n;i++)v.setInt16(44+i*2,Math.round(Math.sin(i/8)*3000),true);
+      const out={};AUDIO.enable(true);
+      out.bad=await AUDIO.setBossFile(new File([new Uint8Array([1,2,3,4])],'broken.mp3'));
+      out.good=await AUDIO.setBossFile(new File([b],'my-boss.mp3',{type:'audio/wav'}));
+      out.status=$('bossBgmStatus').textContent;
+      AUDIO.bossMusic(2);out.playing=AUDIO.currentMusic();
+      await AUDIO.clearBossFile();out.after=AUDIO.currentMusic();out.info=AUDIO.bossInfo();
+      AUDIO.stop(0);AUDIO.enable(false);return out;})()`);
+    assert.equal(bgm.bad.ok, false);
+    assert.equal(bgm.good.ok && bgm.good.saved, true, JSON.stringify(bgm));
+    assert.equal(bgm.status, '내 파일: my-boss.mp3');
+    assert.deepEqual([bgm.playing.file, bgm.playing.name, bgm.playing.boss], [true, 'my-boss.mp3', true]);
+    assert.equal(bgm.after.file, fs.existsSync(bgmPath), 'clearing custom BGM restores the available built-in file or synth');
+    assert.equal(bgm.info.source, fs.existsSync(bgmPath)?'default':'synth');
+    console.log('PASS Boss BGM uses a chosen mp3, rejects broken files and restores the built-in fallback');
     await ready(base + '/embedded.html');
     assert.equal(await evaluate('scene'), 'title');
     await evaluate('window.requestAnimationFrame=()=>0;beginGame();scene="play";render()');
@@ -566,7 +660,8 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await screenshot('item-sprites');
     console.log('PASS Item sprites, exact scores, single pickup, healing, SP, scroll and drop tables');
     assert.equal(await evaluate(`BAREL_ATLAS.naturalWidth > 0 && BAREL_PORTRAIT.naturalWidth > 0`), true);
-    assert.equal(await evaluate(`document.querySelectorAll('.skill-icon').length`), 5);
+    assert.equal(await evaluate(`document.querySelectorAll('#skillbar .skill-icon').length`), 5);
+    assert.equal(await evaluate(`document.querySelectorAll('#touchPad .skill-icon').length`), 5);
     assert.equal(await evaluate(`(()=>{
       player=newPlayer();scene='play';player.inv=0;
       for(const st of ['free','atk','skill','dash','hurt','down','dead','cast','special']) {
@@ -635,15 +730,32 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     })()`),true,'Morgra dies fully, waits, revives at full enhanced stats, awards only final death');
     assert.equal(await evaluate(`(()=>{
       for(const type of ['boss1','boss3','boss4','boss5']) {
-        player=newPlayer();const b=mkEnemy(type,400,420);enemies=[b];chain.n=0;b.gr=90;b.hp=b.max*.51;
+        player=newPlayer();const b=mkEnemy(type,400,420);enemies=[b];chain.n=0;b.gr=90;b.hp=b.max*(type==='boss3'?.01:.51);
+        if(isVargul(b)){
+          b.hp=1;damageEnemy(b,1,false,0,true);if(b.hp!==0||b.p2shown||b.phaseT!==288||b.gr!==0)return false;
+          for(let i=0;i<288;i++)updEnemy(b);
+          if(!b.p2shown||b.hp!==2500||b.max!==2500||b.gr!==0||b.grMax!==150)return false;
+          player.inv=0;const health=player.hp;hurtPlayer(10,1,false,b);if(health-player.hp!==13)return false;
+          continue;
+        }
         const max=b.max,grMax=b.grMax;damageEnemy(b,b.max*.02,false);const hp=b.hp;
-        if(!b.p2shown||b.gr!==0||b.max!==max||b.grMax!==grMax)return false;
+        if(!b.p2shown||b.gr!==0||b.max!==(type==='boss3'?2200:max)||b.grMax!==grMax||(type==='boss3'&&hp!==2200))return false;
         for(let i=0;i<72;i++)updEnemy(b);
         if(b.hp!==hp)return false;
         player.inv=0;const health=player.hp;hurtPlayer(10,1,false,b);if(health-player.hp!==13)return false;
       }
       let previous=0,previousD=0;
       for(let s=0;s<5;s++){stageIdx=s;const e=mkEnemy('grunt',0,420);if(e.max<=previous||e.d.dmg<=previousD)return false;previous=e.max;previousD=e.d.dmg;}
+      {// 아우렐리온: 50%에서는 넘어가지 않고, 1페이즈 체력이 다하면 체력·그로기 완전 회복 후 같은 각성 모션
+        player=newPlayer();const b=mkEnemy('boss3',400,420);enemies=[b];chain.n=0;const score=player.score,drops=items.length;
+        b.hp=b.max*.51;damageEnemy(b,b.max*.02,false);if(b.p2shown||b.phaseT)return false;
+        b.st='chase';b.hp=5;b.gr=b.grMax-1;b.grT=100;damageEnemy(b,50,false);
+        if(!b.p2shown||b.max!==2200||b.hp!==2200||b.gr!==0||b.grT!==0||b.nextKd!==2200*.75||b.st==='dead'||!b.invuln||b.phaseT!==(isAurelion(b)?242:72))return false;
+        if(player.score!==score||items.length!==drops)return false;
+        for(let i=0;i<300&&b.phaseT>0;i++)updEnemy(b);
+        if(b.invuln||b.phaseT||b.hp!==2200)return false;
+        damageEnemy(b,b.max*2,true);if(b.st!=='dead')return false;
+      }
       return ET.boss1.hp<ET.boss2.hp&&ET.boss2.hp<ET.boss3.hp&&ET.boss3.hp<ET.boss4.hp&&ET.boss4.hp<ET.boss5.hp;
     })()`),true,'Stage difficulty increases; other bosses only reset groggy and boost phase damage');
     assert.equal(await evaluate(`(()=>{
@@ -691,6 +803,23 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await screenshot('stage5-emperor');
     await evaluate('player=newPlayer();startStage(0);scene="play";showScreen(null);player.inv=0;player.x=160;enemies=[];startSkill("redwave");for(let i=0;i<23;i++)updPlayer();for(let i=0;i<12;i++)updHazards();updateSkillButtons();render()');
     await screenshot('red-wave');
+    for (const [stage, kind] of [[2, 'fire'], [3, 'frost'], [4, 'abyss']]) {
+      assert.equal(await evaluate(`(async()=>{await ZONE_IMAGES.${kind}.decode();player=newPlayer();startStage(${stage});scene='play';showScreen(null);player.x=camX+200;player.y=480;player.inv=99999;enemies=[mkEnemy(STAGES[${stage}].boss,camX+430,420)];
+        hazards=[{type:'rift',kind:'${kind}',x:camX,y:425,width:VW,depth:23,age:0,delay:1200,life:350,arena:true}];const z=hazards[0],at=age=>{z.age=age;render();return zoneEruptionVisible(z)?zoneFrame(z):-1;};
+        const sigils=[0,120,240,360,480].map(at);if(sigils.some(f=>f<0||f>3)||new Set(sigils).size<4)return false;
+        if(at(1200)!==4||at(1200+349)!==13||at(1200+351)<14||at(1200+350+ZONE_FADE)!==23)return false;
+        return at(1200+350+ZONE_FADE+1)===-1&&ZONE_ART.${kind}.frames===24})()`), true, kind + ' zone plays 24 frames: sigils, eruption, embers');
+      for (const [age, phase] of [[300, 'warn'], [1380, 'peak'], [1700, 'embers']]) {
+        await evaluate(`hazards[0].age=${age};render()`);
+        await screenshot('zone-' + kind + '-' + phase);
+      }
+    }
+    assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(3);scene='play';const b=mkEnemy('boss4',camX+430,420);enemies=[b];player.x=camX+200;player.y=420;
+      hazards=[{type:'rift',kind:'frost',x:player.x-19,y:(GTOP+GBOT)/2,width:38,depth:85,delay:950,life:320,age:1000,owner:b}];render();
+      if(!zoneEruptionVisible(hazards[0])||zoneFrame(hazards[0])<4)return false;
+      for(let i=0;i<20;i++)updHazards();return hazards.length===1&&zoneFrame(hazards[0])>=14})()`), true, 'Boss frost rift also uses the zone sprite and keeps its embers');
+    await screenshot('zone-boss-frost');
+    await evaluate('hazards=[]');
     fs.writeFileSync(path.join(profile, 'reference-units.png'), Buffer.from(await evaluate('(' + referenceSheet.toString() + ')()'), 'base64'));
     await evaluate('toTitle();AUDIO.enable(false)');
     await evaluate('(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=()=>{throw new DOMException("blocked", "SecurityError")};try{beginGame();scene="play";render();}finally{Storage.prototype.setItem=original}})()');

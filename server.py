@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "barel-art.js", "barel-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "item-art.js", "item-runtime.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
+SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "barel-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-data.js", "vargul-runtime.js", "item-art.js", "item-runtime.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -38,6 +38,11 @@ def in_streamlit() -> bool:
 def build_single_html() -> str:
     """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
     html = (ROOT / "index.html").read_text(encoding="utf-8")
+    # 보스전 기본 mp3 가 있으면 data URL 로 넣는다 (srcdoc 에서는 상대 경로 파일을 읽을 수 없다)
+    boss_bgm = ROOT / "assets/bgm/boss.mp3"
+    if boss_bgm.is_file():
+        url = "data:audio/mpeg;base64," + base64.b64encode(boss_bgm.read_bytes()).decode("ascii")
+        html = html.replace('<script src="audio.js">', f'<script>window.BOSS_BGM_URL="{url}";</script>\n<script src="audio.js">', 1)
     for name in SCRIPTS:
         code = (ROOT / name).read_text(encoding="utf-8")
         html = html.replace(f'<script src="{name}"></script>', f"<script>\n{code}\n</script>")

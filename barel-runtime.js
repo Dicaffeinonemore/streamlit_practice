@@ -68,12 +68,12 @@ function drawBarelPlayer() {
 }
 function setupBarelSkills() {
   const names={thrust:'slash',slam:'impact',whirl:'moon',leap:'lightning',redwave:'wave'};
-  document.querySelectorAll('.skillbtn').forEach(b=>{
+  document.querySelectorAll('.skillbtn,.touch-skill').forEach(b=>{
     if(b.querySelector('.skill-icon'))return;
     const f=barelFrame(names[b.dataset.skill],.4),[x,y,w,h]=f.atlas;
     const c=document.createElement('canvas');c.width=c.height=96;c.className='skill-icon';c.setAttribute('aria-hidden','true');
     c.getContext('2d').drawImage(BAREL_ATLAS,x,y,w,h,0,0,96,96);b.prepend(c);
-    b.setAttribute('aria-label',b.querySelector('.name').textContent);
+    const name=b.querySelector('.name');if(name)b.setAttribute('aria-label',name.textContent);
   });
 }
 BAREL_ATLAS.addEventListener('load',setupBarelSkills,{once:true});

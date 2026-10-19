@@ -1,0 +1,382 @@
+{
+  "version": "1.36",
+  "art_bytes": 1559981,
+  "aurelion_art_bytes": 1602584,
+  "webp_quality": 75,
+  "stored_p1_body_height": 80,
+  "scale": 1.5975,
+  "phase_ratio": 1.0757180156657964,
+  "motions": 24,
+  "motion_frames": 316,
+  "effect_rows": 15,
+  "effect_frames_per_variant": 219,
+  "mask_frames": 163,
+  "scales": [
+    {
+      "id": "p1_idle",
+      "reference": {
+        "drawing": 1,
+        "head_y": 62,
+        "ground_y": 456,
+        "height": 394,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.20304568527918782,
+      "raw_to_world": 0.32436548223350253,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_walk",
+      "reference": {
+        "drawing": 1,
+        "head_y": 71,
+        "ground_y": 450,
+        "height": 379,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.21108179419525067,
+      "raw_to_world": 0.33720316622691293,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_intro",
+      "reference": {
+        "drawing": 16,
+        "head_y": 66,
+        "ground_y": 406,
+        "height": 340,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.23529411764705882,
+      "raw_to_world": 0.37588235294117645,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_spear_combo",
+      "reference": {
+        "drawing": 0,
+        "head_y": 52,
+        "ground_y": 345,
+        "height": 293,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.27303754266211605,
+      "raw_to_world": 0.43617747440273036,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_dash",
+      "reference": {
+        "drawing": 16,
+        "head_y": 21,
+        "ground_y": 264,
+        "height": 243,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.3292181069958848,
+      "raw_to_world": 0.5259259259259259,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_sword_summon",
+      "reference": {
+        "drawing": 1,
+        "head_y": 103,
+        "ground_y": 425,
+        "height": 322,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.2484472049689441,
+      "raw_to_world": 0.39689440993788816,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_cross",
+      "reference": {
+        "drawing": 16,
+        "head_y": 13,
+        "ground_y": 213,
+        "height": 200,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.4,
+      "raw_to_world": 0.639,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_orb_summon",
+      "reference": {
+        "drawing": 1,
+        "head_y": 70,
+        "ground_y": 457,
+        "height": 387,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.20671834625322996,
+      "raw_to_world": 0.33023255813953484,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_sweep",
+      "reference": {
+        "drawing": 16,
+        "head_y": 7,
+        "ground_y": 224,
+        "height": 217,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.3686635944700461,
+      "raw_to_world": 0.5889400921658986,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_taunt",
+      "reference": {
+        "drawing": 1,
+        "head_y": 47,
+        "ground_y": 321,
+        "height": 274,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.291970802919708,
+      "raw_to_world": 0.46642335766423354,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_hurt",
+      "reference": {
+        "drawing": 14,
+        "head_y": 69,
+        "ground_y": 438,
+        "height": 369,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.21680216802168023,
+      "raw_to_world": 0.3463414634146342,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "p1_knockdown",
+      "reference": {
+        "drawing": 16,
+        "head_y": 16,
+        "ground_y": 274,
+        "height": 258,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.31007751937984496,
+      "raw_to_world": 0.4953488372093023,
+      "reference_body_world": 127.8,
+      "phase": 1
+    },
+    {
+      "id": "awaken",
+      "reference": {
+        "drawing": 1,
+        "head_y": 75,
+        "ground_y": 458,
+        "height": 383,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.20887728459530025,
+      "raw_to_world": 0.33368146214099215,
+      "reference_body_world": 127.8,
+      "phase": "bridge"
+    },
+    {
+      "id": "p2_idle",
+      "reference": {
+        "drawing": 1,
+        "head_y": 5,
+        "ground_y": 373,
+        "height": 368,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.23385174253604268,
+      "raw_to_world": 0.37357815870132816,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_walk",
+      "reference": {
+        "drawing": 12,
+        "head_y": 6,
+        "ground_y": 267,
+        "height": 261,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.3297219971389414,
+      "raw_to_world": 0.5267308904294589,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_combo",
+      "reference": {
+        "drawing": 16,
+        "head_y": 4,
+        "ground_y": 208,
+        "height": 204,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.4218502022218809,
+      "raw_to_world": 0.6739056980494548,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_dash",
+      "reference": {
+        "drawing": 16,
+        "head_y": 6,
+        "ground_y": 240,
+        "height": 234,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.3677668429626654,
+      "raw_to_world": 0.587507531632858,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_cast",
+      "reference": {
+        "drawing": 19,
+        "head_y": 5,
+        "ground_y": 168,
+        "height": 163,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.5279597622899613,
+      "raw_to_world": 0.8434157202582132,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_cast_b",
+      "reference": {
+        "drawing": 1,
+        "head_y": 56,
+        "ground_y": 295,
+        "height": 239,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.36007297595507826,
+      "raw_to_world": 0.5752165790882375,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_sweep",
+      "reference": {
+        "drawing": 1,
+        "head_y": 10,
+        "ground_y": 373,
+        "height": 363,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.23707284091808184,
+      "raw_to_world": 0.3787238633666357,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "ultimate",
+      "reference": {
+        "drawing": 16,
+        "head_y": 0,
+        "ground_y": 223,
+        "height": 223,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.38590780831059956,
+      "raw_to_world": 0.6164877237761828,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_hurt",
+      "reference": {
+        "drawing": 14,
+        "head_y": 64,
+        "ground_y": 370,
+        "height": 306,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.2812334681479206,
+      "raw_to_world": 0.44927046536630316,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "p2_knockdown",
+      "reference": {
+        "drawing": 16,
+        "head_y": 7,
+        "ground_y": 231,
+        "height": 224,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.38418500559492724,
+      "raw_to_world": 0.6137355464378962,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    },
+    {
+      "id": "death",
+      "reference": {
+        "drawing": 1,
+        "head_y": 0,
+        "ground_y": 246,
+        "height": 246,
+        "note": "Measured crown-to-foot, spear excluded; drawing 0 is discarded scale reference."
+      },
+      "raw_to_stored": 0.3498269969644866,
+      "raw_to_world": 0.5588486276507674,
+      "reference_body_world": 137.47676240208875,
+      "phase": 2
+    }
+  ],
+  "sheets": [
+    {
+      "file": "atlas-0.webp",
+      "category": "actors",
+      "bytes": 752774,
+      "size": [
+        4096,
+        1014
+      ]
+    },
+    {
+      "file": "atlas-1.webp",
+      "category": "fx_add",
+      "bytes": 304224,
+      "size": [
+        4096,
+        585
+      ]
+    },
+    {
+      "file": "atlas-2.png",
+      "category": "tattoos",
+      "bytes": 41536,
+      "size": [
+        4096,
+        677
+      ]
+    }
+  ],
+  "runtime_connected": false
+}

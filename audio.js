@@ -3,6 +3,7 @@
 //  소리: WebAudio 로 합성하는 효과음 + 스테이지별 BGM (외부 파일 없음)
 //  브라우저 정책상 첫 키 입력/클릭 뒤에 켜진다. M 키로 끄고 켠다 (선택은 브라우저에 기억)
 //  사용: AUDIO.sfx('hit', 2) / AUDIO.music(스테이지 번호) / AUDIO.stop(페이드 초) / AUDIO.toggle()
+//  보스전 BGM 은 mp3 로 바꿀 수 있다: 플레이어가 고른 파일 > 게임 기본 파일(assets/bgm/boss.mp3) > 합성 BGM
 // =====================================================================
 (function (global) {
   const AU = { ctx: null, on: false, master: null, sfxB: null, musB: null, noise: null, mus: null, timer: 0, gm: 1, want: -1 };
@@ -33,6 +34,7 @@
     for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
     AU.noise = buf;
     setVolumes(musicVolume, sfxVolume);
+    prepareBoss();
   }
   function init() {
     if (AU.ctx) return AU.ctx;
@@ -108,7 +110,8 @@
   }
 
   // Separate original stage and boss scores, with a per-track fade bus.
-  let wantedBoss = false, wantedRate = 1;
+  let wantedBoss = false, wantedRate = 1, wantedVictory = null;   // wantedVictory: null | 'victory' | 'ending'
+  const trackOf = (i, boss, win) => win ? SCORE.victory[win] : SCORE.tracks[(i % 5) + (boss ? 5 : 0)];
   function musTick(until) {
     const M = AU.mus; if (!M) return;
     while (M.next < until) {
@@ -116,12 +119,15 @@
       SCORE.step(M.engine, M.T, M.step++, M.next, step); M.next += step;
     }
   }
-  function music(i, rate = 1, boss = false) {
-    stop(.6); AU.want = i; wantedBoss = boss; wantedRate = rate;
+  function music(i, rate = 1, boss = false, win = null) {
+    stop(win ? .4 : .6); AU.want = i; wantedBoss = boss; wantedRate = rate; wantedVictory = win;
     if (!AU.on || !AU.ctx) return;
+    const file = boss && !win && bossBuffer();
+    if (file) { playFile(file, rate); return; }
     const engine = SCORE.create(AU.ctx, AU.musB), now = AU.ctx.currentTime;
-    engine.bus.gain.setValueAtTime(0,now);engine.bus.gain.linearRampToValueAtTime(2.5,now+.8);
-    AU.mus = { T: SCORE.tracks[(i % 5) + (boss ? 5 : 0)], engine, step: 0, next: now+.08, rate };
+    // 승리 팡파르는 첫 음부터 또렷하게, 일반 BGM 은 0.8초에 걸쳐 들어온다
+    engine.bus.gain.setValueAtTime(0,now);engine.bus.gain.linearRampToValueAtTime(2.5,now+(win?.05:.8));
+    AU.mus = { T: trackOf(i, boss, win), engine, step: 0, next: now+.08, rate };
     AU.timer = setInterval(() => { if (AU.ctx?.state === 'running') musTick(AU.ctx.currentTime+.25); },40);
   }
   function stop(fade = 0) {
@@ -134,10 +140,94 @@
     }
   }
   function silence() { stop(.25); }
-  function currentMusic() { return AU.want < 0 ? null : { stage: AU.want, boss: wantedBoss, name: SCORE.tracks[(AU.want%5)+(wantedBoss?5:0)].name }; }
+  function currentMusic() {
+    if (AU.want < 0) return null;
+    const name = AU.mus?.buf ? (AU.mus.buf === bossFile.customBuf ? bossFile.customName : 'boss.mp3') : trackOf(AU.want, wantedBoss, wantedVictory).name;
+    return { stage: AU.want, boss: wantedBoss, victory: wantedVictory, name, file: !!AU.mus?.buf };
+  }
+
+  // ---- 보스전 mp3 ----------------------------------------------------
+  // 5명의 보스가 같은 곡을 쓴다. 직접 고른 파일은 IndexedDB 에 저장해 새로고침 뒤에도 유지한다.
+  const BOSS_FILE_GAIN = 2, BOSS_MAX_BYTES = 30 * 1024 * 1024;
+  const bossFile = { customRaw: null, customBuf: null, customName: '', stored: false, defBuf: null, defState: 'idle', listeners: [] };
+  const bossBuffer = () => bossFile.customBuf || bossFile.defBuf;
+  const decode = raw => new Promise((ok, fail) => {         // 콜백(구형 Safari)과 Promise 양쪽을 모두 받는다
+    const p = AU.ctx.decodeAudioData(raw.slice(0), ok, fail); if (p && p.catch) p.catch(() => {});
+  });
+  function playFile(buf, rate) {
+    const c = AU.ctx, now = c.currentTime, bus = c.createGain(), src = c.createBufferSource();
+    src.buffer = buf; src.loop = true; src.playbackRate.value = rate; src.connect(bus); bus.connect(AU.musB);
+    bus.gain.setValueAtTime(0, now); bus.gain.linearRampToValueAtTime(BOSS_FILE_GAIN, now + .8);
+    src.start(now + .05);
+    AU.mus = { buf, engine: { bus, dispose() { try { src.stop(); } catch (e) { /* 이미 멈춤 */ } src.disconnect(); bus.disconnect(); } } };
+  }
+  function bossInfo() {
+    return { source: bossFile.customBuf ? 'custom' : bossFile.defBuf ? 'default' : 'synth',
+      name: bossFile.customName, stored: bossFile.stored, loading: bossFile.defState === 'loading' };
+  }
+  function notifyBoss() {
+    // 보스전 도중 곡이 바뀌면(파일 선택·해제, 기본 곡 로딩 완료) 새 곡으로 이어서 튼다.
+    if (AU.on && AU.want >= 0 && wantedBoss && !wantedVictory && (AU.mus?.buf || null) !== (bossBuffer() || null)) music(AU.want, wantedRate, true);
+    bossFile.listeners.forEach(f => { try { f(bossInfo()); } catch (e) { /* 무시 */ } });
+  }
+  async function prepareBoss() {
+    if (!AU.ctx) return;
+    if (bossFile.customRaw && !bossFile.customBuf) {
+      try { bossFile.customBuf = await decode(bossFile.customRaw); }
+      catch (e) { bossFile.customRaw = null; bossFile.customName = ''; }
+    }
+    if (bossFile.defState === 'idle') {
+      bossFile.defState = 'loading'; notifyBoss();
+      try {
+        const r = await fetch(global.BOSS_BGM_URL || 'assets/bgm/boss.mp3');
+        if (!r.ok) throw new Error(r.status);
+        bossFile.defBuf = await decode(await r.arrayBuffer()); bossFile.defState = 'ready';
+      } catch (e) { bossFile.defState = 'missing'; }   // 기본 mp3 가 없으면 합성 BGM
+    }
+    notifyBoss();
+  }
+  function idb(mode, op) {
+    return new Promise(done => {
+      try {
+        const req = indexedDB.open('bmk_audio', 1);
+        req.onupgradeneeded = () => req.result.createObjectStore('files');
+        req.onerror = () => done(undefined);
+        req.onsuccess = () => {
+          const db = req.result;
+          try {
+            const tx = db.transaction('files', mode), r = op(tx.objectStore('files'));
+            tx.oncomplete = () => { db.close(); done(mode === 'readonly' ? r.result : true); };
+            tx.onerror = tx.onabort = () => { db.close(); done(undefined); };
+          } catch (e) { db.close(); done(undefined); }
+        };
+      } catch (e) { done(undefined); }
+    });
+  }
+  async function setBossFile(file) {
+    if (!file) return { ok: false, message: '파일을 고르지 않았습니다.' };
+    if (file.size > BOSS_MAX_BYTES) return { ok: false, message: '30MB 이하의 파일만 쓸 수 있습니다.' };
+    if (!init()) return { ok: false, message: '이 브라우저는 오디오를 지원하지 않습니다.' };
+    const raw = await file.arrayBuffer();
+    let buf;
+    try { buf = await decode(raw); } catch (e) { return { ok: false, message: '재생할 수 없는 오디오 파일입니다.' }; }
+    Object.assign(bossFile, { customRaw: raw, customBuf: buf, customName: file.name });
+    bossFile.stored = !!await idb('readwrite', s => s.put({ name: file.name, data: raw }, 'bossBgm'));
+    notifyBoss();
+    return { ok: true, saved: bossFile.stored };
+  }
+  async function clearBossFile() {
+    Object.assign(bossFile, { customRaw: null, customBuf: null, customName: '', stored: false });
+    await idb('readwrite', s => s.delete('bossBgm'));
+    notifyBoss();
+  }
+  idb('readonly', s => s.get('bossBgm')).then(v => {
+    if (bossFile.customRaw || !v || typeof v.name !== 'string' || !(v.data instanceof ArrayBuffer)) return;
+    Object.assign(bossFile, { customRaw: v.data, customName: v.name, stored: true });
+    if (AU.ctx) prepareBoss(); else notifyBoss();
+  });
   async function renderPreview(stage, boss, seconds = 12) {
     const c = new OfflineAudioContext(2,Math.ceil(seconds*24000),24000), gain=c.createGain();gain.gain.value=.34;gain.connect(c.destination);
-    const engine=SCORE.create(c,gain), T=SCORE.tracks[stage+(boss?5:0)], step=60/T.bpm/4;
+    const engine=SCORE.create(c,gain), T=typeof stage==='string'?SCORE.victory[stage]:SCORE.tracks[stage+(boss?5:0)], step=60/T.bpm/4;
     engine.bus.gain.setValueAtTime(2.5,0);engine.bus.gain.setValueAtTime(2.5,Math.max(0,seconds-1));engine.bus.gain.linearRampToValueAtTime(0,seconds);
     for(let st=0;st*step<seconds;st++) SCORE.step(engine,T,st,st*step,step);
     const buffer = await c.startRendering(); engine.dispose(); return buffer;
@@ -151,7 +241,7 @@
       if (c.resume && !paused) c.resume().catch(() => {});
       AU.master.gain.value = .8;
       AU.on = true;
-      if (AU.want >= 0 && !AU.mus) music(AU.want, wantedRate, wantedBoss);
+      if (AU.want >= 0 && !AU.mus) music(AU.want, wantedRate, wantedBoss, wantedVictory);
     } else { const desired=AU.want; AU.on = false; stop(0); AU.want=desired; if (AU.master) AU.master.gain.value = 0; }
     return AU.on;
   }
@@ -164,5 +254,6 @@
   }
   ['keydown', 'pointerdown'].forEach(ev => global.addEventListener(ev, gesture, true));
 
-  global.AUDIO = { sfx, music, bossMusic: i => music(i, 1, true), currentMusic, renderPreview, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on };
+  global.AUDIO = { sfx, music, bossMusic: i => music(i, 1, true), victoryMusic: (i, final) => music(i, 1, false, final ? 'ending' : 'victory'), currentMusic, renderPreview, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on,
+    setBossFile, clearBossFile, bossInfo, onBossInfo: f => bossFile.listeners.push(f) };
 })(window);
