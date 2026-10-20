@@ -5,7 +5,7 @@
 최신 변경 내역은 [v1.37 패치 노트](patch_note/patch_1.37.txt)에 정리했습니다. 바르굴의 독립 AI 구슬·크기 보정·3연격 이펙트·창 내려찍기와 연속 빙결파, 모든 보스의 서 있는 그로기 자세를 포함합니다.
 
 `python server.py`로 로컬 실행하거나 `streamlit run server.py`로 실행합니다.
-Streamlit에서는 이미지와 JavaScript를 단일 HTML에 포함하며 외부 CDN이나 fetch가 필요하지 않습니다.
+Streamlit에서는 로컬 컴포넌트가 HTML·JavaScript·BGM을 파일별로 제공합니다. 같은 서버에서 불러오며 외부 CDN은 사용하지 않습니다. 배포 의존성은 `requirements.txt`로 고정했습니다.
 
 - 1스테이지: 도살자 고라스 — HP 700, `gorath-art.js` / `gorath-runtime.js`
 - 2스테이지: 모르그라 — HP 850 → 부활 후 1,200, `morgra-art.js` / `morgra-runtime.js`

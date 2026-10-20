@@ -48,6 +48,45 @@ class StreamlitBundleTests(unittest.TestCase):
                 with self.assertRaisesRegex(FileNotFoundError, "index.html.*missing.js"):
                     server.build_single_html()
 
+    def test_component_keeps_scripts_separate_and_exposes_only_game_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = '<head></head><script src="large.js"></script>'
+            (root / "index.html").write_text(source, encoding="utf-8")
+            script = b"// game\n" * 300000
+            (root / "large.js").write_bytes(script)
+            (root / "streamlit-bridge.js").write_text("// bridge", encoding="utf-8")
+            (root / "private.txt").write_text("not a game file", encoding="utf-8")
+            with patch.object(server, "ROOT", root), patch.object(server.tempfile, "gettempdir", return_value=directory):
+                output = server.prepare_streamlit_component()
+                first_mtime = (output / "large.js").stat().st_mtime_ns
+                server.prepare_streamlit_component()
+                self.assertEqual(first_mtime, (output / "large.js").stat().st_mtime_ns)
+                self.assertEqual((output / "large.js").read_bytes(), script)
+                html = (output / "index.html").read_text(encoding="utf-8")
+                self.assertIn('<script src="large.js">', html)
+                self.assertIn('streamlit-bridge.js', html)
+                self.assertLess(len(html), 1000)
+                self.assertFalse((output / "private.txt").exists())
+
+
+class ActualStreamlitTests(unittest.TestCase):
+    def test_game_and_reference_have_small_component_messages(self):
+        try:
+            from streamlit.testing.v1 import AppTest
+        except ImportError:
+            self.skipTest("Install requirements.txt for the real Streamlit test")
+        app = AppTest.from_file(str(ROOT / "server.py"), default_timeout=90).run()
+        self.assertEqual(len(app.exception), 0)
+        components = app.get("component_instance")
+        self.assertEqual(len(components), 1)
+        self.assertLess(components[0].proto.ByteSize(), 10000)
+        app.radio[0].set_value("원본 스프라이트 검수").run()
+        self.assertEqual(len(app.exception), 0)
+        components = app.get("component_instance")
+        self.assertEqual(len(components), 1)
+        self.assertLess(components[0].proto.ByteSize(), 10000)
+
 
 if __name__ == "__main__":
     unittest.main()

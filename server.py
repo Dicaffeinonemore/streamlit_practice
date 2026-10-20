@@ -5,15 +5,18 @@
   2) Streamlit:      streamlit run server.py   (Streamlit Cloud 배포 포함)
 
 Streamlit 환경에서는 소켓 서버를 열 수 없으므로(포트 바인딩 오류),
-HTML/JS 파일을 하나로 합쳐 st.components.v1.html 로 화면에 직접 넣습니다.
+게임 파일을 로컬 컴포넌트로 제공해 거대한 HTML 메시지 생성을 피합니다.
 """
 import http.server
+import hashlib
 import base64
 import json
 import os
 import re
+import shutil
 import socketserver
 import threading
+import tempfile
 import webbrowser
 from pathlib import Path
 
@@ -99,6 +102,72 @@ def build_reference_html() -> str:
     return html
 
 
+def _copy_component_file(name: str, destination: Path) -> None:
+    """Copy only changed public game files, with bounded memory and atomic replacement."""
+    source = ROOT / name
+    target = destination / name
+    info = source.stat()
+    if target.is_file():
+        old = target.stat()
+        if old.st_size == info.st_size and old.st_mtime_ns == info.st_mtime_ns:
+            return
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as output:
+        temporary = Path(output.name)
+        try:
+            with source.open("rb") as incoming:
+                shutil.copyfileobj(incoming, output, length=1024 * 1024)
+        except BaseException:
+            output.close()
+            temporary.unlink(missing_ok=True)
+            raise
+    try:
+        os.utime(temporary, ns=(info.st_atime_ns, info.st_mtime_ns))
+        os.replace(temporary, target)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def prepare_streamlit_component(review: bool = False) -> Path:
+    """Publish only required files; JS/images stay out of Streamlit's WebSocket messages."""
+    identity = hashlib.sha256(str(ROOT).encode("utf-8")).hexdigest()[:16]
+    destination = Path(tempfile.gettempdir()) / f"bmk-component-{identity}" / ("review" if review else "game")
+    destination.mkdir(parents=True, exist_ok=True)
+    entry = "sprite-lab.html" if review else "index.html"
+    html = (ROOT / entry).read_text(encoding="utf-8")
+    if review:
+        catalog_name = "data/reference-catalog.json"
+        catalog = json.loads((ROOT / catalog_name).read_text(encoding="utf-8"))
+        files = {catalog_name, catalog["effects"], "src/animation/lab.css",
+                 "src/animation/player.js", "src/combat/reference-combat.js", "src/animation/lab.js"}
+        files.update(s["image"] for s in catalog["sources"])
+        effects = json.loads((ROOT / catalog["effects"]).read_text(encoding="utf-8"))
+        for sample in effects["samples"]:
+            files.update((sample["image"], sample["original"]))
+        for character in catalog["characters"]:
+            files.update(character[key] for key in ("animations", "skills", "enemy"))
+            animations = json.loads((ROOT / character["animations"]).read_text(encoding="utf-8"))
+            for animation in animations["animations"].values():
+                if animation.get("panel"):
+                    files.add(animation["panel"])
+                for frame in animation["frames"]:
+                    files.update((frame["image"], frame["original"]))
+        html = html.replace('<a href="index.html">게임으로 돌아가기 ↗</a>', '')
+    else:
+        files = set(re.findall(r'<script\s+src=[\"\']([^\"\']+)[\"\']', html))
+        if (ROOT / "assets/bgm/boss.mp3").is_file():
+            files.add("assets/bgm/boss.mp3")
+        html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
+    files.add("streamlit-bridge.js")
+    for name in sorted(files):
+        _copy_component_file(name, destination)
+    html = html.replace("<head>", '<head>\n<script src="streamlit-bridge.js"></script>', 1)
+    target = destination / "index.html"
+    if not target.is_file() or target.read_text(encoding="utf-8") != html:
+        target.write_text(html, encoding="utf-8")
+    return destination
+
+
 def run_streamlit():
     import streamlit as st
 
@@ -118,14 +187,14 @@ def run_streamlit():
             "width:min(100%,calc((100vh - 130px)*16/9))!important;height:auto!important;aspect-ratio:16/9}</style>",
             unsafe_allow_html=True,
         )
-    html = build_reference_html() if review else build_single_html()
-    height = 1000 if review else 680
-    if hasattr(st, "iframe"):          # 최신 Streamlit (components.v1.html 은 제거 예정)
-        st.iframe(html, height=height)
-    else:                              # 구버전 호환
-        import streamlit.components.v1 as components
+    # Component files are streamed via HTTP, rather than serializing ~177 MB of HTML.
+    import streamlit.components.v1 as components
 
-        components.html(html, height=height, scrolling=review)
+    directory = prepare_streamlit_component(review)
+    height = 1000 if review else 680
+    component = components.declare_component("black_moon_reference" if review else "black_moon_game", path=str(directory))
+    component(height=height, key="reference" if review else "game", default=None)
+    st.caption("v1.37 · 파일별 로딩")
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
