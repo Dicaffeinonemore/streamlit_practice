@@ -104,8 +104,11 @@ function vargulEvent(e,event){
     spawnVargul(e,'cross',player.x,player.y,0,{wait:vargulWarningTicks(e,60),active:18});
   }else if(event.type==='orbs'){
     if(vargulHazards(e,'orb').length)return;
-    a.orbClock=0;a.orbNext=VARGUL_RULES.orb.interval[e.p2shown?1:0];a.orbTurn=0;
-    for(let i=0;i<2;i++)spawnVargul(e,'orb',e.x+(i?1:-1)*40,e.y,70*k,{index:i,hp:2,inv:0,flash:0,attackTokens:new Set()});
+    const r=VARGUL_RULES.orb;
+    a.hadOrbs=true;
+    for(let i=0;i<2;i++)spawnVargul(e,'orb',clamp(e.x+(i?1:-1)*40,camX+24,camX+VW-24),e.y,r.height,
+      {entityKind:'summon',index:i,hp:r.hp,maxHp:r.hp,inv:0,flash:0,vx:0,vy:0,ai:'approach',
+        shotCooldown:r.interval[e.p2shown?1:0]*(i+1)/2});
   }else if(event.type==='turn'){
     e.face*=-1;a.travel=0;a.lockedY=null;
   }else if(event.type==='ultimate_mark'){
@@ -258,22 +261,36 @@ function updateVargulIntro(e){
   for(const z of vargulHazards(e,'fx'))if(z.age/MS>=z.life)z.dead=true;
 }
 function updateVargulOrbs(e){
-  const a=vargulData(e),orbs=vargulHazards(e,'orb'),r=VARGUL_RULES.orb;
+  const a=vargulData(e),orbs=vargulHazards(e,'orb');
   if(!orbs.length){
     if(a.hadOrbs){a.cooldowns.orb=720;a.hadOrbs=false;}return;
   }
-  a.hadOrbs=true;a.orbClock++;
+  a.hadOrbs=true;
   if(e.st==='dead'||e.phaseT>0){clearVargulHazards(e);return;}
-  if(a.orbClock>=a.orbNext&&player.st!=='down'&&player.st!=='dead'){
-    const ordered=orbs.slice().sort((u,v)=>u.index-v.index),orb=ordered[a.orbTurn%ordered.length];
-    orb.flash=vargulWarningTicks(e,r.flash)+1;orb.shotPending=true;a.orbTurn++;a.orbNext=a.orbClock+r.interval[e.p2shown?1:0];
+}
+function moveVargulOrb(z,t){
+  const r=VARGUL_RULES.orb,p=player,dx=p.x-z.x,distance=Math.abs(dx),side=Math.sign(dx)||(z.index?1:-1);
+  z.ai=distance>r.range+r.rangeSlack?'approach':distance<r.range-r.rangeSlack?'retreat':'strafe';
+  const drift=Math.sin(t/r.driftPeriod*Math.PI*2+z.index*Math.PI);
+  let vx=z.ai==='approach'?side*r.speed:z.ai==='retreat'?-side*r.speed:drift*r.speed*.3;
+  let vy=clamp((p.y+(z.index?1:-1)*26+drift*16-z.y)*.04,-r.depthSpeed,r.depthSpeed);
+  // Independent steering and separation: neither position is attached to the player.
+  for(const other of vargulHazards(z.owner,'orb'))if(other!==z){
+    const sx=z.x-other.x,sy=z.y-other.y;
+    if(Math.abs(sx)<38&&Math.abs(sy)<26){vx+=Math.sign(sx)||(z.index?1:-1);vy+=(Math.sign(sy)||(z.index?1:-1))*.3;}
   }
+  if(z.flash>0){vx*=.25;vy*=.25;}
+  z.vx=(z.vx||0)+clamp(vx-(z.vx||0),-r.accel,r.accel);
+  z.vy=(z.vy||0)+clamp(vy-(z.vy||0),-r.accel,r.accel);
+  z.x=clamp(z.x+clamp(z.vx,-r.speed,r.speed),camX+24,camX+VW-24);
+  z.y=clamp(z.y+clamp(z.vy,-r.depthSpeed,r.depthSpeed),GTOP+14,GBOT-12);
+  z.h=r.height+Math.sin(t/24+z.index*Math.PI)*r.bob;
 }
 function vargulBreakOrb(z,destroyed=false){
   if(z.dead)return;z.dead=true;
   vargulFx(z.owner,'frost_burst',z.x,z.y,z.h,{life:18,width:45,height:45});
   if(destroyed){
-    const e=z.owner;e.gr=Math.min(e.grMax,e.gr+20);e.grT=150;hitStop=Math.max(hitStop,3);sfx('hit');
+    const e=z.owner;e.gr=Math.min(e.grMax,e.gr+VARGUL_RULES.orb.groggy);e.grT=150;hitStop=Math.max(hitStop,3);sfx('hit');
     if(e.gr>=e.grMax&&e.st!=='dead'&&!e.phaseT){resetBossFx(e);e.st='stun';e.t=0;e.z=e.vz=e.vx=0;shake=Math.max(shake,16);sfx('groggy');}
   }
   if(!vargulHazards(z.owner,'orb').length){const a=vargulData(z.owner);a.cooldowns.orb=720;a.hadOrbs=false;}
@@ -288,7 +305,7 @@ function strikeVargulOrbs(reach,behind=8,hitSet=player.hitSet,options={}){
     const x=options.x??p.x,y=options.y??p.y,h=options.h??p.z,face=options.face??p.face,dx=(z.x-x)*face;
     const overlaps=options.global||dx>=-behind-12&&dx<=reach+12&&Math.abs(z.y-y)<(options.depth??20)&&Math.abs(z.h-(h+44))<45;
     if(!overlaps)continue;
-    hitSet.add(z);z.hp--;z.inv=10;hit=true;
+    hitSet.add(z);z.hp=Math.max(0,z.hp-(options.damage??ATK.c1.dmg));z.inv=VARGUL_RULES.orb.inv;hit=true;
     if(z.hp<=0)vargulBreakOrb(z,true);else{sfx('hit');hitStop=Math.max(hitStop,2);}
   }
   return hit;
@@ -312,9 +329,10 @@ function updateVargulHazard(z){
     }
     if(t>=z.wait+z.active)z.dead=true;
   }else if(z.kind==='orb'){
-    const r=VARGUL_RULES.orb,angle=t/r.period*Math.PI*2+z.index*Math.PI;
-    z.x=p.x+Math.cos(angle)*r.radiusX;z.y=p.y+Math.sin(angle)*r.radiusY;z.h=r.height;
+    const r=VARGUL_RULES.orb;
+    moveVargulOrb(z,t);
     if(z.inv>0)z.inv--;
+    if(z.shotCooldown>0)z.shotCooldown--;
     if(z.flash>0&&--z.flash===0&&z.shotPending){
       z.shotPending=false;
       if(p.st!=='down'&&p.st!=='dead'){
@@ -323,12 +341,14 @@ function updateVargulHazard(z){
           const dx=p.x-z.x,dy=p.y-z.y,dh=p.z+44-z.h,length=Math.hypot(dx,dy,dh)||1,s=VARGUL_RULES.shard.speed;
           // Two separate trajectories in phase 2; no homing after release.
           const offset=count===2?(i-.5)*.10:0,cos=Math.cos(offset),sin=Math.sin(offset);
-          spawnVargul(e,'shard',z.x,z.y,z.h,{vx:(dx*cos-dy*sin)/length*s,vy:(dx*sin+dy*cos)/length*s,vh:dh/length*s,life:180});
+          spawnVargul(e,'shard',z.x,z.y,z.h,{casterIndex:z.index,vx:(dx*cos-dy*sin)/length*s,vy:(dx*sin+dy*cos)/length*s,vh:dh/length*s,life:180});
         }
         sfx('bwave');
       }
     }
-    if(t>=r.life)vargulBreakOrb(z,false);
+    if(!z.flash&&z.shotCooldown<=0&&p.st!=='down'&&p.st!=='dead'){
+      z.flash=vargulWarningTicks(e,r.flash);z.shotPending=true;z.shotCooldown=r.interval[e.p2shown?1:0];
+    }
   }else if(z.kind==='shard'){
     const old={x:z.x,y:z.y,h:z.h};z.x+=z.vx;z.y+=z.vy;z.h+=z.vh;
     const dx=z.x-old.x,dy=z.y-old.y,dh=z.h-old.h,length=dx*dx+dy*dy+dh*dh;
@@ -429,8 +449,13 @@ function drawVargulHazards(ground=false){
         if(z.kind==='sword'){ctx.beginPath();ctx.ellipse(z.x-camX,z.y,d.radius,d.depth,0,0,Math.PI*2);ctx.stroke();}
         else{ctx.strokeRect(0,z.y-d.depth,VW,2*d.depth);ctx.strokeRect(z.x-camX-d.column,GTOP,2*d.column,GBOT-GTOP);}ctx.restore();}
     }else if(z.kind==='orb'){
-      const alpha=z.inv>0?.45:1;ctx.save();if(z.flash>0&&UX.options.flash)ctx.filter='brightness(2)';
-      paintVargulFx('ice_orb',(t%52)/52,z.x,z.y-z.h+14,30,30,alpha);ctx.restore();
+      const size=42,alpha=z.inv>0?.45:1;ctx.save();if(z.flash>0&&UX.options.flash)ctx.filter='brightness(2)';
+      paintVargulFx('ice_orb',(t%52)/52,z.x,z.y-z.h+size/2,size,size,alpha);ctx.restore();
+      const x=z.x-camX,y=z.y-z.h-size/2-7,barWidth=size+4;
+      ctx.save();ctx.fillStyle='#182532';ctx.fillRect(x-barWidth/2,y,barWidth,4);
+      ctx.fillStyle='#89dcff';ctx.fillRect(x-barWidth/2+1,y+1,(barWidth-2)*clamp(z.hp/z.maxHp,0,1),2);ctx.restore();
+      if(vargulDebug){ctx.save();ctx.strokeStyle='#73e5ff';ctx.strokeRect(x-12,z.y-z.h-12,24,24);
+        ctx.beginPath();ctx.moveTo(x,z.y-z.h);ctx.lineTo(player.x-camX,player.y-player.z-44);ctx.stroke();ctx.restore();}
     }else if(z.kind==='shard')paintVargulFx('ice_shard',(t%22)/22,z.x,z.y-z.h+9,24,18,1,z.vx>=0?1:-1);
     else if(z.kind==='ultimate'){
       const u=VARGUL_RULES.ultimate;
@@ -445,9 +470,6 @@ function drawVargulHazards(ground=false){
       }
       if(vargulDebug){ctx.save();ctx.strokeStyle='#ff526e';for(const [rx,ry] of [[u.rx,u.ry],[u.outerX,u.outerY]]){ctx.beginPath();ctx.ellipse(z.x-camX,z.y,rx,ry,0,0,Math.PI*2);ctx.stroke();}ctx.restore();}
     }
-  }
-  if(!ground&&vargulDebug&&enemies.some(isVargul)){
-    const r=VARGUL_RULES.orb;ctx.save();ctx.strokeStyle='#73e5ff';ctx.setLineDash([4,3]);ctx.beginPath();ctx.ellipse(player.x-camX,player.y-r.height,r.radiusX,r.radiusY,0,0,Math.PI*2);ctx.stroke();ctx.restore();
   }
 }
 function drawVargulRemains(){for(const r of vargulRemains)paintVargul(VARGUL_ART.clips.death.at(-1),r.x,r.y,r.face);}
