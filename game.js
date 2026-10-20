@@ -338,7 +338,7 @@ function onKeyOnce(code) {
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
-  vargulRemains=[];
+  vargulRemains=[];sovereignRemains=[];
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
   arena = null;
@@ -371,7 +371,7 @@ function spawnWave(w) {
   for (const [type, side] of w.e) {
     if (ET[type].boss) {                           // 보스: 하늘에서 떨어져 착지 → 포효 → 이름 카드
       const b = mkEnemy(type, camX + VW * 0.72, clamp(player.y, GTOP + 40, GBOT - 30));
-      b.st = 'intro'; b.z = type === 'boss2'||isVargul(b) ? 0 : 360; b.face = -1;
+      b.st = 'intro'; b.z = type === 'boss2'||isVargul(b)||isSovereign(b) ? 0 : 360; b.face = -1;
       enemies.push(b); introBoss = b; introT = 0; introLand = false; scene = 'bossintro';
       AUDIO.bossMusic(stageIdx);
       continue;
@@ -384,6 +384,7 @@ function mkEnemy(type, x, y) {
   // The retained ET.boss4 / runLegacyPat / named renderer are bypassed only
   // while USE_VARGUL_V136 is enabled; VARGUL_V136_OVERRIDE=false restores them.
   const base = type==='boss4'&&USE_VARGUL_V136?{...ET[type],name:'바르굴, 얼어붙은 묘지왕',en:'VARGUL, THE FROZEN GRAVELORD',hp:2000,h:VARGUL_ART.worldHeight,hw:19,pats:VARGUL_RULES.names}:
+    type==='boss5'&&USE_SOVEREIGN?{...ET[type],name:'흑월의 갑주왕',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyHeight,hw:SOVEREIGN_RULES.hw,pats:SOVEREIGN_RULES.names}:
     type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
   const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
@@ -467,9 +468,10 @@ function playerStrike(A) {
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
   strikeMorgraCrows(A.reach);
   strikeVargulOrbs(A.reach,8,p.hitSet,{damage:Math.round(A.dmg*mul)});
+  const sovBlock=strikeSovereignFists(A.reach,8,p.hitSet,{damage:Math.round(A.dmg*mul),kd:A.kd});
   let landed = false;
   for (const e of enemies) {
-    if (!canHit(e) || p.hitSet.has(e)) continue;
+    if (!canHit(e) || p.hitSet.has(e) || sovBlock&&isSovereign(e)) continue;
     if (inReach(p, e, A.reach, 24, 55)) {
       p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd, A.fx);
       p.sp = Math.min(SP_MAX, p.sp + (A.kd ? 8 : 5)); landed = true;
@@ -541,9 +543,10 @@ function specialHit(last, k) {
   const p = player, f = p.face, mul = p.buff > 0 ? 1.5 : 1;
   const dmg = Math.round((last ? SPECIAL.fin : SPECIAL.slash) * mul), rx = last ? 110 : 80, ry = last ? 60 : 44;
   strikeVargulOrbs(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg});
+  const sovBlock=strikeSovereignFists(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg,kd:true});
   let any = false;
   for (const e of enemies) {
-    if (!canHit(e)) continue;
+    if (!canHit(e) || sovBlock&&isSovereign(e)) continue;
     if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1); any = true; }
   }
   for (const b of barrels) {
@@ -565,6 +568,7 @@ function fireBolts() {
   p.castFired = true; flashT = 200; flashCol = '207,224,255'; shake = Math.max(shake, 22); hitStop = Math.max(hitStop, 4);
   sfx('bolt');
   strikeVargulOrbs(0,0,new Set(),{global:true,damage:MAGIC.damage});
+  strikeSovereignFists(0,0,new Set(),{global:true,damage:MAGIC.damage});
   for (const e of enemies) {
     if (e.st === 'dead' || e.st === 'intro' || e.x < camX - 20 || e.x > camX + VW + 20) continue;
     xs.push([e.x, e.y]);
@@ -614,10 +618,11 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
   p.vargulSkillHits ||= new Map();
   if(!p.vargulSkillHits.has(phase))p.vargulSkillHits.set(phase,new Set());
   strikeVargulOrbs(reach,behind,p.vargulSkillHits.get(phase),{depth:38,damage:Math.round(dmg*mul)});
+  const sovBlock=strikeSovereignFists(reach,behind,p.vargulSkillHits.get(phase),{depth:38,damage:Math.round(dmg*mul),kd});
   let landed = false;
   for (const e of enemies) {
     const key = phase + ':' + e.id;
-    if (!canHit(e) || p.skillHits.has(key)) continue;
+    if (!canHit(e) || p.skillHits.has(key) || sovBlock&&isSovereign(e)) continue;
     const dx = (e.x - p.x) * p.face;
     if (dx > -behind - e.hw && dx < reach + e.hw && Math.abs(e.y - p.y) < 38 && Math.abs(e.z - p.z) < 85) {
       p.skillHits.add(key); damageEnemy(e, Math.round(dmg * mul), kd, fx); landed = true;
@@ -688,7 +693,7 @@ function updPlayer() {
   if (p.buf > 0) p.buf -= MS;
   if (p.dashCd > 0) p.dashCd--;
   for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
-  if (p.st === 'grabbed') { updateGorathGrab(); return; }
+  if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
   p.walk = false;
   for (const code in SKILL_KEYS) {
@@ -825,6 +830,7 @@ function heal(n) {
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
 function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   if(isVargul(e)&&interceptVargulDamage(e))return;
+  if(isSovereign(e)&&interceptSovereignDamage(e))return;
   if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
   if (e.phaseT > 0 || e.st === 'reviving' || e.st === 'dead' || e.invuln) return;
   const p = player;
@@ -845,6 +851,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
 
   if (e.hp <= 0) {
     if(isVargul(e)&&!e.p2shown){beginVargulTransition(e);return;}
+    if(isSovereign(e)&&!e.p2shown){beginSovereignTransition(e);return;}
     if(e.type==='boss2'&&!e.p2shown){beginMorgraRevival(e);return;}
     if(e.type==='boss3'&&!e.p2shown){beginBossPhase2(e,true);return;}   // 아우렐리온: 1페이즈 체력을 다 깎으면 완전 회복 후 각성
     e.hp = 0; e.st = 'dead'; e.t = 0; e.pat = null;
@@ -857,7 +864,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
     return;
   }
   if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
-    if (e.type!=='boss2' && e.type!=='boss3' && !isVargul(e) && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
+    if (e.type!=='boss2' && e.type!=='boss3' && !isVargul(e) && !isSovereign(e) && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
     if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
     e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
     if (e.gr >= e.grMax) {
@@ -874,7 +881,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
       e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 3;
       if (e.type === 'boss3') spawnAdds(['rogue', 'rogue']);
       else if (e.type === 'boss4'&&!isVargul(e)) spawnAdds(['archer', 'grunt']);
-      else if (e.type === 'boss5') spawnAdds(['brute', 'archer']);
+      else if (e.type === 'boss5'&&!isSovereign(e)) spawnAdds(['brute', 'archer']);
     } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken') || (isVargul(e)&&e.st==='pat'&&!vargulArmored(e))) { if(isAurelion(e)||isVargul(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
@@ -953,11 +960,12 @@ function startPat(e, pat) {
 function endPat(e, next) {
   resetBossFx(e);
   e.st = 'chase'; e.t = 0; e.wait = 0;
-  e.atkCd = isVargul(e)?vargulAttackGap(e):isAurelion(e)?aurelionAttackGap(e):Math.round((700 + Math.random() * 600) * (e.type==='boss2' && phase2(e) ? 0.8 : 1) / MS);
+  e.atkCd = isSovereign(e)?sovGap(e):isVargul(e)?vargulAttackGap(e):isAurelion(e)?aurelionAttackGap(e):Math.round((700 + Math.random() * 600) * (e.type==='boss2' && phase2(e) ? 0.8 : 1) / MS);
   if (next) startPat(e, next);
 }
 function bossChase(e) {
   if(isVargul(e)){chaseVargul(e);return;}
+  if(isSovereign(e)){chaseSovereign(e);return;}
   if(isAurelion(e)){chaseAurelion(e);return;}
   const p = player, d = e.d, dx = p.x - e.x, dy = p.y - e.y, adx = Math.abs(dx);
   e.face = dx >= 0 ? 1 : -1;
@@ -980,7 +988,7 @@ function alignY(e, k) { e.y += clamp(player.y - e.y, -k, k); }   // 근접 패�
 
 function runPat(e) {
   const count=hazards.length;
-  if(isVargul(e))runVargulPattern(e);else if(isAurelion(e))runAurelionPattern(e);else if(e.type==='boss2')runMorgraPattern(e);else runLegacyPat(e);
+  if(isVargul(e))runVargulPattern(e);else if(isSovereign(e))runSovereignPattern(e);else if(isAurelion(e))runAurelionPattern(e);else if(e.type==='boss2')runMorgraPattern(e);else runLegacyPat(e);
   for(let i=count;i<hazards.length;i++) {
     hazards[i].owner ??= e;
     hazards[i].damageScale ??= e.p2shown?(e.type==='boss2'?1.5:1.3):1;
@@ -1221,6 +1229,7 @@ function slamImpact(e) {
 
 function updEnemy(e) {
   if(updateVargulState(e))return;
+  if(updateSovereignState(e))return;
   if(updateAurelionState(e))return;
   if(e.st==='reviving'){updateMorgraRevival(e);return;}
   if(e.morgraCooldown>0)e.morgraCooldown--;
@@ -1474,11 +1483,13 @@ function updHazards() {
       case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
         z.vargulHits ||= new Set();
         strikeVargulOrbs(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1))});
+        const sovBlock=strikeSovereignFists(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1))});
+        if (sovBlock && !z.red) { z.dead = true; break; }
         if (z.red) {
           const from = z.x, step = Math.min(9, 520 - z.travel);
           z.x += z.dir * step; z.travel += step;
           for (const e of enemies) {
-            if (!canHit(e) || z.hits.has(e.id) || Math.abs(e.y - z.y) >= 26 ||
+            if (!canHit(e) || z.hits.has(e.id) || sovBlock&&isSovereign(e) || Math.abs(e.y - z.y) >= 26 ||
                 Math.abs(e.z + 44 - z.h) >= 38 ||
                 e.x + e.hw < Math.min(from, z.x) - 14 || e.x - e.hw > Math.max(from, z.x) + 14) continue;
             z.hits.add(e.id); damageEnemy(e, z.damage, false, 1);
@@ -1585,11 +1596,12 @@ function updFx() {
 function updIntro() {
   const b = introBoss;
   introT += MS;
-  const duration=vargulIntroDuration(b),u = introT / duration;
+  const duration=bossIntroDuration(b),u = introT / duration;
   if(isVargul(b))updateVargulIntro(b);
+  if(isSovereign(b))updateSovereignIntro(b);
   if(isAurelion(b))updateAurelionIntro(b);
-  b.z = (b.type === 'boss2' || b.type === 'boss3'||isVargul(b)) ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
-  if (!introLand && u >= 0.25 && b.type !== 'boss2' && !isAurelion(b)&&!isVargul(b)) {
+  b.z = (b.type === 'boss2' || b.type === 'boss3'||isVargul(b)||isSovereign(b)) ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
+  if (!introLand && u >= 0.25 && b.type !== 'boss2' && !isAurelion(b)&&!isVargul(b)&&!isSovereign(b)) {
     introLand = true; b.z = 0; shake = 22; sfx('land');
     for (let k = 0; k < 7; k++) burst(b.x + (k - 3) * 10, b.y, 4, ['#fff0c0', '#c8b890', '#8a7a5a']);
     impact(b.x, b.y, 10, 2, 1);
@@ -2021,6 +2033,7 @@ function drawEnemy(e) {
 function bossGroggySway(e){return e.face*(.018+Math.sin(e.t*.11)*.035);}
 function drawEnemyBody(e) {
   if(drawVargul(e))return;
+  if(drawSovereign(e))return;
   if(drawAurelion(e))return;
   if(drawMorgra(e))return;
   if (drawGorath(e)) return;
@@ -2515,7 +2528,7 @@ function drawTopFx(L) {
     }
   }
   for (const e of enemies) {                       // 황금왕 2페이즈: 왕관에서 불티
-    if (e.type === 'boss5' && e.st !== 'dead')
+    if (e.type === 'boss5' && !isSovereign(e) && e.st !== 'dead')
       for (let i = 0; i < 4; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 50, fxY(e.y, e.z + 60 + Math.random() * 100), Math.random() < 0.5 ? '#ff498d' : '#c48adb');
     if (e.type === 'boss3' && !isAurelion(e) && phase2(e) && e.st !== 'dead')
       for (let i = 0; i < 5; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 16, fxY(e.y, e.z + 138) - Math.random() * 12, Math.random() < 0.5 ? '#ffd23a' : '#ff7a1a');
@@ -2653,6 +2666,7 @@ function portraitHD(id) {
 }
 function portrait(id) {
   if(id==='boss4'&&USE_VARGUL_V136&&getVargulPortrait())return getVargulPortrait();
+  if(id==='boss5'&&USE_SOVEREIGN&&getSovereignPortrait())return getSovereignPortrait();
   if(id==='boss3'&&getAurelionPortrait())return getAurelionPortrait();
   if(id==='boss2' && getMorgraPortrait())return getMorgraPortrait();
   if(id==='boss1' && getGorathPortrait())return getGorathPortrait();
@@ -2837,7 +2851,7 @@ function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별,
     }
   }
   const tele=e.type==='boss2'?(morgraMoves[e.morgraMove]?.phases?.startup?.[1]+1||0)*MS:(TELE[e.pat]||0);
-  const warnNow = isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
+  const warnNow = isSovereign(e)?(sovereignWarning(e)&&Math.floor(tick*MS/110)%2===0):isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
   if (warnNow) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
 }
 
@@ -2858,7 +2872,7 @@ function render() {
   drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY);         // ↓ 월드 좌표 (1.5배 줌)
   drawFloor(theme);
-  drawVargulRemains();drawVargulHazards(true);
+  drawVargulRemains();drawVargulHazards(true);drawSovereignGround();
   if (stage) {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
     const sp = player.st === 'special' ? player.t * MS : -1;
@@ -2867,6 +2881,7 @@ function render() {
     barrels.forEach(b => list.push({ y: b.y, f: () => drawBarrel(b) }));
     items.forEach(i => list.push({ y: i.y, f: () => drawItem(i) }));
     enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemy(e) }));
+    sovereignDrawList(list);
     hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, f: () => drawZoneEruption(z) }); });
     ghosts.forEach(g => { if (sp < 0 || g.id !== 'player') list.push({ y: g.y - 0.5, f: () => drawGhost(g) }); });
     if (sp < 0) list.push({ y: player.y, f: drawPlayer });
@@ -2889,6 +2904,7 @@ function render() {
     drawMorgraHazards();
     drawAurelionHazards();
     drawVargulHazards(false);
+    drawSovereignTop();
     drawGorathGrab();
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }
@@ -2896,7 +2912,7 @@ function render() {
   drawVignette();
   ctx.restore();
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
-  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / vargulIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
+  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / bossIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
 
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
