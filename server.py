@@ -11,12 +11,13 @@ import http.server
 import base64
 import json
 import os
+import re
 import socketserver
 import threading
 import webbrowser
 from pathlib import Path
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
 SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "barel-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-data.js", "vargul-runtime.js", "item-art.js", "item-runtime.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
@@ -43,9 +44,20 @@ def build_single_html() -> str:
     if boss_bgm.is_file():
         url = "data:audio/mpeg;base64," + base64.b64encode(boss_bgm.read_bytes()).decode("ascii")
         html = html.replace('<script src="audio.js">', f'<script>window.BOSS_BGM_URL="{url}";</script>\n<script src="audio.js">', 1)
-    for name in SCRIPTS:
-        code = (ROOT / name).read_text(encoding="utf-8")
-        html = html.replace(f'<script src="{name}"></script>', f"<script>\n{code}\n</script>")
+    # 실제 HTML의 연결 순서가 기준이다. 오래된 목록에만 남은 파일을 읽지 않는다.
+    def inline_script(match: re.Match) -> str:
+        name = match.group(2)
+        script = ROOT / name
+        if not script.is_file():
+            raise FileNotFoundError(
+                f"index.html에서 연결한 스크립트가 없습니다: {name}. "
+                "배포 저장소에 index.html, server.py와 해당 JavaScript 파일이 "
+                "같은 버전으로 포함되어 있는지 확인하세요."
+            )
+        code = script.read_text(encoding="utf-8")
+        return f"<script>\n{code}\n</script>"
+
+    html = re.sub(r'<script\s+src=([\"\'])([^\"\']+)\1\s*>\s*</script>', inline_script, html)
     # Streamlit uses its own page selector; relative navigation cannot escape srcdoc.
     html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
     return html
