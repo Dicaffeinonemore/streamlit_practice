@@ -4,6 +4,10 @@ from pathlib import Path
 from PIL import Image
 from boss_art_common import pack_tiles
 
+# The atlas keeps the source pixels; the runtime shrinks them by WORLD_SCALE when drawing,
+# so the canvas can show the full detail on high-resolution screens.
+WORLD_SCALE = .5
+
 parser=argparse.ArgumentParser()
 parser.add_argument('sprites',type=Path)
 parser.add_argument('framedata',type=Path)
@@ -23,12 +27,16 @@ for m in catalog['motions']+fx['effects']+fx['parts']:
     clips[name]=[]
     for i in range(m['frames']):
         tile=im.crop((i*cell[0],0,(i+1)*cell[0],cell[1]))
-        tile=tile.resize((round(cell[0]*.5),round(cell[1]*.5)),Image.Resampling.NEAREST)
-        f={'atlas':[0,0,*tile.size],'anchor':[round(pivot[0]*.5),round(pivot[1]*.5)]}
+        # Trim transparent margins (not parts: the chain tile repeats by its full width).
+        box=tile.getbbox() if m not in fx['parts'] else None
+        box=box or (0,0,*tile.size)
+        tile=tile.crop(box)
+        f={'atlas':[0,0,*tile.size],'anchor':[round(pivot[0]-box[0]),round(pivot[1]-box[1])]}
         clips[name].append(f);tiles.append((f,tile))
-atlas=pack_tiles(tiles);atlas.save(out/'atlas.png')
-meta={'clips':clips,'timing':timing,'scale':.5,'idleHeight':140}
+tiles.sort(key=lambda t:-t[1].height)
+atlas=pack_tiles(tiles,4096,4096);atlas.save(out/'atlas.png')
+meta={'clips':clips,'timing':timing,'scale':WORLD_SCALE,'idleHeight':140}
 (out/'frames.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
-b=io.BytesIO();atlas.save(b,format='PNG');meta['atlas']='data:image/png;base64,'+base64.b64encode(b.getvalue()).decode()
+b=io.BytesIO();atlas.save(b,format='PNG',optimize=True);meta['atlas']='data:image/png;base64,'+base64.b64encode(b.getvalue()).decode()
 (root/'gorath-art.js').write_text('const GORATH_ART = '+json.dumps(meta,separators=(',',':'))+';\n',encoding='utf-8')
-print('Gorath:',len(tiles),'frames;',atlas.size)
+print('Gorath:',len(tiles),'frames;',atlas.size,'png',len(b.getvalue())//1024,'KB')

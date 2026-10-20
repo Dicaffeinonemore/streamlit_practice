@@ -349,16 +349,16 @@ function updateVargulHazard(z){
 }
 function paintVargul(frame,x,y,face=1,alpha=1,k=VARGUL_ART.scale,add=false){
   const im=frame&&VARGUL_SHEETS[frame.sheet];if(!im?.naturalWidth)return false;
-  const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor;
-  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;
+  const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,d=k/(VARGUL_ART.hd||1);   // atlas is HD x stored pixels
+  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(d);
   if(add)ctx.globalCompositeOperation='lighter';
-  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
+  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
 }
 function paintVargulFx(id,progress,x,y,width,height,alpha=1,face=1){
   const frames=VARGUL_ART.clips['fx_'+id+'_add'];if(!frames)return;
   const f=frames[Math.min(frames.length-1,Math.max(0,Math.floor(progress*frames.length)))],im=VARGUL_SHEETS[f.sheet];if(!im?.naturalWidth)return;
   const [sx,sy,w,h]=f.atlas;
-  ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;ctx.translate(x-camX,y);ctx.scale(face,1);
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha*=alpha;ctx.translate(x-camX,y);ctx.scale(face,1);smoothFor(height/h);
   ctx.drawImage(im,sx,sy,w,h,-width/2,-height,width,height);ctx.restore();
 }
 function paintVargulCrossWarning(progress,z,alpha){

@@ -263,10 +263,10 @@ function aurelionPose(e) {
 }
 function paintAurelion(f,x,y,face=1,alpha=1,k=.85,add=false) {
   const im=f&&AURELION_SHEETS[f.sheet];if(!im?.naturalWidth)return false;
-  const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor;
-  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;
+  const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor,d=k/(AURELION_ART.hd||1);   // atlas keeps source pixels
+  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(d);
   if(add)ctx.globalCompositeOperation='lighter';
-  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
+  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
 }
 function aurelionTelegraph(e) {
   const a=e.aurelion;if(e.st!=='pat'||!a?.current)return null;
