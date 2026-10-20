@@ -1,6 +1,17 @@
 흑월의 기사 v1.37 — 바르굴 패턴 개선·모든 보스 그로기 자세 변경
 기록일: 2026-10-21
 
+추가 수정 — Streamlit 메모리 부담 완화
+- 약176.6MB의 게임 HTML을 한 번에 합쳐 전송하던 경로를 로컬 컴포넌트 파일 제공으로 변경.
+- 게임·검수 화면 모두 JavaScript와 그림을 파일별 HTTP 요청으로 불러오고, Streamlit 메시지에는 컴포넌트 정보만 포함.
+- 공개할 게임 파일만 임시 컴포넌트 폴더에 복사한다. 큰 파일은1MB씩 복사하며 변경 없는 파일은 재복사하지 않는다.
+- streamlit-bridge.js를 추가해 컴포넌트 준비·높이 설정을 처리. 기존 index.html의 스크립트 순서·아트·전투 로직 유지.
+- requirements.txt에 Streamlit1.56.0을 고정해 배포 환경을 재현.
+- 실제 Streamlit 게임·검수 전환 및 번들 관련5개 검사 통과. 단일 HTML 생성 함수는 기존 도구 호환용으로만 유지.
+- 실제 Streamlit1.56.0 서버+Chrome에서 게임 타이틀 초기화·960×540 논리 좌표·브라우저 오류0·로드 후 health 응답 확인.
+- 실행 원본·화면: artifacts/streamlit-1.37/smoke.json, artifacts/streamlit-1.37/game.png.
+- 배포의 healthz EOF가 메모리 부족 때문이라고 확정한 것은 아니며, 실제 재배포 후 상태 확인이 필요하다.
+
 추가 수정 — Streamlit 스크립트 번들
 - index.html에 실제 연결된 JavaScript만 HTML 순서대로 포함하도록 server.py 수정.
 - 실행 디렉터리와 무관하게 서버 파일 기준 절대 경로 사용.
