@@ -10,7 +10,9 @@ from PIL import Image
 from boss_art_common import pack_pages
 
 ROOT = Path(__file__).resolve().parents[1]
-SCALE = .55
+SCALE = .55          # logical frame units (pivots, hitboxes) relative to the source
+HD = 1 / SCALE       # atlas keeps source pixels; the runtime divides by HD when drawing
+BUDGET = 16_000_000
 
 
 def validate(moves, catalog, effects, projectiles, images):
@@ -72,10 +74,12 @@ def build(sprites_path, data_path, out_root=ROOT):
             w, h = e['cell']
             for i in range(e['frames']):
                 tile = images[e['id']].crop((i*w, 0, (i+1)*w, h))
-                tile = tile.resize((round(w*SCALE), round(h*SCALE)), Image.Resampling.NEAREST)
-                f = {'atlas': [0, 0, *tile.size], 'anchor': [round(v*SCALE) for v in e['pivot']]}
+                box = tile.getbbox() or (0, 0, *tile.size)
+                tile = tile.crop(box)
+                f = {'atlas': [0, 0, *tile.size], 'anchor': [round((v - b) * SCALE, 2) for v, b in zip(e['pivot'], box)]}
                 clips[key].append(f)
                 tiles.append((f, tile))
+        tiles.sort(key=lambda t: -t[1].height)
         pages = pack_pages(tiles)
         for f, _ in tiles:
             f['sheet'] += offset
@@ -94,11 +98,11 @@ def build(sprites_path, data_path, out_root=ROOT):
         encoded.append((f'sheet-{i}.{fmt}', raw))
         report.append({'file': encoded[-1][0], 'size': list(sheet.size), 'bytes': len(raw)})
     meta = {'clips': clips, 'timing': moves, 'boss': boss, 'projectiles': projectiles,
-            'effects': {e['id']: e for e in effects}, 'scale': SCALE, 'idleHeight': 240*SCALE,
+            'effects': {e['id']: e for e in effects}, 'scale': SCALE, 'hd': HD, 'idleHeight': 240*SCALE,
             'sources': {name: hashlib.sha256(raw).hexdigest() for name, raw in sorted(sources.items())}}
     bundle = dict(meta, sheets=['data:image/' + name.split('.')[-1] + ';base64,' + base64.b64encode(raw).decode('ascii') for name, raw in encoded])
     js = ('const AURELION_ART = ' + json.dumps(bundle, ensure_ascii=False, separators=(',', ':')) + ';\n').encode('utf8')
-    assert len(js) <= 4_000_000, ('aurelion-art.js exceeds 4 MB', len(js))
+    assert len(js) <= BUDGET, ('aurelion-art.js exceeds budget', len(js))
     # All validation and encoding must succeed before producing any output.
     out = Path(out_root) / 'assets/aurelion'
     out.mkdir(parents=True, exist_ok=True)

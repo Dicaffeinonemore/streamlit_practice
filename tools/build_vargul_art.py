@@ -24,6 +24,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / 'assets/vargul_src'
 OUT = ROOT / 'assets/vargul'
 QA = ROOT / 'artifacts/vargul-1.36/art'
+# Atlas pixels per stored (logical) pixel. Pivots below are in atlas pixels; the
+# exported anchors are divided by HD so runtime/world units stay unchanged.
+HD = 3
+ACTOR_QUALITY = 90
+BUDGET = 24_000_000
 
 
 def load_json(path):
@@ -353,6 +358,29 @@ def foot_pivot(image, fallen=False):
     return [float(np.median(xx)), float(ground)]
 
 
+def actor_extent(image):
+    """Measure the body, excluding sparse spear tips and cyan weapon/glow pixels."""
+    a = np.array(image).astype(np.int16)
+    r, g, b, alpha = [a[:, :, i] for i in range(4)]
+    body = (alpha >= 110) & ~((b > r * 1.18) & (g > r * 1.12) & (b > 110))
+    ys, xs = np.where(body)
+    if not len(ys):
+        raise ValueError('Actor has no measurable body')
+    # Percentiles discard isolated weapon fragments without including FX bounds.
+    return [float(np.quantile(xs, .99) - np.quantile(xs, .01) + 1),
+            float(np.quantile(ys, .995) - np.quantile(ys, .005) + 1)]
+
+
+def actor_scale(image, target_height, actor_id, drawing, config):
+    width, height = actor_extent(image)
+    # A fallen body keeps its length; do not stretch its short vertical silhouette
+    # to standing height. Pose-specific height preserves crouching during a dash.
+    fallen = ('knockdown' in actor_id and 5 <= drawing <= 12) or (actor_id == 'death' and drawing >= 9)
+    pose_height = config.get('pose_heights', {}).get(str(drawing), 1)
+    extent = max(width, height) if fallen else height
+    return target_height * pose_height / extent, extent, pose_height
+
+
 def tattoo_mask(image, actor_id, drawing, body_height, config):
     """Conservative cyan-line mask inside inspected skin regions, not the weapon.
 
@@ -411,7 +439,7 @@ def make_strip(frames, path, meta_path, extra):
 
 def fx_rows(config, profile):
     result = {}
-    maxw, maxh = profile['fx_max_size']
+    maxw, maxh = (v * HD for v in profile['fx_max_size'])
     for sheet, rows in config['fx'].items():
         source = Image.open(SRC / f'fx/fx_sheet_{sheet}.png').convert('RGB')
         for row in rows:
@@ -447,7 +475,7 @@ def encode_pages(groups, quality):
             clips[key] = []
             for drawing in frames:
                 tile = drawing['image']
-                f = {'atlas': [0, 0, tile.width, tile.height], 'anchor': drawing['pivot']}
+                f = {'atlas': [0, 0, tile.width, tile.height], 'anchor': [round(v / HD, 3) for v in drawing['pivot']]}
                 clips[key].append(f)
                 tiles.append((f, tile))
         pages = pack_pages(tiles)
@@ -459,14 +487,9 @@ def encode_pages(groups, quality):
                 page.save(stream, 'PNG', optimize=True)
                 ext = 'png'
             elif category == 'actors':
-                # Binary pixel-art alpha avoids spending most of the bundle on
-                # subpixel chroma-key fringe. RGB remains full-colour: a global
-                # RGBA palette flattened the cyan tattoos in the review pass.
-                a = np.array(page)
-                a[:, :, 3] = np.where(a[:, :, 3] >= 96, 255, 0)
-                a[a[:, :, 3] == 0] = 0
-                page = Image.fromarray(a)
-                page.save(stream, 'WEBP', quality=quality, method=6, exact=True)
+                # High-resolution actors: soft (lossless) alpha, lossy colour at a
+                # high quality; the runtime filters them when drawing.
+                page.save(stream, 'WEBP', quality=ACTOR_QUALITY, method=6, exact=True)
                 ext = 'webp'
             else:
                 page.save(stream, 'WEBP', quality=quality, method=6, exact=True)
@@ -487,7 +510,7 @@ def build():
     profile = config['build']
     actor_frames, masks, motions, splits = {}, {}, {}, {}
     scale_records = []
-    ratio = config['awaken_bridge']['p2_p1_ratio']
+    ratio = 1  # One body size across both phases, including the awakening bridge.
     world_scale = profile['world_p1_body_height'] / profile['stored_p1_body_height']
     for entry in manifest['entries']:
         if entry['role'] != 'motion':
@@ -508,19 +531,21 @@ def build():
         rendered, tattoo_frames = [], []
         for f in fs:
             raw = f['image']
+            k, extent, pose_height = actor_scale(raw, target_height, id, f['drawing'], conf)
             fallen = ('knockdown' in id and f['drawing'] < 12) or id == 'death'
             pivot = foot_pivot(raw, fallen)
-            image = raw.resize((max(1, round(raw.width * k)), max(1, round(raw.height * k))), Image.Resampling.LANCZOS)
+            image = raw.resize((max(1, round(raw.width * k * HD)), max(1, round(raw.height * k * HD))), Image.Resampling.LANCZOS)
             arr = np.array(image)
             arr[arr[:, :, 3] < 9] = 0
             image = Image.fromarray(arr)
             item = {key: value for key, value in f.items() if key != 'image'}
-            item.update(image=image, pivot=[round(v * k, 3) for v in pivot],
-                        raw_size=list(raw.size), raw_pivot=pivot, source_scale=k)
+            item.update(image=image, pivot=[round(v * k * HD, 3) for v in pivot],
+                        raw_size=list(raw.size), raw_pivot=pivot, source_scale=k,
+                        body_extent=extent, pose_height=pose_height)
             rendered.append(item)
             if p2 or id == 'awaken':
                 mask, roi = tattoo_mask(raw, id, f['drawing'], body['height'], conf)
-                mask = mask.resize(image.size, Image.Resampling.LANCZOS)
+                mask = mask.resize(image.size, Image.Resampling.NEAREST)
                 ma = np.array(mask)
                 ma[:, :, 3] = (np.round(ma[:, :, 3].astype(float) / 255 * 7) * 255 / 7).astype(np.uint8)
                 ma[:, :, :3] = [116, 207, 255]
@@ -539,7 +564,7 @@ def build():
                        {'blend': 'lighter', 'source_motion': id, 'scale': world_scale})
         contact_sheet(rendered, QA / 'motion' / (id + '.png'),
                       f'{id} | {len(rendered)} drawings | feet + | x{world_scale:.5f} world',
-                      scale=2, columns=4, pivots=True)
+                      scale=2 / HD, columns=4, pivots=True)
         splits[id] = {'rows': audit, 'reference_discarded': entry['reference_first'],
                       'frames': [{key: value for key, value in f.items() if key != 'image'} for f in rendered]}
         print('motion', id, len(fs), 'body world', round(rec['reference_body_world'], 3), flush=True)
@@ -556,7 +581,7 @@ def build():
                                                           'source_sheet': row['sheet'], 'source_row': row['row'],
                                                           'floor_scale_y': row['floor_scale_y']})
         contact_sheet(alpha, QA / 'fx' / f"{row['sheet']}{row['row']}-{id}.png",
-                      f"FX {row['sheet']} row {row['row']} | {id} | {len(fs)} cells", columns=4, scale=1.5)
+                      f"FX {row['sheet']} row {row['row']} | {id} | {len(fs)} cells", columns=4, scale=1.5 / HD)
     clips, sheets, sizes = encode_pages([('actors', actor_frames), ('fx_add', add_clips),
                                         ('tattoos', masks)], profile['webp_quality'])
     # Both finished variants are exported as strips. The standalone bundle
@@ -569,22 +594,23 @@ def build():
     source_hashes = {e['file']: e['sha256'] for e in manifest['entries']}
     metadata = {'version': '1.36', 'units': manifest['units'], 'clips': clips, 'motions': {id: {k: v for k, v in m.items() if k != 'frame_data'} for id, m in motions.items()},
                 'effects': {id: {k: v for k, v in m.items() if k != 'frame_data'} for id, m in effect_meta.items()},
-                'scale': world_scale, 'idleHeight': profile['stored_p1_body_height'],
+                'scale': world_scale, 'hd': HD, 'idleHeight': profile['stored_p1_body_height'],
                 'worldHeight': profile['world_p1_body_height'], 'phaseHeightRatio': ratio,
                 'transition': config['awaken_bridge'], 'tattooMaskPrefix': 'mask_',
                 'tattooPulseTicks': 90, 'sources': source_hashes,
                 'fxAlphaStorage': {'mode': 'derive-once-from-add-atlas', 'alpha': 'max(R,G,B)',
                                    'rgb': 'alpha ? RGB*255/alpha : 0',
                                    'exportedAlphaStrips': True},
-                'actorColorEncoding': 'full-colour WebP', 'actorAlphaThreshold': 96,
+                'actorColorEncoding': f'WebP q{ACTOR_QUALITY}, lossless alpha', 'actorResampling': 'lanczos',
+                'actorSizing': 'per-frame body extent; fixed phase size', 'actorAlphaThreshold': 9,
                 'drawingRoles': {'p1_spear_combo': {'referenceSkipped': True, 'thirdHit': [7, 8], 'thirdWindupHold': 7, 'kind': 'deep_thrust'},
                                  'p2_cast': {'startup': [1, 8], 'concentration': [9, 12], 'recovery': [13, 19], 'crossMarkDrawing': 8}},
                 'fxAliases': {'awaken_burst': 'frost_burst', 'awaken_shards': 'ice_shard', 'awaken_floor_ring': 'cross_eruption'},
                 'runtimeConnected': False}
     bundle = metadata | {'sheets': ['data:image/' + name.split('.')[-1] + ';base64,' + base64.b64encode(raw).decode('ascii') for name, raw in sheets]}
     js = ('const VARGUL_ART = ' + json.dumps(bundle, ensure_ascii=False, separators=(',', ':')) + ';\n').encode('utf-8')
-    if len(js) > (ROOT / 'aurelion-art.js').stat().st_size:
-        raise ValueError(('Runtime art exceeds Aurelion budget', len(js)))
+    if len(js) > BUDGET:
+        raise ValueError(('Actor bundle exceeds budget', len(js)))
     for name, raw in sheets:
         (OUT / name).write_bytes(raw)
     (ROOT / 'vargul-art.js').write_bytes(js)
@@ -605,7 +631,7 @@ def build():
             f['image'] = decoded_sheets[atlas_frame['sheet']].crop((x, y, x+w, y+h))
         contact_sheet(fs, QA / 'motion' / (id + '.png'),
                       f'{id} | {len(fs)} drawings | final decoded atlas | feet +',
-                      scale=2, columns=4, pivots=True)
+                      scale=2 / HD, columns=4, pivots=True)
     create_comparisons(actor_frames, masks, config, world_scale)
     print(json.dumps({k: v for k, v in summary.items() if k not in ('scales', 'sheets')}, ensure_ascii=False), flush=True)
     return summary
@@ -624,10 +650,10 @@ def create_comparisons(actors, masks, config, scale):
     d = ImageDraw.Draw(canvas)
     baseline = 540
     d.line((20, baseline, 1220, baseline), fill='#9ab6ca', width=2)
-    ratio = config['awaken_bridge']['p2_p1_ratio']
+    ratio = 1
     entries = [(barel, f['anchor'], .72, 'BAREL | 102.24 world px'),
-               (actors['p1_idle'][0]['image'], actors['p1_idle'][0]['pivot'], scale, 'VARGUL P1 | 127.80 world px'),
-               (actors['p2_idle'][0]['image'], actors['p2_idle'][0]['pivot'], scale,
+               (actors['p1_idle'][0]['image'], actors['p1_idle'][0]['pivot'], scale / HD, 'VARGUL P1 | 127.80 world px'),
+               (actors['p2_idle'][0]['image'], actors['p2_idle'][0]['pivot'], scale / HD,
                 f'VARGUL P2 | {127.8 * ratio:.2f} world px')]
     for i, (image, pivot, k, label) in enumerate(entries):
         k *= 3
@@ -636,7 +662,7 @@ def create_comparisons(actors, masks, config, scale):
         canvas.paste(image, (round(cx - pivot[0] * k), round(baseline - pivot[1] * k)), image)
         d.text((i * 410 + 16, 570), label, font=font(17), fill='#e2f1fc')
     d.text((22, 18), 'Same world scale x3 | spears excluded from body-height measurements', font=font(18), fill='#a1daf8')
-    d.text((22, 46), f'P2 / P1 = awaken d8 / d1 = 412 / 383 = {ratio:.6f}', font=font(17), fill='#c5dfeb')
+    d.text((22, 46), 'P2 / P1 = 1; fixed body size across phases', font=font(17), fill='#c5dfeb')
     canvas.save(QA / 'barel-p1-p2-comparison.png')
     samples = []
     for id in ['p2_idle', 'p2_combo', 'p2_cast', 'p2_sweep', 'p2_hurt', 'ultimate']:
@@ -644,7 +670,7 @@ def create_comparisons(actors, masks, config, scale):
         mask = masks['mask_' + id][0]
         samples.extend([actor, mask | {'drawing': actor['drawing']}])
     contact_sheet(samples, QA / 'tattoo-mask-review.png', 'Actor / isolated cyan tattoo mask | no whole-body tint',
-                  scale=3, columns=4)
+                  scale=3 / HD, columns=4)
 
 
 def main():
