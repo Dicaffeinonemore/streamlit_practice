@@ -1,0 +1,5912 @@
+{
+  "patterns": [
+    {
+      "id": "combo",
+      "phase": 1,
+      "token": 1,
+      "ticks": 94,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "first_warning",
+          "start": 0,
+          "end": 17,
+          "ticks": 18
+        },
+        {
+          "drawing": 2,
+          "phase": "A",
+          "label": "first_hit",
+          "start": 18,
+          "end": 22,
+          "ticks": 5
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "second_connect",
+          "start": 23,
+          "end": 28,
+          "ticks": 6
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "second_connect",
+          "start": 29,
+          "end": 34,
+          "ticks": 6
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "second_hit",
+          "start": 35,
+          "end": 39,
+          "ticks": 5
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "third_connect",
+          "start": 40,
+          "end": 42,
+          "ticks": 3
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "third_connect",
+          "start": 43,
+          "end": 45,
+          "ticks": 3
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "third_warning",
+          "start": 46,
+          "end": 59,
+          "ticks": 14
+        },
+        {
+          "drawing": 7,
+          "phase": "A",
+          "label": "third_hit",
+          "start": 60,
+          "end": 63,
+          "ticks": 4
+        },
+        {
+          "drawing": 8,
+          "phase": "A",
+          "label": "third_hit",
+          "start": 64,
+          "end": 67,
+          "ticks": 4
+        },
+        {
+          "drawing": 8,
+          "phase": "R",
+          "label": "recovery",
+          "start": 68,
+          "end": 93,
+          "ticks": 26
+        }
+      ],
+      "active": [
+        {
+          "id": "combo1",
+          "elapsed": 18,
+          "drawing": 2
+        },
+        {
+          "id": "combo2",
+          "elapsed": 35,
+          "drawing": 4
+        },
+        {
+          "id": "combo3",
+          "elapsed": 60,
+          "drawing": 7
+        }
+      ],
+      "events": [],
+      "recovery": 26,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 94,
+      "expectedTicks": 94
+    },
+    {
+      "id": "dash",
+      "phase": 1,
+      "token": 1,
+      "ticks": 108,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "dash_warning",
+          "start": 0,
+          "end": 11,
+          "ticks": 12
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "dash_warning",
+          "start": 12,
+          "end": 23,
+          "ticks": 12
+        },
+        {
+          "drawing": 3,
+          "phase": "A",
+          "label": "launch",
+          "start": 24,
+          "end": 25,
+          "ticks": 2
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "launch",
+          "start": 26,
+          "end": 27,
+          "ticks": 2
+        },
+        {
+          "drawing": 5,
+          "phase": "A",
+          "label": "launch",
+          "start": 28,
+          "end": 29,
+          "ticks": 2
+        },
+        {
+          "drawing": 6,
+          "phase": "A",
+          "label": "dash",
+          "start": 30,
+          "end": 40,
+          "ticks": 11
+        },
+        {
+          "drawing": 7,
+          "phase": "A",
+          "label": "dash",
+          "start": 41,
+          "end": 51,
+          "ticks": 11
+        },
+        {
+          "drawing": 8,
+          "phase": "A",
+          "label": "dash",
+          "start": 52,
+          "end": 61,
+          "ticks": 10
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "stop",
+          "start": 62,
+          "end": 65,
+          "ticks": 4
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "stop",
+          "start": 66,
+          "end": 68,
+          "ticks": 3
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "stop",
+          "start": 69,
+          "end": 71,
+          "ticks": 3
+        },
+        {
+          "drawing": 12,
+          "phase": "R",
+          "label": "recovery",
+          "start": 72,
+          "end": 79,
+          "ticks": 8
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "recovery",
+          "start": 80,
+          "end": 86,
+          "ticks": 7
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 87,
+          "end": 93,
+          "ticks": 7
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 94,
+          "end": 100,
+          "ticks": 7
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 101,
+          "end": 107,
+          "ticks": 7
+        }
+      ],
+      "active": [
+        {
+          "id": "dash1",
+          "elapsed": 24,
+          "drawing": 3
+        },
+        {
+          "id": "dash1",
+          "elapsed": 30,
+          "drawing": 6
+        }
+      ],
+      "events": [
+        {
+          "type": "dash_lock",
+          "elapsed": 19
+        }
+      ],
+      "recovery": 36,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 108,
+      "expectedTicks": 108
+    },
+    {
+      "id": "sword",
+      "phase": 1,
+      "token": 1,
+      "ticks": 143,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "cast",
+          "start": 0,
+          "end": 3,
+          "ticks": 4
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "cast",
+          "start": 4,
+          "end": 7,
+          "ticks": 4
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "cast",
+          "start": 8,
+          "end": 11,
+          "ticks": 4
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "cast",
+          "start": 12,
+          "end": 15,
+          "ticks": 4
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "cast",
+          "start": 16,
+          "end": 19,
+          "ticks": 4
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "cast",
+          "start": 20,
+          "end": 23,
+          "ticks": 4
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "cast",
+          "start": 24,
+          "end": 27,
+          "ticks": 4
+        },
+        {
+          "drawing": 8,
+          "phase": "S",
+          "label": "cast",
+          "start": 28,
+          "end": 31,
+          "ticks": 4
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 32,
+          "end": 44,
+          "ticks": 13
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 45,
+          "end": 56,
+          "ticks": 12
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 57,
+          "end": 68,
+          "ticks": 12
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "hold_swords",
+          "start": 69,
+          "end": 118,
+          "ticks": 50
+        },
+        {
+          "drawing": 12,
+          "phase": "R",
+          "label": "recovery",
+          "start": 119,
+          "end": 123,
+          "ticks": 5
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "recovery",
+          "start": 124,
+          "end": 128,
+          "ticks": 5
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 129,
+          "end": 133,
+          "ticks": 5
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 134,
+          "end": 138,
+          "ticks": 5
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 139,
+          "end": 142,
+          "ticks": 4
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "sword_mark",
+          "elapsed": 32
+        },
+        {
+          "type": "sword_mark",
+          "elapsed": 50
+        },
+        {
+          "type": "sword_mark",
+          "elapsed": 68
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 77,
+          "token": 1
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 95,
+          "token": 1
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 113,
+          "token": 1
+        }
+      ],
+      "recovery": 24,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 143,
+      "expectedTicks": 143
+    },
+    {
+      "id": "cross",
+      "phase": 1,
+      "token": 1,
+      "ticks": 134,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "cast",
+          "start": 0,
+          "end": 3,
+          "ticks": 4
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "cast",
+          "start": 4,
+          "end": 7,
+          "ticks": 4
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "cast",
+          "start": 8,
+          "end": 11,
+          "ticks": 4
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "cast",
+          "start": 12,
+          "end": 15,
+          "ticks": 4
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "cast",
+          "start": 16,
+          "end": 19,
+          "ticks": 4
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "cast",
+          "start": 20,
+          "end": 23,
+          "ticks": 4
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "cast",
+          "start": 24,
+          "end": 27,
+          "ticks": 4
+        },
+        {
+          "drawing": 8,
+          "phase": "S",
+          "label": "cast",
+          "start": 28,
+          "end": 31,
+          "ticks": 4
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 32,
+          "end": 51,
+          "ticks": 20
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 52,
+          "end": 71,
+          "ticks": 20
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 72,
+          "end": 91,
+          "ticks": 20
+        },
+        {
+          "drawing": 11,
+          "phase": "A",
+          "label": "eruption",
+          "start": 92,
+          "end": 109,
+          "ticks": 18
+        },
+        {
+          "drawing": 12,
+          "phase": "R",
+          "label": "recovery",
+          "start": 110,
+          "end": 114,
+          "ticks": 5
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "recovery",
+          "start": 115,
+          "end": 119,
+          "ticks": 5
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 120,
+          "end": 124,
+          "ticks": 5
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 125,
+          "end": 129,
+          "ticks": 5
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 130,
+          "end": 133,
+          "ticks": 4
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "cross_mark",
+          "elapsed": 31
+        },
+        {
+          "type": "cross_active",
+          "elapsed": 91,
+          "token": 1
+        }
+      ],
+      "recovery": 24,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 134,
+      "expectedTicks": 134
+    },
+    {
+      "id": "orb",
+      "phase": 1,
+      "token": 1,
+      "ticks": 68,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "cast",
+          "start": 0,
+          "end": 7,
+          "ticks": 8
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "cast",
+          "start": 8,
+          "end": 15,
+          "ticks": 8
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "cast",
+          "start": 16,
+          "end": 23,
+          "ticks": 8
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "cast",
+          "start": 24,
+          "end": 31,
+          "ticks": 8
+        },
+        {
+          "drawing": 5,
+          "phase": "R",
+          "label": "recovery",
+          "start": 32,
+          "end": 40,
+          "ticks": 9
+        },
+        {
+          "drawing": 6,
+          "phase": "R",
+          "label": "recovery",
+          "start": 41,
+          "end": 49,
+          "ticks": 9
+        },
+        {
+          "drawing": 7,
+          "phase": "R",
+          "label": "recovery",
+          "start": 50,
+          "end": 58,
+          "ticks": 9
+        },
+        {
+          "drawing": 8,
+          "phase": "R",
+          "label": "recovery",
+          "start": 59,
+          "end": 67,
+          "ticks": 9
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "orbs",
+          "elapsed": 32
+        }
+      ],
+      "recovery": 36,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 68,
+      "expectedTicks": 68
+    },
+    {
+      "id": "sweep",
+      "phase": 1,
+      "token": 1,
+      "ticks": 56,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "warning",
+          "start": 0,
+          "end": 7,
+          "ticks": 8
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "warning",
+          "start": 8,
+          "end": 15,
+          "ticks": 8
+        },
+        {
+          "drawing": 3,
+          "phase": "A",
+          "label": "front",
+          "start": 16,
+          "end": 18,
+          "ticks": 3
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "front",
+          "start": 19,
+          "end": 21,
+          "ticks": 3
+        },
+        {
+          "drawing": 5,
+          "phase": "A",
+          "label": "front",
+          "start": 22,
+          "end": 24,
+          "ticks": 3
+        },
+        {
+          "drawing": 6,
+          "phase": "A",
+          "label": "back",
+          "start": 25,
+          "end": 27,
+          "ticks": 3
+        },
+        {
+          "drawing": 7,
+          "phase": "A",
+          "label": "back",
+          "start": 28,
+          "end": 30,
+          "ticks": 3
+        },
+        {
+          "drawing": 8,
+          "phase": "A",
+          "label": "back",
+          "start": 31,
+          "end": 33,
+          "ticks": 3
+        },
+        {
+          "drawing": 9,
+          "phase": "R",
+          "label": "recovery",
+          "start": 34,
+          "end": 36,
+          "ticks": 3
+        },
+        {
+          "drawing": 10,
+          "phase": "R",
+          "label": "recovery",
+          "start": 37,
+          "end": 39,
+          "ticks": 3
+        },
+        {
+          "drawing": 11,
+          "phase": "R",
+          "label": "recovery",
+          "start": 40,
+          "end": 42,
+          "ticks": 3
+        },
+        {
+          "drawing": 12,
+          "phase": "R",
+          "label": "recovery",
+          "start": 43,
+          "end": 44,
+          "ticks": 2
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "recovery",
+          "start": 45,
+          "end": 47,
+          "ticks": 3
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 48,
+          "end": 50,
+          "ticks": 3
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 51,
+          "end": 53,
+          "ticks": 3
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 54,
+          "end": 55,
+          "ticks": 2
+        }
+      ],
+      "active": [
+        {
+          "id": "sweep_front",
+          "elapsed": 16,
+          "drawing": 3
+        },
+        {
+          "id": "sweep_back",
+          "elapsed": 25,
+          "drawing": 6
+        }
+      ],
+      "events": [],
+      "recovery": 22,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 56,
+      "expectedTicks": 56
+    },
+    {
+      "id": "taunt",
+      "phase": 1,
+      "token": 1,
+      "ticks": 70,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "R",
+          "label": "opening",
+          "start": 0,
+          "end": 7,
+          "ticks": 8
+        },
+        {
+          "drawing": 2,
+          "phase": "R",
+          "label": "opening",
+          "start": 8,
+          "end": 15,
+          "ticks": 8
+        },
+        {
+          "drawing": 3,
+          "phase": "R",
+          "label": "opening",
+          "start": 16,
+          "end": 23,
+          "ticks": 8
+        },
+        {
+          "drawing": 4,
+          "phase": "R",
+          "label": "opening",
+          "start": 24,
+          "end": 31,
+          "ticks": 8
+        },
+        {
+          "drawing": 5,
+          "phase": "R",
+          "label": "opening",
+          "start": 32,
+          "end": 38,
+          "ticks": 7
+        },
+        {
+          "drawing": 6,
+          "phase": "R",
+          "label": "opening",
+          "start": 39,
+          "end": 46,
+          "ticks": 8
+        },
+        {
+          "drawing": 7,
+          "phase": "R",
+          "label": "opening",
+          "start": 47,
+          "end": 54,
+          "ticks": 8
+        },
+        {
+          "drawing": 8,
+          "phase": "R",
+          "label": "opening",
+          "start": 55,
+          "end": 62,
+          "ticks": 8
+        },
+        {
+          "drawing": 9,
+          "phase": "R",
+          "label": "opening",
+          "start": 63,
+          "end": 69,
+          "ticks": 7
+        }
+      ],
+      "active": [],
+      "events": [],
+      "recovery": 70,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 70,
+      "expectedTicks": 70
+    },
+    {
+      "id": "combo",
+      "phase": 2,
+      "token": 1,
+      "ticks": 79,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "first_warning",
+          "start": 0,
+          "end": 7,
+          "ticks": 8
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "first_warning",
+          "start": 8,
+          "end": 14,
+          "ticks": 7
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "first_hit",
+          "start": 15,
+          "end": 18,
+          "ticks": 4
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "second_connect",
+          "start": 19,
+          "end": 22,
+          "ticks": 4
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "second_connect",
+          "start": 23,
+          "end": 25,
+          "ticks": 3
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "second_connect",
+          "start": 26,
+          "end": 28,
+          "ticks": 3
+        },
+        {
+          "drawing": 8,
+          "phase": "A",
+          "label": "second_hit",
+          "start": 29,
+          "end": 32,
+          "ticks": 4
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "third_connect",
+          "start": 33,
+          "end": 35,
+          "ticks": 3
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "third_connect",
+          "start": 36,
+          "end": 37,
+          "ticks": 2
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "third_warning",
+          "start": 38,
+          "end": 46,
+          "ticks": 9
+        },
+        {
+          "drawing": 12,
+          "phase": "S",
+          "label": "third_raise",
+          "start": 47,
+          "end": 49,
+          "ticks": 3
+        },
+        {
+          "drawing": 13,
+          "phase": "A",
+          "label": "third_hit",
+          "start": 50,
+          "end": 53,
+          "ticks": 4
+        },
+        {
+          "drawing": 14,
+          "phase": "A",
+          "label": "third_hit",
+          "start": 54,
+          "end": 56,
+          "ticks": 3
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 57,
+          "end": 67,
+          "ticks": 11
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 68,
+          "end": 78,
+          "ticks": 11
+        }
+      ],
+      "active": [
+        {
+          "id": "combo1",
+          "elapsed": 15,
+          "drawing": 4
+        },
+        {
+          "id": "combo2",
+          "elapsed": 29,
+          "drawing": 8
+        },
+        {
+          "id": "combo3",
+          "elapsed": 50,
+          "drawing": 13
+        }
+      ],
+      "events": [],
+      "recovery": 22,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 79,
+      "expectedTicks": 79
+    },
+    {
+      "id": "dash",
+      "phase": 2,
+      "token": 1,
+      "ticks": 174,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "dash_warning",
+          "start": 0,
+          "end": 9,
+          "ticks": 10
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "dash_warning",
+          "start": 10,
+          "end": 19,
+          "ticks": 10
+        },
+        {
+          "drawing": 3,
+          "phase": "A",
+          "label": "launch",
+          "start": 20,
+          "end": 21,
+          "ticks": 2
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "launch",
+          "start": 22,
+          "end": 23,
+          "ticks": 2
+        },
+        {
+          "drawing": 5,
+          "phase": "A",
+          "label": "launch",
+          "start": 24,
+          "end": 25,
+          "ticks": 2
+        },
+        {
+          "drawing": 6,
+          "phase": "A",
+          "label": "dash",
+          "start": 26,
+          "end": 36,
+          "ticks": 11
+        },
+        {
+          "drawing": 7,
+          "phase": "A",
+          "label": "dash",
+          "start": 37,
+          "end": 47,
+          "ticks": 11
+        },
+        {
+          "drawing": 8,
+          "phase": "A",
+          "label": "dash",
+          "start": 48,
+          "end": 57,
+          "ticks": 10
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "stop",
+          "start": 58,
+          "end": 61,
+          "ticks": 4
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "stop",
+          "start": 62,
+          "end": 64,
+          "ticks": 3
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "stop",
+          "start": 65,
+          "end": 67,
+          "ticks": 3
+        },
+        {
+          "drawing": 12,
+          "phase": "S",
+          "label": "turn",
+          "start": 68,
+          "end": 70,
+          "ticks": 3
+        },
+        {
+          "drawing": 13,
+          "phase": "S",
+          "label": "turn",
+          "start": 71,
+          "end": 73,
+          "ticks": 3
+        },
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "return_warning",
+          "start": 74,
+          "end": 82,
+          "ticks": 9
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "return_warning",
+          "start": 83,
+          "end": 91,
+          "ticks": 9
+        },
+        {
+          "drawing": 3,
+          "phase": "A",
+          "label": "return_launch",
+          "start": 92,
+          "end": 93,
+          "ticks": 2
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "return_launch",
+          "start": 94,
+          "end": 95,
+          "ticks": 2
+        },
+        {
+          "drawing": 5,
+          "phase": "A",
+          "label": "return_launch",
+          "start": 96,
+          "end": 97,
+          "ticks": 2
+        },
+        {
+          "drawing": 6,
+          "phase": "A",
+          "label": "return_dash",
+          "start": 98,
+          "end": 108,
+          "ticks": 11
+        },
+        {
+          "drawing": 7,
+          "phase": "A",
+          "label": "return_dash",
+          "start": 109,
+          "end": 119,
+          "ticks": 11
+        },
+        {
+          "drawing": 8,
+          "phase": "A",
+          "label": "return_dash",
+          "start": 120,
+          "end": 129,
+          "ticks": 10
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "return_stop",
+          "start": 130,
+          "end": 133,
+          "ticks": 4
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "return_stop",
+          "start": 134,
+          "end": 136,
+          "ticks": 3
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "return_stop",
+          "start": 137,
+          "end": 139,
+          "ticks": 3
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 140,
+          "end": 151,
+          "ticks": 12
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 152,
+          "end": 162,
+          "ticks": 11
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 163,
+          "end": 173,
+          "ticks": 11
+        }
+      ],
+      "active": [
+        {
+          "id": "dash1",
+          "elapsed": 20,
+          "drawing": 3
+        },
+        {
+          "id": "dash1",
+          "elapsed": 26,
+          "drawing": 6
+        },
+        {
+          "id": "dash2",
+          "elapsed": 92,
+          "drawing": 3
+        },
+        {
+          "id": "dash2",
+          "elapsed": 98,
+          "drawing": 6
+        }
+      ],
+      "events": [
+        {
+          "type": "dash_lock",
+          "elapsed": 16
+        },
+        {
+          "type": "turn",
+          "elapsed": 68
+        },
+        {
+          "type": "dash_lock",
+          "elapsed": 81
+        }
+      ],
+      "recovery": 34,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 174,
+      "expectedTicks": 174
+    },
+    {
+      "id": "sword",
+      "phase": 2,
+      "token": 1,
+      "ticks": 151,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "cast",
+          "start": 0,
+          "end": 3,
+          "ticks": 4
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "cast",
+          "start": 4,
+          "end": 6,
+          "ticks": 3
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "cast",
+          "start": 7,
+          "end": 10,
+          "ticks": 4
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "cast",
+          "start": 11,
+          "end": 13,
+          "ticks": 3
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "cast",
+          "start": 14,
+          "end": 16,
+          "ticks": 3
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "cast",
+          "start": 17,
+          "end": 20,
+          "ticks": 4
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "cast",
+          "start": 21,
+          "end": 23,
+          "ticks": 3
+        },
+        {
+          "drawing": 8,
+          "phase": "S",
+          "label": "cast",
+          "start": 24,
+          "end": 26,
+          "ticks": 3
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 27,
+          "end": 41,
+          "ticks": 15
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 42,
+          "end": 55,
+          "ticks": 14
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 56,
+          "end": 69,
+          "ticks": 14
+        },
+        {
+          "drawing": 12,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 70,
+          "end": 83,
+          "ticks": 14
+        },
+        {
+          "drawing": 12,
+          "phase": "S",
+          "label": "hold_swords",
+          "start": 84,
+          "end": 126,
+          "ticks": 43
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "recovery",
+          "start": 127,
+          "end": 130,
+          "ticks": 4
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 131,
+          "end": 133,
+          "ticks": 3
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 134,
+          "end": 137,
+          "ticks": 4
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 138,
+          "end": 140,
+          "ticks": 3
+        },
+        {
+          "drawing": 17,
+          "phase": "R",
+          "label": "recovery",
+          "start": 141,
+          "end": 144,
+          "ticks": 4
+        },
+        {
+          "drawing": 18,
+          "phase": "R",
+          "label": "recovery",
+          "start": 145,
+          "end": 147,
+          "ticks": 3
+        },
+        {
+          "drawing": 19,
+          "phase": "R",
+          "label": "recovery",
+          "start": 148,
+          "end": 150,
+          "ticks": 3
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "sword_mark",
+          "elapsed": 27
+        },
+        {
+          "type": "sword_mark",
+          "elapsed": 41
+        },
+        {
+          "type": "sword_mark",
+          "elapsed": 55
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 65,
+          "token": 1
+        },
+        {
+          "type": "sword_mark",
+          "elapsed": 69
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 79,
+          "token": 1
+        },
+        {
+          "type": "sword_mark",
+          "elapsed": 83
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 93,
+          "token": 1
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 107,
+          "token": 1
+        },
+        {
+          "type": "sword_active",
+          "elapsed": 121,
+          "token": 1
+        }
+      ],
+      "recovery": 24,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 151,
+      "expectedTicks": 151
+    },
+    {
+      "id": "cross",
+      "phase": 2,
+      "token": 1,
+      "ticks": 150,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "cast",
+          "start": 0,
+          "end": 3,
+          "ticks": 4
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "cast",
+          "start": 4,
+          "end": 6,
+          "ticks": 3
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "cast",
+          "start": 7,
+          "end": 10,
+          "ticks": 4
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "cast",
+          "start": 11,
+          "end": 13,
+          "ticks": 3
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "cast",
+          "start": 14,
+          "end": 16,
+          "ticks": 3
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "cast",
+          "start": 17,
+          "end": 20,
+          "ticks": 4
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "cast",
+          "start": 21,
+          "end": 23,
+          "ticks": 3
+        },
+        {
+          "drawing": 8,
+          "phase": "S",
+          "label": "cast",
+          "start": 24,
+          "end": 26,
+          "ticks": 3
+        },
+        {
+          "drawing": 9,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 27,
+          "end": 47,
+          "ticks": 21
+        },
+        {
+          "drawing": 10,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 48,
+          "end": 67,
+          "ticks": 20
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 68,
+          "end": 87,
+          "ticks": 20
+        },
+        {
+          "drawing": 12,
+          "phase": "S",
+          "label": "concentrate",
+          "start": 88,
+          "end": 107,
+          "ticks": 20
+        },
+        {
+          "drawing": 12,
+          "phase": "A",
+          "label": "eruption",
+          "start": 108,
+          "end": 125,
+          "ticks": 18
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "recovery",
+          "start": 126,
+          "end": 129,
+          "ticks": 4
+        },
+        {
+          "drawing": 14,
+          "phase": "R",
+          "label": "recovery",
+          "start": 130,
+          "end": 132,
+          "ticks": 3
+        },
+        {
+          "drawing": 15,
+          "phase": "R",
+          "label": "recovery",
+          "start": 133,
+          "end": 136,
+          "ticks": 4
+        },
+        {
+          "drawing": 16,
+          "phase": "R",
+          "label": "recovery",
+          "start": 137,
+          "end": 139,
+          "ticks": 3
+        },
+        {
+          "drawing": 17,
+          "phase": "R",
+          "label": "recovery",
+          "start": 140,
+          "end": 143,
+          "ticks": 4
+        },
+        {
+          "drawing": 18,
+          "phase": "R",
+          "label": "recovery",
+          "start": 144,
+          "end": 146,
+          "ticks": 3
+        },
+        {
+          "drawing": 19,
+          "phase": "R",
+          "label": "recovery",
+          "start": 147,
+          "end": 149,
+          "ticks": 3
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "cross_mark",
+          "elapsed": 26
+        },
+        {
+          "type": "cross_mark",
+          "elapsed": 56
+        },
+        {
+          "type": "cross_active",
+          "elapsed": 77,
+          "token": 1
+        },
+        {
+          "type": "cross_active",
+          "elapsed": 107,
+          "token": 1
+        }
+      ],
+      "recovery": 24,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 150,
+      "expectedTicks": 150
+    },
+    {
+      "id": "orb",
+      "phase": 2,
+      "token": 1,
+      "ticks": 63,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "cast",
+          "start": 0,
+          "end": 4,
+          "ticks": 5
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "cast",
+          "start": 5,
+          "end": 8,
+          "ticks": 4
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "cast",
+          "start": 9,
+          "end": 13,
+          "ticks": 5
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "cast",
+          "start": 14,
+          "end": 17,
+          "ticks": 4
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "cast",
+          "start": 18,
+          "end": 22,
+          "ticks": 5
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "cast",
+          "start": 23,
+          "end": 26,
+          "ticks": 4
+        },
+        {
+          "drawing": 7,
+          "phase": "R",
+          "label": "recovery",
+          "start": 27,
+          "end": 32,
+          "ticks": 6
+        },
+        {
+          "drawing": 8,
+          "phase": "R",
+          "label": "recovery",
+          "start": 33,
+          "end": 38,
+          "ticks": 6
+        },
+        {
+          "drawing": 9,
+          "phase": "R",
+          "label": "recovery",
+          "start": 39,
+          "end": 44,
+          "ticks": 6
+        },
+        {
+          "drawing": 10,
+          "phase": "R",
+          "label": "recovery",
+          "start": 45,
+          "end": 50,
+          "ticks": 6
+        },
+        {
+          "drawing": 11,
+          "phase": "R",
+          "label": "recovery",
+          "start": 51,
+          "end": 56,
+          "ticks": 6
+        },
+        {
+          "drawing": 12,
+          "phase": "R",
+          "label": "recovery",
+          "start": 57,
+          "end": 62,
+          "ticks": 6
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "orbs",
+          "elapsed": 27
+        }
+      ],
+      "recovery": 36,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 63,
+      "expectedTicks": 63
+    },
+    {
+      "id": "sweep",
+      "phase": 2,
+      "token": 1,
+      "ticks": 54,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "warning",
+          "start": 0,
+          "end": 13,
+          "ticks": 14
+        },
+        {
+          "drawing": 2,
+          "phase": "A",
+          "label": "front",
+          "start": 14,
+          "end": 18,
+          "ticks": 5
+        },
+        {
+          "drawing": 3,
+          "phase": "A",
+          "label": "front",
+          "start": 19,
+          "end": 22,
+          "ticks": 4
+        },
+        {
+          "drawing": 3,
+          "phase": "A",
+          "label": "back",
+          "start": 23,
+          "end": 25,
+          "ticks": 3
+        },
+        {
+          "drawing": 4,
+          "phase": "A",
+          "label": "back",
+          "start": 26,
+          "end": 28,
+          "ticks": 3
+        },
+        {
+          "drawing": 5,
+          "phase": "A",
+          "label": "back",
+          "start": 29,
+          "end": 31,
+          "ticks": 3
+        },
+        {
+          "drawing": 5,
+          "phase": "R",
+          "label": "recovery",
+          "start": 32,
+          "end": 36,
+          "ticks": 5
+        },
+        {
+          "drawing": 6,
+          "phase": "R",
+          "label": "recovery",
+          "start": 37,
+          "end": 40,
+          "ticks": 4
+        },
+        {
+          "drawing": 7,
+          "phase": "R",
+          "label": "recovery",
+          "start": 41,
+          "end": 45,
+          "ticks": 5
+        },
+        {
+          "drawing": 8,
+          "phase": "R",
+          "label": "recovery",
+          "start": 46,
+          "end": 49,
+          "ticks": 4
+        },
+        {
+          "drawing": 9,
+          "phase": "R",
+          "label": "recovery",
+          "start": 50,
+          "end": 53,
+          "ticks": 4
+        }
+      ],
+      "active": [
+        {
+          "id": "sweep_front",
+          "elapsed": 14,
+          "drawing": 2
+        },
+        {
+          "id": "sweep_back",
+          "elapsed": 23,
+          "drawing": 3
+        }
+      ],
+      "events": [],
+      "recovery": 22,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 54,
+      "expectedTicks": 54
+    },
+    {
+      "id": "ultimate",
+      "phase": 2,
+      "token": 1,
+      "ticks": 268,
+      "drawings": [
+        {
+          "drawing": 1,
+          "phase": "S",
+          "label": "warning",
+          "start": 0,
+          "end": 12,
+          "ticks": 13
+        },
+        {
+          "drawing": 2,
+          "phase": "S",
+          "label": "warning",
+          "start": 13,
+          "end": 25,
+          "ticks": 13
+        },
+        {
+          "drawing": 3,
+          "phase": "S",
+          "label": "leap",
+          "start": 26,
+          "end": 32,
+          "ticks": 7
+        },
+        {
+          "drawing": 4,
+          "phase": "S",
+          "label": "leap",
+          "start": 33,
+          "end": 38,
+          "ticks": 6
+        },
+        {
+          "drawing": 5,
+          "phase": "S",
+          "label": "leap",
+          "start": 39,
+          "end": 44,
+          "ticks": 6
+        },
+        {
+          "drawing": 6,
+          "phase": "S",
+          "label": "tracking",
+          "start": 45,
+          "end": 64,
+          "ticks": 20
+        },
+        {
+          "drawing": 7,
+          "phase": "S",
+          "label": "tracking",
+          "start": 65,
+          "end": 84,
+          "ticks": 20
+        },
+        {
+          "drawing": 8,
+          "phase": "S",
+          "label": "tracking",
+          "start": 85,
+          "end": 104,
+          "ticks": 20
+        },
+        {
+          "drawing": 8,
+          "phase": "S",
+          "label": "fixed_warning",
+          "start": 105,
+          "end": 134,
+          "ticks": 30
+        },
+        {
+          "drawing": 9,
+          "phase": "A",
+          "label": "fall",
+          "start": 135,
+          "end": 137,
+          "ticks": 3
+        },
+        {
+          "drawing": 10,
+          "phase": "A",
+          "label": "fall",
+          "start": 138,
+          "end": 140,
+          "ticks": 3
+        },
+        {
+          "drawing": 11,
+          "phase": "A",
+          "label": "impact",
+          "start": 141,
+          "end": 148,
+          "ticks": 8
+        },
+        {
+          "drawing": 11,
+          "phase": "S",
+          "label": "settle",
+          "start": 149,
+          "end": 159,
+          "ticks": 11
+        },
+        {
+          "drawing": 11,
+          "phase": "R",
+          "label": "kneel",
+          "start": 160,
+          "end": 189,
+          "ticks": 30
+        },
+        {
+          "drawing": 12,
+          "phase": "R",
+          "label": "kneel",
+          "start": 190,
+          "end": 219,
+          "ticks": 30
+        },
+        {
+          "drawing": 13,
+          "phase": "R",
+          "label": "kneel",
+          "start": 220,
+          "end": 249,
+          "ticks": 30
+        },
+        {
+          "drawing": 14,
+          "phase": "S",
+          "label": "recall",
+          "start": 250,
+          "end": 255,
+          "ticks": 6
+        },
+        {
+          "drawing": 15,
+          "phase": "S",
+          "label": "recall",
+          "start": 256,
+          "end": 261,
+          "ticks": 6
+        },
+        {
+          "drawing": 16,
+          "phase": "S",
+          "label": "recall",
+          "start": 262,
+          "end": 267,
+          "ticks": 6
+        }
+      ],
+      "active": [],
+      "events": [
+        {
+          "type": "ultimate_mark",
+          "elapsed": 45
+        },
+        {
+          "type": "ultimate_lock",
+          "elapsed": 105
+        },
+        {
+          "type": "ultimate_fall",
+          "elapsed": 135
+        },
+        {
+          "type": "ultimate_impact",
+          "elapsed": 141
+        },
+        {
+          "type": "ultimate_wave",
+          "elapsed": 149
+        },
+        {
+          "type": "ultimate_land",
+          "elapsed": 160
+        }
+      ],
+      "recovery": 90,
+      "finished": true,
+      "interrupted": false,
+      "timelineTicks": 268,
+      "expectedTicks": 268
+    }
+  ],
+  "checks": [
+    "2000 HP; no phase change at 50%",
+    "superarmor preserves damage / threshold knockdown",
+    "dash locks its lane before launch; phase2 return reads a fresh lane",
+    "all ! startups interruptible",
+    "3 / 2 pressure hits force next sweep",
+    "interrupt cancels future sword marks; placed mark persists",
+    "floor attacks cannot overlap unresolved floor hazards",
+    "max two consecutive choices",
+    "orbs have30 HP; actual strike damage; +20 groggy; cooldown after last orb",
+    "independent orb shooting / 1 or 2 shards / no shots at downed player",
+    "zero HP -> down100 + awaken180 + crossfade8 -> HP2500",
+    "ultimate 35% priority / hidden immunity / return",
+    "shared groggy damage multiplier",
+    "actual measured melee boxes connect each strike; shared phase damage x1.3",
+    "ultimate ground slam center and expanding ice-wave damage",
+    "death 16 drawings; held final frame; persistent remains"
+  ],
+  "timelineValidation": [
+    {
+      "id": "combo",
+      "phase": 1,
+      "ticks": 94,
+      "activeTicks": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        36,
+        37,
+        38,
+        39,
+        40,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68
+      ]
+    },
+    {
+      "id": "dash",
+      "phase": 1,
+      "ticks": 108,
+      "activeTicks": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ]
+    },
+    {
+      "id": "sword",
+      "phase": 1,
+      "ticks": 143,
+      "activeTicks": []
+    },
+    {
+      "id": "cross",
+      "phase": 1,
+      "ticks": 134,
+      "activeTicks": []
+    },
+    {
+      "id": "orb",
+      "phase": 1,
+      "ticks": 68,
+      "activeTicks": []
+    },
+    {
+      "id": "sweep",
+      "phase": 1,
+      "ticks": 56,
+      "activeTicks": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ]
+    },
+    {
+      "id": "taunt",
+      "phase": 1,
+      "ticks": 70,
+      "activeTicks": []
+    },
+    {
+      "id": "combo",
+      "phase": 2,
+      "ticks": 79,
+      "activeTicks": [
+        16,
+        17,
+        18,
+        19,
+        30,
+        31,
+        32,
+        33,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ]
+    },
+    {
+      "id": "dash",
+      "phase": 2,
+      "ticks": 174,
+      "activeTicks": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ]
+    },
+    {
+      "id": "sword",
+      "phase": 2,
+      "ticks": 151,
+      "activeTicks": []
+    },
+    {
+      "id": "cross",
+      "phase": 2,
+      "ticks": 150,
+      "activeTicks": []
+    },
+    {
+      "id": "orb",
+      "phase": 2,
+      "ticks": 63,
+      "activeTicks": []
+    },
+    {
+      "id": "sweep",
+      "phase": 2,
+      "ticks": 54,
+      "activeTicks": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "id": "ultimate",
+      "phase": 2,
+      "ticks": 268,
+      "activeTicks": []
+    }
+  ],
+  "definitions": [
+    {
+      "combo": {
+        "clip": "p1_spear_combo",
+        "total": 94,
+        "stages": [
+          {
+            "label": "first_warning",
+            "phase": "S",
+            "start": 0,
+            "end": 17,
+            "ticks": 18,
+            "drawings": [
+              1,
+              1
+            ],
+            "warning": true
+          },
+          {
+            "label": "first_hit",
+            "phase": "A",
+            "start": 18,
+            "end": 22,
+            "ticks": 5,
+            "drawings": [
+              2,
+              2
+            ],
+            "attack": {
+              "id": "combo1",
+              "damage": 9,
+              "depth": 18
+            }
+          },
+          {
+            "label": "second_connect",
+            "phase": "S",
+            "start": 23,
+            "end": 34,
+            "ticks": 12,
+            "drawings": [
+              3,
+              4
+            ]
+          },
+          {
+            "label": "second_hit",
+            "phase": "A",
+            "start": 35,
+            "end": 39,
+            "ticks": 5,
+            "drawings": [
+              4,
+              4
+            ],
+            "attack": {
+              "id": "combo2",
+              "damage": 9,
+              "depth": 18
+            }
+          },
+          {
+            "label": "third_connect",
+            "phase": "S",
+            "start": 40,
+            "end": 45,
+            "ticks": 6,
+            "drawings": [
+              5,
+              6
+            ]
+          },
+          {
+            "label": "third_warning",
+            "phase": "S",
+            "start": 46,
+            "end": 59,
+            "ticks": 14,
+            "drawings": [
+              7,
+              7
+            ],
+            "warning": true
+          },
+          {
+            "label": "third_hit",
+            "phase": "A",
+            "start": 60,
+            "end": 67,
+            "ticks": 8,
+            "drawings": [
+              7,
+              8
+            ],
+            "attack": {
+              "id": "combo3",
+              "damage": 14,
+              "depth": 18,
+              "knockdown": true
+            }
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 68,
+            "end": 93,
+            "ticks": 26,
+            "drawings": [
+              8,
+              8
+            ]
+          }
+        ]
+      },
+      "dash": {
+        "clip": "p1_dash",
+        "total": 108,
+        "stages": [
+          {
+            "label": "dash_warning",
+            "phase": "S",
+            "start": 0,
+            "end": 23,
+            "ticks": 24,
+            "drawings": [
+              1,
+              2
+            ],
+            "armor": true,
+            "white": true,
+            "align": true,
+            "lockAt": 20
+          },
+          {
+            "label": "launch",
+            "phase": "A",
+            "start": 24,
+            "end": 29,
+            "ticks": 6,
+            "drawings": [
+              3,
+              5
+            ],
+            "travel": true,
+            "armor": true,
+            "pass": 0,
+            "attack": {
+              "id": "dash1",
+              "damage": 14,
+              "depth": 16,
+              "knockdown": true,
+              "body": true
+            }
+          },
+          {
+            "label": "dash",
+            "phase": "A",
+            "start": 30,
+            "end": 61,
+            "ticks": 32,
+            "drawings": [
+              6,
+              8
+            ],
+            "travel": true,
+            "armor": true,
+            "loop": true,
+            "pass": 0,
+            "attack": {
+              "id": "dash1",
+              "damage": 14,
+              "depth": 16,
+              "knockdown": true,
+              "body": true
+            }
+          },
+          {
+            "label": "stop",
+            "phase": "S",
+            "start": 62,
+            "end": 71,
+            "ticks": 10,
+            "drawings": [
+              9,
+              11
+            ]
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 72,
+            "end": 107,
+            "ticks": 36,
+            "drawings": [
+              12,
+              16
+            ]
+          }
+        ]
+      },
+      "sword": {
+        "clip": "p1_sword_summon",
+        "total": 143,
+        "stages": [
+          {
+            "label": "cast",
+            "phase": "S",
+            "start": 0,
+            "end": 31,
+            "ticks": 32,
+            "drawings": [
+              1,
+              8
+            ],
+            "warning": true
+          },
+          {
+            "label": "concentrate",
+            "phase": "S",
+            "start": 32,
+            "end": 68,
+            "ticks": 37,
+            "drawings": [
+              9,
+              11
+            ],
+            "warning": true
+          },
+          {
+            "label": "hold_swords",
+            "phase": "S",
+            "start": 69,
+            "end": 118,
+            "ticks": 50,
+            "drawings": [
+              11,
+              11
+            ],
+            "warning": true
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 119,
+            "end": 142,
+            "ticks": 24,
+            "drawings": [
+              12,
+              16
+            ]
+          }
+        ]
+      },
+      "cross": {
+        "clip": "p1_cross",
+        "total": 134,
+        "stages": [
+          {
+            "label": "cast",
+            "phase": "S",
+            "start": 0,
+            "end": 31,
+            "ticks": 32,
+            "drawings": [
+              1,
+              8
+            ],
+            "warning": true
+          },
+          {
+            "label": "concentrate",
+            "phase": "S",
+            "start": 32,
+            "end": 91,
+            "ticks": 60,
+            "drawings": [
+              9,
+              11
+            ],
+            "warning": true
+          },
+          {
+            "label": "eruption",
+            "phase": "A",
+            "start": 92,
+            "end": 109,
+            "ticks": 18,
+            "drawings": [
+              11,
+              11
+            ]
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 110,
+            "end": 133,
+            "ticks": 24,
+            "drawings": [
+              12,
+              16
+            ]
+          }
+        ]
+      },
+      "orb": {
+        "clip": "p1_orb_summon",
+        "total": 68,
+        "stages": [
+          {
+            "label": "cast",
+            "phase": "S",
+            "start": 0,
+            "end": 31,
+            "ticks": 32,
+            "drawings": [
+              1,
+              4
+            ],
+            "warning": true
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 32,
+            "end": 67,
+            "ticks": 36,
+            "drawings": [
+              5,
+              8
+            ]
+          }
+        ]
+      },
+      "sweep": {
+        "clip": "p1_sweep",
+        "total": 56,
+        "stages": [
+          {
+            "label": "warning",
+            "phase": "S",
+            "start": 0,
+            "end": 15,
+            "ticks": 16,
+            "drawings": [
+              1,
+              2
+            ],
+            "warning": true
+          },
+          {
+            "label": "front",
+            "phase": "A",
+            "start": 16,
+            "end": 24,
+            "ticks": 9,
+            "drawings": [
+              3,
+              5
+            ],
+            "attack": {
+              "id": "sweep_front",
+              "damage": 12,
+              "depth": 26
+            }
+          },
+          {
+            "label": "back",
+            "phase": "A",
+            "start": 25,
+            "end": 33,
+            "ticks": 9,
+            "drawings": [
+              6,
+              8
+            ],
+            "attack": {
+              "id": "sweep_back",
+              "damage": 12,
+              "depth": 26,
+              "knockdown": true
+            }
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 34,
+            "end": 55,
+            "ticks": 22,
+            "drawings": [
+              9,
+              16
+            ]
+          }
+        ]
+      },
+      "taunt": {
+        "clip": "p1_taunt",
+        "total": 70,
+        "stages": [
+          {
+            "label": "opening",
+            "phase": "R",
+            "start": 0,
+            "end": 69,
+            "ticks": 70,
+            "drawings": [
+              1,
+              9
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "combo": {
+        "clip": "p2_combo",
+        "total": 79,
+        "stages": [
+          {
+            "label": "first_warning",
+            "phase": "S",
+            "start": 0,
+            "end": 14,
+            "ticks": 15,
+            "drawings": [
+              1,
+              2
+            ],
+            "warning": true
+          },
+          {
+            "label": "first_hit",
+            "phase": "A",
+            "start": 15,
+            "end": 18,
+            "ticks": 4,
+            "drawings": [
+              4,
+              4
+            ],
+            "attack": {
+              "id": "combo1",
+              "damage": 9,
+              "depth": 18
+            }
+          },
+          {
+            "label": "second_connect",
+            "phase": "S",
+            "start": 19,
+            "end": 28,
+            "ticks": 10,
+            "drawings": [
+              5,
+              7
+            ]
+          },
+          {
+            "label": "second_hit",
+            "phase": "A",
+            "start": 29,
+            "end": 32,
+            "ticks": 4,
+            "drawings": [
+              8,
+              8
+            ],
+            "attack": {
+              "id": "combo2",
+              "damage": 9,
+              "depth": 18
+            }
+          },
+          {
+            "label": "third_connect",
+            "phase": "S",
+            "start": 33,
+            "end": 37,
+            "ticks": 5,
+            "drawings": [
+              9,
+              10
+            ]
+          },
+          {
+            "label": "third_warning",
+            "phase": "S",
+            "start": 38,
+            "end": 46,
+            "ticks": 9,
+            "drawings": [
+              11,
+              11
+            ],
+            "warning": true
+          },
+          {
+            "label": "third_raise",
+            "phase": "S",
+            "start": 47,
+            "end": 49,
+            "ticks": 3,
+            "drawings": [
+              12,
+              12
+            ],
+            "warning": true
+          },
+          {
+            "label": "third_hit",
+            "phase": "A",
+            "start": 50,
+            "end": 56,
+            "ticks": 7,
+            "drawings": [
+              13,
+              14
+            ],
+            "attack": {
+              "id": "combo3",
+              "damage": 14,
+              "depth": 18,
+              "knockdown": true
+            }
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 57,
+            "end": 78,
+            "ticks": 22,
+            "drawings": [
+              15,
+              16
+            ]
+          }
+        ]
+      },
+      "dash": {
+        "clip": "p2_dash",
+        "total": 174,
+        "stages": [
+          {
+            "label": "dash_warning",
+            "phase": "S",
+            "start": 0,
+            "end": 19,
+            "ticks": 20,
+            "drawings": [
+              1,
+              2
+            ],
+            "armor": true,
+            "white": true,
+            "align": true,
+            "lockAt": 17
+          },
+          {
+            "label": "launch",
+            "phase": "A",
+            "start": 20,
+            "end": 25,
+            "ticks": 6,
+            "drawings": [
+              3,
+              5
+            ],
+            "travel": true,
+            "armor": true,
+            "pass": 0,
+            "attack": {
+              "id": "dash1",
+              "damage": 14,
+              "depth": 16,
+              "knockdown": true,
+              "body": true
+            }
+          },
+          {
+            "label": "dash",
+            "phase": "A",
+            "start": 26,
+            "end": 57,
+            "ticks": 32,
+            "drawings": [
+              6,
+              8
+            ],
+            "travel": true,
+            "armor": true,
+            "loop": true,
+            "pass": 0,
+            "attack": {
+              "id": "dash1",
+              "damage": 14,
+              "depth": 16,
+              "knockdown": true,
+              "body": true
+            }
+          },
+          {
+            "label": "stop",
+            "phase": "S",
+            "start": 58,
+            "end": 67,
+            "ticks": 10,
+            "drawings": [
+              9,
+              11
+            ]
+          },
+          {
+            "label": "turn",
+            "phase": "S",
+            "start": 68,
+            "end": 73,
+            "ticks": 6,
+            "drawings": [
+              12,
+              13
+            ]
+          },
+          {
+            "label": "return_warning",
+            "phase": "S",
+            "start": 74,
+            "end": 91,
+            "ticks": 18,
+            "drawings": [
+              1,
+              2
+            ],
+            "armor": true,
+            "white": true,
+            "align": true,
+            "lockAt": 8
+          },
+          {
+            "label": "return_launch",
+            "phase": "A",
+            "start": 92,
+            "end": 97,
+            "ticks": 6,
+            "drawings": [
+              3,
+              5
+            ],
+            "travel": true,
+            "armor": true,
+            "pass": 1,
+            "attack": {
+              "id": "dash2",
+              "damage": 14,
+              "depth": 16,
+              "knockdown": true,
+              "body": true
+            }
+          },
+          {
+            "label": "return_dash",
+            "phase": "A",
+            "start": 98,
+            "end": 129,
+            "ticks": 32,
+            "drawings": [
+              6,
+              8
+            ],
+            "travel": true,
+            "armor": true,
+            "loop": true,
+            "pass": 1,
+            "attack": {
+              "id": "dash2",
+              "damage": 14,
+              "depth": 16,
+              "knockdown": true,
+              "body": true
+            }
+          },
+          {
+            "label": "return_stop",
+            "phase": "S",
+            "start": 130,
+            "end": 139,
+            "ticks": 10,
+            "drawings": [
+              9,
+              11
+            ]
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 140,
+            "end": 173,
+            "ticks": 34,
+            "drawings": [
+              14,
+              16
+            ]
+          }
+        ]
+      },
+      "sword": {
+        "clip": "p2_cast",
+        "total": 151,
+        "stages": [
+          {
+            "label": "cast",
+            "phase": "S",
+            "start": 0,
+            "end": 26,
+            "ticks": 27,
+            "drawings": [
+              1,
+              8
+            ],
+            "warning": true
+          },
+          {
+            "label": "concentrate",
+            "phase": "S",
+            "start": 27,
+            "end": 83,
+            "ticks": 57,
+            "drawings": [
+              9,
+              12
+            ],
+            "warning": true
+          },
+          {
+            "label": "hold_swords",
+            "phase": "S",
+            "start": 84,
+            "end": 126,
+            "ticks": 43,
+            "drawings": [
+              12,
+              12
+            ],
+            "warning": true
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 127,
+            "end": 150,
+            "ticks": 24,
+            "drawings": [
+              13,
+              19
+            ]
+          }
+        ]
+      },
+      "cross": {
+        "clip": "p2_cast",
+        "total": 150,
+        "stages": [
+          {
+            "label": "cast",
+            "phase": "S",
+            "start": 0,
+            "end": 26,
+            "ticks": 27,
+            "drawings": [
+              1,
+              8
+            ],
+            "warning": true
+          },
+          {
+            "label": "concentrate",
+            "phase": "S",
+            "start": 27,
+            "end": 107,
+            "ticks": 81,
+            "drawings": [
+              9,
+              12
+            ],
+            "warning": true
+          },
+          {
+            "label": "eruption",
+            "phase": "A",
+            "start": 108,
+            "end": 125,
+            "ticks": 18,
+            "drawings": [
+              12,
+              12
+            ]
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 126,
+            "end": 149,
+            "ticks": 24,
+            "drawings": [
+              13,
+              19
+            ]
+          }
+        ]
+      },
+      "orb": {
+        "clip": "p2_cast_b",
+        "total": 63,
+        "stages": [
+          {
+            "label": "cast",
+            "phase": "S",
+            "start": 0,
+            "end": 26,
+            "ticks": 27,
+            "drawings": [
+              1,
+              6
+            ],
+            "warning": true
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 27,
+            "end": 62,
+            "ticks": 36,
+            "drawings": [
+              7,
+              12
+            ]
+          }
+        ]
+      },
+      "sweep": {
+        "clip": "p2_sweep",
+        "total": 54,
+        "stages": [
+          {
+            "label": "warning",
+            "phase": "S",
+            "start": 0,
+            "end": 13,
+            "ticks": 14,
+            "drawings": [
+              1,
+              1
+            ],
+            "warning": true
+          },
+          {
+            "label": "front",
+            "phase": "A",
+            "start": 14,
+            "end": 22,
+            "ticks": 9,
+            "drawings": [
+              2,
+              3
+            ],
+            "attack": {
+              "id": "sweep_front",
+              "damage": 12,
+              "depth": 26
+            }
+          },
+          {
+            "label": "back",
+            "phase": "A",
+            "start": 23,
+            "end": 31,
+            "ticks": 9,
+            "drawings": [
+              3,
+              5
+            ],
+            "attack": {
+              "id": "sweep_back",
+              "damage": 12,
+              "depth": 26,
+              "knockdown": true
+            }
+          },
+          {
+            "label": "recovery",
+            "phase": "R",
+            "start": 32,
+            "end": 53,
+            "ticks": 22,
+            "drawings": [
+              5,
+              9
+            ]
+          }
+        ]
+      },
+      "ultimate": {
+        "clip": "ultimate",
+        "total": 268,
+        "stages": [
+          {
+            "label": "warning",
+            "phase": "S",
+            "start": 0,
+            "end": 25,
+            "ticks": 26,
+            "drawings": [
+              1,
+              2
+            ],
+            "armor": true,
+            "white": true
+          },
+          {
+            "label": "leap",
+            "phase": "S",
+            "start": 26,
+            "end": 44,
+            "ticks": 19,
+            "drawings": [
+              3,
+              5
+            ],
+            "armor": true
+          },
+          {
+            "label": "tracking",
+            "phase": "S",
+            "start": 45,
+            "end": 104,
+            "ticks": 60,
+            "drawings": [
+              6,
+              8
+            ],
+            "hidden": true
+          },
+          {
+            "label": "fixed_warning",
+            "phase": "S",
+            "start": 105,
+            "end": 134,
+            "ticks": 30,
+            "drawings": [
+              8,
+              8
+            ],
+            "hidden": true
+          },
+          {
+            "label": "fall",
+            "phase": "A",
+            "start": 135,
+            "end": 140,
+            "ticks": 6,
+            "drawings": [
+              9,
+              10
+            ],
+            "invulnerable": true
+          },
+          {
+            "label": "impact",
+            "phase": "A",
+            "start": 141,
+            "end": 148,
+            "ticks": 8,
+            "drawings": [
+              11,
+              11
+            ],
+            "invulnerable": true
+          },
+          {
+            "label": "settle",
+            "phase": "S",
+            "start": 149,
+            "end": 159,
+            "ticks": 11,
+            "drawings": [
+              11,
+              11
+            ],
+            "invulnerable": true
+          },
+          {
+            "label": "kneel",
+            "phase": "R",
+            "start": 160,
+            "end": 249,
+            "ticks": 90,
+            "drawings": [
+              11,
+              13
+            ]
+          },
+          {
+            "label": "recall",
+            "phase": "S",
+            "start": 250,
+            "end": 267,
+            "ticks": 18,
+            "drawings": [
+              14,
+              16
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "transition": [
+    {
+      "type": "d8_burst",
+      "age": 168,
+      "drawing": 4
+    },
+    {
+      "type": "floor_ring",
+      "age": 258,
+      "drawing": 8
+    }
+  ],
+  "contacts": [
+    {
+      "id": "combo",
+      "phase": 1,
+      "hits": [
+        {
+          "id": "combo",
+          "elapsed": 18,
+          "base": 9,
+          "damage": 9
+        },
+        {
+          "id": "combo",
+          "elapsed": 35,
+          "base": 9,
+          "damage": 9
+        },
+        {
+          "id": "combo",
+          "elapsed": 60,
+          "base": 14,
+          "damage": 14
+        }
+      ]
+    },
+    {
+      "id": "sweep",
+      "phase": 1,
+      "hits": [
+        {
+          "id": "sweep",
+          "elapsed": 16,
+          "base": 12,
+          "damage": 12
+        },
+        {
+          "id": "sweep",
+          "elapsed": 25,
+          "base": 12,
+          "damage": 12
+        }
+      ]
+    },
+    {
+      "id": "dash",
+      "phase": 1,
+      "hits": [
+        {
+          "id": "dash",
+          "elapsed": 24,
+          "base": 14,
+          "damage": 14
+        }
+      ]
+    },
+    {
+      "id": "combo",
+      "phase": 2,
+      "hits": [
+        {
+          "id": "combo",
+          "elapsed": 15,
+          "base": 9,
+          "damage": 12
+        },
+        {
+          "id": "combo",
+          "elapsed": 29,
+          "base": 9,
+          "damage": 12
+        },
+        {
+          "id": "combo",
+          "elapsed": 50,
+          "base": 14,
+          "damage": 18
+        }
+      ]
+    },
+    {
+      "id": "sweep",
+      "phase": 2,
+      "hits": [
+        {
+          "id": "sweep",
+          "elapsed": 14,
+          "base": 12,
+          "damage": 16
+        },
+        {
+          "id": "sweep",
+          "elapsed": 23,
+          "base": 12,
+          "damage": 16
+        }
+      ]
+    },
+    {
+      "id": "dash",
+      "phase": 2,
+      "hits": [
+        {
+          "id": "dash",
+          "elapsed": 20,
+          "base": 14,
+          "damage": 18
+        },
+        {
+          "id": "dash",
+          "elapsed": 92,
+          "base": 14,
+          "damage": 18
+        }
+      ]
+    }
+  ],
+  "repeatKeyRuns": [
+    {
+      "first": {
+        "id": "combo",
+        "phase": 1,
+        "token": 1,
+        "ticks": 94,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "first_warning",
+            "start": 0,
+            "end": 17,
+            "ticks": 18
+          },
+          {
+            "drawing": 2,
+            "phase": "A",
+            "label": "first_hit",
+            "start": 18,
+            "end": 22,
+            "ticks": 5
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "second_connect",
+            "start": 23,
+            "end": 28,
+            "ticks": 6
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "second_connect",
+            "start": 29,
+            "end": 34,
+            "ticks": 6
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "second_hit",
+            "start": 35,
+            "end": 39,
+            "ticks": 5
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "third_connect",
+            "start": 40,
+            "end": 42,
+            "ticks": 3
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "third_connect",
+            "start": 43,
+            "end": 45,
+            "ticks": 3
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "third_warning",
+            "start": 46,
+            "end": 59,
+            "ticks": 14
+          },
+          {
+            "drawing": 7,
+            "phase": "A",
+            "label": "third_hit",
+            "start": 60,
+            "end": 63,
+            "ticks": 4
+          },
+          {
+            "drawing": 8,
+            "phase": "A",
+            "label": "third_hit",
+            "start": 64,
+            "end": 67,
+            "ticks": 4
+          },
+          {
+            "drawing": 8,
+            "phase": "R",
+            "label": "recovery",
+            "start": 68,
+            "end": 93,
+            "ticks": 26
+          }
+        ],
+        "active": [
+          {
+            "id": "combo1",
+            "elapsed": 18,
+            "drawing": 2
+          },
+          {
+            "id": "combo2",
+            "elapsed": 35,
+            "drawing": 4
+          },
+          {
+            "id": "combo3",
+            "elapsed": 60,
+            "drawing": 7
+          }
+        ],
+        "events": [],
+        "recovery": 26,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 94
+      },
+      "repeated": true,
+      "second": "combo",
+      "totalTicks": 128
+    },
+    {
+      "first": {
+        "id": "dash",
+        "phase": 1,
+        "token": 1,
+        "ticks": 108,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "dash_warning",
+            "start": 0,
+            "end": 11,
+            "ticks": 12
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "dash_warning",
+            "start": 12,
+            "end": 23,
+            "ticks": 12
+          },
+          {
+            "drawing": 3,
+            "phase": "A",
+            "label": "launch",
+            "start": 24,
+            "end": 25,
+            "ticks": 2
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "launch",
+            "start": 26,
+            "end": 27,
+            "ticks": 2
+          },
+          {
+            "drawing": 5,
+            "phase": "A",
+            "label": "launch",
+            "start": 28,
+            "end": 29,
+            "ticks": 2
+          },
+          {
+            "drawing": 6,
+            "phase": "A",
+            "label": "dash",
+            "start": 30,
+            "end": 40,
+            "ticks": 11
+          },
+          {
+            "drawing": 7,
+            "phase": "A",
+            "label": "dash",
+            "start": 41,
+            "end": 51,
+            "ticks": 11
+          },
+          {
+            "drawing": 8,
+            "phase": "A",
+            "label": "dash",
+            "start": 52,
+            "end": 61,
+            "ticks": 10
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "stop",
+            "start": 62,
+            "end": 65,
+            "ticks": 4
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "stop",
+            "start": 66,
+            "end": 68,
+            "ticks": 3
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "stop",
+            "start": 69,
+            "end": 71,
+            "ticks": 3
+          },
+          {
+            "drawing": 12,
+            "phase": "R",
+            "label": "recovery",
+            "start": 72,
+            "end": 79,
+            "ticks": 8
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "recovery",
+            "start": 80,
+            "end": 86,
+            "ticks": 7
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 87,
+            "end": 93,
+            "ticks": 7
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 94,
+            "end": 100,
+            "ticks": 7
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 101,
+            "end": 107,
+            "ticks": 7
+          }
+        ],
+        "active": [
+          {
+            "id": "dash1",
+            "elapsed": 24,
+            "drawing": 3
+          },
+          {
+            "id": "dash1",
+            "elapsed": 30,
+            "drawing": 6
+          }
+        ],
+        "events": [
+          {
+            "type": "dash_lock",
+            "elapsed": 19
+          }
+        ],
+        "recovery": 36,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 108
+      },
+      "repeated": true,
+      "second": "dash",
+      "totalTicks": 139
+    },
+    {
+      "first": {
+        "id": "sword",
+        "phase": 1,
+        "token": 1,
+        "ticks": 143,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "cast",
+            "start": 0,
+            "end": 3,
+            "ticks": 4
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "cast",
+            "start": 4,
+            "end": 7,
+            "ticks": 4
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "cast",
+            "start": 8,
+            "end": 11,
+            "ticks": 4
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "cast",
+            "start": 12,
+            "end": 15,
+            "ticks": 4
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "cast",
+            "start": 16,
+            "end": 19,
+            "ticks": 4
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "cast",
+            "start": 20,
+            "end": 23,
+            "ticks": 4
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "cast",
+            "start": 24,
+            "end": 27,
+            "ticks": 4
+          },
+          {
+            "drawing": 8,
+            "phase": "S",
+            "label": "cast",
+            "start": 28,
+            "end": 31,
+            "ticks": 4
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 32,
+            "end": 44,
+            "ticks": 13
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 45,
+            "end": 56,
+            "ticks": 12
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 57,
+            "end": 68,
+            "ticks": 12
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "hold_swords",
+            "start": 69,
+            "end": 118,
+            "ticks": 50
+          },
+          {
+            "drawing": 12,
+            "phase": "R",
+            "label": "recovery",
+            "start": 119,
+            "end": 123,
+            "ticks": 5
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "recovery",
+            "start": 124,
+            "end": 128,
+            "ticks": 5
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 129,
+            "end": 133,
+            "ticks": 5
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 134,
+            "end": 138,
+            "ticks": 5
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 139,
+            "end": 142,
+            "ticks": 4
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "sword_mark",
+            "elapsed": 32
+          },
+          {
+            "type": "sword_mark",
+            "elapsed": 50
+          },
+          {
+            "type": "sword_mark",
+            "elapsed": 68
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 77,
+            "token": 1
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 95,
+            "token": 1
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 113,
+            "token": 1
+          }
+        ],
+        "recovery": 24,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 143
+      },
+      "repeated": true,
+      "second": "sword",
+      "totalTicks": 189
+    },
+    {
+      "first": {
+        "id": "cross",
+        "phase": 1,
+        "token": 1,
+        "ticks": 134,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "cast",
+            "start": 0,
+            "end": 3,
+            "ticks": 4
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "cast",
+            "start": 4,
+            "end": 7,
+            "ticks": 4
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "cast",
+            "start": 8,
+            "end": 11,
+            "ticks": 4
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "cast",
+            "start": 12,
+            "end": 15,
+            "ticks": 4
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "cast",
+            "start": 16,
+            "end": 19,
+            "ticks": 4
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "cast",
+            "start": 20,
+            "end": 23,
+            "ticks": 4
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "cast",
+            "start": 24,
+            "end": 27,
+            "ticks": 4
+          },
+          {
+            "drawing": 8,
+            "phase": "S",
+            "label": "cast",
+            "start": 28,
+            "end": 31,
+            "ticks": 4
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 32,
+            "end": 51,
+            "ticks": 20
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 52,
+            "end": 71,
+            "ticks": 20
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 72,
+            "end": 91,
+            "ticks": 20
+          },
+          {
+            "drawing": 11,
+            "phase": "A",
+            "label": "eruption",
+            "start": 92,
+            "end": 109,
+            "ticks": 18
+          },
+          {
+            "drawing": 12,
+            "phase": "R",
+            "label": "recovery",
+            "start": 110,
+            "end": 114,
+            "ticks": 5
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "recovery",
+            "start": 115,
+            "end": 119,
+            "ticks": 5
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 120,
+            "end": 124,
+            "ticks": 5
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 125,
+            "end": 129,
+            "ticks": 5
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 130,
+            "end": 133,
+            "ticks": 4
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "cross_mark",
+            "elapsed": 31
+          },
+          {
+            "type": "cross_active",
+            "elapsed": 91,
+            "token": 1
+          }
+        ],
+        "recovery": 24,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 134
+      },
+      "repeated": true,
+      "second": "cross",
+      "totalTicks": 174
+    },
+    {
+      "first": {
+        "id": "orb",
+        "phase": 1,
+        "token": 1,
+        "ticks": 68,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "cast",
+            "start": 0,
+            "end": 7,
+            "ticks": 8
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "cast",
+            "start": 8,
+            "end": 15,
+            "ticks": 8
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "cast",
+            "start": 16,
+            "end": 23,
+            "ticks": 8
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "cast",
+            "start": 24,
+            "end": 31,
+            "ticks": 8
+          },
+          {
+            "drawing": 5,
+            "phase": "R",
+            "label": "recovery",
+            "start": 32,
+            "end": 40,
+            "ticks": 9
+          },
+          {
+            "drawing": 6,
+            "phase": "R",
+            "label": "recovery",
+            "start": 41,
+            "end": 49,
+            "ticks": 9
+          },
+          {
+            "drawing": 7,
+            "phase": "R",
+            "label": "recovery",
+            "start": 50,
+            "end": 58,
+            "ticks": 9
+          },
+          {
+            "drawing": 8,
+            "phase": "R",
+            "label": "recovery",
+            "start": 59,
+            "end": 67,
+            "ticks": 9
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "orbs",
+            "elapsed": 32
+          }
+        ],
+        "recovery": 36,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 68
+      },
+      "repeated": true,
+      "second": "orb",
+      "totalTicks": 106
+    },
+    {
+      "first": {
+        "id": "sweep",
+        "phase": 1,
+        "token": 1,
+        "ticks": 56,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "warning",
+            "start": 0,
+            "end": 7,
+            "ticks": 8
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "warning",
+            "start": 8,
+            "end": 15,
+            "ticks": 8
+          },
+          {
+            "drawing": 3,
+            "phase": "A",
+            "label": "front",
+            "start": 16,
+            "end": 18,
+            "ticks": 3
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "front",
+            "start": 19,
+            "end": 21,
+            "ticks": 3
+          },
+          {
+            "drawing": 5,
+            "phase": "A",
+            "label": "front",
+            "start": 22,
+            "end": 24,
+            "ticks": 3
+          },
+          {
+            "drawing": 6,
+            "phase": "A",
+            "label": "back",
+            "start": 25,
+            "end": 27,
+            "ticks": 3
+          },
+          {
+            "drawing": 7,
+            "phase": "A",
+            "label": "back",
+            "start": 28,
+            "end": 30,
+            "ticks": 3
+          },
+          {
+            "drawing": 8,
+            "phase": "A",
+            "label": "back",
+            "start": 31,
+            "end": 33,
+            "ticks": 3
+          },
+          {
+            "drawing": 9,
+            "phase": "R",
+            "label": "recovery",
+            "start": 34,
+            "end": 36,
+            "ticks": 3
+          },
+          {
+            "drawing": 10,
+            "phase": "R",
+            "label": "recovery",
+            "start": 37,
+            "end": 39,
+            "ticks": 3
+          },
+          {
+            "drawing": 11,
+            "phase": "R",
+            "label": "recovery",
+            "start": 40,
+            "end": 42,
+            "ticks": 3
+          },
+          {
+            "drawing": 12,
+            "phase": "R",
+            "label": "recovery",
+            "start": 43,
+            "end": 44,
+            "ticks": 2
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "recovery",
+            "start": 45,
+            "end": 47,
+            "ticks": 3
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 48,
+            "end": 50,
+            "ticks": 3
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 51,
+            "end": 53,
+            "ticks": 3
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 54,
+            "end": 55,
+            "ticks": 2
+          }
+        ],
+        "active": [
+          {
+            "id": "sweep_front",
+            "elapsed": 16,
+            "drawing": 3
+          },
+          {
+            "id": "sweep_back",
+            "elapsed": 25,
+            "drawing": 6
+          }
+        ],
+        "events": [],
+        "recovery": 22,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 56
+      },
+      "repeated": true,
+      "second": "sweep",
+      "totalTicks": 92
+    },
+    {
+      "first": {
+        "id": "taunt",
+        "phase": 1,
+        "token": 1,
+        "ticks": 70,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "R",
+            "label": "opening",
+            "start": 0,
+            "end": 7,
+            "ticks": 8
+          },
+          {
+            "drawing": 2,
+            "phase": "R",
+            "label": "opening",
+            "start": 8,
+            "end": 15,
+            "ticks": 8
+          },
+          {
+            "drawing": 3,
+            "phase": "R",
+            "label": "opening",
+            "start": 16,
+            "end": 23,
+            "ticks": 8
+          },
+          {
+            "drawing": 4,
+            "phase": "R",
+            "label": "opening",
+            "start": 24,
+            "end": 31,
+            "ticks": 8
+          },
+          {
+            "drawing": 5,
+            "phase": "R",
+            "label": "opening",
+            "start": 32,
+            "end": 38,
+            "ticks": 7
+          },
+          {
+            "drawing": 6,
+            "phase": "R",
+            "label": "opening",
+            "start": 39,
+            "end": 46,
+            "ticks": 8
+          },
+          {
+            "drawing": 7,
+            "phase": "R",
+            "label": "opening",
+            "start": 47,
+            "end": 54,
+            "ticks": 8
+          },
+          {
+            "drawing": 8,
+            "phase": "R",
+            "label": "opening",
+            "start": 55,
+            "end": 62,
+            "ticks": 8
+          },
+          {
+            "drawing": 9,
+            "phase": "R",
+            "label": "opening",
+            "start": 63,
+            "end": 69,
+            "ticks": 7
+          }
+        ],
+        "active": [],
+        "events": [],
+        "recovery": 70,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 70
+      },
+      "repeated": true,
+      "second": "taunt",
+      "totalTicks": 113
+    },
+    {
+      "first": {
+        "id": "combo",
+        "phase": 2,
+        "token": 1,
+        "ticks": 79,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "first_warning",
+            "start": 0,
+            "end": 7,
+            "ticks": 8
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "first_warning",
+            "start": 8,
+            "end": 14,
+            "ticks": 7
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "first_hit",
+            "start": 15,
+            "end": 18,
+            "ticks": 4
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "second_connect",
+            "start": 19,
+            "end": 22,
+            "ticks": 4
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "second_connect",
+            "start": 23,
+            "end": 25,
+            "ticks": 3
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "second_connect",
+            "start": 26,
+            "end": 28,
+            "ticks": 3
+          },
+          {
+            "drawing": 8,
+            "phase": "A",
+            "label": "second_hit",
+            "start": 29,
+            "end": 32,
+            "ticks": 4
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "third_connect",
+            "start": 33,
+            "end": 35,
+            "ticks": 3
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "third_connect",
+            "start": 36,
+            "end": 37,
+            "ticks": 2
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "third_warning",
+            "start": 38,
+            "end": 46,
+            "ticks": 9
+          },
+          {
+            "drawing": 12,
+            "phase": "S",
+            "label": "third_raise",
+            "start": 47,
+            "end": 49,
+            "ticks": 3
+          },
+          {
+            "drawing": 13,
+            "phase": "A",
+            "label": "third_hit",
+            "start": 50,
+            "end": 53,
+            "ticks": 4
+          },
+          {
+            "drawing": 14,
+            "phase": "A",
+            "label": "third_hit",
+            "start": 54,
+            "end": 56,
+            "ticks": 3
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 57,
+            "end": 67,
+            "ticks": 11
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 68,
+            "end": 78,
+            "ticks": 11
+          }
+        ],
+        "active": [
+          {
+            "id": "combo1",
+            "elapsed": 15,
+            "drawing": 4
+          },
+          {
+            "id": "combo2",
+            "elapsed": 29,
+            "drawing": 8
+          },
+          {
+            "id": "combo3",
+            "elapsed": 50,
+            "drawing": 13
+          }
+        ],
+        "events": [],
+        "recovery": 22,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 79
+      },
+      "repeated": true,
+      "second": "combo",
+      "totalTicks": 102
+    },
+    {
+      "first": {
+        "id": "dash",
+        "phase": 2,
+        "token": 1,
+        "ticks": 174,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "dash_warning",
+            "start": 0,
+            "end": 9,
+            "ticks": 10
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "dash_warning",
+            "start": 10,
+            "end": 19,
+            "ticks": 10
+          },
+          {
+            "drawing": 3,
+            "phase": "A",
+            "label": "launch",
+            "start": 20,
+            "end": 21,
+            "ticks": 2
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "launch",
+            "start": 22,
+            "end": 23,
+            "ticks": 2
+          },
+          {
+            "drawing": 5,
+            "phase": "A",
+            "label": "launch",
+            "start": 24,
+            "end": 25,
+            "ticks": 2
+          },
+          {
+            "drawing": 6,
+            "phase": "A",
+            "label": "dash",
+            "start": 26,
+            "end": 36,
+            "ticks": 11
+          },
+          {
+            "drawing": 7,
+            "phase": "A",
+            "label": "dash",
+            "start": 37,
+            "end": 47,
+            "ticks": 11
+          },
+          {
+            "drawing": 8,
+            "phase": "A",
+            "label": "dash",
+            "start": 48,
+            "end": 57,
+            "ticks": 10
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "stop",
+            "start": 58,
+            "end": 61,
+            "ticks": 4
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "stop",
+            "start": 62,
+            "end": 64,
+            "ticks": 3
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "stop",
+            "start": 65,
+            "end": 67,
+            "ticks": 3
+          },
+          {
+            "drawing": 12,
+            "phase": "S",
+            "label": "turn",
+            "start": 68,
+            "end": 70,
+            "ticks": 3
+          },
+          {
+            "drawing": 13,
+            "phase": "S",
+            "label": "turn",
+            "start": 71,
+            "end": 73,
+            "ticks": 3
+          },
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "return_warning",
+            "start": 74,
+            "end": 82,
+            "ticks": 9
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "return_warning",
+            "start": 83,
+            "end": 91,
+            "ticks": 9
+          },
+          {
+            "drawing": 3,
+            "phase": "A",
+            "label": "return_launch",
+            "start": 92,
+            "end": 93,
+            "ticks": 2
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "return_launch",
+            "start": 94,
+            "end": 95,
+            "ticks": 2
+          },
+          {
+            "drawing": 5,
+            "phase": "A",
+            "label": "return_launch",
+            "start": 96,
+            "end": 97,
+            "ticks": 2
+          },
+          {
+            "drawing": 6,
+            "phase": "A",
+            "label": "return_dash",
+            "start": 98,
+            "end": 108,
+            "ticks": 11
+          },
+          {
+            "drawing": 7,
+            "phase": "A",
+            "label": "return_dash",
+            "start": 109,
+            "end": 119,
+            "ticks": 11
+          },
+          {
+            "drawing": 8,
+            "phase": "A",
+            "label": "return_dash",
+            "start": 120,
+            "end": 129,
+            "ticks": 10
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "return_stop",
+            "start": 130,
+            "end": 133,
+            "ticks": 4
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "return_stop",
+            "start": 134,
+            "end": 136,
+            "ticks": 3
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "return_stop",
+            "start": 137,
+            "end": 139,
+            "ticks": 3
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 140,
+            "end": 151,
+            "ticks": 12
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 152,
+            "end": 162,
+            "ticks": 11
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 163,
+            "end": 173,
+            "ticks": 11
+          }
+        ],
+        "active": [
+          {
+            "id": "dash1",
+            "elapsed": 20,
+            "drawing": 3
+          },
+          {
+            "id": "dash1",
+            "elapsed": 26,
+            "drawing": 6
+          },
+          {
+            "id": "dash2",
+            "elapsed": 92,
+            "drawing": 3
+          },
+          {
+            "id": "dash2",
+            "elapsed": 98,
+            "drawing": 6
+          }
+        ],
+        "events": [
+          {
+            "type": "dash_lock",
+            "elapsed": 16
+          },
+          {
+            "type": "turn",
+            "elapsed": 68
+          },
+          {
+            "type": "dash_lock",
+            "elapsed": 81
+          }
+        ],
+        "recovery": 34,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 174
+      },
+      "repeated": true,
+      "second": "dash",
+      "totalTicks": 202
+    },
+    {
+      "first": {
+        "id": "sword",
+        "phase": 2,
+        "token": 1,
+        "ticks": 151,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "cast",
+            "start": 0,
+            "end": 3,
+            "ticks": 4
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "cast",
+            "start": 4,
+            "end": 6,
+            "ticks": 3
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "cast",
+            "start": 7,
+            "end": 10,
+            "ticks": 4
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "cast",
+            "start": 11,
+            "end": 13,
+            "ticks": 3
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "cast",
+            "start": 14,
+            "end": 16,
+            "ticks": 3
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "cast",
+            "start": 17,
+            "end": 20,
+            "ticks": 4
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "cast",
+            "start": 21,
+            "end": 23,
+            "ticks": 3
+          },
+          {
+            "drawing": 8,
+            "phase": "S",
+            "label": "cast",
+            "start": 24,
+            "end": 26,
+            "ticks": 3
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 27,
+            "end": 41,
+            "ticks": 15
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 42,
+            "end": 55,
+            "ticks": 14
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 56,
+            "end": 69,
+            "ticks": 14
+          },
+          {
+            "drawing": 12,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 70,
+            "end": 83,
+            "ticks": 14
+          },
+          {
+            "drawing": 12,
+            "phase": "S",
+            "label": "hold_swords",
+            "start": 84,
+            "end": 126,
+            "ticks": 43
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "recovery",
+            "start": 127,
+            "end": 130,
+            "ticks": 4
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 131,
+            "end": 133,
+            "ticks": 3
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 134,
+            "end": 137,
+            "ticks": 4
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 138,
+            "end": 140,
+            "ticks": 3
+          },
+          {
+            "drawing": 17,
+            "phase": "R",
+            "label": "recovery",
+            "start": 141,
+            "end": 144,
+            "ticks": 4
+          },
+          {
+            "drawing": 18,
+            "phase": "R",
+            "label": "recovery",
+            "start": 145,
+            "end": 147,
+            "ticks": 3
+          },
+          {
+            "drawing": 19,
+            "phase": "R",
+            "label": "recovery",
+            "start": 148,
+            "end": 150,
+            "ticks": 3
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "sword_mark",
+            "elapsed": 27
+          },
+          {
+            "type": "sword_mark",
+            "elapsed": 41
+          },
+          {
+            "type": "sword_mark",
+            "elapsed": 55
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 65,
+            "token": 1
+          },
+          {
+            "type": "sword_mark",
+            "elapsed": 69
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 79,
+            "token": 1
+          },
+          {
+            "type": "sword_mark",
+            "elapsed": 83
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 93,
+            "token": 1
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 107,
+            "token": 1
+          },
+          {
+            "type": "sword_active",
+            "elapsed": 121,
+            "token": 1
+          }
+        ],
+        "recovery": 24,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 151
+      },
+      "repeated": true,
+      "second": "sword",
+      "totalTicks": 174
+    },
+    {
+      "first": {
+        "id": "cross",
+        "phase": 2,
+        "token": 1,
+        "ticks": 150,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "cast",
+            "start": 0,
+            "end": 3,
+            "ticks": 4
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "cast",
+            "start": 4,
+            "end": 6,
+            "ticks": 3
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "cast",
+            "start": 7,
+            "end": 10,
+            "ticks": 4
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "cast",
+            "start": 11,
+            "end": 13,
+            "ticks": 3
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "cast",
+            "start": 14,
+            "end": 16,
+            "ticks": 3
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "cast",
+            "start": 17,
+            "end": 20,
+            "ticks": 4
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "cast",
+            "start": 21,
+            "end": 23,
+            "ticks": 3
+          },
+          {
+            "drawing": 8,
+            "phase": "S",
+            "label": "cast",
+            "start": 24,
+            "end": 26,
+            "ticks": 3
+          },
+          {
+            "drawing": 9,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 27,
+            "end": 47,
+            "ticks": 21
+          },
+          {
+            "drawing": 10,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 48,
+            "end": 67,
+            "ticks": 20
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 68,
+            "end": 87,
+            "ticks": 20
+          },
+          {
+            "drawing": 12,
+            "phase": "S",
+            "label": "concentrate",
+            "start": 88,
+            "end": 107,
+            "ticks": 20
+          },
+          {
+            "drawing": 12,
+            "phase": "A",
+            "label": "eruption",
+            "start": 108,
+            "end": 125,
+            "ticks": 18
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "recovery",
+            "start": 126,
+            "end": 129,
+            "ticks": 4
+          },
+          {
+            "drawing": 14,
+            "phase": "R",
+            "label": "recovery",
+            "start": 130,
+            "end": 132,
+            "ticks": 3
+          },
+          {
+            "drawing": 15,
+            "phase": "R",
+            "label": "recovery",
+            "start": 133,
+            "end": 136,
+            "ticks": 4
+          },
+          {
+            "drawing": 16,
+            "phase": "R",
+            "label": "recovery",
+            "start": 137,
+            "end": 139,
+            "ticks": 3
+          },
+          {
+            "drawing": 17,
+            "phase": "R",
+            "label": "recovery",
+            "start": 140,
+            "end": 143,
+            "ticks": 4
+          },
+          {
+            "drawing": 18,
+            "phase": "R",
+            "label": "recovery",
+            "start": 144,
+            "end": 146,
+            "ticks": 3
+          },
+          {
+            "drawing": 19,
+            "phase": "R",
+            "label": "recovery",
+            "start": 147,
+            "end": 149,
+            "ticks": 3
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "cross_mark",
+            "elapsed": 26
+          },
+          {
+            "type": "cross_mark",
+            "elapsed": 56
+          },
+          {
+            "type": "cross_active",
+            "elapsed": 77,
+            "token": 1
+          },
+          {
+            "type": "cross_active",
+            "elapsed": 107,
+            "token": 1
+          }
+        ],
+        "recovery": 24,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 150
+      },
+      "repeated": true,
+      "second": "cross",
+      "totalTicks": 174
+    },
+    {
+      "first": {
+        "id": "orb",
+        "phase": 2,
+        "token": 1,
+        "ticks": 63,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "cast",
+            "start": 0,
+            "end": 4,
+            "ticks": 5
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "cast",
+            "start": 5,
+            "end": 8,
+            "ticks": 4
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "cast",
+            "start": 9,
+            "end": 13,
+            "ticks": 5
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "cast",
+            "start": 14,
+            "end": 17,
+            "ticks": 4
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "cast",
+            "start": 18,
+            "end": 22,
+            "ticks": 5
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "cast",
+            "start": 23,
+            "end": 26,
+            "ticks": 4
+          },
+          {
+            "drawing": 7,
+            "phase": "R",
+            "label": "recovery",
+            "start": 27,
+            "end": 32,
+            "ticks": 6
+          },
+          {
+            "drawing": 8,
+            "phase": "R",
+            "label": "recovery",
+            "start": 33,
+            "end": 38,
+            "ticks": 6
+          },
+          {
+            "drawing": 9,
+            "phase": "R",
+            "label": "recovery",
+            "start": 39,
+            "end": 44,
+            "ticks": 6
+          },
+          {
+            "drawing": 10,
+            "phase": "R",
+            "label": "recovery",
+            "start": 45,
+            "end": 50,
+            "ticks": 6
+          },
+          {
+            "drawing": 11,
+            "phase": "R",
+            "label": "recovery",
+            "start": 51,
+            "end": 56,
+            "ticks": 6
+          },
+          {
+            "drawing": 12,
+            "phase": "R",
+            "label": "recovery",
+            "start": 57,
+            "end": 62,
+            "ticks": 6
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "orbs",
+            "elapsed": 27
+          }
+        ],
+        "recovery": 36,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 63
+      },
+      "repeated": true,
+      "second": "orb",
+      "totalTicks": 83
+    },
+    {
+      "first": {
+        "id": "sweep",
+        "phase": 2,
+        "token": 1,
+        "ticks": 54,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "warning",
+            "start": 0,
+            "end": 13,
+            "ticks": 14
+          },
+          {
+            "drawing": 2,
+            "phase": "A",
+            "label": "front",
+            "start": 14,
+            "end": 18,
+            "ticks": 5
+          },
+          {
+            "drawing": 3,
+            "phase": "A",
+            "label": "front",
+            "start": 19,
+            "end": 22,
+            "ticks": 4
+          },
+          {
+            "drawing": 3,
+            "phase": "A",
+            "label": "back",
+            "start": 23,
+            "end": 25,
+            "ticks": 3
+          },
+          {
+            "drawing": 4,
+            "phase": "A",
+            "label": "back",
+            "start": 26,
+            "end": 28,
+            "ticks": 3
+          },
+          {
+            "drawing": 5,
+            "phase": "A",
+            "label": "back",
+            "start": 29,
+            "end": 31,
+            "ticks": 3
+          },
+          {
+            "drawing": 5,
+            "phase": "R",
+            "label": "recovery",
+            "start": 32,
+            "end": 36,
+            "ticks": 5
+          },
+          {
+            "drawing": 6,
+            "phase": "R",
+            "label": "recovery",
+            "start": 37,
+            "end": 40,
+            "ticks": 4
+          },
+          {
+            "drawing": 7,
+            "phase": "R",
+            "label": "recovery",
+            "start": 41,
+            "end": 45,
+            "ticks": 5
+          },
+          {
+            "drawing": 8,
+            "phase": "R",
+            "label": "recovery",
+            "start": 46,
+            "end": 49,
+            "ticks": 4
+          },
+          {
+            "drawing": 9,
+            "phase": "R",
+            "label": "recovery",
+            "start": 50,
+            "end": 53,
+            "ticks": 4
+          }
+        ],
+        "active": [
+          {
+            "id": "sweep_front",
+            "elapsed": 14,
+            "drawing": 2
+          },
+          {
+            "id": "sweep_back",
+            "elapsed": 23,
+            "drawing": 3
+          }
+        ],
+        "events": [],
+        "recovery": 22,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 54
+      },
+      "repeated": true,
+      "second": "sweep",
+      "totalTicks": 85
+    },
+    {
+      "first": {
+        "id": "ultimate",
+        "phase": 2,
+        "token": 1,
+        "ticks": 268,
+        "drawings": [
+          {
+            "drawing": 1,
+            "phase": "S",
+            "label": "warning",
+            "start": 0,
+            "end": 12,
+            "ticks": 13
+          },
+          {
+            "drawing": 2,
+            "phase": "S",
+            "label": "warning",
+            "start": 13,
+            "end": 25,
+            "ticks": 13
+          },
+          {
+            "drawing": 3,
+            "phase": "S",
+            "label": "leap",
+            "start": 26,
+            "end": 32,
+            "ticks": 7
+          },
+          {
+            "drawing": 4,
+            "phase": "S",
+            "label": "leap",
+            "start": 33,
+            "end": 38,
+            "ticks": 6
+          },
+          {
+            "drawing": 5,
+            "phase": "S",
+            "label": "leap",
+            "start": 39,
+            "end": 44,
+            "ticks": 6
+          },
+          {
+            "drawing": 6,
+            "phase": "S",
+            "label": "tracking",
+            "start": 45,
+            "end": 64,
+            "ticks": 20
+          },
+          {
+            "drawing": 7,
+            "phase": "S",
+            "label": "tracking",
+            "start": 65,
+            "end": 84,
+            "ticks": 20
+          },
+          {
+            "drawing": 8,
+            "phase": "S",
+            "label": "tracking",
+            "start": 85,
+            "end": 104,
+            "ticks": 20
+          },
+          {
+            "drawing": 8,
+            "phase": "S",
+            "label": "fixed_warning",
+            "start": 105,
+            "end": 134,
+            "ticks": 30
+          },
+          {
+            "drawing": 9,
+            "phase": "A",
+            "label": "fall",
+            "start": 135,
+            "end": 137,
+            "ticks": 3
+          },
+          {
+            "drawing": 10,
+            "phase": "A",
+            "label": "fall",
+            "start": 138,
+            "end": 140,
+            "ticks": 3
+          },
+          {
+            "drawing": 11,
+            "phase": "A",
+            "label": "impact",
+            "start": 141,
+            "end": 148,
+            "ticks": 8
+          },
+          {
+            "drawing": 11,
+            "phase": "S",
+            "label": "settle",
+            "start": 149,
+            "end": 159,
+            "ticks": 11
+          },
+          {
+            "drawing": 11,
+            "phase": "R",
+            "label": "kneel",
+            "start": 160,
+            "end": 189,
+            "ticks": 30
+          },
+          {
+            "drawing": 12,
+            "phase": "R",
+            "label": "kneel",
+            "start": 190,
+            "end": 219,
+            "ticks": 30
+          },
+          {
+            "drawing": 13,
+            "phase": "R",
+            "label": "kneel",
+            "start": 220,
+            "end": 249,
+            "ticks": 30
+          },
+          {
+            "drawing": 14,
+            "phase": "S",
+            "label": "recall",
+            "start": 250,
+            "end": 255,
+            "ticks": 6
+          },
+          {
+            "drawing": 15,
+            "phase": "S",
+            "label": "recall",
+            "start": 256,
+            "end": 261,
+            "ticks": 6
+          },
+          {
+            "drawing": 16,
+            "phase": "S",
+            "label": "recall",
+            "start": 262,
+            "end": 267,
+            "ticks": 6
+          }
+        ],
+        "active": [],
+        "events": [
+          {
+            "type": "ultimate_mark",
+            "elapsed": 45
+          },
+          {
+            "type": "ultimate_lock",
+            "elapsed": 105
+          },
+          {
+            "type": "ultimate_fall",
+            "elapsed": 135
+          },
+          {
+            "type": "ultimate_impact",
+            "elapsed": 141
+          },
+          {
+            "type": "ultimate_wave",
+            "elapsed": 149
+          },
+          {
+            "type": "ultimate_land",
+            "elapsed": 160
+          }
+        ],
+        "recovery": 90,
+        "finished": true,
+        "interrupted": false,
+        "timelineTicks": 268
+      },
+      "repeated": true,
+      "second": "ultimate",
+      "totalTicks": 300
+    }
+  ],
+  "screenshots": [
+    "awaken-d8-burst.png",
+    "cross-eruption.png",
+    "cross-mark.png",
+    "death-last.png",
+    "intro-throne-break.png",
+    "orb-ai.png",
+    "p2-tattoo-bright.png",
+    "p2-tattoo-dim.png",
+    "sword-mark.png",
+    "ultimate-fall.png",
+    "ultimate-impact.png",
+    "ultimate-kneel.png",
+    "ultimate-mark.png"
+  ],
+  "externalResources": [],
+  "production": {
+    "debugDisabled": true,
+    "stage4ReachesClear": true
+  },
+  "consoleErrors": []
+}

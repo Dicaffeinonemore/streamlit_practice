@@ -337,7 +337,7 @@ function combatChecks() {
   reset(); player.score = 2345; startStage(1); toTitle();
   return passed;
 }
-const timeout = setTimeout(() => { console.error('Browser test timed out'); browser?.kill(); server.close(); process.exit(1); }, process.env.AURELION_SUITE||process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_ORB_AI?360000:90000);
+const timeout = setTimeout(() => { console.error('Browser test timed out'); browser?.kill(); server.close(); process.exit(1); }, process.env.AURELION_SUITE||process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE||process.env.BOSS_GROGGY_SUITE?360000:90000);
 (async () => {
   try {
     await new Promise(r => server.listen(0, '127.0.0.1', r));
@@ -352,15 +352,18 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       const m = JSON.parse(data);
       if (m.id) { const h = pending.get(m.id); if (h) { pending.delete(m.id); m.error ? h.reject(m.error) : h.resolve(m.result); } }
       else if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
-      else if((process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI)&&m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')errors.push(m.params.args.map(a=>a.value||a.description).join(' '));
-      else if((process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI)&&m.method==='Log.entryAdded'&&m.params.entry.level==='error')errors.push(m.params.entry.text);
+      else if((process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)&&m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')errors.push(m.params.args.map(a=>a.value||a.description).join(' '));
+      else if((process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)&&m.method==='Log.entryAdded'&&m.params.entry.level==='error')errors.push(m.params.entry.text);
     };
     const target = await call('Target.createTarget', { url: 'about:blank' }, null);
     session = (await call('Target.attachToTarget', { targetId: target.targetId, flatten: true }, null)).sessionId;
     await call('Page.enable'); await call('Runtime.enable');
-    if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI)await call('Log.enable');
+    if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.VARGUL_ULTIMATE_SUITE){await ready(base+'/embedded.html');await require('./vargul-ultimate.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.VARGUL_VISUAL_SUITE){await ready(base+'/embedded.html');await require('./vargul-visual.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_ORB_AI){await ready(base+'/embedded.html');await require('./vargul-orb-ai.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_STAGE4){await ready(base+'/embedded.html');await require('./vargul-stage4.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_STAGE3){await ready(base+'/embedded.html');await require('./vargul-stage3.cjs')({evaluate,call,errors,root});return;}

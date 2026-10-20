@@ -170,9 +170,10 @@ function checks(){
   }passed('actual measured melee boxes connect each strike; shared phase damage x1.3');
   for(const where of ['center','outer']){
     const e=setup(true),u=VARGUL_RULES.ultimate;player.x=where==='center'?300:300+(u.rx+u.outerX)/2;player.y=420;player.z=0;player.inv=0;
-    spawnVargul(e,'ultimate',300,420,0,{stage:'impact',impactAge:0});updHazards();
+    if(where==='center'){spawnVargul(e,'ultimate',300,420,0,{stage:'impact',impactAge:0});updHazards();}
+    else{spawnVargul(e,'ice_wave',300,420,0,{hit:false});for(let i=0;i<36;i++)updHazards();}
     check(player.hp===100-Math.round((where==='center'?23:10)*1.3),'ultimate '+where+' collision damage');
-  }passed('ultimate central and outer damage regions');
+  }passed('ultimate ground slam center and expanding ice-wave damage');
   {const e=setup(true);damageEnemy(e,99999,true,0,true);check(e.st==='dead','final death');for(let i=0;i<145;i++)updEnemy(e);check(!e.remove&&vargulPose(e).drawing===16,'death last drawing held');updEnemy(e);check(e.remove&&vargulRemains.length>0,'remains survive removal and stage can clear');passed('death 16 drawings; held final frame; persistent remains');}
   return result;
 }

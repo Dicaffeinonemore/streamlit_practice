@@ -2012,6 +2012,14 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if(!e.boss||e.st!=='stun'){drawEnemyBody(e);return;}
+  // Render-only sway around the feet; physics and groggy duration stay fixed.
+  const x=e.x-camX,y=e.y-e.z;
+  ctx.save();ctx.translate(x,y);ctx.rotate(bossGroggySway(e));ctx.translate(-x,-y);
+  try{drawEnemyBody(e);}finally{ctx.restore();}
+}
+function bossGroggySway(e){return e.face*(.018+Math.sin(e.t*.11)*.035);}
+function drawEnemyBody(e) {
   if(drawVargul(e))return;
   if(drawAurelion(e))return;
   if(drawMorgra(e))return;
@@ -2042,7 +2050,7 @@ function drawEnemy(e) {
       if (e.wash && !o.wash) { o.wash = e.wash; o.washA = 0.5; }
       if (alpha < 0.6) o.noWeapon = true;
     } else if (e.st === 'stun') {                  // 기절: 무기를 떨군 채 비틀거림
-      o.leanW = (o.leanW || 0) + Math.sin(tick * MS * 0.012) * 2.5 - e.face * 2; o.crouch = Math.max(o.crouch || 0, 1);
+      o.leanW = (o.leanW || 0) - e.face * 2; o.crouch = Math.max(o.crouch || 0, 1);
       pose = mixP(BR[id], { ang: -25, hx: 3, hy: 11, lean: -2 }, 1);
     } else if (e.st === 'dead') {                  // 쓰러짐: 하얗게 깜빡이며 무너지고 사라진다
       const t = e.t * MS;
@@ -2226,7 +2234,7 @@ function bossHD(e) {
   if (id === 'boss1') {                            // 도살자 고라스
     if (e.st === 'intro') return iu < 0.25 ? 'jump_0' : iu < 0.36 ? 'jump_1' : iu < 0.48 ? 'jump_2' : iu < 0.8 ? 'rage_' + Math.floor(T / 130) % 2 : 'idle_0';
     if (e.st === 'dead') return dt < 260 ? 'death_0' : dt < 520 ? 'death_1' : dt < 880 ? 'death_2' : dt < 1300 ? 'death_3' : 'death_4';
-    if (e.st === 'stun') return 'stun_' + Math.floor(T / 240) % 2;
+    if (e.st === 'stun') return 'idle_0';
     if (e.st === 'down') return e.z > 0 ? 'hurt_2' : e.t > 48 ? 'stun_3' : 'stun_2';
     if (e.st === 'pat') {
       if (e.pat === 'slam') {
@@ -2250,7 +2258,7 @@ function bossHD(e) {
   if (id === 'boss2') {                            // 까마귀 마녀 모르그라
     if (e.st === 'intro') return iu > 0.5 && iu < 0.82 ? (iu < 0.6 ? 'soul_1' : 'soul_2') : 'idle_' + Math.floor(T / 220) % 6;
     if (e.st === 'dead') return dt < 220 ? 'death_0' : dt < 520 ? 'death_1' : dt < 820 ? 'death_2' : dt < 1120 ? 'death_3' : dt < 1450 ? 'death_4' : 'death_5';
-    if (e.st === 'stun') return Math.floor(T / 200) % 2 ? 'hurt_2' : 'hurt_3';
+    if (e.st === 'stun') return 'idle_0';
     if (e.st === 'down') return e.z > 0 ? 'hurt_2' : e.t > 48 ? 'hurt_3' : 'death_2';
     if (e.st === 'pat') {
       if (e.pat === 'teleport') return t < 250 ? 'flame_5' : t < 500 ? 'flame_6' : 'idle_0';
@@ -2270,7 +2278,7 @@ function bossHD(e) {
   if (id === 'boss4') {                            // 프로즌 그레이브로드
     if (e.st === 'intro') return iu < 0.42 ? 'idle_1' : iu < 0.56 ? 'wave_0' : iu < 0.66 ? 'wave_1' : iu < 0.9 ? 'intro_8' : 'idle_1';
     if (e.st === 'dead') return 'death_' + Math.min(6, Math.floor(dt / 230));
-    if (e.st === 'stun') return Math.floor(T / 300) % 2 ? 'death_1' : 'wave_1';
+    if (e.st === 'stun') return 'idle_1';
     if (e.st === 'down') return e.z > 0 ? 'death_1' : e.t > 48 ? 'wave_0' : 'death_2';
     if (e.st === 'pat') {
       if (e.pat === 'frost') {                     // 웅크렸다가 일어서며 검을 박아 얼음을 솟구치게 한다 (2페이즈는 두 번)
@@ -2297,7 +2305,7 @@ function bossHD(e) {
   if (id === 'boss5') {                            // 블랙 문 엠페러
     if (e.st === 'intro') return iu < 0.42 ? 'dash_0' : iu < 0.56 ? 'descent_2' : iu < 0.9 ? 'descent_6' : 'idle_1';
     if (e.st === 'dead') return 'death_' + Math.min(8, Math.floor(dt / 190));
-    if (e.st === 'stun') return Math.floor(T / 300) % 2 ? 'death_1' : 'death_2';
+    if (e.st === 'stun') return 'idle_0';
     if (e.st === 'down') return e.z > 0 || e.t > 48 ? 'death_1' : 'death_2';
     if (e.st === 'pat') {
       if (e.pat === 'eclipse') return t < 400 ? 'sk2_0' : t < 1300 ? 'sk2_2' : t < 2000 ? 'sk2_7' : t < 2500 ? 'sk2_0' : 'idle_1';   // 종언의 월식
@@ -2327,7 +2335,7 @@ function bossHD(e) {
     return iu >= 0.78 ? 'i11' : Q[Math.min(Q.length - 1, Math.floor(iu / 0.78 * Q.length))];
   }
   if (e.st === 'dead') { const Q = ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd9', 'd10', 'd11', 'd12', 'd13']; const k = Math.floor(dt / 150); return k < Q.length ? Q[k] : 'd14'; }
-  if (e.st === 'stun') return Math.floor(T / 200) % 2 ? 'h6' : 'h4';
+  if (e.st === 'stun') return 'i11';
   if (e.st === 'down') return e.z > 0 ? 'h2' : e.t > 48 ? 'd1' : 'd3';
   if (e.st === 'pat') {
     if (e.pat === 'slash3') {
@@ -2404,8 +2412,7 @@ function drawEnemyHD(e) {
   if (e.st === 'pat') {
     o.dx += e.bdx * e.face * SC / k; dy = e.bdy * SC; alpha = e.alpha;
     if (e.wash && !o.wash) { o.wash = e.wash; o.washA = 0.4; }
-  } else if (e.st === 'stun') o.lean = (o.lean || 0) + Math.sin(tick * MS * 0.012) * 3;
-  else if (e.st === 'dead') {
+  } else if (e.st === 'dead') {
     const t = e.t * MS, fade = id === 'boss3' || id === 'boss5' ? 1750 : 1500;
     alpha = t < fade ? 1 : Math.max(0, 1 - (t - fade) / (2000 - fade));
     if (t < 900 && Math.floor(t / 70) % 2 === 0) { o.wash = '#ffffff'; o.washA = 0.6; }

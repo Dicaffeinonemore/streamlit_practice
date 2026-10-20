@@ -176,7 +176,8 @@ function drawMorgra(e) {
   let id=e.p2shown?'p2_idle':e.walk?'walk':'idle',f=tick;
   if(e.st==='reviving') {const start=MORGRA_REVIVE.death+MORGRA_REVIVE.wait;id=e.t<start?'death':'revive';f=e.t<start?Math.min(e.t,109):e.t-start;}
   else if(e.st==='dead'){id=e.p2shown?'p2_death':'death';f=e.t;}
-  else if(e.st==='down'||e.st==='stun'){id='knockdown';f=e.st==='stun'?40:Math.min(109,e.t/60*110);}
+  else if(e.st==='down'){id='knockdown';f=Math.min(109,e.t/60*110);}
+  else if(e.st==='stun'){id=e.p2shown?'p2_hurt':'hurt';f=0;}
   else if(e.st==='hurt'){id=e.p2shown?'p2_hurt':'hurt';f=e.t*3;}
   else if(e.st==='intro'){id='intro';f=introT/MS;}
   else if(e.st==='pat'){id=e.morgraMove||morgraResolve(e,e.pat);f=e.pt/MS;}

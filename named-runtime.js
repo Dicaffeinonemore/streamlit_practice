@@ -55,6 +55,8 @@ function namedEnemyFrame(e) {
   }
   if(e.phaseT>0 && NAMED_SPRITES.clips[actor].awaken)return namedAt(actor,'awaken',1-e.phaseT/72);
   if(e.st==='dead')return namedAt(actor,'death',e.t*MS/(e.boss?1100:450));
+  if(e.boss&&e.st==='stun')return actor==='boss5'&&e.p2shown?
+    namedAt(actor,'awaken',1):namedClip(actor,'idle',0);
   if(!e.boss && e.st==='down' && e.z===0)return namedAt(actor,'death',e.t/35);
   if(e.st==='hurt'||e.st==='stun'||e.st==='down')return namedAt(actor,NAMED_SPRITES.clips[actor].hurt?'hurt':'idle',e.t/30);
   if(actor==='boss5') {

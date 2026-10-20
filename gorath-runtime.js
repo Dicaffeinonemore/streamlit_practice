@@ -12,7 +12,8 @@ function gorathTimed(name,time) {
 function gorathEnemyFrame(e) {
   if(e.st==='dead')return gorathTimed('death',e.t*MS);
   if(e.st==='down')return gorathFrame('knockdown',e.t/55);
-  if(e.st==='hurt'||e.st==='stun')return gorathFrame('hurt',e.st==='stun'?.65:e.t/25);
+  if(e.st==='stun')return gorathFrame('hurt',.1);
+  if(e.st==='hurt')return gorathFrame('hurt',e.t/25);
   if(e.st==='intro')return gorathFrame('intro',introT/INTRO_MS);
   if(e.st==='pat') {
     let t=e.pt;
