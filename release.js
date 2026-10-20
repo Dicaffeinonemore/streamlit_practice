@@ -65,7 +65,6 @@ function drawBossBar(boss) {
 let openingTime = 0;
 const OPENING_LINES = ['붉은 월식이 다섯 왕국을 삼켰다.', '무너진 왕좌 너머, 검은 성채가 깨어난다.', '잿더미에서 한 기사가 일어섰다.', '다섯 군주가 밤의 문을 지킨다.', '대검을 들어, 끝나지 않는 밤을 가르라.', '흑월의 기사'];
 function startOpening() {
-  globalThis.GAME_ASSETS?.enterStage('opening');
   clearInput(); openingTime = 0; scene = 'opening'; showScreen(null); AUDIO.silence();
   $('openingSkip').hidden = false;
 }

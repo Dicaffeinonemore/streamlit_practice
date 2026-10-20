@@ -78,8 +78,7 @@ function namedEnemyFrame(e) {
   return namedAt(actor,e.walk?'walk':'idle',tick*MS/(e.walk?720:1400),true);
 }
 function paintNamedFrame(frame, actor, shadow=false) {
-  const atlas = globalThis.NAMED_PAGES?.[frame?.sheet] || NAMED_ATLAS;
-  if(!frame || !atlas.complete || !atlas.naturalWidth)return false;
+  if(!frame || !NAMED_ATLAS.complete || !NAMED_ATLAS.naturalWidth)return false;
   const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=frame.scale*(actor.type==='brute' && !frame.source.startsWith('heavy')?1.12:1)*(actor.boss?BOSS_VISUAL_SCALE:1);
   if(shadow)drawShadow(actor.x-camX,actor.y,SPRITES[actor.d.sprite].sh,actor.z);
   ctx.save();
@@ -88,7 +87,7 @@ function paintNamedFrame(frame, actor, shadow=false) {
   ctx.globalAlpha=actor.st==='dead'?(actor.boss?clamp(1-(actor.t-65)/55,0,1):clamp(1-(actor.t-40)/25,0,1)):actor.alpha??1;
   ctx.imageSmoothingEnabled=false;
   if(actor.flash>0 && UX.options.flash)ctx.filter='brightness(2)';
-  ctx.drawImage(atlas,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);
+  ctx.drawImage(NAMED_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);
   ctx.restore();return true;
 }
 function drawNamedPlayer() {

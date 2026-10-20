@@ -17,15 +17,6 @@ const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></
 const allowed = new Set(['index.html', ...scripts]);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
-  if(process.env.MOBILE_SUITE && name==='mobile.html'){
-    res.setHeader('Content-Type','text/html; charset=utf-8');
-    res.end(fs.readFileSync(path.join(root,'static/mobile-test.html')));return;
-  }
-  if(process.env.MOBILE_SUITE && /^static\/game-assets\/[a-f0-9]{24}\.png$/.test(name)){
-    res.setHeader('Content-Type','image/png');
-    res.setHeader('X-Content-Type-Options','nosniff');
-    res.end(fs.readFileSync(path.join(root,name)));return;
-  }
   if(name==='favicon.ico'){res.writeHead(204).end();return;}
   if(name==='assets/bgm/boss.mp3'&&fs.existsSync(bgmPath)){res.setHeader('Content-Type','audio/mpeg');res.end(fs.readFileSync(bgmPath));return;}
   if(name==='production.html'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(embedded.replace('<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>',''));return;}
@@ -370,24 +361,6 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.VARGUL_CAPTURE_CONSOLE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
-    if(process.env.MOBILE_STREAMLIT){
-      await call('Page.navigate',{url:process.env.MOBILE_STREAMLIT});
-      let initialized=false;
-      for(let n=0;n<300;n++){
-        initialized=await evaluate("!!document.querySelector('iframe')?.contentWindow?.GAME_ASSETS");
-        if(initialized)break;
-        await delay(100);
-      }
-      assert(initialized,'Streamlit game iframe initializes');
-      const inGame=expression=>evaluate(`document.querySelector('iframe').contentWindow.eval(${JSON.stringify(expression)})`);
-      await require('./mobile-loading.cjs')({evaluate:inGame,call,errors,root});
-      return;
-    }
-    if(process.env.MOBILE_SUITE){
-      await ready(base+'/mobile.html');
-      await require('./mobile-loading.cjs')({evaluate,call,errors,root});
-      return;
-    }
     if(process.env.VARGUL_STAGE4){await ready(base+'/embedded.html');await require('./vargul-stage4.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_STAGE3){await ready(base+'/embedded.html');await require('./vargul-stage3.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_SUITE){await ready(base+'/embedded.html');await require('./vargul.cjs')({evaluate,call,errors,root,base,ready});return;}
