@@ -4,6 +4,11 @@ from pathlib import Path
 from PIL import Image
 from boss_art_common import pack_tiles
 
+# Logical frame units stay at x.55 of the source (hitboxes, anchors); the atlas keeps
+# source pixels and the runtime divides by HD when drawing.
+SCALE = .55
+HD = 1 / SCALE
+
 parser=argparse.ArgumentParser()
 parser.add_argument('sprites',type=Path)
 parser.add_argument('framedata',type=Path)
@@ -24,12 +29,13 @@ for m in catalog['motions']+fx['effects']+fx['parts']:
     clips[key]=[]
     for i in range(m['frames']):
         tile=im.crop((i*cell[0],0,(i+1)*cell[0],cell[1]))
-        tile=tile.resize((round(cell[0]*.55),round(cell[1]*.55)),Image.Resampling.NEAREST)
-        f={'atlas':[0,0,*tile.size],'anchor':[round(pivot[0]*.55),round(pivot[1]*.55)]}
+        box=tile.getbbox() or (0,0,*tile.size);tile=tile.crop(box)
+        f={'atlas':[0,0,*tile.size],'anchor':[round((pivot[0]-box[0])*SCALE,2),round((pivot[1]-box[1])*SCALE,2)]}
         clips[key].append(f);tiles.append((f,tile))
-atlas=pack_tiles(tiles);atlas.save(out/'atlas.png')
-meta={'clips':clips,'timing':timing,'scale':.55,'idleHeight':121,'projectiles':json.loads(data.read('game/data/bosses/morgra/projectiles.json')),'boss':json.loads(data.read('game/data/bosses/morgra/morgra_boss.json'))}
+tiles.sort(key=lambda t:-t[1].height)
+atlas=pack_tiles(tiles,4096,4096);atlas.save(out/'atlas.png')
+meta={'clips':clips,'timing':timing,'scale':SCALE,'hd':HD,'idleHeight':121,'projectiles':json.loads(data.read('game/data/bosses/morgra/projectiles.json')),'boss':json.loads(data.read('game/data/bosses/morgra/morgra_boss.json'))}
 (out/'frames.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
-b=io.BytesIO();atlas.save(b,format='PNG');meta['atlas']='data:image/png;base64,'+base64.b64encode(b.getvalue()).decode()
+b=io.BytesIO();atlas.save(b,format='PNG',optimize=True);meta['atlas']='data:image/png;base64,'+base64.b64encode(b.getvalue()).decode()
 (root/'morgra-art.js').write_text('const MORGRA_ART = '+json.dumps(meta,separators=(',',':'))+';\n',encoding='utf-8')
 print('Morgra:',len(tiles),'frames;',atlas.size)

@@ -10,7 +10,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
-from build_aurelion_art import build, validate
+from build_aurelion_art import BUDGET, build, validate
 from boss_art_common import pack_tiles
 
 
@@ -48,7 +48,7 @@ class BuildTests(unittest.TestCase):
                         if p.is_file(): archive.write(p, prefix + '/' + p.relative_to(self.original / source).as_posix())
             for name in ['a', 'b']:
                 report = build(temp / 'sprites.zip', temp / 'data.zip', temp / name)
-                self.assertLessEqual(report['art_bytes'], 4_000_000)
+                self.assertLessEqual(report['art_bytes'], BUDGET)
                 self.assertEqual(report['frames'], 148)
             self.assertEqual((temp / 'a/aurelion-art.js').read_bytes(), (temp / 'b/aurelion-art.js').read_bytes())
             self.assertEqual((temp / 'a/aurelion-art.js').read_bytes(), (ROOT / 'aurelion-art.js').read_bytes())

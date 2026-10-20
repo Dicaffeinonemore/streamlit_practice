@@ -23,9 +23,9 @@ function morgraFxFrame(id,f=0) {
 }
 function paintMorgra(f,x,y,face=1,alpha=1,k=BOSS_VISUAL_SCALE) {
   if(!f||!MORGRA_ATLAS.naturalWidth)return false;
-  const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor;
-  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;
-  ctx.drawImage(MORGRA_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
+  const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor,d=k/(MORGRA_ART.hd||1);   // atlas keeps source pixels
+  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(d);
+  ctx.drawImage(MORGRA_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
 }
 function beginMorgraRevival(e) {
   resetBossFx(e);e.hp=0;e.gr=0;e.grT=0;e.st='reviving';e.t=0;e.invuln=true;e.remove=false;
@@ -240,7 +240,7 @@ function getMorgraPortrait() {
   if(!MORGRA_ATLAS.naturalWidth)return null;
   if(!morgraPortrait) {
     morgraPortrait=document.createElement('canvas');morgraPortrait.width=morgraPortrait.height=64;morgraPortrait.hd=true;
-    const [x,y,w,h]=MORGRA_ART.clips.idle[0].atlas,c=morgraPortrait.getContext('2d');c.imageSmoothingEnabled=false;
+    const [x,y,w,h]=MORGRA_ART.clips.idle[0].atlas,c=morgraPortrait.getContext('2d');c.imageSmoothingQuality='high';
     c.drawImage(MORGRA_ATLAS,x+w*.15,y,w*.7,h*.55,0,0,64,64);
   }
   return morgraPortrait;

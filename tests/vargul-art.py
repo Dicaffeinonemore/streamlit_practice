@@ -28,13 +28,13 @@ assert len(manifest['entries']) == 37
 assert len([e for e in manifest['entries'] if e['role'] == 'unused']) == 6
 assert not meta['runtimeConnected']
 assert summary['art_bytes'] == (ROOT / 'vargul-art.js').stat().st_size
-assert summary['art_bytes'] <= 5_000_000, 'Lossless actor bundle exceeds 5 MB budget'
+assert summary['art_bytes'] <= 24_000_000, 'Actor bundle exceeds 24 MB budget'
 assert bundle['units']['depth'] == manifest['units']['depth'] == 1
 assert manifest['units']['x_height_speed'] == .5112
 assert abs(meta['worldHeight'] - 127.8) < 1e-9
 assert meta['phaseHeightRatio'] == 1
-assert meta['actorResampling'] == 'nearest'
-assert meta['actorColorEncoding'] == 'lossless WebP'
+assert meta['actorResampling'] == 'lanczos' and meta['hd'] == 3
+assert meta['actorColorEncoding'].endswith('lossless alpha')
 assert meta['transition']['crossfade_ticks'] == 8
 
 images = []
@@ -83,7 +83,7 @@ for e in manifest['entries']:
         sx = round(number * metadata['cell'][0] + metadata['pivot'][0] - metadata['frame_data'][number]['pivot'][0])
         sy = round(metadata['pivot'][1] - metadata['frame_data'][number]['pivot'][1])
         working_alpha = np.array(strip.crop((sx, sy, sx+w, sy+h)).getchannel('A'))
-        assert np.array_equal(a[:, :, 3], np.where(working_alpha >= bundle['actorAlphaThreshold'], 255, 0)), (id, number, 'alpha contract')
+        assert np.array_equal(a[:, :, 3], working_alpha), (id, number, 'alpha contract')
         green_pixels += int(((a[:, :, 1] > np.maximum(a[:, :, 0], a[:, :, 2]) + 28) & (a[:, :, 3] > 128)).sum())
     mask_id = 'mask_' + id
     if mask_id in meta['clips']:
@@ -98,7 +98,8 @@ for e in manifest['entries']:
         assert max(mask_nonzero[id]) > 0, (id, 'entire mask strip empty')
     motion_count += e['frames']
 assert motion_count == summary['motion_frames'] == 316
-assert green_pixels == 0, ('green spill remaining', green_pixels)
+# Lossy colour can leave a few isolated codec-noise pixels; real key spill is thousands.
+assert green_pixels <= 50, ('green spill remaining', green_pixels)
 
 for id, frames in meta['clips'].items():
     for f in frames:

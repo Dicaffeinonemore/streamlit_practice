@@ -40,9 +40,9 @@ function gorathEnemyFrame(e) {
 }
 function paintGorath(f,x,y,face=1,alpha=1,scale=1) {
   if(!f||!GORATH_ATLAS.naturalWidth)return false;
-  const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor;
-  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;
-  ctx.drawImage(GORATH_ATLAS,sx,sy,w,h,-ax*scale,-ay*scale,w*scale,h*scale);ctx.restore();return true;
+  const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor,k=scale*GORATH_ART.scale;   // atlas keeps source pixels
+  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(k);
+  ctx.drawImage(GORATH_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
 }
 function drawGorath(e) {
   if(e.type!=='boss1'||!GORATH_ATLAS.naturalWidth)return false;
@@ -72,9 +72,9 @@ function drawGorathHazards() {
     if(z.dead||z.owner?.type!=='boss1')continue;
     if(z.type==='hook') {
       const o=z.owner,x=o.x+o.face*28,y=o.y-62,dx=z.x-x,dy=z.y-z.h-y;
-      const f=gorathFrame('chain_tile'),[sx,sy,w,h]=f.atlas,len=Math.hypot(dx,dy);
-      ctx.save();ctx.translate(x-camX,y);ctx.rotate(Math.atan2(dy,dx));ctx.imageSmoothingEnabled=false;
-      for(let at=0;at<len;at+=w){const n=Math.min(w,len-at);ctx.drawImage(GORATH_ATLAS,sx,sy,n,h,at,-h/2,n,h);}
+      const f=gorathFrame('chain_tile'),[sx,sy,sw,sh]=f.atlas,k=GORATH_ART.scale,w=sw*k,h=sh*k,len=Math.hypot(dx,dy);
+      ctx.save();ctx.translate(x-camX,y);ctx.rotate(Math.atan2(dy,dx));smoothFor(k);
+      for(let at=0;at<len;at+=w){const n=Math.min(w,len-at);ctx.drawImage(GORATH_ATLAS,sx,sy,n/k,sh,at,-h/2,n,h);}
       ctx.restore();paintGorath(gorathFrame(z.latched?'hook_latched':'hook_fly',(z.age%160)/160),z.x,z.y-z.h,z.dir);
     } else if(z.type==='meat')paintGorath(gorathFrame('meat_fly',(z.age%160)/160),z.x,z.y-z.h,z.owner.face);
     else if(z.type==='splat')paintGorath(gorathFrame('meat_splat',z.age/360),z.x,z.y,1,clamp(1-z.age/650,0,1));
@@ -86,8 +86,8 @@ function getGorathPortrait() {
   if(!gorathPortrait) {
     const f=gorathFrame('idle'),[x,y,w,h]=f.atlas;
     gorathPortrait=document.createElement('canvas');gorathPortrait.width=gorathPortrait.height=64;gorathPortrait.hd=true;
-    const c=gorathPortrait.getContext('2d');c.imageSmoothingEnabled=false;
-    c.drawImage(GORATH_ATLAS,x+w*.22,y+5,w*.56,h*.48,0,0,64,64);
+    const c=gorathPortrait.getContext('2d');c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+    c.drawImage(GORATH_ATLAS,x+w*.22,y+5/GORATH_ART.scale,w*.56,h*.48,0,0,64,64);
   }
   return gorathPortrait;
 }
