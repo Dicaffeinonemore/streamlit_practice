@@ -21,7 +21,7 @@ module.exports=async({evaluate,call,errors,root,base,ready})=>{
     const index=await evaluate(`VARGUL_ATTACKS.filter(id=>id!==(${p2}?'taunt':'ultimate')).indexOf('${id}')`);
     for(let i=0;i<index;i++)await key('F6');
     await key('F7');assert.equal(await evaluate('vargulRepeat'),id,'F6/F7 chooses '+id);
-    const measured=await evaluate(`(()=>{const e=enemies[0];let ticks=0;while((!e.vargul?.stats.runs.length||e.st==='pat')&&ticks<900){updEnemy(e);updHazards();ticks++;}while(e.vargul.stats.runs.length<2&&ticks<1800){updEnemy(e);updHazards();ticks++;}return {first:structuredClone(e.vargul.stats.runs[0]),repeated:e.vargul.stats.runs.length===2,second:e.vargul.stats.runs[1]?.id,totalTicks:ticks};})()`);
+    const measured=await evaluate(`(()=>{const e=enemies[0];let ticks=0;while((!e.vargul?.stats.runs.length||e.st==='pat')&&ticks<900){updEnemy(e);updHazards();ticks++;}if('${id}'==='orb')strikeVargulOrbs(0,0,new Set(),{global:true,damage:VARGUL_RULES.orb.hp});while(e.vargul.stats.runs.length<2&&ticks<1800){updEnemy(e);updHazards();ticks++;}return {first:structuredClone(e.vargul.stats.runs[0]),repeated:e.vargul.stats.runs.length===2,second:e.vargul.stats.runs[1]?.id,totalTicks:ticks};})()`);
     assert.equal(measured.repeated,true,id+' repeats through actual debug keys');assert.equal(measured.second,id);
     result.repeatKeyRuns.push(measured);await key('F7');
   }
@@ -34,7 +34,7 @@ module.exports=async({evaluate,call,errors,root,base,ready})=>{
   await shot('sword-mark',`vargulShotSetup();startPat(enemies[0],'sword');vargulShotStep(58)`);
   await shot('cross-mark',`vargulShotSetup();startPat(enemies[0],'cross');vargulShotStep(68)`);
   await shot('cross-eruption',`vargulShotSetup();startPat(enemies[0],'cross');vargulShotStep(99)`);
-  await shot('orb-orbit',`vargulShotSetup();startPat(enemies[0],'orb');vargulShotStep(96);vargulDebug=true`);
+  await shot('orb-ai',`vargulShotSetup();startPat(enemies[0],'orb');vargulShotStep(96);vargulDebug=true`);
   await shot('ultimate-mark',`vargulShotSetup(true);startPat(enemies[0],'ultimate');vargulShotStep(116)`);
   await shot('ultimate-fall',`vargulShotSetup(true);startPat(enemies[0],'ultimate');vargulShotStep(139)`);
   await shot('ultimate-impact',`vargulShotSetup(true);startPat(enemies[0],'ultimate');vargulShotStep(146)`);
@@ -121,20 +121,21 @@ function checks(){
   for(const p2 of [false,true]){
     const e=setup(p2);startPat(e,'orb');for(let i=0;i<40;i++){updEnemy(e);updHazards();}const orbs=vargulHazards(e,'orb');check(orbs.length===2,'two orbs');
     const z=orbs[0];player.x=z.x-30;player.y=z.y;player.face=1;
-    const strike=new Set();strikeVargulOrbs(60,8,strike);check(z.hp===1,'first hit');z.inv=0;strikeVargulOrbs(60,8,strike);check(z.hp===1,'same swing cannot double-hit');
-    const gr=e.gr;strikeVargulOrbs(60,8,new Set());check(z.dead&&e.gr===gr+20,'second strike grants 20 groggy');
+    const strike=new Set();strikeVargulOrbs(60,8,strike);check(z.hp===20,'first hit deals actual10 damage');z.inv=0;strikeVargulOrbs(60,8,strike);check(z.hp===20,'same swing cannot double-hit');
+    strikeVargulOrbs(60,8,new Set());check(z.hp===10,'second normal strike');z.inv=0;
+    const gr=e.gr;strikeVargulOrbs(60,8,new Set());check(z.dead&&e.gr===gr+20,'HP zero grants 20 groggy');
     const remaining=vargulHazards(e,'orb')[0];vargulBreakOrb(remaining,true);
     check(e.vargul.cooldowns.orb===720,'orb cooldown starts after last gone');
-  }passed('orbs take two distinct strikes; +20 groggy; cooldown after last orb');
+  }passed('orbs have30 HP; actual strike damage; +20 groggy; cooldown after last orb');
   for(const p2 of [false,true]){
     const e=setup(p2);vargulEvent(e,{type:'orbs'});
-    const a=e.vargul;a.orbNext=1;
+    const orbs=vargulHazards(e,'orb');orbs[0].shotCooldown=1;orbs[1].shotCooldown=999;
     for(let i=0;i<21;i++){updEnemy(e);updHazards();}
     check(hazards.filter(z=>z.kind==='shard').length===(p2?2:1),'phase shard count');
-    player.st='down';a.orbNext=a.orbClock;const n=hazards.filter(z=>z.kind==='shard').length;
+    player.st='down';orbs[0].shotCooldown=0;const n=hazards.filter(z=>z.kind==='shard').length;
     for(let i=0;i<30;i++){updEnemy(e);updHazards();}
     check(hazards.filter(z=>z.kind==='shard').length===n,'no fire at downed player');
-  }passed('orb alternation / 1 or 2 shards / no shots at downed player');
+  }passed('independent orb shooting / 1 or 2 shards / no shots at downed player');
   {const e=setup();spawnVargul(e,'sword',100,420,0,{wait:45,active:6});vargulEvent(e,{type:'orbs'});e.hp=1;damageEnemy(e,1,false,0,true);
     check(e.hp===0&&e.phaseT===288&&e.invuln&&!vargulHazards(e).length,'phase begins only at zero; clears owned hazards');
     damageEnemy(e,99,true);check(e.hp===0,'transition immune');

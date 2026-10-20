@@ -453,7 +453,7 @@ function hurtPlayer(dmg, dir, kd, source=null) {
 function playerStrike(A) {
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
   strikeMorgraCrows(A.reach);
-  strikeVargulOrbs(A.reach);
+  strikeVargulOrbs(A.reach,8,p.hitSet,{damage:Math.round(A.dmg*mul)});
   let landed = false;
   for (const e of enemies) {
     if (!canHit(e) || p.hitSet.has(e)) continue;
@@ -527,7 +527,7 @@ function updSpecial() {
 function specialHit(last, k) {
   const p = player, f = p.face, mul = p.buff > 0 ? 1.5 : 1;
   const dmg = Math.round((last ? SPECIAL.fin : SPECIAL.slash) * mul), rx = last ? 110 : 80, ry = last ? 60 : 44;
-  strikeVargulOrbs(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry});
+  strikeVargulOrbs(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg});
   let any = false;
   for (const e of enemies) {
     if (!canHit(e)) continue;
@@ -551,7 +551,7 @@ function fireBolts() {
   const p = player, xs = [];
   p.castFired = true; flashT = 200; flashCol = '207,224,255'; shake = Math.max(shake, 22); hitStop = Math.max(hitStop, 4);
   sfx('bolt');
-  strikeVargulOrbs(0,0,new Set(),{global:true});
+  strikeVargulOrbs(0,0,new Set(),{global:true,damage:MAGIC.damage});
   for (const e of enemies) {
     if (e.st === 'dead' || e.st === 'intro' || e.x < camX - 20 || e.x > camX + VW + 20) continue;
     xs.push([e.x, e.y]);
@@ -600,7 +600,7 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
   const p = player, mul = p.buff > 0 ? 1.5 : 1;
   p.vargulSkillHits ||= new Map();
   if(!p.vargulSkillHits.has(phase))p.vargulSkillHits.set(phase,new Set());
-  strikeVargulOrbs(reach,behind,p.vargulSkillHits.get(phase),{depth:38});
+  strikeVargulOrbs(reach,behind,p.vargulSkillHits.get(phase),{depth:38,damage:Math.round(dmg*mul)});
   let landed = false;
   for (const e of enemies) {
     const key = phase + ':' + e.id;
@@ -1460,7 +1460,7 @@ function updHazards() {
         break;
       case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
         z.vargulHits ||= new Set();
-        strikeVargulOrbs(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26});
+        strikeVargulOrbs(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1))});
         if (z.red) {
           const from = z.x, step = Math.min(9, 520 - z.travel);
           z.x += z.dir * step; z.travel += step;
