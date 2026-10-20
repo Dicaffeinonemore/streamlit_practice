@@ -27,15 +27,15 @@ const GAME_ASSETS = (() => {
     if (!r.url) return Promise.resolve();
     if (r.pending) return r.pending;
     r.pending = new Promise((resolve, reject) => {
-      const timer = setTimeout(() => finish(new Error('이미지 로딩 시간 초과 (120초)')), 120000);
+      const timer = setTimeout(() => finish(new Error('Image loading timed out')), 30000);
       const ok = () => finish();
-      const fail = () => finish(new Error('이미지 다운로드 또는 디코딩 실패'));
+      const fail = () => finish(new Error('Image could not be loaded'));
       function finish(error) {
         clearTimeout(timer);
         r.image.removeEventListener('load', ok);
         r.image.removeEventListener('error', fail);
         r.cancel = null;
-        if (error) { error.assetURL = r.url; r.pending = null; reject(error); }
+        if (error) { r.pending = null; reject(error); }
         else resolve();
       }
       r.image.addEventListener('load', ok);
@@ -77,13 +77,9 @@ const GAME_ASSETS = (() => {
     }
     try {
       // Sequential decoding avoids a large transient memory spike on iOS.
-      const needed = records.filter(r => active.has(r.group));
-      let completed = 0;
-      for (const r of needed) {
+      for (const r of records) {
         if (token !== generation) return;
-        status(`이미지 준비 중… ${completed} / ${needed.length}`);
-        await load(r);
-        completed++;
+        if (active.has(r.group)) await load(r);
       }
       if (token !== generation) return;
       api.loading = false;
@@ -92,32 +88,6 @@ const GAME_ASSETS = (() => {
       if (token !== generation) return;
       api.error = error.message;
       status('이미지를 불러오지 못했습니다. 연결을 확인해 주세요.', true);
-      const detail = document.createElement('p');
-      detail.style.cssText = 'max-width:90vw;overflow-wrap:anywhere;font-size:13px';
-      detail.textContent = error.message;
-      panel.append(detail);
-      if (error.assetURL) {
-        const link = document.createElement('a');
-        link.href = error.assetURL; link.target = '_blank'; link.rel = 'noopener';
-        link.style.color = '#9bd4ff';
-        link.textContent = '실패한 이미지 직접 열기';
-        panel.append(link);
-        // HEAD inspects the deployment route without downloading another copy.
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 8000);
-        try {
-          const response = await fetch(error.assetURL, {method:'HEAD', cache:'no-store', signal:controller.signal});
-          if (token !== generation) return;
-          const type = response.headers.get('content-type') || '알 수 없음';
-          api.error = `${error.message} · HTTP ${response.status} · ${type}`;
-          detail.textContent = api.error;
-          if (response.status === 404) detail.append(' — 배포 파일 경로나 정적 파일 설정을 확인해야 합니다.');
-          else if (response.ok && !type.startsWith('image/')) detail.append(' — 이미지 대신 다른 응답이 반환되었습니다.');
-          else if (response.ok) detail.append(' — 파일 경로는 응답합니다. 전송 지연이나 이미지 디코딩 실패를 확인해야 합니다.');
-        } catch {
-          if (token === generation) detail.append(' — 서버 응답 확인도 실패했습니다.');
-        } finally { clearTimeout(timer); }
-      }
     }
   };
   api.stats = () => ({
