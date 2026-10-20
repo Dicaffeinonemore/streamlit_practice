@@ -11,7 +11,7 @@
   body { display: flex; align-items: center; justify-content: center; }
   #wrap { position: relative; width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16 / 9;
     container-type: size; background: #000; box-shadow: 0 0 40px #000; }
-  canvas { width: 100%; height: 100%; display: block; image-rendering: auto; }
+  canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
 
   .screen { position: absolute; inset: 0; z-index: 10; display: none; flex-direction: column; align-items: center;
     justify-content: center; text-align: center; background: rgba(8, 6, 20, .86); font-size: 2cqw; }

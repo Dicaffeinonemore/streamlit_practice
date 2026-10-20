@@ -5,6 +5,19 @@
 const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 const W = 960, H = 540;
+// 캔버스 실제 픽셀은 화면 크기에 맞춘다 (게임 좌표는 그대로 960x540). 4K에서 과부하 없게 최대 3배
+let RENDER_K = 1;
+function fitCanvas() {
+  RENDER_K = clamp((cv.clientWidth || W) * (window.devicePixelRatio || 1) / W, 1, 3);
+  cv.width = Math.round(W * RENDER_K); cv.height = Math.round(H * RENDER_K);
+}
+addEventListener('resize', fitCanvas);
+// 스프라이트 보간: 화면에서 2배 이상 커지면 도트를 또렷하게(nearest), 그보다 작으면 고품질로 부드럽게 줄인다.
+// k = 그릴 크기 / 원본 픽셀 크기. 현재 변환(줌, 해상도 배율)까지 곱해서 판단한다
+function smoothFor(k, c = ctx) {
+  const m = c.getTransform();
+  c.imageSmoothingEnabled = Math.hypot(m.a, m.b) * Math.abs(k) < 2; c.imageSmoothingQuality = 'high';
+}
 const GTOP = 340, GBOT = 500;          // 걸어 다닐 수 있는 바닥 영역(깊이)
 const MS = 1000 / 60;                  // 1틱(60fps) = 16.7ms. 공격 모션은 ms 단위로 만든다
 const SC = 2;                          // 도트 1칸 = 월드 2px
@@ -2935,6 +2948,7 @@ function loop(t) {
     const processed = update(); acc -= MS;
     if (processed) for (const k in pressed) { pressed[k] -= MS; if (pressed[k] <= 0) delete pressed[k]; }
   }
+  ctx.setTransform(RENDER_K, 0, 0, RENDER_K, 0, 0);   // 960x540 좌표계를 실제 해상도로 확대
   if (scene === 'title' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
   else render();
@@ -2945,4 +2959,5 @@ function loop(t) {
   requestAnimationFrame(loop);
 }
 UX.mount();
+fitCanvas();
 requestAnimationFrame(t => { last = t; loop(t); });
