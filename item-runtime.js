@@ -42,7 +42,12 @@ function prepareItemSprite(image) {
 }
 const ITEM_READY = Promise.all(Object.entries(ITEM_ART).map(([key, src]) => new Promise(resolve => {
   const image = new Image();
-  image.onload = () => { ITEM_SPRITES[key] = prepareItemSprite(image); resolve(); };
+  image.onload = () => {
+    ITEM_SPRITES[key] = globalThis.ITEM_ART_PREPARED
+      ? {image, x:0, y:0, w:image.naturalWidth, h:image.naturalHeight}
+      : prepareItemSprite(image);
+    resolve();
+  };
   image.onerror = () => resolve();
   image.src = src;
 })));
