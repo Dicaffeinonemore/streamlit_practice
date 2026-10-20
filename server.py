@@ -5,7 +5,7 @@
   2) Streamlit:      streamlit run server.py   (Streamlit Cloud 배포 포함)
 
 Streamlit 환경에서는 소켓 서버를 열 수 없으므로(포트 바인딩 오류),
-게임 코드는 iframe에 넣고 이미지 파일은 정적 경로에서 필요한 스테이지만 불러옵니다.
+HTML/JS 파일을 하나로 합쳐 st.components.v1.html 로 화면에 직접 넣습니다.
 """
 import http.server
 import base64
@@ -35,15 +35,7 @@ def in_streamlit() -> bool:
         return False
 
 
-def build_single_html(asset_base="app/static/game-assets/") -> str:
-    """Small iframe document with external, stage-scoped image resources."""
-    from asset_bundle import build_html
-
-    html = build_html(SCRIPTS, asset_base)
-    return html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
-
-
-def build_legacy_html() -> str:
+def build_single_html() -> str:
     """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     # 보스전 기본 mp3 가 있으면 data URL 로 넣는다 (srcdoc 에서는 상대 경로 파일을 읽을 수 없다)
@@ -114,9 +106,7 @@ def run_streamlit():
             "width:min(100%,calc((100vh - 130px)*16/9))!important;height:auto!important;aspect-ratio:16/9}</style>",
             unsafe_allow_html=True,
         )
-    prefix = st.get_option("server.baseUrlPath").strip("/")
-    asset_base = f"/{prefix + '/' if prefix else ''}app/static/game-assets/"
-    html = build_reference_html() if review else build_single_html(asset_base)
+    html = build_reference_html() if review else build_single_html()
     height = 1000 if review else 680
     if hasattr(st, "iframe"):          # 최신 Streamlit (components.v1.html 은 제거 예정)
         st.iframe(html, height=height)
@@ -132,20 +122,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def end_headers(self):
         # 개발 중 수정사항이 바로 반영되도록 캐시 비활성화
-        self.send_header("Cache-Control", "public, max-age=31536000, immutable"
-                         if self.path.startswith("/static/game-assets/") else "no-store")
+        self.send_header("Cache-Control", "no-store")
         super().end_headers()
-
-    def do_GET(self):
-        if self.path.split("?", 1)[0] in ("/", "/index.html"):
-            data = build_single_html("static/game-assets/").encode("utf-8")
-            self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(data)))
-            self.end_headers()
-            self.wfile.write(data)
-            return
-        super().do_GET()
 
 
 def bind_server() -> socketserver.TCPServer:

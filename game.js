@@ -242,7 +242,7 @@ function beginGame(cinematic = false) {
   player = newPlayer(0);
   startStage(0);
 }
-function toTitle() { clearInput(); practice = false; scene = 'title'; showScreen('title'); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); globalThis.GAME_ASSETS?.enterStage(null); }
+function toTitle() { clearInput(); practice = false; scene = 'title'; showScreen('title'); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
 function pauseGame(reason = 'ESC 또는 계속하기') {
   if (!['play', 'intro', 'bossintro'].includes(scene)) return;
   resumeScene = scene; clearInput(); scene = 'pause'; $('pauseReason').textContent = reason; showScreen('pause'); AUDIO.pause(true);
@@ -325,7 +325,6 @@ function onKeyOnce(code) {
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
-  globalThis.GAME_ASSETS?.enterStage(i);
   vargulRemains=[];
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
@@ -2929,11 +2928,6 @@ function renderIdle() {   // 타이틀/튜토리얼 뒤 배경: 스테이지 풍
 let last = 0, acc = 0;
 function loop(t) {
   const real = Math.min(100, t - last); last = t;
-  if (globalThis.GAME_ASSETS?.loading) {
-    acc = 0;
-    requestAnimationFrame(loop);
-    return;
-  }
   const frozen = ['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene);
   acc += frozen ? 0 : slowT > 0 ? real * 0.3 : real;
   if (!frozen && slowT > 0) slowT -= real;
