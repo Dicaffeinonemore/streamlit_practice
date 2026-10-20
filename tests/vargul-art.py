@@ -28,11 +28,13 @@ assert len(manifest['entries']) == 37
 assert len([e for e in manifest['entries'] if e['role'] == 'unused']) == 6
 assert not meta['runtimeConnected']
 assert summary['art_bytes'] == (ROOT / 'vargul-art.js').stat().st_size
-assert summary['art_bytes'] <= (ROOT / 'aurelion-art.js').stat().st_size, 'Runtime art exceeds Aurelion budget'
+assert summary['art_bytes'] <= 5_000_000, 'Lossless actor bundle exceeds 5 MB budget'
 assert bundle['units']['depth'] == manifest['units']['depth'] == 1
 assert manifest['units']['x_height_speed'] == .5112
 assert abs(meta['worldHeight'] - 127.8) < 1e-9
-assert abs(meta['phaseHeightRatio'] - 412 / 383) < 1e-9
+assert meta['phaseHeightRatio'] == 1
+assert meta['actorResampling'] == 'nearest'
+assert meta['actorColorEncoding'] == 'lossless WebP'
 assert meta['transition']['crossfade_ticks'] == 8
 
 images = []
@@ -72,6 +74,9 @@ for e in manifest['entries']:
         assert metadata['body_scale']['reference']['drawing'] == 19
         assert [f['source_index'] for f in metadata['frame_data']] == list(range(1, 20))
     for number, f in enumerate(meta['clips'][id]):
+        measured = metadata['frame_data'][number]
+        assert abs(measured['body_extent'] * measured['source_scale'] /
+                   measured['pose_height'] - bundle['idleHeight']) < 1e-6, (id, number, 'fixed body size')
         x, y, w, h = f['atlas']
         image = images[f['sheet']].crop((x, y, x + w, y + h))
         a = np.array(image).astype(np.int16)
