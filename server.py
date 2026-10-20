@@ -115,6 +115,10 @@ def run_streamlit():
             unsafe_allow_html=True,
         )
     prefix = st.get_option("server.baseUrlPath").strip("/")
+    if not review and not st.get_option("server.enableStaticServing"):
+        st.error("게임 이미지 제공 설정이 꺼져 있습니다. .streamlit/config.toml의 "
+                 "[server] enableStaticServing = true를 배포한 뒤 앱을 Reboot 해주세요.")
+        st.stop()
     asset_base = f"/{prefix + '/' if prefix else ''}app/static/game-assets/"
     html = build_reference_html() if review else build_single_html(asset_base)
     height = 1000 if review else 680
