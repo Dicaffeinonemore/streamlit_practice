@@ -112,18 +112,22 @@ function vargulEvent(e,event){
   }else if(event.type==='turn'){
     e.face*=-1;a.travel=0;a.lockedY=null;
   }else if(event.type==='ultimate_mark'){
-    a.ultimate=spawnVargul(e,'ultimate',player.x,player.y,0,{stage:'tracking',life:116,hit:false,impactAge:null});a.ultimateUsed=true;
+    a.ultimate=spawnVargul(e,'ultimate',player.x,player.y,0,{stage:'tracking',hit:false,impactAge:null,wavesEmitted:0});a.ultimateUsed=true;
   }else if(event.type==='ultimate_lock'){
     if(a.ultimate)a.ultimate.stage='fixed';
   }else if(event.type==='ultimate_fall'){
-    if(a.ultimate)a.ultimate.stage='fall';
+    if(a.ultimate){a.ultimate.stage='fall';e.x=a.ultimate.x;e.y=a.ultimate.y;}
   }else if(event.type==='ultimate_impact'){
-    if(a.ultimate){a.ultimate.stage='impact';a.ultimate.impactAge=a.ultimate.age/MS;}
+    if(a.ultimate){
+      a.ultimate.stage='impact';a.ultimate.impactAge=Math.floor((a.ultimate.age+MS)/MS+1e-6);
+      e.x=a.ultimate.x;e.y=a.ultimate.y;
+    }
+    e.z=0;
+    vargulFx(e,'spear_flash',e.x,e.y,12,{life:12,width:38,height:60});
     shake=Math.max(shake,24);sfx('land');
   }else if(event.type==='ultimate_land'){
-    const mark=a.ultimate;
-    if(mark){e.x=clamp(mark.x-e.face*55,camX+28,camX+VW-28);e.y=clamp(mark.y-18,GTOP+10,GBOT);}
-    e.z=0;sfx('land');
+    // Already landed at impact. Begin the existing90-tick punish window here.
+    e.z=0;
   }
 }
 function vargulAttackBox(e,t){
@@ -147,7 +151,7 @@ function runVargulPattern(e){
   while(a.timeline&&a.processed<target&&e.st==='pat'){
     a.processed++;const t=a.timeline[a.cursor];
     if(!t){finishVargulPattern(e);return;}
-    a.current=t;e.invuln=!!t.hidden;
+    a.current=t;e.invuln=!!(t.hidden||t.invulnerable);
     const oldX=e.x;
     for(const event of t.events||[])vargulEvent(e,event);
     if(t.align){
@@ -165,8 +169,11 @@ function runVargulPattern(e){
     }
     if(a.move==='ultimate'){
       const f=a.cursor;
-      if(f<45&&f>=vargulWarningTicks(e,30))e.z=(f-vargulWarningTicks(e,30))/(45-vargulWarningTicks(e,30))*240;
-      if(f>=45&&f<160)e.z=0;
+      const height=VARGUL_RULES.ultimate.riseHeight;
+      if(t.label==='leap')e.z=(t.local+1)/t.segmentTicks*height;
+      else if(t.hidden)e.z=height;
+      else if(t.label==='fall')e.z=height*(1-t.local/t.segmentTicks);
+      else if(f>=141)e.z=0;
     }
     if(t.attack){
       if(t.first){a.run.active.push({id:t.attack.id,elapsed:a.processed,drawing:t.drawing});sfx('swing');}
@@ -240,7 +247,7 @@ function vargulPose(e){
   if(e.st==='intro')return pose('p1_intro',introT/MS/VARGUL_RULES.intro);
   if(e.st==='dead')return pose('death',Math.min(.999,e.t/VARGUL_RULES.death));
   if(e.st==='down')return pose(p+'knockdown',Math.min(.999,e.t/61));
-  if(e.st==='stun')return pose(p+'knockdown',.5);
+  if(e.st==='stun')return {clip:p+'hurt',drawing:1};
   if(e.st==='hurt'){
     const clip=p+'hurt',count=VARGUL_ART.clips[clip].length,half=count/2;
     return {clip,drawing:Math.min(count,(e.hheavy?half:0)+1+Math.min(half-1,Math.floor(e.t/11*half)))};
@@ -357,15 +364,30 @@ function updateVargulHazard(z){
     if(t>=180||z.x<camX-100||z.x>camX+VW+100||z.h<0)z.dead=true;
   }else if(z.kind==='ultimate'){
     if(z.stage==='tracking'){z.x=p.x;z.y=p.y;}
-    if(z.stage==='impact'&&t-z.impactAge<8&&!z.hit){
+    if(z.stage==='impact'&&t-z.impactAge<VARGUL_RULES.ultimate.impactTicks&&!z.hit){
       const u=VARGUL_RULES.ultimate,dx=p.x-z.x,dy=p.y-z.y;
       const center=(dx/u.rx)**2+(dy/u.ry)**2<=1&&p.z<200*.5112;
-      const outer=!center&&(dx/u.outerX)**2+(dy/u.outerY)**2<=1&&p.z<=u.outerHeight;
-      if((center||outer)&&vargulHurt(e,{damage:center?u.damage:u.outerDamage,knockdown:true},z))z.hit=true;
+      if(center&&vargulHurt(e,{damage:u.damage,knockdown:true},z))z.hit=true;
     }
-    if(z.stage==='impact'&&t-z.impactAge>=24)z.dead=true;
+    const u=VARGUL_RULES.ultimate,emitted=z.wavesEmitted||0;
+    if(z.stage==='impact'&&emitted<u.waveCount&&t-z.impactAge>=u.waveDelay+emitted*u.waveInterval){
+      z.wavesEmitted=emitted+1;spawnVargul(e,'ice_wave',z.x,z.y,0,{hit:false,pulse:emitted});vargulLogEvent(e,'ultimate_wave');
+    }
+    if(z.stage==='impact'&&t-z.impactAge>=u.waveDelay+(u.waveCount-1)*u.waveInterval+1)z.dead=true;
+  }else if(z.kind==='ice_wave'){
+    const u=VARGUL_RULES.ultimate,band=vargulIceWaveBand(t);
+    const distance=Math.hypot(p.x-z.x,(p.y-z.y)*u.outerX/u.outerY);
+    if(t<u.waveTicks&&!z.hit&&distance>=band.inner&&distance<=band.outer&&p.z<=u.outerHeight&&
+      vargulHurt(e,{damage:u.outerDamage,knockdown:true},z))z.hit=true;
+    if(t>=u.waveTicks)z.dead=true;
   }
   return true;
+}
+function vargulIceWaveBand(age){
+  const u=VARGUL_RULES.ultimate,t=clamp(age,0,u.waveTicks-1);
+  return {radius:u.outerX*(t+1)/u.waveTicks,
+    inner:Math.max(0,u.outerX*t/u.waveTicks-u.waveHalfWidth),
+    outer:Math.min(u.outerX,u.outerX*(t+1)/u.waveTicks+u.waveHalfWidth)};
 }
 function paintVargul(frame,x,y,face=1,alpha=1,k=VARGUL_ART.scale,add=false){
   const im=frame&&VARGUL_SHEETS[frame.sheet];if(!im?.naturalWidth)return false;
@@ -391,28 +413,70 @@ function paintVargulCrossWarning(progress,z,alpha){
 }
 function vargulTelegraph(e){const t=e.vargul?.current;return e.st==='pat'&&t?{warning:!!t.warning,white:!!t.white}:null;}
 function vargulAuraVisible(e){return e.p2shown&&!e.phaseT&&!['down','stun','dead','intro'].includes(e.st)&&!e.vargul?.current?.hidden;}
+function vargulVisualScale(pose){return VARGUL_ART.scale*(VARGUL_VISUAL_SCALES[pose.clip]?.[pose.drawing-1]??1);}
+function vargulComboEffectData(e){
+  const a=e.vargul,t=a?.current;
+  if(e.st!=='pat'||a?.move!=='combo'||!t)return null;
+  let frame=t,active=!!t.attack?.id.startsWith('combo');
+  if(!active){
+    if(t.phase!=='S')return null;
+    const ahead=a.timeline.slice(a.cursor,a.cursor+8).find(v=>v.attack?.id.startsWith('combo'));
+    if(!ahead)return null;frame=ahead;
+  }
+  return {active,id:frame.attack.id,box:vargulAttackBox(e,frame),depth:frame.attack.depth};
+}
+function drawVargulComboEffect(e,ground){
+  const fx=vargulComboEffectData(e);if(!fx)return;
+  const [bx,bh,w,h]=fx.box,x=e.x-camX+(e.face>0?bx:-(bx+w));
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  if(ground){
+    const top=e.y-fx.depth,bottom=e.y+fx.depth;
+    const mist=ctx.createLinearGradient(0,top,0,bottom);
+    mist.addColorStop(0,'rgba(104,205,255,0)');mist.addColorStop(.5,fx.active?'rgba(104,205,255,.28)':'rgba(104,205,255,.10)');mist.addColorStop(1,'rgba(104,205,255,0)');
+    ctx.fillStyle=mist;ctx.fillRect(x,top,w,fx.depth*2);
+    ctx.strokeStyle=fx.active?'rgba(159,235,255,.85)':'rgba(104,205,255,.35)';ctx.lineWidth=fx.active?1.4:.8;
+    ctx.strokeRect(x,top,w,fx.depth*2);
+    if(fx.active){ctx.fillStyle='#bbf3ff';for(let i=0;i<6;i++){
+      const px=x+w*(i+.5)/6,py=e.y+Math.sin(i*2.3+tick*.6)*fx.depth*.7;
+      ctx.beginPath();ctx.moveTo(px,py-3);ctx.lineTo(px+2,py);ctx.lineTo(px,py+3);ctx.lineTo(px-2,py);ctx.closePath();ctx.fill();
+    }}
+  }else if(fx.active){
+    const top=e.y-e.z-bh-h,center=top+h/2;
+    const beam=ctx.createLinearGradient(0,top,0,top+h);
+    beam.addColorStop(0,'rgba(99,201,255,0)');beam.addColorStop(.5,'rgba(153,234,255,.32)');beam.addColorStop(1,'rgba(99,201,255,0)');
+    ctx.fillStyle=beam;ctx.fillRect(x,top,w,h);
+    ctx.strokeStyle='#ddfaff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,center);ctx.lineTo(x+w,center);ctx.stroke();
+    // Vertical sparkle stays inside the actual blade-height interval.
+    const tip=e.face>0?x+w:x;ctx.strokeStyle='#9feaff';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(tip,top);ctx.lineTo(tip,top+h);ctx.stroke();
+  }
+  ctx.restore();
+}
 function drawVargul(e){
   if(!isVargul(e))return false;
   const a=vargulData(e),pose=vargulPose(e),frame=VARGUL_ART.clips[pose.clip]?.[pose.drawing-1];
   if(pose.hidden)return true;
   if(!VARGUL_SHEETS[frame?.sheet]?.naturalWidth)return false;
+  const visualScale=vargulVisualScale(pose);
+  drawVargulComboEffect(e,true);
   drawShadow(e.x-camX,e.y,SPRITES.boss4.sh,e.z);
-  if(vargulAuraVisible(e))paintVargulFx('frost_aura',(tick%96)/96,e.x,e.y,150,170,.38);
+  if(vargulAuraVisible(e))paintVargulFx('frost_aura',(tick%96)/96,e.x,e.y-e.z,150,170,.38);
   ctx.save();const tele=vargulTelegraph(e);
   if(e.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
   else if(tele?.white&&UX.options.flash&&Math.floor(e.pt/90)%2===0)ctx.filter='brightness(2)';
   const crossfade=e.phaseT>0&&a.transitionAge>=VARGUL_RULES.down+VARGUL_RULES.awaken;
   if(crossfade){
     const u=(a.transitionAge-VARGUL_RULES.down-VARGUL_RULES.awaken)/8;
-    paintVargul(frame,e.x,e.y,e.face,1-u);paintVargul(VARGUL_ART.clips.p2_idle[0],e.x,e.y,e.face,u);
-  }else paintVargul(frame,e.x,e.y-e.z,e.face);
+    paintVargul(frame,e.x,e.y,e.face,1-u,visualScale);paintVargul(VARGUL_ART.clips.p2_idle[0],e.x,e.y,e.face,u,vargulVisualScale({clip:'p2_idle',drawing:1}));
+  }else paintVargul(frame,e.x,e.y-e.z,e.face,1,visualScale);
   ctx.restore();
   if(vargulAuraVisible(e)){
     const mask=VARGUL_ART.clips['mask_'+pose.clip]?.[pose.drawing-1],pulse=.20+.65*(.5+.5*Math.sin(tick*Math.PI*2/90));
-    if(mask)paintVargul(mask,e.x,e.y-e.z,e.face,pulse,VARGUL_ART.scale,true);
+    if(mask)paintVargul(mask,e.x,e.y-e.z,e.face,pulse,visualScale,true);
   }
   const geo=VARGUL_MEASUREMENTS[pose.clip]?.[pose.drawing-1];
   if(geo){e.tipX=e.x+e.face*geo.tip[0];e.tipH=e.z+geo.tip[1];}
+  drawVargulComboEffect(e,false);
   if(vargulDebug)drawVargulBoxes(e);
   return true;
 }
@@ -425,7 +489,7 @@ function drawVargulHazards(ground=false){
   if(!USE_VARGUL_V136)return;
   for(const z of hazards){
     if(z.type!=='vargul'||z.dead)continue;
-    const t=Math.max(0,z.age/MS),floor=['sword','cross','ultimate'].includes(z.kind),waiting=floor&&!z.boom&&z.stage!=='impact';
+    const t=Math.max(0,z.age/MS),floor=['sword','cross','ultimate'].includes(z.kind),waiting=z.kind==='ice_wave'||floor&&!z.boom&&z.stage!=='impact';
     if(ground!==!!waiting)continue;
     if(z.kind==='fx')paintVargulFx(z.fx,t/z.life,z.x,z.y-z.h+(z.height||80)/2,z.width||100,z.height||80,1-t/z.life*.65,z.face);
     else if(z.kind==='sword'||z.kind==='cross'){
@@ -462,13 +526,25 @@ function drawVargulHazards(ground=false){
       if(z.stage!=='impact'){
         const alpha=UX.options.flash?.5+.4*Math.sin(t*(z.stage==='tracking'?.22:1))**2:.8;
         paintVargulFx('ultimate_warning',(t%33)/33,z.x,z.y+u.ry,u.rx*2,u.ry*2,alpha);
-        if(z.stage==='fall')paintVargulFx('giant_spear',clamp((t-90)/6,0,1),z.x,z.y,90,260);
+        // The boss itself dives onto this mark; no detached giant spear.
       }else{
-        paintVargulFx('glacier_impact',(t-z.impactAge)/24,z.x,z.y+40,u.outerX*2,180);
-        ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='#adebff';ctx.lineWidth=3;ctx.beginPath();
-        ctx.ellipse(z.x-camX,z.y,u.outerX,u.outerY,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+        if(t-z.impactAge<24)paintVargulFx('glacier_impact',(t-z.impactAge)/24,z.x,z.y+40,u.outerX*2,180);
       }
-      if(vargulDebug){ctx.save();ctx.strokeStyle='#ff526e';for(const [rx,ry] of [[u.rx,u.ry],[u.outerX,u.outerY]]){ctx.beginPath();ctx.ellipse(z.x-camX,z.y,rx,ry,0,0,Math.PI*2);ctx.stroke();}ctx.restore();}
+      if(vargulDebug){ctx.save();ctx.strokeStyle='#ff526e';ctx.beginPath();ctx.ellipse(z.x-camX,z.y,u.rx,u.ry,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
+    }else if(z.kind==='ice_wave'){
+      const u=VARGUL_RULES.ultimate,band=vargulIceWaveBand(Math.floor(t+1e-6)),ratio=u.outerY/u.outerX,x=z.x-camX;
+      ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=1-t/u.waveTicks*.4;
+      ctx.fillStyle='rgba(111,218,255,.32)';ctx.beginPath();
+      ctx.ellipse(x,z.y,band.outer,band.outer*ratio,0,0,Math.PI*2);
+      ctx.ellipse(x,z.y,band.inner,band.inner*ratio,0,0,Math.PI*2,true);ctx.fill('evenodd');
+      ctx.strokeStyle='#b3f2ff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(x,z.y,band.radius,band.radius*ratio,0,0,Math.PI*2);ctx.stroke();
+      for(let i=0;i<16;i++){
+        const angle=i/16*Math.PI*2,px=x+Math.cos(angle)*band.radius,py=z.y+Math.sin(angle)*band.radius*ratio;
+        ctx.beginPath();ctx.moveTo(px-2,py);ctx.lineTo(px,py-5);ctx.lineTo(px+2,py);ctx.stroke();
+      }
+      if(vargulDebug){ctx.strokeStyle='#ff526e';for(const radius of [band.inner,band.outer]){
+        ctx.beginPath();ctx.ellipse(x,z.y,radius,radius*ratio,0,0,Math.PI*2);ctx.stroke();
+      }}ctx.restore();
     }
   }
 }

@@ -246,7 +246,7 @@ function updateAurelionState(e) {
   }
   const pose=aurelionPose(e),d=aurelionDrawing(pose.id,pose.f),boxes=d.hurtboxes||[];
   if(boxes.length)e.hw=(Math.max(...boxes.map(b=>b[0]+b[2]))-Math.min(...boxes.map(b=>b[0])))*AURELION_K/2;
-  // A stun borrows the fallen pose, not its immunity: common groggy remains punishable.
+  // Groggy uses a standing hurt pose and keeps common vulnerability.
   if(!e.phaseT)e.invuln=e.st!=='stun'&&aurelionIn(aurelionMoves[pose.id].invulnerable,pose.f);
   return false;
 }
@@ -256,7 +256,7 @@ function aurelionPose(e) {
   if(e.st==='intro')return {id:'intro',f:introT/MS};
   if(e.st==='dead')return {id:'death',f:Math.min(120,e.t)};
   if(e.st==='down')return {id:'knockdown',f:Math.min(99,e.t/60*100)};
-  if(e.st==='stun')return {id:'knockdown',f:40};
+  if(e.st==='stun')return {id:'hurt',f:0};
   if(e.st==='hurt')return {id:'hurt',f:(e.hheavy?20:0)+Math.min(19,e.t*2)};
   if(e.st==='pat'&&a.current)return {id:a.move,f:a.current.source};
   return {id:e.walk?'walk':'idle',f:tick};
