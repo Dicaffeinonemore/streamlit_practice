@@ -316,13 +316,13 @@ function combatChecks() {
     reset(); startStage(s); scene = 'play'; hitStop = 0;
     for (let w = 0; w < stage.waves.length; w++) {
       camX = stage.waves[w].at; player.x = camX + 256; camLock = false; waveIdx = w; enemies = []; update();
-      if (scene === 'bossintro') for (let i = 0; i < Math.ceil(vargulIntroDuration(introBoss)/MS)+1; i++) update();
+      if (scene === 'bossintro') for (let i = 0; i < Math.ceil(bossIntroDuration(introBoss)/MS)+1; i++) update();
       for (const e of [...enemies]) if (e.st !== 'dead') damageEnemy(e, 1e6, true);
       for(const e of enemies)if(e.st==='reviving'){
         for(let i=0;i<261;i++)updEnemy(e);
         damageEnemy(e,1e6,true);
       }
-      for(const e of enemies)if((e.type==='boss3'||isVargul(e))&&e.st!=='dead'){   // Refilled bosses require a second depletion.
+      for(const e of enemies)if((e.type==='boss3'||isVargul(e)||isSovereign(e))&&e.st!=='dead'){   // Refilled bosses require a second depletion.
         for(let i=0;i<300&&e.phaseT>0;i++)updEnemy(e);
         damageEnemy(e,1e6,true);
       }
@@ -453,7 +453,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate('scene'), 'intro');
     console.log('PASS Opening skip and automatic completion start stage one');
     for (const n of [0,2,3,4]) {
-      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];const v=isVargul(b);b.hp=b.type==='boss3'||v?b.max*.05:b.max*.51;damageEnemy(b,b.max*.1,false);const duration=v?288:isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);if(b.hp!==hp)return false;for(let t=0;t<duration;t++)updEnemy(b);return b.hp===(v?2500:hp)&&!b.invuln&&b.st===(v?'chase':'rec')&&b.z===0})()`),true,'Safe phase transition');
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];const v=isVargul(b),sv=isSovereign(b);b.hp=b.type==='boss3'||v||sv?b.max*.05:b.max*.51;damageEnemy(b,b.max*.1,false);const duration=v?288:sv?SOVEREIGN_RULES.kneelDown+SOVEREIGN_RULES.awaken:isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);if(b.hp!==hp)return false;for(let t=0;t<duration;t++)updEnemy(b);return b.hp===(v?2500:sv?SOVEREIGN_RULES.hp[1]:hp)&&!b.invuln&&b.st===(v||sv?'chase':'rec')&&b.z===0})()`),true,'Safe phase transition');
       const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
       assert.equal(key,[3,4].includes(n)?'phase'+(n+1):'boss'+(n+1));
     }
@@ -735,10 +735,11 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate(`(()=>{
       for(const type of ['boss1','boss3','boss4','boss5']) {
         player=newPlayer();const b=mkEnemy(type,400,420);enemies=[b];chain.n=0;b.gr=90;b.hp=b.max*(type==='boss3'?.01:.51);
-        if(isVargul(b)){
-          b.hp=1;damageEnemy(b,1,false,0,true);if(b.hp!==0||b.p2shown||b.phaseT!==288||b.gr!==0)return false;
-          for(let i=0;i<288;i++)updEnemy(b);
-          if(!b.p2shown||b.hp!==2500||b.max!==2500||b.gr!==0||b.grMax!==150)return false;
+        if(isVargul(b)||isSovereign(b)){
+          const t=isVargul(b)?288:SOVEREIGN_RULES.kneelDown+SOVEREIGN_RULES.awaken,hp2=isVargul(b)?2500:SOVEREIGN_RULES.hp[1];
+          b.hp=1;damageEnemy(b,1,false,0,true);if(b.hp!==0||b.p2shown||b.phaseT!==t||b.gr!==0)return false;
+          for(let i=0;i<t;i++)updEnemy(b);
+          if(!b.p2shown||b.hp!==hp2||b.max!==hp2||b.gr!==0||b.grMax!==150)return false;
           player.inv=0;const health=player.hp;hurtPlayer(10,1,false,b);if(health-player.hp!==13)return false;
           continue;
         }
