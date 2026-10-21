@@ -384,7 +384,7 @@ function mkEnemy(type, x, y) {
   // The retained ET.boss4 / runLegacyPat / named renderer are bypassed only
   // while USE_VARGUL_V136 is enabled; VARGUL_V136_OVERRIDE=false restores them.
   // boss5 likewise: USE_SOVEREIGN (SOVEREIGN_OVERRIDE=false) restores the BLACK MOON EMPEROR.
-  const base = type==='boss5'&&USE_SOVEREIGN?{...ET[type],name:'흑월의 갑주왕',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyWorld,hw:22,pats:SOVEREIGN_RULES.names}:
+  const base = type==='boss5'&&USE_SOVEREIGN?{...ET[type],name:'흑월의 철군주, 소버린',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyWorld,hw:22,pats:SOVEREIGN_RULES.names}:
     type==='boss4'&&USE_VARGUL_V136?{...ET[type],name:'바르굴, 얼어붙은 묘지왕',en:'VARGUL, THE FROZEN GRAVELORD',hp:2000,h:VARGUL_ART.worldHeight,hw:19,pats:VARGUL_RULES.names}:
     type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
