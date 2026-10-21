@@ -1,0 +1,607 @@
+{
+  "version": "1.38",
+  "hd": 1.5,
+  "body_world": 138.024,
+  "motions": {
+    "intro": {
+      "frames": 16,
+      "raw_to_world": 0.6275,
+      "rule": "stand",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "idle": {
+      "frames": 16,
+      "raw_to_world": 0.56258,
+      "rule": "stand",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "walk": {
+      "frames": 16,
+      "raw_to_world": 0.61181,
+      "rule": "stand",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "command": {
+      "frames": 16,
+      "raw_to_world": 0.61437,
+      "rule": "stand",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "beam": {
+      "frames": 16,
+      "raw_to_world": 0.61695,
+      "rule": "stand",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "hurt": {
+      "frames": 18,
+      "raw_to_world": 0.58267,
+      "rule": "stand",
+      "rows": [
+        [
+          5,
+          5,
+          "components"
+        ],
+        [
+          5,
+          5,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "kneel": {
+      "frames": 16,
+      "raw_to_world": 0.57809,
+      "rule": "stand",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "awaken": {
+      "frames": 16,
+      "raw_to_world": 0.49181,
+      "rule": "kneel_match",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "idle_p2": {
+      "frames": 16,
+      "raw_to_world": 0.50048,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "walk_p2": {
+      "frames": 16,
+      "raw_to_world": 0.47872,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "command_p2": {
+      "frames": 16,
+      "raw_to_world": 0.49406,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "beam_p2": {
+      "frames": 16,
+      "raw_to_world": 0.51042,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "hurt_p2": {
+      "frames": 16,
+      "raw_to_world": 0.49406,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "kneel_p2": {
+      "frames": 16,
+      "raw_to_world": 0.49406,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "ultimate": {
+      "frames": 16,
+      "raw_to_world": 0.47285,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "death": {
+      "frames": 16,
+      "raw_to_world": 0.49406,
+      "rule": "sabaton",
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "fist_p1": {
+      "raw_to_world": 0.17459,
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "fist_p2": {
+      "raw_to_world": 0.16908,
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ],
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "fist_fallen_p2": {
+      "raw_to_world": 0.11357,
+      "rows": [
+        [
+          4,
+          4,
+          "components"
+        ]
+      ]
+    },
+    "fist_giant": {
+      "raw_to_world": 0.27056,
+      "rows": [
+        [
+          3,
+          3,
+          "components"
+        ],
+        [
+          3,
+          5,
+          "uniform"
+        ]
+      ]
+    }
+  },
+  "fx": {
+    "punch_trail": {
+      "sheet": "E1_Fist_Effects.png",
+      "row": 1,
+      "cells": 8,
+      "expected": 8,
+      "y": [
+        0,
+        166
+      ]
+    },
+    "fist_impact": {
+      "sheet": "E1_Fist_Effects.png",
+      "row": 2,
+      "cells": 8,
+      "expected": 8,
+      "y": [
+        166,
+        425
+      ]
+    },
+    "ground_wave": {
+      "sheet": "E1_Fist_Effects.png",
+      "row": 3,
+      "cells": 10,
+      "expected": 10,
+      "y": [
+        425,
+        550
+      ]
+    },
+    "slam_mark": {
+      "sheet": "E1_Fist_Effects.png",
+      "row": 4,
+      "cells": 10,
+      "expected": 10,
+      "y": [
+        550,
+        687
+      ]
+    },
+    "fist_shatter": {
+      "sheet": "E1_Fist_Effects.png",
+      "row": 5,
+      "cells": 10,
+      "expected": 10,
+      "y": [
+        687,
+        941
+      ]
+    },
+    "mark_alt": {
+      "sheet": "Beam_Effects_Latest.png",
+      "row": 4,
+      "cells": 11,
+      "expected": null,
+      "y": [
+        369,
+        467
+      ]
+    },
+    "helm_beam": {
+      "sheet": "Beam_Effects_Latest.png",
+      "row": 6,
+      "cells": 8,
+      "expected": 8,
+      "y": [
+        595,
+        723
+      ]
+    },
+    "eruption": {
+      "sheet": "Beam_Effects_Latest.png",
+      "row": 7,
+      "cells": 10,
+      "expected": null,
+      "y": [
+        723,
+        851
+      ]
+    },
+    "reform": {
+      "sheet": "Beam_Effects_Latest.png",
+      "row": 8,
+      "cells": 9,
+      "expected": null,
+      "y": [
+        851,
+        1024
+      ]
+    }
+  },
+  "notes": [
+    "command_p2: sabaton scale 0.5626 → phase-2 median 0.4941"
+  ],
+  "sabaton_world": 38.5369038884813,
+  "fist_world_length": 58.66251094740097,
+  "art_bytes": 6059668,
+  "sheets": [
+    3421586,
+    1018708,
+    78596
+  ]
+}
