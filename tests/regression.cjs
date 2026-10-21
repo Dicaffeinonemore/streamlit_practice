@@ -361,6 +361,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./pixel-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_ULTIMATE_SUITE){await ready(base+'/embedded.html');await require('./vargul-ultimate.cjs')({evaluate,call,errors,root});return;}
@@ -460,7 +461,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     }
     for (const [width,height] of [[1920,1080],[1280,720],[844,390]]) {
       await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
-      const layout=await evaluate(`(()=>{UX.options.touch=false;UX.applySettings?.();document.body.classList.remove('touch');$('skillbar').hidden=false;player=newPlayer();startStage(3);scene='play';enemies=[mkEnemy('boss4',430,420)];render();const c=cv.getBoundingClientRect(),s=$('skillbar').getBoundingClientRect();return {gap:s.top-(c.top+484*c.height/H),bottom:s.bottom<=c.bottom+1}})()`);
+      const layout=await evaluate(`(()=>{UX.options.touch=false;UX.applySettings?.();document.body.classList.remove('touch');$('skillbar').hidden=false;player=newPlayer();startStage(3);scene='play';enemies=[mkEnemy('boss4',430,420)];render();const c=cv.getBoundingClientRect(),s=$('skillbar').getBoundingClientRect();return {gap:(c.top+350*c.height/H)-s.bottom,bottom:s.bottom<=c.bottom+1}})()`);
       assert(layout.gap>=0 && layout.bottom,JSON.stringify(layout)+' Boss bar and skillbar do not overlap at '+width);
       await screenshot('release-boss-'+width);
     }
