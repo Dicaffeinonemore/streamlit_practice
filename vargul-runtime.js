@@ -414,16 +414,19 @@ function paintVargulCrossWarning(progress,z,alpha){
 function vargulTelegraph(e){const t=e.vargul?.current;return e.st==='pat'&&t?{warning:!!t.warning,white:!!t.white}:null;}
 function vargulAuraVisible(e){return e.p2shown&&!e.phaseT&&!['down','stun','dead','intro'].includes(e.st)&&!e.vargul?.current?.hidden;}
 function vargulVisualScale(pose){return VARGUL_ART.scale*(VARGUL_VISUAL_SCALES[pose.clip]?.[pose.drawing-1]??1);}
+// Spear range effect for both phases' 3-hit combo and spin sweep. The ground band is
+// the measured attack box; the warning preview covers the whole wind-up (≤24 ticks).
+const VARGUL_RANGE_MOVES=['combo','sweep'];
 function vargulComboEffectData(e){
-  const a=e.vargul,t=a?.current;
-  if(e.st!=='pat'||a?.move!=='combo'||!t)return null;
-  let frame=t,active=!!t.attack?.id.startsWith('combo');
+  const a=e.vargul,t=a?.current,move=a?.move;
+  if(e.st!=='pat'||!VARGUL_RANGE_MOVES.includes(move)||!t)return null;
+  let frame=t,active=!!t.attack?.id.startsWith(move);
   if(!active){
     if(t.phase!=='S')return null;
-    const ahead=a.timeline.slice(a.cursor,a.cursor+8).find(v=>v.attack?.id.startsWith('combo'));
+    const ahead=a.timeline.slice(a.cursor,a.cursor+24).find(v=>v.attack?.id.startsWith(move));
     if(!ahead)return null;frame=ahead;
   }
-  return {active,id:frame.attack.id,box:vargulAttackBox(e,frame),depth:frame.attack.depth};
+  return {move,active,id:frame.attack.id,box:vargulAttackBox(e,frame),depth:frame.attack.depth};
 }
 function drawVargulComboEffect(e,ground){
   const fx=vargulComboEffectData(e);if(!fx)return;
@@ -432,18 +435,28 @@ function drawVargulComboEffect(e,ground){
   if(ground){
     const top=e.y-fx.depth,bottom=e.y+fx.depth;
     const mist=ctx.createLinearGradient(0,top,0,bottom);
-    mist.addColorStop(0,'rgba(104,205,255,0)');mist.addColorStop(.5,fx.active?'rgba(104,205,255,.28)':'rgba(104,205,255,.10)');mist.addColorStop(1,'rgba(104,205,255,0)');
+    mist.addColorStop(0,'rgba(104,205,255,0)');mist.addColorStop(.5,fx.active?'rgba(104,205,255,.36)':'rgba(104,205,255,.16)');mist.addColorStop(1,'rgba(104,205,255,0)');
     ctx.fillStyle=mist;ctx.fillRect(x,top,w,fx.depth*2);
-    ctx.strokeStyle=fx.active?'rgba(159,235,255,.85)':'rgba(104,205,255,.35)';ctx.lineWidth=fx.active?1.4:.8;
+    const blink=fx.active||Math.floor(tick/5)%2===0;
+    ctx.strokeStyle=fx.active?'rgba(159,235,255,.9)':`rgba(104,205,255,${blink?.55:.3})`;ctx.lineWidth=fx.active?1.6:1;
     ctx.strokeRect(x,top,w,fx.depth*2);
     if(fx.active){ctx.fillStyle='#bbf3ff';for(let i=0;i<6;i++){
       const px=x+w*(i+.5)/6,py=e.y+Math.sin(i*2.3+tick*.6)*fx.depth*.7;
       ctx.beginPath();ctx.moveTo(px,py-3);ctx.lineTo(px+2,py);ctx.lineTo(px,py+3);ctx.lineTo(px-2,py);ctx.closePath();ctx.fill();
     }}
+  }else if(fx.active&&fx.move==='sweep'){
+    // Crescent from the body side of the box to its far end, inside the blade-height band.
+    const top=e.y-e.z-bh-h,near=Math.abs(x-(e.x-camX))<Math.abs(x+w-(e.x-camX))?x:x+w,far=near===x?x+w:x;
+    const arc=ctx.createLinearGradient(near,0,far,0);
+    arc.addColorStop(0,'rgba(99,201,255,.05)');arc.addColorStop(.7,'rgba(170,238,255,.45)');arc.addColorStop(1,'rgba(230,252,255,.8)');
+    ctx.fillStyle=arc;ctx.beginPath();ctx.moveTo(near,top+h);
+    ctx.quadraticCurveTo((near+far)/2,top-h*.35,far,top+h*.35);
+    ctx.quadraticCurveTo((near+far)/2,top+h*.2,near,top+h);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#ddfaff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(near,top+h);ctx.quadraticCurveTo((near+far)/2,top-h*.35,far,top+h*.35);ctx.stroke();
   }else if(fx.active){
     const top=e.y-e.z-bh-h,center=top+h/2;
     const beam=ctx.createLinearGradient(0,top,0,top+h);
-    beam.addColorStop(0,'rgba(99,201,255,0)');beam.addColorStop(.5,'rgba(153,234,255,.32)');beam.addColorStop(1,'rgba(99,201,255,0)');
+    beam.addColorStop(0,'rgba(99,201,255,0)');beam.addColorStop(.5,'rgba(153,234,255,.36)');beam.addColorStop(1,'rgba(99,201,255,0)');
     ctx.fillStyle=beam;ctx.fillRect(x,top,w,h);
     ctx.strokeStyle='#ddfaff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,center);ctx.lineTo(x+w,center);ctx.stroke();
     // Vertical sparkle stays inside the actual blade-height interval.
