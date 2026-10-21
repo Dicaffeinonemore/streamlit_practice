@@ -389,6 +389,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
     if(process.env.BOSS_INTRO_HUD_SUITE){await ready(base+'/embedded.html');await require('./boss-intro-hud.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.ENEMY_UI_SUITE){await ready(base+'/embedded.html');await require('./enemy-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./pixel-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}

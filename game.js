@@ -2836,8 +2836,10 @@ function drawHUD() {
   } else if (target && target.t > 0 && enemies.includes(target.e)) {
     const e = target.e, a = Math.min(1, target.t / 20);
     ctx.globalAlpha = a;
-    krText(e.d.name, W / 2, 202, '#ffffff', 16, 'center', '#1a3a8a');
-    lifeBar(W / 2 - 70, 210, 140, 7, e.hp / e.max, lagTo(e, 'hpLag', e.hp, e.max * 0.01) / e.max, ['#fff07a', '#d08a10']);
+    if (!drawPixelEnemyBar(e)) {
+      krText(e.d.name, W - 12, 76, '#ffffff', 16, 'right', '#1a3a8a');
+      lifeBar(W - 152, 84, 140, 7, e.hp / e.max, lagTo(e, 'hpLag', e.hp, e.max * 0.01) / e.max, ['#fff07a', '#d08a10']);
+    }
     ctx.globalAlpha = 1;
   }
 

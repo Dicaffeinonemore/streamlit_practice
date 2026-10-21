@@ -86,6 +86,11 @@ async function evaluate(expression, contextId) {
     const rms = () => evaluate(`(()=>{const a=new Float32Array(testAudioMeter.fftSize);testAudioMeter.getFloatTimeDomainData(a);return Math.sqrt(a.reduce((sum,v)=>sum+v*v,0)/a.length)})()`,gameContext);
     await evaluate('AUDIO.music(0)',gameContext);await delay(1200);
     assert(await rms()>.0001,'Stage BGM produces audio inside Streamlit');
+    assert.equal(await evaluate("window.BOSS_BGM_URL.startsWith('data:audio/mpeg;base64,')",gameContext),true,'MP3 is embedded in component HTML');
+    for(let i=0;i<50 && await evaluate('AUDIO.bossInfo().loading',gameContext);i++) await delay(100);
+    assert.equal(await evaluate('AUDIO.bossInfo().source',gameContext),'default','Embedded MP3 decodes successfully');
+    await evaluate('AUDIO.bossMusic(0)',gameContext);await delay(1500);
+    assert(await rms()>.0001,'Embedded boss MP3 produces audio inside Streamlit');
     await evaluate('AUDIO.silence()',gameContext);await delay(450);
     await evaluate("AUDIO.sfx('hit',2)",gameContext);await delay(70);
     assert(await rms()>.0001,'Effects produce audio inside Streamlit');
