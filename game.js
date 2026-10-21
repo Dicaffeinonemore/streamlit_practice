@@ -549,29 +549,34 @@ function startDash(d) {
   sfx('dash');
 }
 
+function aimPlayerSkill() {
+  // Skill input is processed before movement; resolve direction from held controls.
+  const aim = Number(down('ArrowRight', 'KeyD')) - Number(down('ArrowLeft', 'KeyA'));
+  if (aim) player.face = aim;
+}
 function startSpecial() {
   const p = player;
+  aimPlayerSkill();
   p.st = 'special'; p.t = 0; p.sp = 0; p.vx = 0; p.combo = 0; p.buf = 0; p.spHits = 0; p.spFin = false; p.spDash = false;reactAurelionAttack();
-  // 목표: 바라보는 쪽에서 가장 가까운 적 (뒤쪽 적은 우선순위를 낮춘다)
+  // Only acquire targets in the chosen direction.
   let best = null, bd = 1e9;
   for (const e of enemies) {
-    if (e.st === 'dead' || Math.abs(e.x - p.x) > 420 || Math.abs(e.y - p.y) > 120) continue;
+    if (e.st === 'dead' || (e.x - p.x) * p.face < 0 || Math.abs(e.x - p.x) > 420 || Math.abs(e.y - p.y) > 120) continue;
     const d = Math.abs(e.x - p.x) + Math.abs(e.y - p.y) * 2 + ((e.x - p.x) * p.face < 0 ? 200 : 0);
     if (d < bd) { bd = d; best = e; }
   }
   p.spTg = best;
-  if (best) p.face = best.x >= p.x ? 1 : -1;
   p.spX = best ? best.x : p.x + p.face * 140; p.spY = best ? best.y : p.y;
   p.spX0 = p.x; p.spY0 = p.y;
   cutIn(); sfx('spcharge');
 }
 function updSpecial() {
   const p = player, t = p.t * MS, f = p.face, tg = p.spTg;
-  if (tg && tg.st !== 'dead' && t < 1580) { p.spX = tg.x; p.spY = tg.y; }
+  if (tg && tg.st !== 'dead' && t < 1580 && (tg.x - p.spX0) * f >= 0) { p.spX = tg.x; p.spY = tg.y; }
   if (t >= 450 && !p.spDash) { p.spDash = true; sfx('spdash'); }
   if (t >= 450 && t < 620) {                                     // 돌진: 목표 앞까지 순간 이동하며 붉은 잔상
     const u = ease((t - 450) / 150);
-    p.x = lerp(p.spX0, p.spX - f * 52, u); p.y = lerp(p.spY0, p.spY, u);
+    p.x = lerp(p.spX0, p.spX0 + f * Math.max(0, (p.spX - p.spX0) * f - 52), u); p.y = lerp(p.spY0, p.spY, u);
   }
   for (let k = 0; k < 4; k++) {                                  // 4연 베기: 각 베기의 스윙 중간에 적중
     const st = 620 + k * 160;
@@ -601,6 +606,7 @@ function specialHit(last, k) {
 
 function startCast() {
   const p = player;
+  aimPlayerSkill();
   p.st = 'cast'; p.t = 0; p.mg--; p.castFired = false; p.combo = 0; p.buf = 0; p.vx = 0;reactAurelionAttack();
   p.inv = Math.max(p.inv, 48);
   sfx('mcharge');
@@ -644,10 +650,11 @@ function startSkill(id) {
   const p = player;
   p.st = 'skill'; p.skill = id; p.t = 0; p.x0 = p.x; p.vx = 0; p.vz = 0; p.z = 0;
   p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false; p.skillHits = new Set(); p.vargulSkillHits = new Map(); p.skillCd[id] = SKILLS[id].cd;
-  const targets = enemies.filter(e => e.st !== 'dead' && Math.abs(e.y - p.y) < 60 && Math.abs(e.x - p.x) < 320)
+  aimPlayerSkill();
+  const targets = enemies.filter(e => e.st !== 'dead' && (e.x - p.x) * p.face >= 0 && Math.abs(e.y - p.y) < 60 && Math.abs(e.x - p.x) < 320)
     .sort((a, b) => Math.abs(a.x - p.x) - Math.abs(b.x - p.x));
-  if (targets[0]) p.face = targets[0].x >= p.x ? 1 : -1;
-  p.skillDest = clamp(targets[0] ? targets[0].x - p.face * 44 : p.x + p.face * 160,
+  const distance = targets[0] ? Math.max(0, (targets[0].x - p.x) * p.face - 44) : 160;
+  p.skillDest = clamp(p.x + p.face * distance,
     camX + 24, Math.min(camX + VW - 24, stage.len - 24));
   reactAurelionAttack();
   if (id === 'thrust' || id === 'leap') sfx('spdash');

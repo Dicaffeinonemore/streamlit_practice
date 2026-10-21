@@ -38,6 +38,8 @@ function drawReleaseBackdrop(theme, scroll) {
   return true;
 }
 function drawBossBar(boss) {
+  // The intro state persists through pause/settings; reveal HP only on combat entry.
+  if (boss.st === 'intro' || scene === 'bossintro') return;
   const x = 120, y = 416, w = 720;
   const frozen = scene === 'pause' || scene === 'settings';
   const now = tick;

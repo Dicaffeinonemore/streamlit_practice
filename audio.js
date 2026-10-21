@@ -249,10 +249,17 @@
   // 첫 사용자 입력에서 자동으로 켠다 (예전에 껐다면 꺼진 채로)
   let touched = false;
   function gesture(e) {
-    if (touched || (e && e.code === 'KeyM')) return;   // M(소리 토글) 은 토글 쪽에서 처리
-    touched = true; if (pref() !== 'off') enable(true);
+    if (e && e.code === 'KeyM') return;   // M is handled by the explicit mute toggle.
+    if (!touched) {
+      touched = true;
+      if (pref() !== 'off') enable(true);
+    } else if (AU.on && !paused && AU.ctx?.state !== 'running') {
+      // A first touch/iframe gesture may not unlock audio. Retry in the next
+      // activation event, also recovering contexts interrupted by the browser.
+      enable(true);
+    }
   }
-  ['keydown', 'pointerdown'].forEach(ev => global.addEventListener(ev, gesture, true));
+  ['keydown', 'pointerdown', 'pointerup', 'touchend', 'click'].forEach(ev => global.addEventListener(ev, gesture, true));
 
   global.AUDIO = { sfx, music, bossMusic: i => music(i, 1, true), victoryMusic: (i, final) => music(i, 1, false, final ? 'ending' : 'victory'), currentMusic, renderPreview, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on,
     setBossFile, clearBossFile, bossInfo, onBossInfo: f => bossFile.listeners.push(f) };
