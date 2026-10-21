@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "barel-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
+SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "barel-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -39,14 +39,22 @@ def in_streamlit() -> bool:
         return False
 
 
-def build_single_html() -> str:
-    """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
-    html = (ROOT / "index.html").read_text(encoding="utf-8")
-    # 보스전 기본 mp3 가 있으면 data URL 로 넣는다 (srcdoc 에서는 상대 경로 파일을 읽을 수 없다)
+def embed_boss_bgm(html: str) -> str:
+    """Embed MP3 bytes before the audio engine, avoiding a separate media request."""
     boss_bgm = ROOT / "assets/bgm/boss.mp3"
     if boss_bgm.is_file():
         url = "data:audio/mpeg;base64," + base64.b64encode(boss_bgm.read_bytes()).decode("ascii")
-        html = html.replace('<script src="audio.js">', f'<script>window.BOSS_BGM_URL="{url}";</script>\n<script src="audio.js">', 1)
+        html = re.sub(
+            r'<script\s+src=([\"\'])audio\.js\1\s*>',
+            lambda match: f'<script>window.BOSS_BGM_URL="{url}";</script>\n' + match.group(0),
+            html, count=1,
+        )
+    return html
+
+
+def build_single_html() -> str:
+    """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
+    html = embed_boss_bgm((ROOT / "index.html").read_text(encoding="utf-8"))
     # 실제 HTML의 연결 순서가 기준이다. 오래된 목록에만 남은 파일을 읽지 않는다.
     def inline_script(match: re.Match) -> str:
         name = match.group(2)
@@ -155,8 +163,7 @@ def prepare_streamlit_component(review: bool = False) -> Path:
         html = html.replace('<a href="index.html">게임으로 돌아가기 ↗</a>', '')
     else:
         files = set(re.findall(r'<script\s+src=[\"\']([^\"\']+)[\"\']', html))
-        if (ROOT / "assets/bgm/boss.mp3").is_file():
-            files.add("assets/bgm/boss.mp3")
+        html = embed_boss_bgm(html)
         html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
     files.add("streamlit-bridge.js")
     for name in sorted(files):

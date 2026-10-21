@@ -1,5 +1,6 @@
 """Streamlit 번들: 실제 HTML 연결, 누락 파일, 실행 디렉터리 검사."""
 import importlib.util
+import base64
 import os
 from pathlib import Path
 import re
@@ -15,6 +16,24 @@ spec.loader.exec_module(server)
 
 
 class StreamlitBundleTests(unittest.TestCase):
+    def test_component_embeds_mp3_bytes_before_audio_engine(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "index.html").write_text('<head></head><script src="audio.js"></script>', encoding="utf-8")
+            (root / "audio.js").write_text("// audio", encoding="utf-8")
+            (root / "streamlit-bridge.js").write_text("// bridge", encoding="utf-8")
+            mp3 = root / "assets/bgm/boss.mp3"
+            mp3.parent.mkdir(parents=True)
+            with patch.object(server, "ROOT", root), patch.object(server.tempfile, "gettempdir", return_value=directory):
+                for payload in (b"ID3 original audio", b"ID3 updated audio"):
+                    mp3.write_bytes(payload)
+                    output = server.prepare_streamlit_component()
+                    html = (output / "index.html").read_text(encoding="utf-8")
+                    encoded = re.search(r'data:audio/mpeg;base64,([^"<]+)', html).group(1)
+                    self.assertEqual(base64.b64decode(encoded), payload)
+                    self.assertLess(html.index("window.BOSS_BGM_URL"), html.index('src="audio.js"'))
+                    self.assertFalse((output / "assets/bgm/boss.mp3").exists())
+
     def test_real_game_bundle_from_another_directory(self):
         previous = Path.cwd()
         with tempfile.TemporaryDirectory() as directory:
