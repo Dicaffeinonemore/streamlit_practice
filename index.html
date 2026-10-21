@@ -214,6 +214,16 @@
   #challengeList { display: grid; gap: 8px; }
   #challengeList .challenge-boss { margin: 0; padding: 12px; font-size: clamp(12px,1.6cqw,18px); text-align: left; }
   #challengeList .challenge-boss:disabled { opacity: .45; cursor: default; transform: none; }
+  /* Supplied gold pixel atlas. Keep live key labels and cooldown overlays. */
+  #skillbar { left: 25.5%; top: 25.5%; bottom: auto; transform: none; padding: 0; gap: 0; border: 0; background: none; border-radius: 0; }
+  #skillbar .skillbtn { width: 3cqw; height: auto; aspect-ratio: 140 / 243; min-width: 0; min-height: 0; max-width: none; max-height: none; margin: 0 -.17cqw 0 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background-color: transparent; background-size: 100% 100%; image-rendering: pixelated; overflow: visible; }
+  #skillbar .skillbtn .skill-icon { display: none; }
+  #skillbar .skillbtn .key { top: 29%; left: 22%; padding: 0; background: none; color: #ffda43; font-size: clamp(5px,.65cqw,10px); text-shadow: 2px 2px #000; }
+  #skillbar .skillbtn .cool { inset: 25% 14% 22% 16%; }
+  #skillbar .skillbtn::after { font-size: clamp(6px,1cqw,14px); inset: 25% 14% 22% 16%; }
+  #skillbar .skillbtn:disabled { filter: brightness(.65); }
+  #skillbar .skillbtn.ready:hover { filter: brightness(1.2); }
+  #playPause, body.touch #playPause { top: .5%; right: .5%; width: 5.5%; height: 9%; padding: 0; margin: 0; border: 0; border-radius: 0; background-color: transparent !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; box-shadow: none; color: transparent; font-size: 0; image-rendering: pixelated; }
 </style>
 </head>
 <body>
@@ -399,6 +409,9 @@
 <script src="sovereign-runtime.js"></script>
 <script src="item-art.js"></script>
 <script src="item-runtime.js"></script>
+<script src="pixel-ui-art.js"></script>
+<script src="boss-ui-art.js"></script>
+<script src="pixel-ui.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

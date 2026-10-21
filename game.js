@@ -2787,6 +2787,7 @@ function drawPortrait(id, x, y, w, h, flip, glow) {
 
 function drawHUD() {
   const p = player;
+  if (!drawPixelHUD(p)) {
   // ---- 흑기사 패널 (왼쪽)
   panel(14, 12, 328, 88);
   drawPortrait('player', 22, 20, 64, 56, false, p.buff > 0);
@@ -2819,12 +2820,8 @@ function drawHUD() {
   if (p.mg > 0) pxText(UX.keyName(UX.options.bindings.KeyI), 258, 97, '#9cc3ff', 8, 'right');
 
   // ---- 스테이지 패널 (오른쪽)
-  panel(722, 12, 224, 50);
-  pxText(stage.name, 732, 32, '#f3d26a', 10);
-  krText(stage.title, 732, 54, '#ffffff', 14);
-  pxText(`x${enemies.filter(e => e.st !== 'dead').length}`, 938, 32, '#ff9aa6', 9, 'right');   // 남은 적
-  pxText(AUDIO.isOn() ? 'M:SOUND' : 'M:MUTE', 938, 54, AUDIO.isOn() ? '#7ad8ff' : '#7a7090', 7, 'right');
 
+  }
   // ---- 보스 패널 (가운데) / 아니면 최근에 때린 적 이름과 체력 (레퍼런스의 "Goblin" 표시)
   const boss = enemies.find(e => e.boss && (e.st !== 'dead' || e.t < 60));
   if (boss) {
@@ -2832,14 +2829,14 @@ function drawHUD() {
   } else if (target && target.t > 0 && enemies.includes(target.e)) {
     const e = target.e, a = Math.min(1, target.t / 20);
     ctx.globalAlpha = a;
-    krText(e.d.name, W / 2, 36, '#ffffff', 16, 'center', '#1a3a8a');
-    lifeBar(W / 2 - 70, 44, 140, 7, e.hp / e.max, lagTo(e, 'hpLag', e.hp, e.max * 0.01) / e.max, ['#fff07a', '#d08a10']);
+    krText(e.d.name, W / 2, 202, '#ffffff', 16, 'center', '#1a3a8a');
+    lifeBar(W / 2 - 70, 210, 140, 7, e.hp / e.max, lagTo(e, 'hpLag', e.hp, e.max * 0.01) / e.max, ['#fff07a', '#d08a10']);
     ctx.globalAlpha = 1;
   }
 
   // 연속 히트 (2타부터): 숫자 + 등급 + 남은 시간 막대
   if (chain.n >= 2) {
-    const big = chain.n >= 6, x = 22, y = 150;
+    const big = chain.n >= 6, x = 22, y = 214;
     ctx.font = `28px ${PIX}`; ctx.textAlign = 'left';
     ctx.fillStyle = '#7a1a24'; ctx.fillText(String(chain.n), x + 3, y + 3);
     ctx.fillStyle = big ? '#ffe27a' : '#ffffff'; ctx.fillText(String(chain.n), x, y);
