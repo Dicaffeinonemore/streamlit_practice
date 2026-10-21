@@ -217,7 +217,7 @@ const stat = { ticks: 0, kills: 0, damage: 0, deaths: 0 };
 let resumeScene = 'play', settingsFrom = 'title', helpFrom = 'title', stageEntry = null;
 let practice = false;
 let bossChallenge = false;
-const challengeNames = ['도살자 고라스', '까마귀 마녀 모르그라', '황금왕 아우렐리온', '바르굴, 얼어붙은 묘지왕', '흑월의 갑주왕'];
+const challengeNames = ['도살자 고라스', '까마귀 마녀 모르그라', '황금왕 아우렐리온', '바르굴, 얼어붙은 묘지왕', '흑월의 군주, 소버린'];
 const practiceDone = new Set();
 let practiceOrigin = 80;
 let arena = null;
@@ -426,7 +426,7 @@ function mkEnemy(type, x, y) {
   // The retained ET.boss4 / runLegacyPat / named renderer are bypassed only
   // while USE_VARGUL_V136 is enabled; VARGUL_V136_OVERRIDE=false restores them.
   const base = type==='boss4'&&USE_VARGUL_V136?{...ET[type],name:'바르굴, 얼어붙은 묘지왕',en:'VARGUL, THE FROZEN GRAVELORD',hp:2000,h:VARGUL_ART.worldHeight,hw:19,pats:VARGUL_RULES.names}:
-    type==='boss5'&&USE_SOVEREIGN?{...ET[type],name:'흑월의 갑주왕',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyHeight,hw:SOVEREIGN_RULES.hw,pats:SOVEREIGN_RULES.names}:
+    type==='boss5'&&USE_SOVEREIGN?{...ET[type],name:'흑월의 군주, 소버린',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyHeight,hw:SOVEREIGN_RULES.hw,pats:SOVEREIGN_RULES.names}:
     type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
   const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };

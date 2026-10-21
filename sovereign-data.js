@@ -1,8 +1,8 @@
 'use strict';
-// v1.38 흑월의 갑주왕 (The Black Moon Sovereign). Body + two independent fists.
+// v1.38 흑월의 군주, 소버린 (The Black Moon Sovereign). Body + two independent fists.
 // All ticks are 60 Hz; distances, heights and speeds are world px (per tick).
 const SOVEREIGN_RULES = {
-  hp:[2400,3000], hw:24, walk:[[.75,.45],[1.05,.6]], gaps:[[30,50],[14,28]], bands:{near:110,mid:260},
+  hp:[2400,3000], hw:24, walk:[[.75,.45],[1.05,.6]], gaps:[[30,50],[14,28]], attackDelay:90, bands:{near:110,mid:260},
   names:{direct:'직격',slam:'추적 내려찍기',hammer:'망치질',grab:'붙잡기',clap:'협공',wave:'지면 파동',wall:'철벽',
     whirl:'회오리',backhand:'손등 치기',meteor:'유성 낙하',ultimate:'흑월 강림',beam:'투구 광선'},
   cooldowns:{direct:120,slam:180,hammer:360,grab:300,clap:300,wave:360,wall:600,whirl:420,beam:300,meteor:900,ultimate:900,backhand:0},
@@ -23,7 +23,8 @@ const SOVEREIGN_RULES = {
   // Body stays in its pattern pose for the whole job (others release it after the command pose).
   bodyBound:['wall','whirl','ultimate','beam'],
   maxJobs:[1,2], dangerGap:20, pendingTicks:90, recover:[40,30], fistSpeed:[1,1.2], ultimateAt:.35, ultimateLater:15,
-  home:{front:[75,85],back:[-80,100],bob:6,period:120,speed:6},
+  home:{front:[75,85],back:[-80,100],bob:3,period:180,speed:4},
+  afterimage:{life:18,interval:3,max:6,minDistance:2,alpha:.22},
   fistHp:[140,180], kdFistMul:1.5, fistGroggy:40, fallen:[480,360], rise:30, pressure:[3,2], pressureDecay:120,
   intro:200, introFistDrawing:13, introFistDrop:40, kneelDown:40, awaken:210, awakenShakeDrawing:7, death:110, deathHold:60,
   command:24, ultimateKneel:120,

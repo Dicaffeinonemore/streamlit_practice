@@ -19,7 +19,7 @@ function sovData(e){
       glow:null,trail:false,timer:0,wake:1,flash:0,vh:0,broken:false,job:null}))};
 }
 function sovClip(e,name){return e.p2shown&&SOV_A.clips[name+'_p2']?name+'_p2':name;}
-function sovGap(e){const [a,b]=SOV_R.gaps[sovP2(e)];return Math.round(rand(a,b));}
+function sovGap(e){const [a,b]=SOV_R.gaps[sovP2(e)];return SOV_R.attackDelay+Math.round(rand(a,b));}
 function sovereignIntroDuration(){return SOV_R.intro*MS;}
 function bossIntroDuration(e){return isSovereign(e)?sovereignIntroDuration(e):vargulIntroDuration(e);}
 function sovStanding(e){return !['stun','down','dead'].includes(e.st)&&!e.phaseT;}
@@ -233,7 +233,7 @@ function runSovereignPattern(e){
 function chaseSovereign(e){
   const s=sovData(e),p=player,dx=p.x-e.x,dy=p.y-e.y,[sx,sy]=SOV_R.walk[sovP2(e)];
   if(p.st==='dead')return;
-  e.face=dx>=0?1:-1;
+  if(Math.abs(dx)>24)e.face=dx>=0?1:-1;
   if(e.atkCd<=0&&p.st!=='down'&&p.st!=='grabbed'){
     let id=null;
     if(s.pending&&s.now<s.pending.until&&sovAvailable(e,s,s.pending.id))id=s.pending.id;
@@ -602,7 +602,7 @@ function sovDeath(e,s){
 }
 function updateSovereignState(e){
   if(!isSovereign(e))return false;
-  const s=sovData(e);s.now++;
+  const s=sovData(e);s.now++;sovCaptureAfterimages(e,s);
   for(const id in s.cooldowns)if(s.cooldowns[id]>0)s.cooldowns[id]--;
   if(s.pressureT>0&&--s.pressureT===0)s.pressure=0;
   if(e.phaseT>0){sovTransition(e,s);sovTickFists(e,s);sovTickFx(s);return true;}
@@ -616,7 +616,7 @@ function updateSovereignState(e){
   const danger=s.jobs.some(j=>j.danger)||s.waves.length>0;
   if(s.dangerWas&&!danger)s.lastDangerEnd=s.now;
   s.dangerWas=danger;
-  if(s.forceBackhand&&e.atkCd>10)e.atkCd=10;
+  if(s.forceBackhand&&e.atkCd>10+SOV_R.attackDelay)e.atkCd=10+SOV_R.attackDelay;
   e.hw=SOV_R.hw;
   if(e.st!=='pat')e.invuln=false;
   return false;
@@ -637,6 +637,35 @@ function updateSovereignIntro(e){
 function sovereignWarning(e){return !!e.sov?.jobs.some(j=>j.warn);}
 
 // ---------------------------------------------------------------- drawing
+// Snapshot actual positions on simulation ticks, never on render calls.
+// Ghosts are visual only and expire even when the subject stops moving.
+function sovCaptureAfterimages(e,s){
+  const R=SOV_R.afterimage,active=sovStanding(e)&&e.st!=='intro';
+  const pose=sovPose(e);
+  const subjects=[[e,SOV_A.clips[pose.clip]?.[pose.drawing-1],e.y-e.z,active]];
+  for(const f of s.fists){
+    const stage=f.hp/f.max>.66?0:f.hp/f.max>.33?1:2;
+    subjects.push([f,SOV_A.clips[e.p2shown?'fist_p2':'fist_p1'][(f.pose===1?[5,6,7][stage]:f.pose)-1],f.y-f.h,active&&sovActive(f)]);
+  }
+  if(s.giant)subjects.push([s.giant,SOV_A.clips.giant[s.giant.frame],s.giant.y-s.giant.h,active]);
+  for(const [o,frame,y,visible] of subjects){
+    o.afterimages=(o.afterimages||[]).filter(g=>s.now-g.at<R.life);
+    if(!visible){o.afterimages=[];o.trailSample=null;continue;}
+    if(s.now%R.interval)continue;
+    const old=o.trailSample;
+    if(old&&Math.hypot(o.x-old.x,y-old.y)>=R.minDistance){
+      o.afterimages.push(old);if(o.afterimages.length>R.max)o.afterimages.shift();
+    }
+    o.trailSample={frame,x:o.x,y,face:o.face,angle:o.angle||0,at:s.now};
+  }
+}
+function sovDrawAfterimages(o,s){
+  const R=SOV_R.afterimage;
+  for(const g of o.afterimages||[]){
+    const fade=Math.max(0,1-(s.now-g.at)/R.life);
+    if(fade&&g.frame)sovPaint(g.frame,g.x,g.y,{face:g.face,angle:g.angle,alpha:R.alpha*fade,filter:'sepia(.4) saturate(.7) hue-rotate(260deg)'});
+  }
+}
 function sovPaint(frame,x,y,o={}){
   const im=frame&&SOV_SHEETS[frame.sheet];if(!im?.naturalWidth)return false;
   const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=(o.scale??1)/SOV_A.ppw;
@@ -686,6 +715,7 @@ function drawSovereign(e){
   const s=sovData(e),pose=sovPose(e),frame=SOV_A.clips[pose.clip]?.[pose.drawing-1];
   if(!SOV_SHEETS[frame?.sheet]?.naturalWidth)return false;
   drawShadow(e.x-camX,e.y,22,e.z);
+  sovDrawAfterimages(e,s);
   sovPaint(frame,e.x,e.y-e.z,{face:e.face,filter:e.flash>0&&UX.options.flash?'brightness(1.8)':null});
   // Phase-2: moon in the empty helm and the magenta cracks breathe (~90 ticks).
   const mask=SOV_A.clips[SOV_A.maskPrefix+pose.clip]?.[pose.drawing-1];
@@ -725,6 +755,7 @@ function drawSovFist(e,s,f){
     return;
   }
   const fr=set[(f.pose===1?[5,6,7][stage]:f.pose)-1];
+  sovDrawAfterimages(f,s);
   if(f.h>14&&f.h<400){
     ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();
     ctx.ellipse(f.x-camX,f.y,SOV_FIST.len*.4*(1-Math.min(f.h,220)/400),6,0,0,Math.PI*2);ctx.fill();
@@ -747,6 +778,7 @@ function drawSovFist(e,s,f){
 }
 function drawSovGiant(e,s){
   const g=s.giant,fr=SOV_A.clips.giant[g.frame];
+  sovDrawAfterimages(g,s);
   if(g.trail)sovFxDraw('punch_trail',(tick%16)/16,g.x-g.face*SOV_FIST.len*1.3,g.y-g.h,150,56,{face:g.face});
   sovPaint(fr,g.x,g.y-g.h,{face:g.face,filter:g.glow&&Math.floor(tick/5)%2===0&&UX.options.flash?'brightness(1.5)':null});
   if(g.glow&&fr.core)sovGlow(g.x-camX+g.face*fr.core[0]/SOV_A.ppw,g.y-g.h+fr.core[1]/SOV_A.ppw,g.glow,20);
