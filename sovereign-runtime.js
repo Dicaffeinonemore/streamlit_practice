@@ -377,7 +377,9 @@ const SOV_PATTERNS={
         if(pt.lt>=r.hover-1){g.x=g.from;g.h=25;pt.hit=false;stageSov(pt,'sweep');pt.pass=1;sfx('dash');return;}
       }else if(pt.stage==='sweep'){
         g.x+=g.dir*r.speed;s.lastDanger=s.now;
-        if(pt.lt%3===0)sovFx(e,'punch_trail',g.x-g.dir*90,g.y,g.h,200,70,16,{face:g.dir});
+        // Low ground spray instead of a horizontal streak, which read as the helm beam.
+        if(pt.lt%4===0){sovFx(e,'ground_wave',g.x-g.dir*50,g.y,0,90,46,16,{face:-g.dir});
+          parts.push({x:g.x-g.dir*40,y:g.y+rand(-10,10),z:rand(4,12),vx:-g.dir*rand(1,3),vz:rand(2,5),life:rand(16,26),col:['#3a2a34','#ff498d','#5a4652'][pt.lt%3]});}
         if(!pt.hit&&Math.abs(player.x-g.x)<r.halfWidth&&player.z<r.high&&sovHurt(e,r.damage,true,g.x-g.dir*30))pt.hit=true;
         if((g.x-g.to)*g.dir>=0){
           if(pt.pass===1){pt.pass=2;[g.from,g.to]=[g.to,g.from];g.dir*=-1;g.face=g.dir;pt.hit=false;stageSov(pt,'turn');return;}
@@ -612,7 +614,10 @@ function updateSovereignState(e){
   if(e.st==='dead'){
     e.t++;e.invuln=true;
     if(!s.deathInit){s.deathInit=true;cancelAllSov(e);releaseSovereignGrab();s.marks=[];s.waves=[];s.beam=null;
-      for(const f of s.fists){if(f.st==='merged'){f.x=e.x;f.y=e.y;f.h=120;}dropFist(e,f,'wreck');}}
+      // Fists that sit on the body (merged / mid-pattern) fall beside it so the wreck shows both.
+      for(const f of s.fists){if(f.st==='merged'){f.y=e.y;f.h=120;}
+        if(Math.abs(f.x-e.x)<40){f.x=e.x+(f.role==='F'?1:-1)*e.face*72;f.y=e.y+(f.role==='F'?6:-6);}
+        dropFist(e,f,'wreck');}}
     updateSovFists(e);
     if(e.t===40){sovFx(e,'fist_shatter',e.x,e.y,60,140,140,32,{anchor:'center'});sfx('land');}
     if(e.t>=SR.death+SR.deathHold){
@@ -765,16 +770,25 @@ function sovereignDrawList(list){
 function drawSovereignGround(){
   if(!USE_SOVEREIGN)return;
   for(const r of sovereignRemains){
+    // Embers keep the wreck readable after the victory dimming.
+    const glow=.35+.15*Math.sin(tick*.05);
+    ctx.save();ctx.globalCompositeOperation='lighter';ctx.translate(r.x-camX,r.y-6);ctx.scale(1,.32);
+    const g=ctx.createRadialGradient(0,0,0,0,0,120);
+    g.addColorStop(0,`rgba(255,73,141,${glow})`);g.addColorStop(1,'rgba(255,73,141,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,120,0,Math.PI*2);ctx.fill();ctx.restore();
     paintSov(SOVEREIGN_ART.clips.death.at(-1),r.x,r.y,r.face);
-    for(const f of r.fists)paintSov(SOVEREIGN_ART.clips.fist_fallen_p2[1],f.x,f.y-20,f.face);
+    for(const f of r.fists)paintSov(SOVEREIGN_ART.clips.fist_fallen_p2[1],f.x,f.y-14,f.face);
   }
   for(const e of enemies){
     if(!isSovereign(e)||!e.sov)continue;
     const s=e.sov;
     for(const m of s.marks){
-      const fast=m.flash,alpha=UX.options.flash?(fast?.55+.45*(Math.floor(m.age/3)%2):.75):.85;
-      ctx.save();ctx.globalAlpha=.25;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(m.x-camX,m.y,m.rx,m.ry,0,0,Math.PI*2);ctx.fill();ctx.restore();
-      paintSovFx('slam_mark',(m.age%30)/30,m.x,m.y,m.rx*2+14,m.ry*2+10,alpha,1,'center');
+      // Dark pit + lit rim so the landing zone reads on the dark stage-5 floor.
+      const fast=m.flash,alpha=UX.options.flash?(fast?(Math.floor(m.age/3)%2?1:.45):.75+.25*Math.sin(m.age*.2)):.9,x=m.x-camX;
+      ctx.save();ctx.globalAlpha=.5;ctx.fillStyle='#12030b';ctx.beginPath();ctx.ellipse(x,m.y,m.rx,m.ry,0,0,Math.PI*2);ctx.fill();
+      ctx.globalCompositeOperation='lighter';ctx.globalAlpha=alpha;ctx.fillStyle='rgba(255,73,141,.3)';ctx.fill();
+      ctx.lineWidth=2;ctx.strokeStyle=fast?'#ffe0ef':'#ff498d';ctx.stroke();ctx.restore();
+      paintSovFx('slam_mark',(m.age%30)/30,m.x,m.y,m.rx*2.5,m.ry*2.8,Math.min(1,alpha+.2),1,'center');
     }
     for(const w of s.waves)for(const y of [GTOP+18,(GTOP*2+GBOT)/3+10,(GTOP+GBOT*2)/3+10,GBOT+4])
       paintSovFx('ground_wave',(w.age%24)/24,w.x,y,70,34,.95,w.dir);
