@@ -216,6 +216,8 @@ const chain = { n: 0, t: 0, max: 0 };  // 연속 히트 (화면 왼쪽 HIT 표�
 const stat = { ticks: 0, kills: 0, damage: 0, deaths: 0 };
 let resumeScene = 'play', settingsFrom = 'title', helpFrom = 'title', stageEntry = null;
 let practice = false;
+let bossChallenge = false;
+const challengeNames = ['도살자 고라스', '까마귀 마녀 모르그라', '황금왕 아우렐리온', '바르굴, 얼어붙은 묘지왕', '흑월의 갑주왕'];
 const practiceDone = new Set();
 let practiceOrigin = 80;
 let arena = null;
@@ -229,8 +231,10 @@ function newPlayer(score = 0) {
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
-const screens = ['title', 'tutorial', 'pause', 'clear', 'over', 'ending', 'settings'];
+const screens = ['title', 'tutorial', 'pause', 'clear', 'over', 'ending', 'settings', 'challenge', 'challengeResult'];
 function showScreen(id) {
+  $('btnOverBosses').hidden = !bossChallenge;
+  $('btnPauseBosses').hidden = !bossChallenge;
   screens.forEach(s => $(s).classList.toggle('show', s === id));
   $('skillbar').hidden = !!id; $('playPause').hidden = !!id;
   $('practiceGuide').hidden = !!id || !practice;
@@ -250,12 +254,13 @@ function toTutorial(from = 'title') {
   document.querySelector('#tutorial .dialog-body').scrollTop = 0;
 }
 function beginGame(cinematic = false) {
+  bossChallenge = false;
   if (cinematic === true) { startOpening(); return; }
   practice = false; clearInput(); AUDIO.pause(false);
   player = newPlayer(0);
   startStage(0);
 }
-function toTitle() { clearInput(); practice = false; scene = 'title'; showScreen('title'); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
+function toTitle() { bossChallenge = false; clearInput(); practice = false; scene = 'title'; showScreen('title'); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
 function pauseGame(reason = 'ESC 또는 계속하기') {
   if (!['play', 'intro', 'bossintro'].includes(scene)) return;
   resumeScene = scene; clearInput(); scene = 'pause'; $('pauseReason').textContent = reason; showScreen('pause'); AUDIO.pause(true);
@@ -271,10 +276,12 @@ function entrySnapshot(i = stageIdx) {
   return { stage: i, score, hp, lives, sp, mg, buff };
 }
 function continueGame() {
+  bossChallenge = false;
   const saved = UX.checkpoint(); if (!saved) return;
   practice = false; player = Object.assign(newPlayer(), saved); AUDIO.pause(false); startStage(saved.stage, true);
 }
 function beginPractice() {
+  bossChallenge = false;
   practice = true; practiceDone.clear(); player = newPlayer(); startStage(0); scene = 'play'; bannerT = 0;
   camLock = true; lockAt = 0; barrels = []; player.inv = 0; practiceOrigin = player.x;
   enemies = [mkEnemy('grunt', 350, 420)]; enemies[0].training = true;
@@ -292,6 +299,36 @@ function updatePractice() {
   $('practiceText').textContent = next ? `연습 ${practiceDone.size}/5 · ${next[1]}` : '연습 완료! 실전에서 공격 예고를 보고 피하세요.';
 }
 
+function openBossChallenge() {
+  clearInput(); practice = false; bossChallenge = false;
+  AUDIO.silence(); AUDIO.pause(false);
+  const records = UX.records(), list = $('challengeList'); list.replaceChildren();
+  challengeNames.forEach((name, i) => {
+    const unlocked = !!records.stages[i], button = document.createElement('button');
+    button.className = 'btn challenge-boss'; button.disabled = !unlocked;
+    button.textContent = 'STAGE ' + (i + 1) + ' · ' + name + ' — ' + (unlocked ? '도전하기' : '미해금 · 본편 클리어 필요');
+    button.onclick = () => beginBossChallenge(i); list.appendChild(button);
+  });
+  scene = 'challenge'; showScreen('challenge');
+}
+function beginBossChallenge(i) {
+  if (!Number.isInteger(i) || !STAGES[i] || !UX.records().stages[i]) return;
+  bossChallenge = true; practice = false; AUDIO.pause(false);
+  player = newPlayer(); player.sp = 100; player.mg = 3;
+  startStage(i, true);
+  // Use the original boss arena and phases, skipping the approach waves.
+  const wave = stage.waves.find(w => w.boss);
+  camX = wave.at; lockAt = camX; camLock = true; waveIdx = stage.waves.length;
+  player.x = camX + VW * .28; player.x0 = player.x;
+  barrels = []; bannerT = 0;
+  spawnWave({ ...wave, e: [[stage.boss, 1]] });
+}
+$('btnBossChallenge').onclick = openBossChallenge;
+$('btnChallengeBack').onclick = toTitle;
+$('btnChallengeRetry').onclick = () => beginBossChallenge(stageIdx);
+$('btnChallengeList').onclick = openBossChallenge;
+$('btnOverBosses').onclick = openBossChallenge;
+$('btnPauseBosses').onclick = openBossChallenge;
 $('btnStart').onclick = () => toTutorial();
 $('btnGo').onclick = () => beginGame(true);
 $('btnNext').onclick = nextStage;
@@ -326,11 +363,14 @@ function onKeyOnce(code) {
     else if (scene === 'clear') nextStage();
     else if (scene === 'over') retryStage();
     else if (scene === 'ending') toTitle();
+    else if (scene === 'challengeResult') beginBossChallenge(stageIdx);
   }
   if (code === 'KeyM') AUDIO.toggle();             // 소리 켜기/끄기
   if (code === 'Escape') {
     if (['play', 'intro', 'bossintro'].includes(scene)) pauseGame();
     else if (scene === 'pause') resumeGame();
+    else if (scene === 'challenge') toTitle();
+    else if (scene === 'challengeResult') openBossChallenge();
     else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else closeSettings(); }
     else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else toTitle(); }
   }
@@ -353,15 +393,17 @@ function startStage(i, restored = false) {
   p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.spTg = null;
   p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
   stageStartScore = p.score;
-  if (!practice) { stageEntry = entrySnapshot(); UX.saveCheckpoint(stageEntry); }
+  if (!practice && !bossChallenge) { stageEntry = entrySnapshot(); UX.saveCheckpoint(stageEntry); }
   scene = 'intro'; bannerT = 160;
   showScreen(null);
   AUDIO.music(i);
 }
 function nextStage() {
+  if (bossChallenge) return;
   if (stageIdx + 1 < STAGES.length) startStage(stageIdx + 1);
 }
 function retryStage() {
+  if (bossChallenge) { beginBossChallenge(stageIdx); return; }
   player = Object.assign(newPlayer(stageStartScore), stageEntry || {});
   startStage(stageIdx, true);
 }
@@ -1627,6 +1669,12 @@ function tallyHtml() {
 }
 
 function finishStage() {
+  if (bossChallenge) {
+    scene = 'challengeResult';
+    $('challengeResultTitle').textContent = challengeNames[stageIdx] + ' 격파!';
+    $('challengeResultInfo').innerHTML = tallyHtml();
+    showScreen('challengeResult'); return;
+  }
   const p = player;
   const bonus = p.hp * 10;
   p.score += bonus;
@@ -2972,7 +3020,7 @@ function loop(t) {
     if (processed) for (const k in pressed) { pressed[k] -= MS; if (pressed[k] <= 0) delete pressed[k]; }
   }
   ctx.setTransform(RENDER_K, 0, 0, RENDER_K, 0, 0);   // 960x540 좌표계를 실제 해상도로 확대
-  if (scene === 'title' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
+  if (scene === 'title' || scene === 'challenge' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
   else render();
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
