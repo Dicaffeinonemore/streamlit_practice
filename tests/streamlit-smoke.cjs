@@ -23,15 +23,17 @@ async function evaluate(expression, contextId) {
   const socket = net.createServer();
   await new Promise(resolve => socket.listen(0, '127.0.0.1', resolve));
   const port = socket.address().port; await new Promise(resolve => socket.close(resolve));
-  const url = `http://127.0.0.1:${port}`;
+  const url = process.env.STREAMLIT_TEST_URL || `http://127.0.0.1:${port}`;
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-streamlit-test-'));
   const timeout = setTimeout(() => {console.error('Timed out', log); process.exitCode = 1; ws?.close(); browser?.kill(); backend?.kill();}, 90000);
   try {
     assert(chrome, 'Chrome is required');
+    if (!process.env.STREAMLIT_TEST_URL) {
     backend = spawn(python, ['-m', 'streamlit', 'run', 'server.py', '--server.headless=true', '--browser.gatherUsageStats=false', '--server.fileWatcherType=none', '--server.address=127.0.0.1', `--server.port=${port}`], {cwd: root, windowsHide: true, env: {...process.env, PYTHONDONTWRITEBYTECODE: '1', PYTHONUTF8: '1'}});
     backend.stdout.on('data', b => log = (log + b).slice(-20000));
     backend.stderr.on('data', b => log = (log + b).slice(-20000));
     backend.on('error', e => log += String(e));
+    }
     let health = false;
     for (let i = 0; i < 100; i++) {try {health = (await fetch(url+'/_stcore/health')).ok;} catch {} if (health) break; await delay(100);}
     assert(health, log);
