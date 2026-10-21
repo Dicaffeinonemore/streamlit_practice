@@ -207,13 +207,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 
+class GameServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    # 브라우저는 스크립트 30여 개를 동시에 요청한다. 단일 스레드 + 대기열 5개에서는 큰 그림 파일을
+    # 보내는 동안 대기열이 넘쳐 일부 요청이 ERR_CONNECTION_REFUSED 로 빠졌다(아이템 그림 누락 등).
+    daemon_threads = True
+    request_queue_size = 128
+
+
 def bind_server() -> socketserver.TCPServer:
     # Windows 에서는 SO_REUSEADDR 가 "이미 사용 중인 포트에도 바인딩"을 허용해 버리므로 끈다
-    socketserver.TCPServer.allow_reuse_address = os.name != "nt"
+    GameServer.allow_reuse_address = os.name != "nt"
     last_error = None
     for port in range(START_PORT, START_PORT + PORT_TRIES):
         try:
-            return socketserver.TCPServer(("127.0.0.1", port), Handler)
+            return GameServer(("127.0.0.1", port), Handler)
         except OSError as e:       # 포트 사용 중 등 -> 다음 포트 시도
             last_error = e
     raise SystemExit(f"사용 가능한 포트를 찾지 못했습니다 ({START_PORT}~{START_PORT + PORT_TRIES - 1}): {last_error}")
