@@ -222,7 +222,7 @@ function combatChecks() {
   check('Depth movement also uses walking animation',namedPlayerFrame().source==='player_walk');
   clearInput();
   for (const distance of [40, 100, 160, 260, 310, -100, -260]) {
-    reset(); player.x = distance < 0 ? 400 : 200;
+    reset(); player.x = distance < 0 ? 400 : 200; player.face = Math.sign(distance);
     enemies = [mkEnemy('grunt', player.x + distance, 420)]; startSkill('thrust');
     for (let i = 0; i < 50; i++) updPlayer();
     check('Thrust reaches target once at distance ' + distance, enemies[0].hp === enemies[0].max-28 && player.st === 'free');
@@ -236,6 +236,33 @@ function combatChecks() {
   reset(); player.x=200; player.face=1; enemies=[mkEnemy('grunt',300,420),mkEnemy('grunt',100,420)];
   startSkill('whirl'); player.t=11; updPlayer();
   check('Whirl deals sixteen on both sides at expanded range', enemies.every(e=>e.hp===e.max-16));
+  for (const id of [...Object.keys(SKILLS), 'special', 'cast']) for (const dir of [-1,1]) for (const distance of [-60,20,180]) {
+    reset();player.x=320;player.face=-dir;player.mg=3;
+    enemies=[mkEnemy('grunt',player.x+dir*distance,420)];
+    inputDown(dir===1?'ArrowRight':'ArrowLeft');
+    if(id==='special')startSpecial();else if(id==='cast')startCast();else startSkill(id);
+    check('All skills honor input '+id+' '+dir+' '+distance,player.face===dir);
+    clearInput();
+    for(let i=0;i<40;i++)updPlayer();
+    check('All skills avoid backward movement '+id+' '+dir+' '+distance,player.face===dir&&(player.x-320)*dir>=-.001);
+  }
+  for (const id of [...Object.keys(SKILLS), 'special', 'cast']) for (const dir of [-1,1]) {
+    reset();player.x=320;player.face=dir;player.mg=3;enemies=[mkEnemy('grunt',320-dir*50,420)];
+    if(id==='special')startSpecial();else if(id==='cast')startCast();else startSkill(id);
+    check('All skills retain facing without input '+id+' '+dir,player.face===dir);
+  }
+  for (const [key, dir] of [['ArrowRight',1],['ArrowLeft',-1],['KeyD',1],['KeyA',-1],[null,1],[null,-1]]) {
+    reset(); player.x=320; player.face=key ? -dir : dir;
+    enemies=[mkEnemy('grunt',player.x-dir*60,420),mkEnemy('grunt',player.x+dir*180,420)];
+    if(key)inputDown(key);
+    inputDown('KeyL');updPlayer();
+    check('Red wave honors aim with closer enemy behind '+key+' '+dir,player.skill==='redwave'&&player.face===dir);
+    clearInput();inputDown(dir===1?'ArrowLeft':'ArrowRight');
+    for(let i=0;i<20;i++)updPlayer();
+    check('Red wave locks selected direction through windup '+key+' '+dir,hazards.length===1&&hazards[0].dir===dir);
+    for(let i=0;i<35;i++)updHazards();
+    check('Red wave hits forward target, not enemy behind '+key+' '+dir,enemies[0].hp===enemies[0].max&&enemies[1].hp===enemies[1].max-24);
+  }
   for(const dir of [1,-1]) {
     reset(); player.x=dir===1?100:700; player.face=dir;
     enemies=[mkEnemy('grunt',player.x+dir*300,420),mkEnemy('grunt',player.x+dir*460,420),
@@ -361,6 +388,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.BOSS_INTRO_HUD_SUITE){await ready(base+'/embedded.html');await require('./boss-intro-hud.cjs')({evaluate,call,errors,root});return;}
     if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./pixel-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}

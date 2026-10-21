@@ -15,7 +15,7 @@ function call(method, params = {}) {
   });
 }
 async function evaluate(expression, contextId) {
-  const r = await call('Runtime.evaluate', {expression, contextId, returnByValue: true});
+  const r = await call('Runtime.evaluate', {expression, contextId, returnByValue: true, awaitPromise: true});
   if (r.exceptionDetails) throw Error(r.exceptionDetails.text);
   return r.result.value;
 }
@@ -52,15 +52,22 @@ async function evaluate(expression, contextId) {
     };
     await new Promise(resolve => ws.onopen = resolve);
     await call('Runtime.enable'); await call('Page.enable');
+    await call('Page.addScriptToEvaluateOnNewDocument', {source: `
+      if(window.AudioContext){const Native=window.AudioContext;
+        window.AudioContext=class extends Native {constructor(...args){super(...args);window.testAudioContext=this;
+          const create=this.createDynamicsCompressor.bind(this);
+          this.createDynamicsCompressor=()=>{const node=create();window.testAudioMeter=this.createAnalyser();node.connect(window.testAudioMeter);return node;};
+        }};
+      }`});
     await call('Page.navigate', {url});
-    let result;
+    let result, gameContext;
     for (let i = 0; i < 150; i++) {
       for (const [id, context] of contexts) {
         if (!context.auxData?.isDefault) continue;
         try {
           result = await evaluate(`location.href.includes('/component/') && document.readyState === 'complete' && typeof scene !== 'undefined' && typeof UX !== 'undefined' ? ({url:location.href,scene,canvas:!!document.querySelector('#c'),width:W,height:H,renderWidth:cv.width,renderHeight:cv.height}) : null`, id);
         } catch {continue;}
-        if (result) break;
+        if (result) { gameContext = id; break; }
       }
       if (result) break;
       await delay(200);
@@ -68,6 +75,33 @@ async function evaluate(expression, contextId) {
     assert(result, 'Game did not initialize through Streamlit. '+log);
     await delay(500);
     assert.equal(result.canvas, true); assert.equal(result.width, 960); assert.equal(result.height, 540);
+    // Reproduce a first interaction without browser activation inside the component.
+    await evaluate("localStorage.removeItem('sf_snd');dispatchEvent(new PointerEvent('pointerdown',{pointerType:'touch'}))", gameContext);
+    await delay(100);
+    assert.equal(await evaluate('testAudioContext.state',gameContext),'suspended','Initial blocked audio must be retryable');
+    const frame = await evaluate(`(()=>{const f=[...document.querySelectorAll('iframe')].find(f=>f.src.includes('/component/'));const r=f.getBoundingClientRect();return {x:r.x+r.width*.1,y:r.y+r.height*.15};})()`);
+    for(const type of ['mousePressed','mouseReleased'])await call('Input.dispatchMouseEvent',{type,...frame,button:'left',clickCount:1});
+    await delay(200);
+    assert.equal(await evaluate('testAudioContext.state',gameContext),'running','Trusted iframe click retries audio unlock');
+    const rms = () => evaluate(`(()=>{const a=new Float32Array(testAudioMeter.fftSize);testAudioMeter.getFloatTimeDomainData(a);return Math.sqrt(a.reduce((sum,v)=>sum+v*v,0)/a.length)})()`,gameContext);
+    await evaluate('AUDIO.music(0)',gameContext);await delay(1200);
+    assert(await rms()>.0001,'Stage BGM produces audio inside Streamlit');
+    await evaluate('AUDIO.silence()',gameContext);await delay(450);
+    await evaluate("AUDIO.sfx('hit',2)",gameContext);await delay(70);
+    assert(await rms()>.0001,'Effects produce audio inside Streamlit');
+    await evaluate('AUDIO.pause(true)',gameContext);await delay(100);
+    await evaluate("dispatchEvent(new Event('touchend'));dispatchEvent(new Event('click'))",gameContext);
+    assert.equal(await evaluate('testAudioContext.state',gameContext),'suspended');
+    await evaluate('AUDIO.pause(false)',gameContext);await delay(100);
+    assert.equal(await evaluate('testAudioContext.state',gameContext),'running');
+    for(const event of ['pointerup','touchend','click']) {
+      await evaluate('testAudioContext.suspend()',gameContext);
+      await evaluate(`dispatchEvent(new Event('${event}'))`,gameContext);await delay(80);
+      assert.equal(await evaluate('testAudioContext.state',gameContext),'running',event+' recovers interrupted audio');
+    }
+    await evaluate("AUDIO.toggle();dispatchEvent(new Event('touchend'));dispatchEvent(new Event('click'))",gameContext);
+    assert.equal(await evaluate('AUDIO.isOn()',gameContext),false,'Retry preserves explicit mute');
+    console.log('PASS Streamlit iframe audio: blocked first gesture, trusted unlock, BGM/effects signal, pause/resume and mute');
     assert.deepEqual(errors, []);
     assert((await fetch(url+'/_stcore/health')).ok, 'Backend health after game initialization');
     const out = path.join(root, 'artifacts/streamlit-1.37'); fs.mkdirSync(out, {recursive: true});
