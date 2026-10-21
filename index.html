@@ -209,6 +209,11 @@
   .skillbtn::after { content: attr(data-cooldown); position: absolute; inset: 0; display: grid; place-items: center; color: white; font: bold clamp(14px,2cqw,24px) sans-serif; text-shadow: 0 2px 4px black; z-index: 3; }
   .skillbtn.ready { border-color: #93d6ff; box-shadow: 0 0 12px #5ca8e655; }
   .skillbtn:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+
+  #title.named-title #btnBossChallenge { position: absolute; left: 5%; bottom: 13%; margin: 0; padding: 1.2cqw 2cqw; font-size: clamp(12px,1.7cqw,20px); letter-spacing: 0; }
+  #challengeList { display: grid; gap: 8px; }
+  #challengeList .challenge-boss { margin: 0; padding: 12px; font-size: clamp(12px,1.6cqw,18px); text-align: left; }
+  #challengeList .challenge-boss:disabled { opacity: .45; cursor: default; transform: none; }
 </style>
 </head>
 <body>
@@ -226,6 +231,18 @@
     <button class="skillbtn" data-skill="redwave"><span class="key">L</span><span class="name">붉은 파동</span><span class="cool"></span></button>
   </div>
 
+
+  <div class="screen dialog" id="challenge"><h2>보스챌린지</h2>
+    <div class="dialog-body"><p>본편에서 클리어한 보스에게 다시 도전하세요.</p>
+    <p>체력 100 · 목숨 3 · 필살기 100 · 뇌격 3회로 시작합니다.<br>본편 진행과 점수 기록은 유지됩니다.</p>
+    <div id="challengeList"></div></div>
+    <div class="actions"><button class="btn secondary" id="btnChallengeBack">타이틀로</button></div>
+  </div>
+  <div class="screen dialog" id="challengeResult"><h2 id="challengeResultTitle"></h2>
+    <p id="challengeResultInfo"></p><div class="actions">
+    <button class="btn" id="btnChallengeRetry">다시 도전</button>
+    <button class="btn secondary" id="btnChallengeList">보스 목록</button></div>
+  </div>
   <!-- 타이틀 -->
   <div class="screen show" id="title">
     <div class="logo">
@@ -236,7 +253,7 @@
       <div class="actions"><button class="btn" id="btnContinue" hidden>이어하기</button><button class="btn" id="btnStart">새 게임</button></div>
       <div class="actions"><button class="btn secondary" id="btnTitleSettings">설정</button></div>
       <p><a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a></p>
-      <p id="recordSummary"></p><p id="saveStatus"></p>
+      <div class="actions"><button class="btn" id="btnBossChallenge">보스챌린지</button></div><p id="recordSummary"></p><p id="saveStatus"></p>
       <p style="margin-top:12px;font-size:13px">Enter · 새 게임 / 진행은 스테이지 시작 지점에 저장됩니다</p>
     </div>
   </div>
@@ -289,7 +306,7 @@
   </div>
 
   <div class="screen dialog" id="pause"><h2>일시정지</h2><p id="pauseReason">ESC 또는 계속하기</p>
-    <div class="actions"><button class="btn" id="btnResume">계속하기</button><button class="btn secondary" id="btnPauseHelp">조작 안내</button><button class="btn secondary" id="btnPauseSettings">설정</button></div>
+    <div class="actions"><button class="btn secondary" id="btnPauseBosses" hidden>보스 목록</button><button class="btn" id="btnResume">계속하기</button><button class="btn secondary" id="btnPauseHelp">조작 안내</button><button class="btn secondary" id="btnPauseSettings">설정</button></div>
     <div class="actions"><button class="btn secondary" id="btnRestart">스테이지 다시 시작</button><button class="btn secondary" id="btnPauseTitle">타이틀로</button></div>
     <p class="tips">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
   </div>
@@ -317,7 +334,7 @@
   <div class="screen" id="over">
     <h1 style="font-size:7cqw;color:#ff5252">GAME OVER</h1>
     <p id="overInfo"></p>
-    <button class="btn" id="btnRetry">다시 도전</button>
+    <button class="btn secondary" id="btnOverBosses" hidden>보스 목록</button><button class="btn" id="btnRetry">다시 도전</button>
     <button class="btn" id="btnToTitle" style="margin-top:1cqw;background:#2b2d4a">타이틀로</button>
   </div>
 
