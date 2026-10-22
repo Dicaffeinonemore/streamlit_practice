@@ -74,7 +74,7 @@ function drawViesaPlayer(){
     const size=VIESA_ART.worldHeight*1.6,alpha=fading?clamp(1-(p.t-8)/12,0,1):1;
     drawViesaFx('moon_sigil',f,p.x-p.face*24,p.y,p.z+VIESA_ART.worldHeight*.55,size,size,p.face,alpha);
   }
-  paintViesa(frame,p);
+  paintViesa(frame,p,p.st==='dead'?clamp(1-(p.t-65)/35,0,1):1);
   p.tipX=p.x+p.face*(frame.tip?.[0]??42)*VIESA_ART.scale;p.tipH=p.z+(frame.tip?.[1]??80)*VIESA_ART.scale;
   if(p.st==='skill'&&a){
     if(a.phase==='snipe_draw'&&p.t>=12)drawViesaFx('charge_glow',Math.floor(p.t/4)%6,p.tipX,p.y,p.tipH,40,40,p.face);

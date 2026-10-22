@@ -388,6 +388,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.DEATH_FADE_SUITE){await ready(base+'/embedded.html');await require('./death-fade.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_FIXES_SUITE){await ready(base+'/embedded.html');await require('./viesa-fixes.cjs')({evaluate,call,errors,root});return;}
     if(process.env.CHARACTER_SELECT_SUITE){await ready(base+'/embedded.html');await require('./character-select.cjs')({evaluate,call,errors,root});return;}
     if(process.env.COMBAT_UPDATE_SUITE){await ready(base+'/embedded.html');await require('./combat-update.cjs')({evaluate,call,errors,root});return;}
