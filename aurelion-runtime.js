@@ -144,7 +144,7 @@ function aurelionBoxHit(box,depth,x,y,face=1,h=0,oldX=x) {
   const [bx,by,bw,bh]=box,k=AURELION_K,p=player;
   const left=Math.min(x,oldX)+Math.min(bx*face,(bx+bw)*face)*k;
   const right=Math.max(x,oldX)+Math.max(bx*face,(bx+bw)*face)*k;
-  return p.x+12>=left&&p.x-12<=right&&Math.abs(p.y-y)<depth&&p.z+90>=h+by*k&&p.z<=h+(by+bh)*k;
+  return p.x+playerBodyHalfWidth()>=left&&p.x-playerBodyHalfWidth()<=right&&Math.abs(p.y-y)<depth*playerHurtScale()&&p.z+playerBodyHeight()>=h+by*k&&p.z<=h+(by+bh)*k;
 }
 function aurelionHurtPlayer(e,attack,source=e) {
   const hpBefore=player.hp;

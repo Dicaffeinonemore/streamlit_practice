@@ -1,0 +1,49 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'artifacts/trailer/black-moon-knight-trailer.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:42.00, start: 0.000000, bitrate: 16540 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709/bt709/iec61966-2-1, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 16338 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 libx264
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 193 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+[Parsed_volumedetect_0 @ 00000250131aea40] n_samples: 0
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))
+  Stream #0:1 -> #0:1 (aac (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: wrapped_avframe, yuvj420p(pc, bt709/bt709/iec61966-2-1, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 30 fps, 30 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 wrapped_avframe
+  Stream #0:1(und): Audio: pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 pcm_s16le
+frame=  470 fps=0.0 q=-0.0 size=N/A time=00:00:15.66 bitrate=N/A speed=30.7x    
+frame=  940 fps=922 q=-0.0 size=N/A time=00:00:31.33 bitrate=N/A speed=30.7x    
+[Parsed_volumedetect_0 @ 0000025014020300] n_samples: 4032512
+[Parsed_volumedetect_0 @ 0000025014020300] mean_volume: -20.2 dB
+[Parsed_volumedetect_0 @ 0000025014020300] max_volume: -1.3 dB
+[Parsed_volumedetect_0 @ 0000025014020300] histogram_1db: 7
+[Parsed_volumedetect_0 @ 0000025014020300] histogram_2db: 85
+[Parsed_volumedetect_0 @ 0000025014020300] histogram_3db: 602
+[Parsed_volumedetect_0 @ 0000025014020300] histogram_4db: 2186
+[Parsed_volumedetect_0 @ 0000025014020300] histogram_5db: 5562
+[out#0/null @ 0000025012b6cf00] video:541KiB audio:7876KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame= 1260 fps=1010 q=-0.0 Lsize=N/A time=00:00:42.00 bitrate=N/A speed=33.7x    

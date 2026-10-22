@@ -1,0 +1,1163 @@
+{
+  "format": "PNG lossless (same as Barel)",
+  "sources": {
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\05_Basic_Movement_Idle_Walk_Run_8_8_8.png": "244f16af4411dfe2d9df5b523a91919760483be843e3743361e9715702dba24c",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\06_Melee_Combo_Slash1_Slash2_Kick_5_5_6.png": "4db90c0dae767d0deee80882f40e26c883a1b5c176f5f75dde9ef878d1bc9d49",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\07_Quick_Shot_Jump_Jump_Shot_6_6_5.png": "4f4d939f32f262f97b42e49e2cd227f7042a6cbbb231703971975c8b091bd3b6",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\01_Long_Range_Sniper_Draw_Release_6x2.png": "4ae93248696f204174a46057b71075e6159d311bbf6fc51dead259aebd03e05a",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\02_Rapid_Fire_Start_Loop_End_4_6_4.png": "f3abc62a29b5b2db91c057b93aa8beb16266c32565e9857f5453d6cfd6c86bd3",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\03_Dash_Slash_Backflip_7_8.png": "b06704ece1c0e18c2ebedb5046bd2998e016867a0a9603d5df9f28a4e531559e",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\04_Black_Moon_Barrage_Ultimate_6_5_6_7.png": "3c92133351235d56b16f766635186064348b7e819bfa8f19392d507d552676d5",
+    "assets_src\\viesa\\Viesa_Revised\\01_Character_Motions\\08_Damage_Hurt_Knockdown_GetUp_Death_4_7_6_6.png": "a314dfa7923f1b288a78df3127bcb5952568774f2a727ca45ebdb893c7dc5142",
+    "assets_src\\viesa\\Viesa_Revised\\02_Basic_Effects\\Basic_Arrow_Effects_4_5_4_6_6_5+5.png": "1923996ff6114d3f35ec7b212ef00025353bfe676588df9b19369c9665808fd9",
+    "assets_src\\viesa\\Viesa_Revised\\03_Ultimate_Effects\\Black_Moon_Barrage_Effects_4_4_6_6_4_7.png": "eef13c615454199de8aed38d3388d7692579e18e3f08e29b3b9956566e5046c1"
+  },
+  "animations": {
+    "idle": {
+      "actual": 8,
+      "expected": 8,
+      "row": [
+        0,
+        321
+      ],
+      "columnCuts": [
+        [
+          0,
+          229
+        ],
+        [
+          229,
+          438
+        ],
+        [
+          438,
+          648
+        ],
+        [
+          648,
+          856
+        ],
+        [
+          856,
+          1067
+        ],
+        [
+          1067,
+          1272
+        ],
+        [
+          1272,
+          1475
+        ],
+        [
+          1475,
+          1672
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 315.5,
+      "sheet": 5,
+      "smallFragmentsMerged": 83,
+      "strayHalfResolutionPixelsRemoved": 24
+    },
+    "walk": {
+      "actual": 8,
+      "expected": 8,
+      "row": [
+        321,
+        628
+      ],
+      "columnCuts": [
+        [
+          0,
+          220
+        ],
+        [
+          220,
+          433
+        ],
+        [
+          433,
+          637
+        ],
+        [
+          637,
+          855
+        ],
+        [
+          855,
+          1060
+        ],
+        [
+          1060,
+          1208
+        ],
+        [
+          1208,
+          1465
+        ],
+        [
+          1465,
+          1672
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.254
+      ],
+      "groundY": 619.5,
+      "sheet": 5,
+      "smallFragmentsMerged": 76,
+      "strayHalfResolutionPixelsRemoved": 20
+    },
+    "run": {
+      "actual": 8,
+      "expected": 8,
+      "row": [
+        628,
+        941
+      ],
+      "columnCuts": [
+        [
+          0,
+          238
+        ],
+        [
+          238,
+          448
+        ],
+        [
+          448,
+          644
+        ],
+        [
+          644,
+          824
+        ],
+        [
+          824,
+          1049
+        ],
+        [
+          1049,
+          1235
+        ],
+        [
+          1235,
+          1474
+        ],
+        [
+          1474,
+          1672
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.16
+      ],
+      "groundY": 912.0,
+      "sheet": 5,
+      "smallFragmentsMerged": 91,
+      "strayHalfResolutionPixelsRemoved": 14
+    },
+    "slash1": {
+      "actual": 5,
+      "expected": 5,
+      "row": [
+        0,
+        348
+      ],
+      "columnCuts": [
+        [
+          0,
+          294
+        ],
+        [
+          294,
+          575
+        ],
+        [
+          575,
+          887
+        ],
+        [
+          887,
+          1160
+        ],
+        [
+          1160,
+          1448
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.048
+      ],
+      "groundY": 346.0,
+      "sheet": 6,
+      "smallFragmentsMerged": 120,
+      "strayHalfResolutionPixelsRemoved": 10
+    },
+    "slash2": {
+      "actual": 5,
+      "expected": 5,
+      "row": [
+        348,
+        707
+      ],
+      "columnCuts": [
+        [
+          0,
+          298
+        ],
+        [
+          298,
+          573
+        ],
+        [
+          573,
+          867
+        ],
+        [
+          867,
+          1162
+        ],
+        [
+          1162,
+          1448
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 707.0,
+      "sheet": 6,
+      "smallFragmentsMerged": 145,
+      "strayHalfResolutionPixelsRemoved": 23
+    },
+    "kick": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        707,
+        1086
+      ],
+      "columnCuts": [
+        [
+          0,
+          226
+        ],
+        [
+          226,
+          439
+        ],
+        [
+          439,
+          710
+        ],
+        [
+          710,
+          1001
+        ],
+        [
+          1001,
+          1205
+        ],
+        [
+          1205,
+          1448
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 1084.0,
+      "sheet": 6,
+      "smallFragmentsMerged": 68,
+      "strayHalfResolutionPixelsRemoved": 16
+    },
+    "shot": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        0,
+        355
+      ],
+      "columnCuts": [
+        [
+          0,
+          297
+        ],
+        [
+          297,
+          550
+        ],
+        [
+          550,
+          839
+        ],
+        [
+          839,
+          1134
+        ],
+        [
+          1134,
+          1420
+        ],
+        [
+          1420,
+          1672
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 352.0,
+      "sheet": 7,
+      "smallFragmentsMerged": 156,
+      "strayHalfResolutionPixelsRemoved": 16
+    },
+    "jump": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        355,
+        641
+      ],
+      "columnCuts": [
+        [
+          0,
+          276
+        ],
+        [
+          276,
+          584
+        ],
+        [
+          584,
+          858
+        ],
+        [
+          858,
+          1115
+        ],
+        [
+          1115,
+          1401
+        ],
+        [
+          1401,
+          1672
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 637.0,
+      "sheet": 7,
+      "smallFragmentsMerged": 142,
+      "strayHalfResolutionPixelsRemoved": 3
+    },
+    "jump_shot": {
+      "actual": 5,
+      "expected": 5,
+      "row": [
+        641,
+        941
+      ],
+      "columnCuts": [
+        [
+          0,
+          359
+        ],
+        [
+          359,
+          681
+        ],
+        [
+          681,
+          992
+        ],
+        [
+          992,
+          1314
+        ],
+        [
+          1314,
+          1672
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 924.0,
+      "sheet": 7,
+      "smallFragmentsMerged": 131,
+      "strayHalfResolutionPixelsRemoved": 1
+    },
+    "snipe_draw": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        0,
+        433
+      ],
+      "columnCuts": [
+        [
+          0,
+          281
+        ],
+        [
+          281,
+          566
+        ],
+        [
+          566,
+          866
+        ],
+        [
+          866,
+          1174
+        ],
+        [
+          1174,
+          1476
+        ],
+        [
+          1476,
+          1774
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.018000000000000002
+      ],
+      "groundY": 426.0,
+      "sheet": 1,
+      "smallFragmentsMerged": 121,
+      "strayHalfResolutionPixelsRemoved": 41
+    },
+    "snipe_release": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        433,
+        887
+      ],
+      "columnCuts": [
+        [
+          0,
+          324
+        ],
+        [
+          324,
+          663
+        ],
+        [
+          663,
+          965
+        ],
+        [
+          965,
+          1234
+        ],
+        [
+          1234,
+          1492
+        ],
+        [
+          1492,
+          1774
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.048
+      ],
+      "groundY": 847.0,
+      "sheet": 1,
+      "smallFragmentsMerged": 137,
+      "strayHalfResolutionPixelsRemoved": 11
+    },
+    "rapid_start": {
+      "actual": 4,
+      "expected": 4,
+      "row": [
+        0,
+        327
+      ],
+      "columnCuts": [
+        [
+          0,
+          423
+        ],
+        [
+          423,
+          696
+        ],
+        [
+          696,
+          1024
+        ],
+        [
+          1024,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.04
+      ],
+      "groundY": 315.5,
+      "sheet": 2,
+      "smallFragmentsMerged": 96,
+      "strayHalfResolutionPixelsRemoved": 44
+    },
+    "rapid_loop": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        327,
+        642
+      ],
+      "columnCuts": [
+        [
+          0,
+          275
+        ],
+        [
+          275,
+          530
+        ],
+        [
+          530,
+          767
+        ],
+        [
+          767,
+          1028
+        ],
+        [
+          1028,
+          1252
+        ],
+        [
+          1252,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.184
+      ],
+      "groundY": 640.0,
+      "sheet": 2,
+      "smallFragmentsMerged": 80,
+      "strayHalfResolutionPixelsRemoved": 71
+    },
+    "rapid_end": {
+      "actual": 4,
+      "expected": 4,
+      "row": [
+        642,
+        1024
+      ],
+      "columnCuts": [
+        [
+          0,
+          460
+        ],
+        [
+          460,
+          757
+        ],
+        [
+          757,
+          1092
+        ],
+        [
+          1092,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.002
+      ],
+      "groundY": 987.0,
+      "sheet": 2,
+      "smallFragmentsMerged": 118,
+      "strayHalfResolutionPixelsRemoved": 9
+    },
+    "dash_slash": {
+      "actual": 7,
+      "expected": 7,
+      "row": [
+        0,
+        476
+      ],
+      "columnCuts": [
+        [
+          0,
+          307
+        ],
+        [
+          307,
+          564
+        ],
+        [
+          564,
+          782
+        ],
+        [
+          782,
+          1049
+        ],
+        [
+          1049,
+          1248
+        ],
+        [
+          1248,
+          1534
+        ],
+        [
+          1534,
+          1774
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        -0.216
+      ],
+      "groundY": 454.0,
+      "sheet": 3,
+      "smallFragmentsMerged": 96,
+      "strayHalfResolutionPixelsRemoved": 1
+    },
+    "backflip": {
+      "actual": 8,
+      "expected": 8,
+      "row": [
+        476,
+        887
+      ],
+      "columnCuts": [
+        [
+          0,
+          237
+        ],
+        [
+          237,
+          487
+        ],
+        [
+          487,
+          672
+        ],
+        [
+          672,
+          837
+        ],
+        [
+          837,
+          1056
+        ],
+        [
+          1056,
+          1289
+        ],
+        [
+          1289,
+          1561
+        ],
+        [
+          1561,
+          1774
+        ]
+      ],
+      "thresholds": [
+        0.002,
+        0.152
+      ],
+      "groundY": 836.0,
+      "sheet": 3,
+      "smallFragmentsMerged": 117,
+      "strayHalfResolutionPixelsRemoved": 10
+    },
+    "ult_leap": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        0,
+        272
+      ],
+      "columnCuts": [
+        [
+          0,
+          223
+        ],
+        [
+          223,
+          495
+        ],
+        [
+          495,
+          744
+        ],
+        [
+          744,
+          993
+        ],
+        [
+          993,
+          1246
+        ],
+        [
+          1246,
+          1536
+        ]
+      ],
+      "thresholds": [
+        "component-center clustering",
+        -0.594
+      ],
+      "groundY": 250.0,
+      "sheet": 4,
+      "smallFragmentsMerged": 60,
+      "strayHalfResolutionPixelsRemoved": 4
+    },
+    "ult_summon": {
+      "actual": 4,
+      "expected": 4,
+      "row": [
+        245,
+        491
+      ],
+      "columnCuts": [
+        [
+          0,
+          442
+        ],
+        [
+          442,
+          722
+        ],
+        [
+          722,
+          1002
+        ],
+        [
+          1002,
+          1536
+        ]
+      ],
+      "thresholds": [
+        "component-center clustering",
+        -0.002
+      ],
+      "groundY": 490.5,
+      "sheet": 4,
+      "smallFragmentsMerged": 85,
+      "strayHalfResolutionPixelsRemoved": 19
+    },
+    "ult_barrage": {
+      "actual": 7,
+      "expected": 7,
+      "row": [
+        465,
+        765
+      ],
+      "columnCuts": [
+        [
+          0,
+          256
+        ],
+        [
+          256,
+          470
+        ],
+        [
+          470,
+          708
+        ],
+        [
+          708,
+          926
+        ],
+        [
+          926,
+          1120
+        ],
+        [
+          1120,
+          1344
+        ],
+        [
+          1344,
+          1536
+        ]
+      ],
+      "thresholds": [
+        "component-center clustering",
+        -0.128
+      ],
+      "groundY": 744.0,
+      "sheet": 4,
+      "smallFragmentsMerged": 129,
+      "strayHalfResolutionPixelsRemoved": 38
+    },
+    "ult_final": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        715,
+        1009
+      ],
+      "columnCuts": [
+        [
+          0,
+          283
+        ],
+        [
+          283,
+          550
+        ],
+        [
+          550,
+          815
+        ],
+        [
+          815,
+          1071
+        ],
+        [
+          1071,
+          1327
+        ],
+        [
+          1327,
+          1536
+        ]
+      ],
+      "thresholds": [
+        "component-center clustering",
+        -0.122
+      ],
+      "groundY": 1008.0,
+      "sheet": 4,
+      "smallFragmentsMerged": 102,
+      "strayHalfResolutionPixelsRemoved": 9
+    },
+    "hurt": {
+      "actual": 4,
+      "expected": 4,
+      "row": [
+        0,
+        308
+      ],
+      "columnCuts": [
+        [
+          0,
+          308
+        ],
+        [
+          308,
+          567
+        ],
+        [
+          567,
+          826
+        ],
+        [
+          826,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.012,
+        -0.002
+      ],
+      "groundY": 298.0,
+      "sheet": 8,
+      "smallFragmentsMerged": 63,
+      "strayHalfResolutionPixelsRemoved": 13
+    },
+    "knockdown": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        308,
+        521
+      ],
+      "columnCuts": [
+        [
+          0,
+          273
+        ],
+        [
+          273,
+          489
+        ],
+        [
+          489,
+          714
+        ],
+        [
+          714,
+          916
+        ],
+        [
+          916,
+          1202
+        ],
+        [
+          1202,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.012,
+        -0.156
+      ],
+      "groundY": 513.0,
+      "sheet": 8,
+      "smallFragmentsMerged": 45,
+      "strayHalfResolutionPixelsRemoved": 22
+    },
+    "getup": {
+      "actual": 6,
+      "expected": 6,
+      "row": [
+        521,
+        764
+      ],
+      "columnCuts": [
+        [
+          0,
+          309
+        ],
+        [
+          309,
+          576
+        ],
+        [
+          576,
+          796
+        ],
+        [
+          796,
+          1038
+        ],
+        [
+          1038,
+          1248
+        ],
+        [
+          1248,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.012,
+        0.054000000000000006
+      ],
+      "groundY": 753.0,
+      "sheet": 8,
+      "smallFragmentsMerged": 80,
+      "strayHalfResolutionPixelsRemoved": 4
+    },
+    "death": {
+      "actual": 5,
+      "expected": 5,
+      "row": [
+        764,
+        1024
+      ],
+      "columnCuts": [
+        [
+          0,
+          253
+        ],
+        [
+          253,
+          519
+        ],
+        [
+          519,
+          748
+        ],
+        [
+          748,
+          1146
+        ],
+        [
+          1146,
+          1536
+        ]
+      ],
+      "thresholds": [
+        0.012,
+        0.05
+      ],
+      "groundY": 1001.0,
+      "sheet": 8,
+      "smallFragmentsMerged": 36,
+      "strayHalfResolutionPixelsRemoved": 5
+    }
+  },
+  "sheets": {
+    "5": {
+      "reference": [
+        "idle",
+        0
+      ],
+      "bodyMeasurement": {
+        "height": 304,
+        "top": 1,
+        "foot": 305,
+        "bodyX": 80.0
+      },
+      "relativeToIdle": 1.0,
+      "sourceToAtlas": 0.4437499999999999
+    },
+    "6": {
+      "reference": [
+        "slash1",
+        0
+      ],
+      "bodyMeasurement": {
+        "height": 300,
+        "top": 1,
+        "foot": 301,
+        "bodyX": 96.0
+      },
+      "relativeToIdle": 1.0133333333333334,
+      "sourceToAtlas": 0.4496666666666666
+    },
+    "7": {
+      "reference": [
+        "shot",
+        0
+      ],
+      "bodyMeasurement": {
+        "height": 321,
+        "top": 2,
+        "foot": 323,
+        "bodyX": 103.0
+      },
+      "relativeToIdle": 0.9470404984423676,
+      "sourceToAtlas": 0.42024922118380054
+    },
+    "1": {
+      "reference": [
+        "snipe_release",
+        5
+      ],
+      "bodyMeasurement": {
+        "height": 351,
+        "top": 2,
+        "foot": 353,
+        "bodyX": 101.0
+      },
+      "relativeToIdle": 0.8660968660968661,
+      "sourceToAtlas": 0.3843304843304843
+    },
+    "2": {
+      "reference": [
+        "rapid_end",
+        3
+      ],
+      "bodyMeasurement": {
+        "height": 339,
+        "top": 2,
+        "foot": 341,
+        "bodyX": 125.0
+      },
+      "relativeToIdle": 0.8967551622418879,
+      "sourceToAtlas": 0.39793510324483766
+    },
+    "3": {
+      "reference": [
+        "dash_slash",
+        6
+      ],
+      "bodyMeasurement": {
+        "height": 286,
+        "top": 3,
+        "foot": 289,
+        "bodyX": 130.0
+      },
+      "relativeToIdle": 1.062937062937063,
+      "sourceToAtlas": 0.4716783216783216
+    },
+    "4": {
+      "reference": [
+        "ult_final",
+        5
+      ],
+      "bodyMeasurement": {
+        "height": 188,
+        "top": 2,
+        "foot": 190,
+        "bodyX": 93.0
+      },
+      "relativeToIdle": 1.6170212765957446,
+      "sourceToAtlas": 0.7175531914893615
+    },
+    "8": {
+      "reference": [
+        "getup",
+        5
+      ],
+      "bodyMeasurement": {
+        "height": 217,
+        "top": 7,
+        "foot": 224,
+        "bodyX": 94.0
+      },
+      "relativeToIdle": 1.400921658986175,
+      "sourceToAtlas": 0.6216589861751151
+    }
+  },
+  "meleeLinePixelsRemoved": 21716,
+  "ultimateRowCenters": [
+    136.9649558385248,
+    354.8160557540465,
+    595.2867573750228,
+    871.0011640489574
+  ],
+  "ultimateAirPivotOffset": -22.0,
+  "effects": {
+    "arrow": 1,
+    "arrow_trail": 3,
+    "arrow_fade": 5,
+    "snipe_arrow": 4,
+    "charge_glow": 6,
+    "hit_spark": 6,
+    "dash_streak": 5,
+    "land_dust": 5,
+    "phantom_arrow": 4,
+    "volley": 4,
+    "moon_sigil": 6,
+    "ult_impact": 6,
+    "giant_arrow": 4,
+    "ult_explosion": 7
+  },
+  "effectCutMethods": {
+    "phantom_arrow": "alpha projection",
+    "volley": "alpha projection",
+    "moon_sigil": "alpha projection",
+    "ult_impact": "alpha projection",
+    "giant_arrow": "alpha projection",
+    "ult_explosion": "required equal seventh cuts for touching frames"
+  }
+}

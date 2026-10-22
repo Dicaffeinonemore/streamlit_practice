@@ -39,6 +39,10 @@ function drawPixelHUD(p) {
   const scale = 1064 * k / 1104;
   ctx.save(); ctx.translate(3, 20); ctx.scale(scale, scale); ctx.translate(0, -140); ctx.imageSmoothingEnabled = false;
   ctx.drawImage(pixelUI.hud, 0, 140);
+  if(isViesa(p)){
+    drawViesaHUDPortrait(145,324,82,80);
+    for(let i=0;i<p.lives;i++)drawViesaHUDPortrait(330+i*88,477,24,27);
+  }
   for (const [y, ratio, color] of [[290, p.hp / p.max, '#290508'], [350, p.sp / SP_MAX, '#031329']]) {
     const width = 468, amount = width * clamp(ratio, 0, 1);
     ctx.save(); ctx.beginPath(); ctx.roundRect(274, y, width, 34, 17); ctx.clip();

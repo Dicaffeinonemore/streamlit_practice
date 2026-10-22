@@ -1,0 +1,76 @@
+v1.41 — 플레이어블 궁수 비에사 추가(필살기 흑월 난사 포함)
+
+개정 리소스
+- assets_src/viesa/Viesa_RedHair_Final_Images.zip → Viesa_Revised/ 사용.
+- 00_Master는 사용하지 않음. 모션8장, 기본 이펙트1장, 필살기 이펙트1장 사용.
+- 바렐의 크로마키·무손실 PNG·아틀라스/피벗 규칙과 기존 pack_pages 재사용.
+- 녹색 투명화 및 despill, 작은 활/머리카락 조각은 가까운 몸체에 병합.
+- 06의 길게 이어진 검은 가로/세로 칸 테두리를 먼저 제거.
+- 행/열 투영과 빈 구간·잉크 골짜기를 기준으로 비균일 분리. 고정 격자를 사용하지 않음.
+- 04 필살기는 연결 성분의 중심 y를 4개 행으로 묶어 분리.
+- 붙어 있는 ult_explosion만 요청대로 전체 행 너비를 7등분.
+- 08 넉다운의 작은 연두색 영역은 투명 처리 허용 방식을 사용.
+
+실제 모션 프레임 수 (총 142장, 요청 표와 모두 일치)
+05: idle 8 / walk 8 / run 8
+06: slash1 5 / slash2 5 / kick 6
+07: shot 6 / jump 6 / jump_shot 5
+01: snipe_draw 6 / snipe_release 6
+02: rapid_start 4 / rapid_loop 6 / rapid_end 4
+03: dash_slash 7 / backflip 8
+04: ult_leap 6 / ult_summon 4 / ult_barrage 7 / ult_final 6
+08: hurt 4 / knockdown 6 / getup 6 / death 5
+파일명에 적힌 04의 6/5/6/7, 08의 4/7/6/6을 사용하지 않고 요청한 실제 프레임 수로 맞춤.
+선이 가늘거나 포즈가 낮아 투영만으로 애매한 구간은 콘텐츠 비용으로 경계를 보정하고 연결된 몸체는 통째로 유지.
+
+실제 이펙트 프레임 수 (총 66장, 요청 표와 모두 일치)
+기본: arrow 1 / arrow_trail 3 / arrow_fade 5 / snipe_arrow 4 / charge_glow 6 / hit_spark 6 / dash_streak 5 / land_dust 5
+필살기: phantom_arrow 4종 / volley 4 / moon_sigil 6 / ult_impact 6 / giant_arrow 4 / ult_explosion 7
+가산 합성은 밝기 알파 및 언프리멀티플라이, 일반 합성은 검정 임계값 투명화.
+
+시트별 크기 보정 (05 idle 1의 몸 키 304px를 기준으로 한 배율)
+01: 기준 snipe_release 6, 몸 키 351px, 상대 배율 0.866097, 원본→아틀라스 0.384330
+02: 기준 rapid_end 4, 몸 키 339px, 상대 배율 0.896755, 원본→아틀라스 0.397935
+03: 기준 dash_slash 7, 몸 키 286px, 상대 배율 1.062937, 원본→아틀라스 0.471678
+04: 기준 ult_final 6, 몸 키 188px, 상대 배율 1.617021, 원본→아틀라스 0.717553
+05: 기준 idle 1, 몸 키 304px, 상대 배율 1.000000, 원본→아틀라스 0.443750
+06: 기준 slash1 1, 몸 키 300px, 상대 배율 1.013333, 원본→아틀라스 0.449667
+07: 기준 shot 1, 몸 키 321px, 상대 배율 0.947040, 원본→아틀라스 0.420249
+08: 기준 getup 6, 몸 키 217px, 상대 배율 1.400922, 원본→아틀라스 0.621659
+게임 렌더 배율 0.72, 최종 서 있는 몸 키 97.128 월드 px = 바렐 102.24 × 0.95.
+피벗·원본 좌표·열 경계·투영 기준·병합 수·원본 해시는 assets/viesa/build-report.json 및 frames.json 참고.
+
+비에사 전용 조작
+J: 화살 / 공중 아래 30° 화살 + 체공. 사격 4번 이후 연계 가능. 공중 사격 종료 후 6틱 이내 재입력으로 체공 유지.
+H: 지상 근접 콤보 slash1 → slash2 → kick. 기사와 같은 입력 버퍼/콤보 유예시간, 쿨타임 없음.
+U: rapid_start → rapid_loop 3회 → rapid_end. 1·4번 프레임마다 총 6발. 위/아래로 다음 발 레인 조절. 쿨타임 4.6초.
+L: 조준 유지·해제 관통 저격. 일찍 놓아도 최소 30틱 조준 후 발사. 120틱 유지 시 자동 발사. 쿨타임 6.5초.
+O: 1~4번 전진, 5~6번 베기 → 낮은 백플립 → 착지. J 입력 무시. 쿨타임 7초.
+P: 지상/공중 돌진 → 높은 백플립 → 최대 40틱 약한 중력 체공. J로 공중 사격 연계. 착지 전 공중 P 한 번. 쿨타임 8초.
+K: SP100 소모 필살기 ‘흑월 난사’. 시전 전체 무적.
+공통: WASD/방향키 이동, Space/Ctrl 점프, Shift/방향키 두 번 대시, ESC 일시정지/메뉴, M 음소거.
+기본 설정에서 키 충돌 없음. 저장된 키 재설정은 기존 입력 매핑을 따름. Z/X/I/V의 기사 공격·필살·뇌격 보조 조작은 비에사에서 발동하지 않음.
+바렐 선택 시 기존 조작 유지. 선택창·조작 안내·설정·모바일 버튼 이름을 비에사에 맞춰 표시.
+
+필살기 ‘흑월 난사’
+- 도약4번부터 상승하여 키 × 1.2 높이 도달 → 소환 → 50틱 난사 → 마무리.
+- 틱당 환영 화살4발, 총200발. 모양4종 무작위, 60%는 전방의 살아있는 적 근처로 조준.
+- 화살당 0.08J, 같은 적은 3틱 간격으로만 피격. 3발마다 착탄 이펙트, 4틱마다 연출용 volley.
+- 투사체·이펙트 객체 풀 재사용. 착탄 이펙트는 최대128개로 제한.
+- 마법진 등장·3~5번 반복·6번 소멸. 마무리3번에서 거대 화살 발사.
+- 폭발 반경 키 × 1.2, 피해 3.0J, 다운 및 화면 흔들림. 이후 낙하·착지·기립.
+- 배경만 30% 어둡게 처리하며 다른 캐릭터·적은 원래 밝기로 표시.
+- HP80, 이동1.1배, 대시거리1.15배, hurtbox0.9배 및 기사 공통 피격/다운/기상 무적·사망·저장 흐름 유지.
+- 새 게임과 보스 챌린지에서 선택 가능. 저장/이어하기는 characterId를 유지.
+
+추가/갱신 파일
+- assets_src/viesa/Viesa_RedHair_Final_Images.zip 및 Viesa_Revised/01_Character_Motions,02_Basic_Effects,03_Ultimate_Effects
+- tools/viesa_build.py, tools/viesa_load_smoke.cjs
+- assets/viesa/atlas-0.png, atlas-1.png, portrait.png, frames.json, build-report.json, preview.jpg, revised-source-preview.jpg
+- viesa-art.js, viesa-runtime.js, game.js, index.html, server.py, README.md
+- patch_note/patch_1.41.txt
+
+마무리 확인 범위
+- 사용자 요청에 따라 별도 전투/회귀 테스트 단계 없이 게임 로드만 확인.
+- assets/viesa/build-report.json은 이미지 추출 결과이며 전투 테스트 결과가 아님.
+- artifacts/viesa-1.41-load/load.json 및 선택창/조작 안내/스테이지1 초기 화면 기록.

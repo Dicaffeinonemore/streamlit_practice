@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "barel-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
+SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -201,7 +201,7 @@ def run_streamlit():
     height = 1000 if review else 680
     component = components.declare_component("black_moon_reference" if review else "black_moon_game", path=str(directory))
     component(height=height, key="reference" if review else "game", default=None)
-    st.caption("v1.38 · 파일별 로딩")
+    st.caption("v1.41 · 비에사 · 필살기 흑월 난사")
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):

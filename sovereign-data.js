@@ -26,6 +26,7 @@ const SOVEREIGN_RULES = {
   home:{front:[75,85],back:[-80,100],bob:3,period:180,speed:4},
   afterimage:{life:18,interval:3,max:6,minDistance:2,alpha:.22},
   fistHp:[140,180], kdFistMul:1.5, fistGroggy:40, fallen:[480,360], rise:30, pressure:[3,2], pressureDecay:120,
+  fistDrops:{potion:.25,scroll:.15},
   intro:200, introFistDrawing:13, introFistDrop:40, kneelDown:40, awaken:210, awakenShakeDrawing:7, death:110, deathHold:60,
   command:24, ultimateKneel:120,
   direct:{wind:24,lock:16,speed:9,range:420,back:7,damage:14,backDamage:8},
@@ -39,7 +40,7 @@ const SOVEREIGN_RULES = {
   backhand:{warn:10,swing:12,damage:10,push:9},
   meteor:{rise:30,height:420,interval:20,count:4,delay:36,fall:8,active:4,rx:45,ry:20,stuck:60,damage:16},
   ultimate:{merge:60,warn:30,speed:10,turn:24,top:50,half:34,back:20,split:16,damage:23},
-  beam:{charge:30,lock:20,fire:[40,50],recovery:36,depth:14,low:40,high:120,damage:14}
+  beam:{charge:30,lock:20,fire:[40,50],recovery:36,depth:14,low:40,high:120,damage:14,neckLength:20,neckHalfHeight:3}
 };
 const SOVEREIGN_ATTACKS = Object.keys(SOVEREIGN_RULES.names);
 // Tick of the first hit window after a pattern starts; the scheduler uses it

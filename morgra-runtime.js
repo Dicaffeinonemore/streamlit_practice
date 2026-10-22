@@ -111,7 +111,7 @@ function runMorgraPattern(e) {
   }
   if(!e.morgraHit)for(const hb of d.hitboxes||[]) {
     const [x,y,w,h]=hb.box,k=morgraScale(),dx=(p.x-e.x)*e.face,hover=morgraHover(e);
-    if(dx+12>=x*k&&dx-12<=(x+w)*k&&Math.abs(p.y-e.y)<hb.depth&&p.z+90>=hover+y*k&&p.z<=hover+(y+h)*k) {
+    if(dx+playerBodyHalfWidth()>=x*k&&dx-playerBodyHalfWidth()<=(x+w)*k&&Math.abs(p.y-e.y)<hb.depth*playerHurtScale()&&p.z+playerBodyHeight()>=hover+y*k&&p.z<=hover+(y+h)*k) {
       if(hurtPlayer(m.attack.damage,e.face,!!m.attack.knockdown,e)){e.morgraHit=true;hitStop=Math.max(hitStop,m.attack.hitstop||0);}
     }
   }
@@ -121,8 +121,8 @@ function morgraArmored(e) {
   if(e.type!=='boss2'||e.st!=='pat')return false;
   return (morgraMoves[e.morgraMove]?.super_armor||[]).some(([a,b])=>e.pt/MS>=a&&e.pt/MS<=b);
 }
-function strikeMorgraCrows(reach,behind=0) {
-  const p=player;
+function strikeMorgraCrows(reach,behind=0,origin=player) {
+  const p=origin;
   for(const h of hazards) {
     const dx=(h.x-p.x)*p.face;
     if(h.kind==='crow'&&!h.dead&&dx>=-behind-15&&dx<=reach+15&&Math.abs(h.y-p.y)<26&&Math.abs(h.h-(p.z+55))<55) {
@@ -164,7 +164,7 @@ function updateMorgraHazard(z) {
   const [bx,by,bw,bh]=def.hitbox;
   const left=Math.min(oldX,z.x)+Math.min(bx*z.face,(bx+bw)*z.face)*k;
   const right=Math.max(oldX,z.x)+Math.max(bx*z.face,(bx+bw)*z.face)*k;
-  if(p.x+10>=left&&p.x-10<=right&&Math.abs(p.y-z.y)<def.depth&&p.z+85>=z.h+by*k&&p.z<=z.h+(by+bh)*k) {
+  if(p.x+10*playerHurtScale()>=left&&p.x-10*playerHurtScale()<=right&&Math.abs(p.y-z.y)<def.depth*playerHurtScale()&&p.z+85*playerHurtScale()>=z.h+by*k&&p.z<=z.h+(by+bh)*k) {
     if(hurtPlayer(def.damage,z.face,!!def.knockdown,z)) {z.dead=true;morgraFx('bolt_hit',z.x,z.y,z.h,z.owner,18);}
   }
   if(f>(def.lifetime||160)||z.x<camX-150||z.x>camX+VW+150)z.dead=true;
