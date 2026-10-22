@@ -2,7 +2,44 @@
 // One flag selects the complete replacement. Legacy boss4 code/art stays intact.
 const USE_VARGUL_V136=globalThis.VARGUL_V136_OVERRIDE!==false;
 const VARGUL_SHEETS=USE_VARGUL_V136?VARGUL_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;}):[];
-const VARGUL_READY=Promise.all(VARGUL_SHEETS.map(im=>im.decode()));
+const VARGUL_MELEE_FRAMES={};
+const VARGUL_MELEE_READY=Promise.all(Object.entries(VARGUL_MELEE_SOURCES).map(async([kind,src])=>{
+  const im=new Image();im.src=src;await im.decode();
+  // Explicit cuts follow the reference's eight drawings per row, not a uniform grid.
+  // The enlarged lower-row drawings overlap in the supplied sheets. Animate the
+  // eight separate upper-row drawings and scale the finisher without cutting arcs.
+  const rows=kind==='slash'?
+    [[0,170,452,[0,208,400,610,808,1022,1230,1442,1672]]]:
+    [[0,245,402,[20,185,365,565,780,995,1225,1470,1650]]];
+  VARGUL_MELEE_FRAMES[kind]=[];
+  for(const [,top,bottom,cuts] of rows)for(let n=0;n<8;n++){
+    const canvas=document.createElement('canvas');canvas.width=cuts[n+1]-cuts[n];canvas.height=bottom-top;
+    const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(im,-cuts[n],-top);
+    const pixels=c.getImageData(0,0,canvas.width,canvas.height),d=pixels.data;
+    let x0=canvas.width,y0=canvas.height,x1=-1,y1=-1;
+    for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++){
+      const i=(y*canvas.width+x)*4;
+      // Also supports black-backed exports. Very faint fringe is neither drawn nor damaging.
+      if(d[i+3]<32||Math.max(d[i],d[i+1],d[i+2])<40)d[i+3]=0;
+      else{x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}
+    }
+    c.putImageData(pixels,0,0);
+    const frame=document.createElement('canvas');frame.width=x1-x0+1;frame.height=y1-y0+1;
+    frame.getContext('2d').drawImage(canvas,-x0,-y0);
+    const spans=[];
+    for(let y=y0;y<=y1;y++){
+      const runs=[];let start=-1;
+      for(let x=x0;x<=x1+1;x++){
+        const solid=x<=x1&&d[(y*canvas.width+x)*4+3]>0;
+        if(solid&&start<0)start=x;
+        if(!solid&&start>=0){runs.push([start-x0,x-x0]);start=-1;}
+      }
+      spans.push(runs);
+    }
+    VARGUL_MELEE_FRAMES[kind].push({image:frame,spans,width:frame.width,height:frame.height});
+  }
+}));
+const VARGUL_READY=Promise.all([...VARGUL_SHEETS.map(im=>im.decode()),VARGUL_MELEE_READY]);
 VARGUL_READY.catch(()=>{});
 const VARGUL_DEBUG=globalThis.VARGUL_DEBUG_OVERRIDE===true||new URLSearchParams(location.search).get('debug')==='1';
 let vargulDebug=false,vargulDebugMove=0,vargulRepeat=null,vargulRemains=[];
@@ -131,6 +168,7 @@ function vargulEvent(e,event){
   }
 }
 function vargulAttackBox(e,t){
+  const fx=vargulMeleeEffectData(e,t);if(fx)return fx.box;
   const geometry=VARGUL_MEASUREMENTS[t.clip][t.drawing-1];
   return t.attack?.body?geometry.body:geometry.attack;
 }
@@ -177,8 +215,7 @@ function runVargulPattern(e){
     }
     if(t.attack){
       if(t.first){a.run.active.push({id:t.attack.id,elapsed:a.processed,drawing:t.drawing});sfx('swing');}
-      if(!a.hitIds.has(t.attack.id)&&vargulBoxHit(e,vargulAttackBox(e,t),t.attack.depth,oldX)&&vargulHurt(e,t.attack))a.hitIds.add(t.attack.id);
-      if(t.attack.id.startsWith('combo')&&t.first){const tip=VARGUL_MEASUREMENTS[t.clip][t.drawing-1].tip;vargulFx(e,'spear_flash',e.x+e.face*tip[0],e.y,tip[1],{life:10,width:50,height:28});}
+      if(!a.hitIds.has(t.attack.id)&&vargulMeleeHit(e,t,oldX)&&vargulHurt(e,t.attack))a.hitIds.add(t.attack.id);
     }
     const previous=a.run.drawings.at(-1);
     if(previous&&previous.drawing===t.drawing&&previous.phase===t.phase&&previous.label===t.label){previous.end=a.processed;previous.ticks++;}
@@ -414,6 +451,56 @@ function paintVargulCrossWarning(progress,z,alpha){
 function vargulTelegraph(e){const t=e.vargul?.current;return e.st==='pat'&&t?{warning:!!t.warning,white:!!t.white}:null;}
 function vargulAuraVisible(e){return e.p2shown&&!e.phaseT&&!['down','stun','dead','intro'].includes(e.st)&&!e.vargul?.current?.hidden;}
 function vargulVisualScale(pose){return VARGUL_ART.scale*(VARGUL_VISUAL_SCALES[pose.clip]?.[pose.drawing-1]??1);}
+function vargulMeleeEffectData(e,t=e.vargul?.current){
+  if(!t?.attack)return null;
+  const id=t.attack.id,kind=id.startsWith('dash')?'thrust':'slash';
+  if(!/^(combo|dash|sweep)/.test(id))return null;
+  // Keep one continuous animation across launch/dash, including the return pass.
+  const timeline=e.vargul?.timeline||[],segment=timeline.filter(v=>v.attack?.id===id);
+  const index=Math.max(0,segment.indexOf(t)),progress=index/Math.max(1,segment.length-1);
+  const large=id==='combo3'||id==='sweep_back';
+  const frame=VARGUL_MELEE_FRAMES[kind]?.[Math.min(7,Math.floor(progress*8))];
+  const geo=VARGUL_MEASUREMENTS[t.clip][t.drawing-1];
+  const tip=Math.abs(geo.tip[0]),back=id==='sweep_back';
+  const w=kind==='thrust'?128:Math.max(80,Math.min(145,tip));
+  const h=kind==='thrust'?60:(large?112:86);
+  // The sweep's second arc faces behind the boss, regardless of atlas tip noise.
+  const box=[back?-w-12:12,12,w,h];
+  return {active:true,id,kind,frame,box,depth:t.attack.depth,progress,reverse:back};
+}
+function vargulMeleeHit(e,t,oldX=e.x){
+  const fx=vargulMeleeEffectData(e,t);
+  if(!fx)return vargulBoxHit(e,vargulAttackBox(e,t),t.attack.depth,oldX);
+  // Missing artwork must never leave an invisible damaging attack.
+  if(!fx.frame||!vargulBoxHit(e,fx.box,fx.depth,oldX))return false;
+  const [bx,bh,w,h]=fx.box,f=fx.frame,p=player;
+  const low=Math.max(0,Math.floor((e.z+bh+h-(p.z+90))*f.height/h));
+  const high=Math.min(f.height-1,Math.floor((e.z+bh+h-p.z)*f.height/h));
+  const direction=e.face*(fx.reverse?-1:1);
+  for(let y=low;y<=high;y++)for(const [start,end] of f.spans[y]){
+    const u=direction>0?start/f.width:1-end/f.width;
+    const v=direction>0?end/f.width:1-start/f.width;
+    const left=Math.min(e.x,oldX)+(e.face>0?bx:-(bx+w));
+    const right=Math.max(e.x,oldX)+(e.face>0?bx:-(bx+w));
+    if(p.x+12>=left+u*w&&p.x-12<=right+v*w)return true;
+  }
+  return false;
+}
+function drawVargulMeleeEffect(e,ground){
+  const fx=vargulComboEffectData(e)||((e.st==='pat')?vargulMeleeEffectData(e):null);
+  if(!fx)return;
+  const [bx,bh,w,h]=fx.box,x=e.x-camX+(e.face>0?bx:-(bx+w));
+  ctx.save();
+  if(ground){
+    // Lane cue is faint; only the solid animated effect is the damaging silhouette.
+    ctx.globalAlpha*=fx.active ? .12 : .07;ctx.fillStyle='#8ddfff';
+    ctx.fillRect(x,e.y-fx.depth,w,fx.depth*2);
+  }else if(fx.active&&fx.frame){
+    ctx.translate(x+w/2,e.y-e.z-bh-h/2);ctx.scale(e.face*(fx.reverse?-1:1),1);
+    smoothFor(h/fx.frame.height);ctx.drawImage(fx.frame.image,-w/2,-h/2,w,h);
+  }
+  ctx.restore();
+}
 function vargulComboEffectData(e){
   const a=e.vargul,t=a?.current;
   if(e.st!=='pat'||a?.move!=='combo'||!t)return null;
@@ -423,34 +510,7 @@ function vargulComboEffectData(e){
     const ahead=a.timeline.slice(a.cursor,a.cursor+8).find(v=>v.attack?.id.startsWith('combo'));
     if(!ahead)return null;frame=ahead;
   }
-  return {active,id:frame.attack.id,box:vargulAttackBox(e,frame),depth:frame.attack.depth};
-}
-function drawVargulComboEffect(e,ground){
-  const fx=vargulComboEffectData(e);if(!fx)return;
-  const [bx,bh,w,h]=fx.box,x=e.x-camX+(e.face>0?bx:-(bx+w));
-  ctx.save();ctx.globalCompositeOperation='lighter';
-  if(ground){
-    const top=e.y-fx.depth,bottom=e.y+fx.depth;
-    const mist=ctx.createLinearGradient(0,top,0,bottom);
-    mist.addColorStop(0,'rgba(104,205,255,0)');mist.addColorStop(.5,fx.active?'rgba(104,205,255,.28)':'rgba(104,205,255,.10)');mist.addColorStop(1,'rgba(104,205,255,0)');
-    ctx.fillStyle=mist;ctx.fillRect(x,top,w,fx.depth*2);
-    ctx.strokeStyle=fx.active?'rgba(159,235,255,.85)':'rgba(104,205,255,.35)';ctx.lineWidth=fx.active?1.4:.8;
-    ctx.strokeRect(x,top,w,fx.depth*2);
-    if(fx.active){ctx.fillStyle='#bbf3ff';for(let i=0;i<6;i++){
-      const px=x+w*(i+.5)/6,py=e.y+Math.sin(i*2.3+tick*.6)*fx.depth*.7;
-      ctx.beginPath();ctx.moveTo(px,py-3);ctx.lineTo(px+2,py);ctx.lineTo(px,py+3);ctx.lineTo(px-2,py);ctx.closePath();ctx.fill();
-    }}
-  }else if(fx.active){
-    const top=e.y-e.z-bh-h,center=top+h/2;
-    const beam=ctx.createLinearGradient(0,top,0,top+h);
-    beam.addColorStop(0,'rgba(99,201,255,0)');beam.addColorStop(.5,'rgba(153,234,255,.32)');beam.addColorStop(1,'rgba(99,201,255,0)');
-    ctx.fillStyle=beam;ctx.fillRect(x,top,w,h);
-    ctx.strokeStyle='#ddfaff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,center);ctx.lineTo(x+w,center);ctx.stroke();
-    // Vertical sparkle stays inside the actual blade-height interval.
-    const tip=e.face>0?x+w:x;ctx.strokeStyle='#9feaff';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(tip,top);ctx.lineTo(tip,top+h);ctx.stroke();
-  }
-  ctx.restore();
+  return {...vargulMeleeEffectData(e,frame),active};
 }
 function drawVargul(e){
   if(!isVargul(e))return false;
@@ -458,7 +518,7 @@ function drawVargul(e){
   if(pose.hidden)return true;
   if(!VARGUL_SHEETS[frame?.sheet]?.naturalWidth)return false;
   const visualScale=vargulVisualScale(pose);
-  drawVargulComboEffect(e,true);
+  drawVargulMeleeEffect(e,true);
   drawShadow(e.x-camX,e.y,SPRITES.boss4.sh,e.z);
   if(vargulAuraVisible(e))paintVargulFx('frost_aura',(tick%96)/96,e.x,e.y-e.z,150,170,.38);
   ctx.save();const tele=vargulTelegraph(e);
@@ -476,7 +536,7 @@ function drawVargul(e){
   }
   const geo=VARGUL_MEASUREMENTS[pose.clip]?.[pose.drawing-1];
   if(geo){e.tipX=e.x+e.face*geo.tip[0];e.tipH=e.z+geo.tip[1];}
-  drawVargulComboEffect(e,false);
+  drawVargulMeleeEffect(e,false);
   if(vargulDebug)drawVargulBoxes(e);
   return true;
 }
