@@ -39,10 +39,10 @@ function sovGo(job,stage){job.stage=stage;job.st=-1;}   // job.st is advanced af
 
 // ---------------------------------------------------------------- hits on Barel
 function sovTouch(f,o={}){
-  const p=player,hw=(o.hw??SOV_FIST.hw)+12,from=o.fromX??f.x;
+  const p=player,hw=(o.hw??SOV_FIST.hw)+playerBodyHalfWidth(),from=o.fromX??f.x;
   const lo=o.low??f.h-SOV_FIST.hh,hi=o.high??f.h+SOV_FIST.hh;
   return p.st!=='dead'&&p.x>=Math.min(f.x,from)-hw&&p.x<=Math.max(f.x,from)+hw&&
-    Math.abs(p.y-f.y)<(o.depth??20)&&p.z<=hi&&p.z+90>=lo;
+    Math.abs(p.y-f.y)<(o.depth??20)*playerHurtScale()&&p.z<=hi&&p.z+playerBodyHeight()>=lo;
 }
 function sovHurt(e,job,key,damage,kd,from,push=0){
   if(job.hits.has(key))return false;
@@ -91,10 +91,16 @@ function sovDamageFist(e,f,dmg,kd){
   if(f.hp<=0)sovBreakFist(e,f);
 }
 function sovBreakFist(e,f){
+  if(f.broken||!sovActive(f))return;
   const s=sovData(e);if(f.job)sovEndJob(e,s,f.job);
   f.st='fallen';f.broken=true;f.timer=SOV_R.fallen[sovP2(e)];f.vh=0;f.glow=null;f.trail=false;f.wake=0;f.hp=0;
   sovFx(e,'fist_shatter',f.x,f.y,f.h,100,100,30);shake=Math.max(shake,12);hitStop=Math.max(hitStop,8);sfx('groggy');
   floatText(f.x,f.y-f.h-46,'주먹 파괴!','#ff7ab8');
+  if(!practice&&e.st!=='dead'&&!e.phaseT){
+    const roll=Math.random(),drops=SOV_R.fistDrops;
+    const type=roll<drops.potion?'potion':roll<drops.potion+drops.scroll?'scroll':null;
+    if(type)dropItem(type,clamp(f.x,camX+20,camX+VW-20),clamp(f.y,GTOP+8,GBOT-8));
+  }
   if(e.st==='dead'||e.phaseT>0||e.st==='stun')return;
   e.gr=Math.min(e.grMax,e.gr+SOV_R.fistGroggy);e.grT=150;
   // Both fists lying broken: immediate groggy (the biggest counter window).
@@ -487,7 +493,7 @@ function sovJobTick(e,s,job){
       }else if(job.stage==='sweep'){
         job.danger=true;g.glow=null;g.trail=true;if(body)body.drawing=9+Math.floor(st/6)%4;
         const old=g.x;g.x+=job.dir*U.speed;
-        if(p.x>=Math.min(old,g.x)-U.half-12&&p.x<=Math.max(old,g.x)+U.half+12&&p.z<=U.top)sovHurt(e,job,'u'+job.pass,U.damage,true,g);
+        if(p.x>=Math.min(old,g.x)-U.half-playerBodyHalfWidth()&&p.x<=Math.max(old,g.x)+U.half+playerBodyHalfWidth()&&p.z<=U.top)sovHurt(e,job,'u'+job.pass,U.damage,true,g);
         if((g.x-job.endX)*job.dir>=0){
           g.trail=false;
           if(job.pass===0){job.dir*=-1;[job.startX,job.endX]=[job.endX,job.startX];go('turn');}
@@ -513,7 +519,7 @@ function sovJobTick(e,s,job){
         if(st>=B.charge-1){e.y=job.lane;go('fire');sfx('bolt');shake=Math.max(shake,6);}
       }else if(job.stage==='fire'){
         job.danger=true;if(body)body.drawing=9+Math.floor(st/6)%4;
-        if(Math.abs(p.y-job.lane)<=B.depth&&p.z+90>=B.low&&p.z<=B.high&&(p.x-e.x)*e.face>0)sovHurt(e,job,'beam',B.damage,false,e);
+        if(Math.abs(p.y-job.lane)<=B.depth*playerHurtScale()&&p.z+playerBodyHeight()>=B.low&&p.z<=B.high&&(p.x-e.x)*e.face>0)sovHurt(e,job,'beam',B.damage,false,e);
         if(st>=fire-1){job.dangerDone=true;go('recovery');}
       }else if(job.stage==='recovery'){
         if(body)body.drawing=13+Math.min(3,Math.floor(st/B.recovery*4));
@@ -830,7 +836,14 @@ function drawSovereignTop(){
       // helm_beam: drawings 1-3 open, 4-8 loop, 9-10 close.
       const fire=SOV_R.beam.fire[beam.p2],st=beam.st,index=st<6?Math.floor(st/2):fire-st<=4?8+Math.min(1,Math.floor((4-(fire-st))/2)):3+Math.floor(st/3)%5;
       const x0=e.x+e.face*14,y=beam.lane-sovHelmHeight(e),len=e.face>0?camX+VW+20-x0:x0-camX+20;
+      // About 1 cm at the usual desktop display size: only the short muzzle
+      // tapers. The rest of the beam and its gameplay collision stay unchanged.
+      const neck=Math.min(len,SOV_R.beam.neckLength),half=SOV_R.beam.neckHalfHeight;
+      const mouth=x0-camX,flare=mouth+e.face*neck,end=mouth+e.face*len;
+      ctx.save();ctx.beginPath();ctx.moveTo(mouth,y-half);ctx.lineTo(flare,y-26);ctx.lineTo(end,y-26);
+      ctx.lineTo(end,y+26);ctx.lineTo(flare,y+26);ctx.lineTo(mouth,y+half);ctx.closePath();ctx.clip();
       sovFxDraw('helm_beam',0,x0,y,len,52,{index,face:e.face});
+      ctx.restore();
     }
     for(const f of s.fx){
       const u=f.age/f.life,y=f.y-f.h+(f.ground?0:0);

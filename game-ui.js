@@ -56,10 +56,12 @@ const UX = (() => {
   function checkpoint() {
     const c = read('checkpoint');
     if (!c || c.version !== 1 || !Number.isInteger(c.stage) || !number(c.stage, 0, 4)) return null;
-    for (const [k, min, max] of [['score', 0, 1e9], ['hp', 1, 100], ['lives', 1, 3], ['sp', 0, 100], ['mg', 0, 3], ['buff', 0, 900]]) {
+    const characterId=c.characterId===undefined?'barel':c.characterId;
+    if(!['barel','viesa'].includes(characterId))return null;
+    for (const [k, min, max] of [['score', 0, 1e9], ['hp', 1, characterId==='viesa'?80:100], ['lives', 1, 3], ['sp', 0, 100], ['mg', 0, 3], ['buff', 0, 900]]) {
       if (!number(c[k], min, max) || !Number.isInteger(c[k])) return null;
     }
-    return { version: 1, stage: c.stage, score: c.score, hp: c.hp, lives: c.lives, sp: c.sp, mg: c.mg, buff: c.buff };
+    return { version: 1, characterId, stage: c.stage, score: c.score, hp: c.hp, lives: c.lives, sp: c.sp, mg: c.mg, buff: c.buff };
   }
   function records() {
     const r = read('records');
@@ -90,10 +92,11 @@ const UX = (() => {
     const box = document.getElementById('bindings'); box.replaceChildren();
     for (const action of Object.keys(defaults)) {
       const row = document.createElement('div'); row.className = 'setting-row';
-      const label = document.createElement('span'); label.textContent = labels[action];
+      const actionName=playerActionLabel(action,labels[action]);
+      const label = document.createElement('span'); label.textContent = actionName;
       const button = document.createElement('button'); button.className = 'btn small-btn secondary';
-      button.textContent = keyName(options.bindings[action]); button.setAttribute('aria-label', labels[action] + ' 키 변경');
-      button.onclick = () => { capture = action; document.getElementById('bindingStatus').textContent = labels[action] + ': 새 키를 누르세요 (ESC 취소)'; };
+      button.textContent = keyName(options.bindings[action]); button.setAttribute('aria-label', actionName + ' 키 변경');
+      button.onclick = () => { capture = action; document.getElementById('bindingStatus').textContent = actionName + ': 새 키를 누르세요 (ESC 취소)'; };
       row.append(label, button); box.append(row);
     }
     document.querySelectorAll('.cap[data-k]').forEach(el => {
@@ -268,7 +271,7 @@ const UX = (() => {
     AUDIO.onBossInfo(() => showBgm()); showBgm();
     applySettings(); bindingButtons(); refreshTitle();
   }
-  return { options, keyName, mapKey, checkpoint, records, record, mount, refreshTitle, clearTouch, endTouchEdit,
+  return { options, keyName, mapKey, checkpoint, records, record, mount, refreshTitle, clearTouch, endTouchEdit, refreshBindings:bindingButtons,
     get touchEditing() { return editing; },
     saveCheckpoint: c => write('checkpoint', c && { ...c, version: 1 }), cancelCapture: () => { capture = null; } };
 })();

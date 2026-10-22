@@ -224,6 +224,34 @@
   #skillbar .skillbtn:disabled { filter: brightness(.65); }
   #skillbar .skillbtn.ready:hover { filter: brightness(1.2); }
   #playPause, body.touch #playPause { top: .5%; right: .5%; width: 5.5%; height: 9%; padding: 0; margin: 0; border: 0; border-radius: 0; background-color: transparent !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; box-shadow: none; color: transparent; font-size: 0; image-rendering: pixelated; }
+  /* Character selection: two permanent slots, including upcoming heroes. */
+  #characterSelect { padding: clamp(14px,3cqw,36px); gap: 14px; background: radial-gradient(ellipse at 25% 55%,#541c2c66,transparent 55%),radial-gradient(ellipse at 85% 30%,#143d3c55,transparent 55%),#08070ded; }
+  #characterSelect .selection-kicker { margin: 0; font-size: 11px; letter-spacing: .35em; color: #b99a7e; }
+  #characterSelect h2 { margin: 0; font: bold clamp(24px,3.1cqw,38px) Batang,Georgia,serif; color: #f3e7dc; letter-spacing: .15em; }
+  .character-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: clamp(12px,2cqw,26px); width: min(86%,800px); min-height: 0; }
+  .character-card { position: relative; min-width: 0; height: min(51vh,330px); padding: 18px 12px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; overflow: hidden; color: #d8c7c4; border: 1px solid #62534f; background: radial-gradient(ellipse at 50% 60%,#54233177,transparent 68%),linear-gradient(150deg,#24161e,#100d14); cursor: pointer; font-family: inherit; box-shadow: inset 0 0 0 4px #0b080b,0 10px 30px #0005; }
+  .character-card::before { content: ''; position: absolute; inset: 9px; border: 1px solid #bba37f26; pointer-events: none; }
+  .character-card[aria-pressed="true"] { border-color: #e4bd82; box-shadow: inset 0 0 0 4px #0b080b,0 0 25px #a8513033; }
+  .character-card:hover { border-color: #b49b7c; }
+  .character-card:focus-visible { outline: 2px solid #e6c28e; outline-offset: 4px; }
+  .character-card.upcoming { background: radial-gradient(ellipse at 50% 55%,#214c4955,transparent 65%),linear-gradient(150deg,#152122,#0c1016); }
+  .character-card .character-number { position: absolute; left: 22px; top: 18px; color: #9d807a; font-size: 11px; letter-spacing: .18em; }
+  .character-card .character-tag { font-size: 10px; letter-spacing: .2em; color: #d9b887; margin-top: 2px; }
+  .character-card.upcoming .character-tag { color: #96aaa8; }
+  .character-visual { position: relative; display: grid; place-items: center; width: 100%; flex: 1 1 0; min-height: 0; margin: 4px 0; }
+  .character-visual::after { content: ''; position: absolute; left: 15%; right: 15%; bottom: 8%; height: 15%; border-radius: 50%; background: radial-gradient(ellipse,#ba5d403b,transparent 70%); pointer-events: none; }
+  #barelSelectPreview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 9px #0009); }
+  #viesaSelectPortrait { height: 90%; max-width: 85%; object-fit: contain; filter: drop-shadow(0 5px 9px #0009); }
+  .archer-emblem { height: 78%; max-height: 190px; width: 65%; color: #819995; filter: drop-shadow(0 0 15px #73bfa12b); }
+  .character-card .character-name { font: bold clamp(24px,3.2cqw,40px) Batang,Georgia,serif; color: #f0e4da; letter-spacing: .18em; margin-left: .18em; }
+  .character-card .character-job { display: block; margin-top: 5px; font-size: clamp(12px,1.6cqw,18px); color: #d7b08f; letter-spacing: .2em; }
+  .character-card.upcoming .character-job { color: #94b6af; }
+  #characterSelectionStatus { min-height: 21px; margin: 0; color: #c7b6a8; font-size: clamp(12px,1.4cqw,16px); }
+  #btnCharacterConfirm { min-width: 160px; border-color: #bb9060; background: linear-gradient(#542b30,#25121b); }
+  #btnCharacterConfirm:disabled { opacity: .45; cursor: default; transform: none; }
+  #characterSelect .selection-help { margin: 0; color: #8e8086; font-size: 11px; }
+  @media(max-width:700px) { #characterSelect { gap: 18px; } .character-grid { width: 100%; } .character-card { height: min(48vh,330px); padding: 20px 8px 24px; } .character-card .character-number { left: 16px; top: 16px; } .character-card .character-tag { padding-top: 15px; font-size: 9px; letter-spacing: .12em; } .character-card .character-name { font-size: 28px; } }
+  @media(max-height:500px) { #characterSelect { gap: 7px; padding: 10px; } #characterSelect h2 { font-size: 23px; } .character-card { height: 49vh; padding: 12px 8px; } .character-card .character-name { font-size: 24px; } .character-card .character-job { font-size: 12px; margin-top: 2px; } .character-card .character-number { left: 18px; top: 12px; } #characterSelect .selection-help { display: none; } #characterSelect .actions .btn { padding: 8px 18px; } }
 </style>
 </head>
 <body>
@@ -268,10 +296,41 @@
     </div>
   </div>
 
+  <section class="screen" id="characterSelect" aria-labelledby="characterSelectTitle">
+    <p class="selection-kicker">CHOOSE YOUR HERO</p>
+    <h2 id="characterSelectTitle">캐릭터 선택</h2>
+    <div class="character-grid" role="group" aria-label="캐릭터 목록">
+      <button class="character-card" id="characterBarel" type="button" data-character="barel" aria-pressed="true" aria-label="바렐 흑기사" aria-describedby="characterSelectionStatus">
+        <span class="character-number" aria-hidden="true">01</span><span class="character-tag">BLACK KNIGHT</span>
+        <span class="character-visual"><canvas id="barelSelectPreview" width="300" height="250" aria-hidden="true"></canvas></span>
+        <span class="character-name">바렐</span><span class="character-job">흑기사</span>
+      </button>
+      <button class="character-card" id="characterViesa" type="button" data-character="viesa" aria-pressed="false" aria-label="비에사 궁수" aria-describedby="characterSelectionStatus">
+        <span class="character-number" aria-hidden="true">02</span><span class="character-tag">ARCHER</span>
+        <span class="character-visual" aria-hidden="true"><img id="viesaSelectPortrait" alt=""></span>
+        <span class="character-name">비에사</span><span class="character-job">궁수</span>
+      </button>
+    </div>
+    <p id="characterSelectionStatus" role="status" aria-live="polite">바렐 · 흑기사 선택됨</p>
+    <p id="characterSelectionKeys" hidden style="margin:0;font-size:clamp(10px,1.2cqw,13px);color:#c9b5df;text-align:center">J 화살 · H 근접 · U 연사 · L 저격 · O 지상 백플립 · P 공중 백플립 · K 흑월 난사</p>
+    <div class="actions"><button class="btn secondary" id="btnCharacterBack">타이틀로</button><button class="btn" id="btnCharacterConfirm">바렐로 시작</button></div>
+    <p class="selection-help">← → 선택 · Enter 확인 · Esc 돌아가기</p>
+  </section>
+
   <!-- 키 튜토리얼 -->
   <div class="screen dialog" id="tutorial">
     <h2>조작 방법</h2>
     <div class="dialog-body" tabindex="0" aria-label="조작 안내 내용">
+    <div id="viesaControlGuide" hidden>
+      <h3>비에사 · 궁수</h3><p>흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.</p>
+      <p>이동: WASD / 방향키 · 점프: Space / Ctrl · 대시: Shift / 방향키 두 번</p>
+      <p><span class="cap" data-k="KeyJ">J</span> 화살. 공중에서는 아래 30°로 쏘며 체공합니다. 사격 도중 또는 종료 후 6틱 이내에 다시 누르면 체공 사격이 이어집니다.</p>
+      <p><span class="cap" data-k="KeyH">H</span> 근접 3연타 · <span class="cap" data-k="KeyU">U</span> 6발 연사 (위/아래로 사격 레인 조절)</p>
+      <p><span class="cap" data-k="KeyL">L</span> 장거리 저격. 누르고 있으면 조준, 놓으면 관통 사격. 최소 30틱 조준하며, 일찍 놓아도 30틱에 발사합니다. 2초 유지 시 자동 발사.</p>
+      <p><span class="cap" data-k="KeyO">O</span> 돌진 → 지상 백플립 · <span class="cap" data-k="KeyP">P</span> 돌진 → 높은 백플립 → 최대 40틱 체공. P는 공중에서도 착지 전 한 번 사용할 수 있으며, 체공 중 J로 사격을 이어갑니다.</p>
+      <p><span class="cap" data-k="KeyK">K</span> 필살기 ‘흑월 난사’ (SP100). 공중 도약 → 마법진 소환 → 환영 화살 200발 → 거대 화살 폭발. 시전 전체 무적.</p>
+      <p>U/L/O/P는 기존 기술과 같은 쿨타임을 사용합니다. 백플립 회전 중에는 무적이며, 이후 체공 중에는 피격될 수 있습니다. 화살은 무제한입니다.</p>
+    </div>
     <p>이동 · 공격 · 점프부터 익혀보세요. 연습장에서는 피해를 받지 않습니다.</p>
     <div class="grid">
       <div class="keys"><span class="cap" data-k="ArrowLeft KeyA">←</span><span class="cap" data-k="ArrowRight KeyD">→</span>
@@ -381,6 +440,7 @@
 <script src="sprites.js"></script>
 <script src="backgrounds.js"></script>
 <script src="score.js"></script>
+<script src="death-sfx.js"></script>
 <script src="audio.js"></script>
 <script src="hd_sprites.js"></script>
 <script src="legion_sprites.js"></script>
@@ -395,6 +455,8 @@
 <script src="zone-runtime.js"></script>
 <script src="barel-art.js"></script>
 <script src="barel-runtime.js"></script>
+<script src="viesa-art.js"></script>
+<script src="viesa-runtime.js"></script>
 <script src="gorath-art.js"></script>
 <script src="gorath-runtime.js"></script>
 <script src="morgra-art.js"></script>

@@ -1,6 +1,6 @@
 'use strict';
 // =====================================================================
-//  소리: WebAudio 로 합성하는 효과음 + 스테이지별 BGM (외부 파일 없음)
+//  소리: WebAudio 합성 효과음 + 적 사망 MP3 + 스테이지별 BGM
 //  브라우저 정책상 첫 키 입력/클릭 뒤에 켜진다. M 키로 끄고 켠다 (선택은 브라우저에 기억)
 //  사용: AUDIO.sfx('hit', 2) / AUDIO.music(스테이지 번호) / AUDIO.stop(페이드 초) / AUDIO.toggle()
 //  보스전 BGM 은 mp3 로 바꿀 수 있다: 플레이어가 고른 파일 > 게임 기본 파일(assets/bgm/boss.mp3) > 합성 BGM
@@ -35,6 +35,7 @@
     AU.noise = buf;
     setVolumes(musicVolume, sfxVolume);
     prepareBoss();
+    prepareEnemyDeath();
   }
   function init() {
     if (AU.ctx) return AU.ctx;
@@ -105,6 +106,7 @@
   const GAIN = { mobdie: 1.6, pickup: 1.8, swing: 4, dash: 2.5, jump: 2, hurt: 2.5, spdash: 2, pwave: 2.5, bswing: 3.5, bwind: 2, tele: 2.2, tele2: 2.2, orb: 3, bwave: 3, phase2: 2, click: 4, raven: 1.6, barrel: 2 };   // 작게 들리는 소리 보정
   function sfx(name, a) {
     if (!AU.on || !AU.ctx || AU.ctx.state === 'closed') return;
+    if (name === 'mobdie' && playEnemyDeath()) return;
     const f = SFX[name]; if (!f) return;
     AU.gm = GAIN[name] || 1; try { f(a); } catch (e) { /* 무시 */ } AU.gm = 1;
   }
@@ -154,6 +156,23 @@
   const decode = raw => new Promise((ok, fail) => {         // 콜백(구형 Safari)과 Promise 양쪽을 모두 받는다
     const p = AU.ctx.decodeAudioData(raw.slice(0), ok, fail); if (p && p.catch) p.catch(() => {});
   });
+  // Embedded with the scripts so local, Streamlit and single-HTML builds use
+  // the same sample. One buffer, independent sources for simultaneous kills.
+  let enemyDeathBuffer = null, enemyDeathReady = null;
+  function prepareEnemyDeath() {
+    if (!enemyDeathReady && global.ENEMY_DEATH_SFX_URL && AU.ctx) {
+      enemyDeathReady = fetch(global.ENEMY_DEATH_SFX_URL).then(r => {
+        if (!r.ok) throw new Error('Enemy death sample unavailable');
+        return r.arrayBuffer();
+      }).then(decode).then(buffer => { enemyDeathBuffer = buffer; }).catch(() => {});
+    }
+  }
+  function playEnemyDeath() {
+    if (!enemyDeathBuffer) return false;  // Keep synthesized fallback while loading/on failure.
+    const src = AU.ctx.createBufferSource(); src.buffer = enemyDeathBuffer;
+    src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();
+    return true;
+  }
   function playFile(buf, rate) {
     const c = AU.ctx, now = c.currentTime, bus = c.createGain(), src = c.createBufferSource();
     src.buffer = buf; src.loop = true; src.playbackRate.value = rate; src.connect(bus); bus.connect(AU.musB);

@@ -222,8 +222,9 @@ const practiceDone = new Set();
 let practiceOrigin = 80;
 let arena = null;
 
-function newPlayer(score = 0) {
-  return { x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26, hw: 16, hp: 100, max: 100, lives: 3,
+function newPlayer(score = 0, characterId = selectedCharacterId) {
+  const archer=characterId==='viesa';
+  return { characterId:archer?'viesa':'barel', x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26*(archer ? .9 : 1), hw: 16*(archer ? .9 : 1), hp: archer?80:100, max: archer?80:100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
     inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
     skill: null, skillCd: Object.fromEntries(Object.keys(SKILLS).map(id => [id, 0])), skillHits: new Set(), skillDest: 0,
@@ -231,7 +232,62 @@ function newPlayer(score = 0) {
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
-const screens = ['title', 'tutorial', 'pause', 'clear', 'over', 'ending', 'settings', 'challenge', 'challengeResult'];
+const screens = ['title', 'characterSelect', 'tutorial', 'pause', 'clear', 'over', 'ending', 'settings', 'challenge', 'challengeResult'];
+const CHARACTER_ROSTER = {
+  barel: { name: '바렐', job: '흑기사', description:'대검으로 전장을 가르는 흑기사', available: true },
+  viesa: { name: '비에사', job: '궁수', description:'흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.', available: true }
+};
+let selectedCharacterId = 'barel';
+let characterSelectBossStage = null;
+function selectCharacter(id, focus = false) {
+  const hero = CHARACTER_ROSTER[id]; if (!hero) return;
+  selectedCharacterId = id;
+  document.querySelectorAll('[data-character]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.character === id));
+    if (focus && button.dataset.character === id) button.focus();
+  });
+  $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
+  $('characterSelectionKeys').hidden = id !== 'viesa';
+  $('btnCharacterConfirm').disabled = !hero.available;
+  $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
+}
+function drawCharacterPreview() {
+  const portrait=$('viesaSelectPortrait');if(portrait&&!portrait.src)portrait.src=VIESA_ART.portrait;
+  if (!BAREL_ATLAS.naturalWidth) return;
+  const canvas = $('barelSelectPreview'), c = canvas.getContext('2d');
+  const frame = barelFrame('idle', tick * MS / 1300, true), [x,y,w,h] = frame.atlas;
+  const scale = Math.min(250/w, 225/h);
+  c.clearRect(0,0,canvas.width,canvas.height);c.imageSmoothingEnabled = false;
+  c.drawImage(BAREL_ATLAS,x,y,w,h,(canvas.width-w*scale)/2,canvas.height-h*scale-8,w*scale,h*scale);
+}
+function openCharacterSelect(challengeStage = null) {
+  characterSelectBossStage = Number.isInteger(challengeStage) ? challengeStage : null;
+  clearInput();practice = false;scene = 'characterSelect';showScreen('characterSelect');
+  $('btnCharacterBack').textContent = characterSelectBossStage === null ? '타이틀로' : '보스 목록';
+  selectCharacter('barel', true);drawCharacterPreview();sfx('click');
+}
+function confirmCharacter() {
+  if (!CHARACTER_ROSTER[selectedCharacterId]?.available) return;
+  if (characterSelectBossStage !== null) { beginBossChallenge(characterSelectBossStage);return; }
+  toTutorial('characterSelect');$('btnGo').focus();
+}
+function backFromCharacterSelect() {
+  if (characterSelectBossStage !== null) { openBossChallenge();return; }
+  toTitle();$('btnStart').focus();
+}
+document.querySelectorAll('[data-character]').forEach(button => {
+  button.onclick = () => { selectCharacter(button.dataset.character);sfx('click'); };
+});
+$('characterSelect').addEventListener('keydown', e => {
+  if (e.code === 'Enter' && e.target.closest('.character-card')) {
+    e.preventDefault();e.stopPropagation();confirmCharacter();return;
+  }
+  if (!['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code)) return;
+  e.preventDefault();e.stopPropagation();
+  selectCharacter(['ArrowLeft','KeyA'].includes(e.code) ? 'barel' : 'viesa', true);sfx('click');
+});
+$('btnCharacterConfirm').onclick = confirmCharacter;
+$('btnCharacterBack').onclick = backFromCharacterSelect;
 function showScreen(id) {
   $('btnOverBosses').hidden = !bossChallenge;
   $('btnPauseBosses').hidden = !bossChallenge;
@@ -249,8 +305,10 @@ function syncTouchControls(show = scene === 'play' || scene === 'settings', prev
 }
 
 function toTutorial(from = 'title') {
+  syncPlayerCharacterUI(from==='pause'?player.characterId:selectedCharacterId);
   helpFrom = from; clearInput(); scene = 'tutorial'; showScreen('tutorial'); sfx('click');
-  $('btnHelpBack').hidden = from !== 'pause'; $('btnPractice').hidden = from === 'pause'; $('btnGo').hidden = from === 'pause';
+  $('btnHelpBack').hidden = !['pause', 'characterSelect'].includes(from); $('btnPractice').hidden = from === 'pause'; $('btnGo').hidden = from === 'pause';
+  $('btnHelpBack').textContent = from === 'characterSelect' ? '캐릭터 선택' : '돌아가기';
   document.querySelector('#tutorial .dialog-body').scrollTop = 0;
 }
 function beginGame(cinematic = false) {
@@ -273,12 +331,13 @@ function openSettings(from) { settingsFrom = from; clearInput(); scene = 'settin
 function closeSettings() { UX.cancelCapture(); scene = settingsFrom; showScreen(settingsFrom); clearInput(); }
 function entrySnapshot(i = stageIdx) {
   const { score, hp, lives, sp, mg, buff } = player;
-  return { stage: i, score, hp, lives, sp, mg, buff };
+  return { stage: i, characterId:player.characterId, score, hp, lives, sp, mg, buff };
 }
 function continueGame() {
   bossChallenge = false;
   const saved = UX.checkpoint(); if (!saved) return;
-  practice = false; player = Object.assign(newPlayer(), saved); AUDIO.pause(false); startStage(saved.stage, true);
+  selectedCharacterId=saved.characterId;
+  practice = false; player = Object.assign(newPlayer(0,saved.characterId), saved); AUDIO.pause(false); startStage(saved.stage, true);
 }
 function beginPractice() {
   bossChallenge = false;
@@ -307,7 +366,7 @@ function openBossChallenge() {
     const unlocked = !!records.stages[i], button = document.createElement('button');
     button.className = 'btn challenge-boss'; button.disabled = !unlocked;
     button.textContent = 'STAGE ' + (i + 1) + ' · ' + name + ' — ' + (unlocked ? '도전하기' : '미해금 · 본편 클리어 필요');
-    button.onclick = () => beginBossChallenge(i); list.appendChild(button);
+    button.onclick = () => openCharacterSelect(i); list.appendChild(button);
   });
   scene = 'challenge'; showScreen('challenge');
 }
@@ -329,7 +388,7 @@ $('btnChallengeRetry').onclick = () => beginBossChallenge(stageIdx);
 $('btnChallengeList').onclick = openBossChallenge;
 $('btnOverBosses').onclick = openBossChallenge;
 $('btnPauseBosses').onclick = openBossChallenge;
-$('btnStart').onclick = () => toTutorial();
+$('btnStart').onclick = openCharacterSelect;
 $('btnGo').onclick = () => beginGame(true);
 $('btnNext').onclick = nextStage;
 $('btnRetry').onclick = retryStage;
@@ -346,7 +405,7 @@ $('btnRestart').onclick = () => { AUDIO.pause(false); if (practice) beginPractic
 $('btnTitleSettings').onclick = () => openSettings('title');
 $('btnPauseSettings').onclick = () => openSettings('pause');
 $('btnPauseHelp').onclick = () => toTutorial('pause');
-$('btnHelpBack').onclick = () => { scene = 'pause'; showScreen('pause'); clearInput(); };
+$('btnHelpBack').onclick = () => { if (helpFrom === 'characterSelect') openCharacterSelect(); else { scene = 'pause'; showScreen('pause'); clearInput(); } };
 $('btnSettingsBack').onclick = closeSettings;
 document.querySelectorAll('.skillbtn').forEach(b => {
   b.addEventListener('pointerdown', e => {
@@ -358,7 +417,8 @@ document.querySelectorAll('.skillbtn').forEach(b => {
 function onKeyOnce(code) {
   if (scene === 'opening' && ['Enter', 'Space', 'Escape'].includes(code)) { finishOpening(); return; }
   if (code === 'Enter') {
-    if (scene === 'title') toTutorial();
+    if (scene === 'title') openCharacterSelect();
+    else if (scene === 'characterSelect') confirmCharacter();
     else if (scene === 'tutorial' && helpFrom !== 'pause') beginGame(true);
     else if (scene === 'clear') nextStage();
     else if (scene === 'over') retryStage();
@@ -370,14 +430,16 @@ function onKeyOnce(code) {
     if (['play', 'intro', 'bossintro'].includes(scene)) pauseGame();
     else if (scene === 'pause') resumeGame();
     else if (scene === 'challenge') toTitle();
+    else if (scene === 'characterSelect') backFromCharacterSelect();
     else if (scene === 'challengeResult') openBossChallenge();
     else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else closeSettings(); }
-    else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else toTitle(); }
+    else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else if (helpFrom === 'characterSelect') openCharacterSelect(); else toTitle(); }
   }
 }
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
+  resetViesaEffects();syncPlayerCharacterUI(player.characterId);
   vargulRemains=[];sovereignRemains=[];
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
@@ -389,7 +451,7 @@ function startStage(i, restored = false) {
     hp: 2, flash: 0, dead: false, t: 0 }));
   const p = player;
   p.x = 80; p.y = 420; p.z = 0; p.vx = 0; p.vz = 0; p.face = 1; p.st = 'free'; p.t = 0; p.inv = 90;
-  p.grab = null; p.skill = null; for (const id in p.skillCd) p.skillCd[id] = 0;
+  p.grab = null; p.skill = null;p.viesaAction=null;p.viesaClip=null;p.jumpTime=0;p.viesaHoverGrace=0;p.viesaAirPUsed=false;p.viesaLanding=null; for (const id in p.skillCd) p.skillCd[id] = 0;
   p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.spTg = null;
   p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
   stageStartScore = p.score;
@@ -404,7 +466,7 @@ function nextStage() {
 }
 function retryStage() {
   if (bossChallenge) { beginBossChallenge(stageIdx); return; }
-  player = Object.assign(newPlayer(stageStartScore), stageEntry || {});
+  player = Object.assign(newPlayer(stageStartScore,stageEntry?.characterId||player.characterId), stageEntry || {});
   startStage(stageIdx, true);
 }
 
@@ -446,7 +508,7 @@ function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life:
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
 function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
-function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'&&USE_AURELION_V133?aurelionGhostFrame():null, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, barel: id==='player'?barelPlayerFrame():null, named: id==='player'?namedPlayerFrame():null }); }
+function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'&&USE_AURELION_V133?aurelionGhostFrame():null, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, viesa:id==='player'&&isViesa()?viesaPose():null, barel: id==='player'&&!isViesa()?barelPlayerFrame():null, named: id==='player'&&!isViesa()?namedPlayerFrame():null }); }
 function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
 function dropItem(type, x, y) {
@@ -473,6 +535,7 @@ function dropFromBarrel(b) {
 // ---------------------------------------------------------------- 판정 도우미
 // a의 앞쪽 reach 범위 안에 t가 있는가 (깊이 ytol, 높이 zt)
 function inReach(a, t, reach, ytol, zt = 45) {
+  if(t===player){ytol*=playerHurtScale();zt*=playerHurtScale();}
   const dx = (t.x - a.x) * a.face;
   return dx > -8 && dx < reach + (t.hw || 14) && Math.abs(t.y - a.y) < ytol && Math.abs(t.z - a.z) < zt;
 }
@@ -480,6 +543,7 @@ function canHit(e) { return e.st !== 'dead' && e.st !== 'down' && e.inv <= 0 && 
 
 // ---------------------------------------------------------------- 플레이어
 function startAtk(n) {
+  if(isViesa()){startViesaAttack(n);return;}
   const p = player;
   p.st = 'atk'; p.t = 0; p.buf = 0; p.hitSet = new Set(); p.x0 = p.x; p.wave = false; p.smash = false;
   if (n === 'air') { p.atk = 'air';reactAurelionAttack(); sfx('swing', 2); return; }
@@ -493,7 +557,7 @@ function hurtPlayer(dmg, dir, kd, source=null) {
   if (practice) return false;
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special' || p.st === 'grabbed') return false;
   stat.damage += Math.min(p.hp, dmg);
-  p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; p.skill = null; chain.n = 0;
+  p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; p.skill = null;p.viesaAction=null;p.viesaHoverGrace=0;p.viesaLanding=null; chain.n = 0;
   hitStop = Math.max(hitStop, kd ? 6 : 4); shake = Math.max(shake, kd ? 12 : 7);
   floatText(p.x, p.y - p.z - 110, dmg, '#ff5a6a');
   impact(p.x - dir * 6, p.y, p.z + 56, kd ? 2 : 1, dir);
@@ -516,6 +580,7 @@ function playerStrike(A) {
     if (!canHit(e) || p.hitSet.has(e) || sovBlock&&isSovereign(e)) continue;
     if (inReach(p, e, A.reach, 24, 55)) {
       p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd, A.fx);
+      if(A.pushScale&&!e.boss&&e.hp>0)e.vx*=A.pushScale;
       p.sp = Math.min(SP_MAX, p.sp + (A.kd ? 8 : 5)); landed = true;
     }
   }
@@ -555,6 +620,7 @@ function aimPlayerSkill() {
   if (aim) player.face = aim;
 }
 function startSpecial() {
+  if(isViesa())return beginViesaSpecial();
   const p = player;
   aimPlayerSkill();
   p.st = 'special'; p.t = 0; p.sp = 0; p.vx = 0; p.combo = 0; p.buf = 0; p.spHits = 0; p.spFin = false; p.spDash = false;reactAurelionAttack();
@@ -571,6 +637,7 @@ function startSpecial() {
   cutIn(); sfx('spcharge');
 }
 function updSpecial() {
+  if(isViesa()){updateViesaUltimate();return;}
   const p = player, t = p.t * MS, f = p.face, tg = p.spTg;
   if (tg && tg.st !== 'dead' && t < 1580 && (tg.x - p.spX0) * f >= 0) { p.spX = tg.x; p.spY = tg.y; }
   if (t >= 450 && !p.spDash) { p.spDash = true; sfx('spdash'); }
@@ -635,6 +702,7 @@ function damageBarrel(b) {
 }
 
 function canStartSkill(id) {
+  if(isViesa())return canStartViesaSkill(id);
   const p = player;
   if (!p || !SKILLS[id] || p.skillCd[id] > 0 || p.z > 0 || p.st === 'dead' || p.st === 'down' ||
       p.st === 'hurt' || p.st === 'special' || p.st === 'cast' || p.st === 'skill' || p.st === 'grabbed') return false;
@@ -646,6 +714,7 @@ function canStartSkill(id) {
   return scene === 'play';
 }
 function startSkill(id) {
+  if(isViesa())return startViesaSkill(id);
   if (!canStartSkill(id)) return false;
   const p = player;
   p.st = 'skill'; p.skill = id; p.t = 0; p.x0 = p.x; p.vx = 0; p.vz = 0; p.z = 0;
@@ -690,6 +759,7 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
   return landed;
 }
 function updSkill() {
+  if(isViesa()){updateViesaAction();return;}
   const p = player, id = p.skill, t = p.t * MS, prev = (p.t - 1) * MS;
   if (id === 'thrust') {
     if (t >= 180 && t <= 360 + MS) {
@@ -745,7 +815,8 @@ function updPlayer() {
   if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
   p.walk = false;
-  for (const code in SKILL_KEYS) {
+  if(isViesa()){if(viesaInput())return;}
+  else for (const code in SKILL_KEYS) {
     if (canStartSkill(SKILL_KEYS[code]) && hit(code) && startSkill(SKILL_KEYS[code])) return;
   }
   if (p.dashCd <= 0 && p.z === 0 && (p.st === 'free' || p.st === 'atk') && hit('ShiftLeft')) dashReq = p.face;
@@ -755,9 +826,10 @@ function updPlayer() {
   }
 
   // 중력
-  if (p.z > 0 || p.vz !== 0) {
+  if (!viesaControlsHeight() && (p.z > 0 || p.vz !== 0)) {
+    p.jumpTime=(p.jumpTime||0)+1;
     p.z += p.vz; p.vz -= 0.55;
-    if (p.z <= 0) { p.z = 0; p.vz = 0; }
+    if (p.z <= 0) { p.z = 0; p.vz = 0;p.jumpTime=0;if(isViesa())viesaLanding(); }
   }
 
   switch (p.st) {
@@ -767,7 +839,7 @@ function updPlayer() {
       if (down('ArrowRight', 'KeyD')) ax += 1;
       if (down('ArrowUp', 'KeyW')) ay -= 1;
       if (down('ArrowDown', 'KeyS')) ay += 1;
-      const sp = p.z > 0 ? 2.6 : 3.1;
+      const sp = (p.z > 0 ? 2.6 : 3.1)*(isViesa()?1.1:1);
       p.x += ax * sp; p.y += ay * sp * 0.75;
       if (ax) p.face = ax;
       p.walk = !!(ax || ay);
@@ -775,15 +847,16 @@ function updPlayer() {
       p.t++;
       if (p.comboT > 0) p.comboT--;
       if (p.z === 0 && hit(...JUMP_KEYS)) { p.vz = 9.6; sfx('jump'); }
-      if (p.sp >= SP_MAX && hit('KeyK', 'KeyX')) { startSpecial(); break; }
-      if (p.mg > 0 && p.z === 0 && hit('KeyI', 'KeyV')) { startCast(); break; }
-      if (hit('KeyJ', 'KeyZ')) {
+      if (!isViesa() && p.sp >= SP_MAX && hit('KeyK', 'KeyX')) { startSpecial(); break; }
+      if (!isViesa() && p.mg > 0 && p.z === 0 && hit('KeyI', 'KeyV')) { startCast(); break; }
+      if (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ')) {
         if (p.z > 0) startAtk('air');
         else startAtk(p.comboT > 0 && p.combo < 2 ? p.combo + 1 : 0);
       }
       break;
     }
     case 'atk': {
+      if(isViesa()){p.t++;updateViesaAttack();break;}
       const A = ATK[p.atk];
       p.t++;
       if (p.atk === 'air') {
@@ -809,9 +882,9 @@ function updPlayer() {
     case 'dash': {                                 // 150ms 동안 80px 미끄러지듯 이동, 푸른 잔상. 110ms 뒤부터 공격으로 연결 가능
       p.t++;
       const t = p.t * MS;
-      p.x = p.x0 + p.face * DASH.dist * ease(Math.min(1, t / 150));
+      p.x = p.x0 + p.face * DASH.dist * (isViesa()?1.15:1) * ease(Math.min(1, t / 150));
       if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
-      if (t >= 110 && hit('KeyJ', 'KeyZ')) { startAtk(0); break; }
+      if (t >= 110 && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
       if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
       break;
     }
@@ -1409,9 +1482,11 @@ function updArena() {
   arena.cycle++; arena.next += 5000;
 }
 function updHazards() {
+  updateViesaUltimateProjectiles();
   const p = player, off = z => z.x < camX - 60 || z.x > camX + VW + 60;
   for (const z of hazards) {
     z.age += MS;
+    if(updateViesaProjectile(z))continue;
     if(updateVargulHazard(z)||updateAurelionHazard(z)||updateMorgraHazard(z))continue;
     if (z.owner && ['dead', 'down', 'stun'].includes(z.owner.st) && ['rift', 'eclipse'].includes(z.type)) { z.dead = true; continue; }
     switch (z.type) {
@@ -1441,7 +1516,7 @@ function updHazards() {
       }
       case 'orb':
         z.x += z.vx; z.y += z.vy; z.h = Math.max(36, z.h + z.vh);
-        if (Math.abs(z.x - p.x) < 14 && Math.abs(z.y - p.y) < 16 && Math.abs(z.h - (p.z + 48)) < 44 && hurtPlayer(8, Math.sign(z.vx) || 1, false, z)) z.dead = true;
+        if (Math.abs(z.x - p.x) < 14*playerHurtScale() && Math.abs(z.y - p.y) < 16*playerHurtScale() && Math.abs(z.h - (p.z + 48*playerHurtScale())) < 44*playerHurtScale() && hurtPlayer(8, Math.sign(z.vx) || 1, false, z)) z.dead = true;
         if (z.age > 3500 || off(z) || z.y < GTOP - 40 || z.y > GBOT + 40) z.dead = true;
         break;
       case 'wave':
@@ -1458,7 +1533,7 @@ function updHazards() {
           }
         } else {
           z.x += z.vx; z.y += z.vy; z.h += z.vh;
-          if (Math.abs(z.x - p.x) < 18 && Math.abs(z.y - p.y) < 18 && Math.abs(z.h - (p.z + 44)) < 34 && hurtPlayer(7, Math.sign(z.vx) || 1, false, z)) z.dead = true;
+          if (Math.abs(z.x - p.x) < 18*playerHurtScale() && Math.abs(z.y - p.y) < 18*playerHurtScale() && Math.abs(z.h - (p.z + 44*playerHurtScale())) < 34*playerHurtScale() && hurtPlayer(7, Math.sign(z.vx) || 1, false, z)) z.dead = true;
           if (z.h <= 0 || off(z)) z.dead = true;
         }
         break;
@@ -1517,7 +1592,7 @@ function updHazards() {
         const speed = (z.age < 500 ? 22 : 56) * SC / 1000 * MS, turn = Math.min(1, MS / 380);
         z.vx += (dx / d * speed - z.vx) * turn; z.vy += (dy / d * speed - z.vy) * turn; z.vh += (dh / d * speed - z.vh) * turn;
         z.x += z.vx; z.y += z.vy; z.h += z.vh;
-        if (Math.hypot(z.x - p.x, z.y - p.y, z.h - (p.z + 48)) < 20 && hurtPlayer(8, Math.sign(z.vx) || 1, false, z)) z.dead = true;
+        if (Math.hypot(z.x - p.x, z.y - p.y, z.h - (p.z + 48*playerHurtScale())) < 20*playerHurtScale() && hurtPlayer(8, Math.sign(z.vx) || 1, false, z)) z.dead = true;
         if (z.age > 3400 || off(z)) z.dead = true;
         break;
       }
@@ -1526,7 +1601,7 @@ function updHazards() {
         break;
       case 'arrow':                                // 궁병의 화살: 같은 줄을 따라 곧게 날아간다
         z.x += z.dir * 7;
-        if (Math.abs(z.x - p.x) < 14 && Math.abs(z.y - p.y) < 18 && Math.abs(z.h - (p.z + 44)) < 34 && hurtPlayer(z.damage ?? 7, z.dir, false, z)) z.dead = true;
+        if (Math.abs(z.x - p.x) < 14*playerHurtScale() && Math.abs(z.y - p.y) < 18*playerHurtScale() && Math.abs(z.h - (p.z + 44*playerHurtScale())) < 34*playerHurtScale() && hurtPlayer(z.damage ?? 7, z.dir, false, z)) z.dead = true;
         if (z.age > 2600 || off(z)) z.dead = true;
         break;
       case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
@@ -1632,6 +1707,7 @@ function update() {
 }
 
 function updFx() {
+  updateViesaEffects();
   for (const a of impacts) a.age += MS;
   impacts = impacts.filter(a => a.age < 450);
   for (const s of bursts) s.age += MS;
@@ -2064,6 +2140,7 @@ function drawPlayer() {
     ctx.beginPath(); ctx.ellipse(sx, p.y - p.z - Hh * 0.5, S.sh * SC * 1.5, Hh * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
   }
   const lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
+  if (drawViesaPlayer()) return;
   if (drawBarelPlayer()) return;
   if (drawNamedPlayer()) return;
   if (HD.player) { drawPlayerHD(lying); return; }
@@ -2152,6 +2229,7 @@ function drawEnemyBody(e) {
 function drawGhost(g) {
   if(g.aurelion&&paintAurelion(g.aurelion,g.x,g.y-g.z,g.face,.3*(1-g.age/g.life)))return;
   if(g.gorath && paintGorath(g.gorath,g.x,g.y-g.z,g.face,.3*(1-g.age/g.life),BOSS_VISUAL_SCALE))return;
+  if(g.viesa && paintViesa(g.viesa,g,.3*(1-g.age/g.life)))return;
   if(g.barel && paintBarel(g.barel,g,.3*(1-g.age/g.life)))return;
   if(g.named && paintNamedFrame(g.named,{...g,alpha:.3*(1-g.age/g.life)}))return;
   if (HD[g.id]) {                                  // 고해상도: 대시·돌진 프레임으로 잔상
@@ -2725,6 +2803,7 @@ function portrait(id) {
   if(id==='boss3'&&getAurelionPortrait())return getAurelionPortrait();
   if(id==='boss2' && getMorgraPortrait())return getMorgraPortrait();
   if(id==='boss1' && getGorathPortrait())return getGorathPortrait();
+  if(id==='player' && isViesa() && VIESA_PORTRAIT.naturalWidth)return VIESA_PORTRAIT;
   if(id==='player' && BAREL_PORTRAIT.naturalWidth)return BAREL_PORTRAIT;
   if(id==='player' && NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth) {
     if(portraitCache.playerNamed)return portraitCache.playerNamed;
@@ -2799,9 +2878,9 @@ function drawHUD() {
   panel(14, 12, 328, 88);
   drawPortrait('player', 22, 20, 64, 56, false, p.buff > 0);
   if (p.buff > 0) { ctx.fillStyle = '#000'; rect(21, 82, 66, 8); ctx.fillStyle = '#ffe14d'; rect(22, 83, 64 * p.buff / 900, 6); }
-  pxText('BLACK KNIGHT', 96, 30, '#f3d26a', 9);
+  pxText(isViesa()?'ARCHER':'BLACK KNIGHT', 96, 30, '#f3d26a', 9);
   pxText(`L-${stageIdx + 1}`, 334, 30, '#9cc3ff', 9, 'right');
-  krText('흑기사', 96, 51, '#ffffff', 15);
+  krText(isViesa()?'비에사':'흑기사', 96, 51, '#ffffff', 15);
   for (let i = 0; i < p.lives; i++) {                // 남은 목숨: 붉은 깃털 투구
     const x = 160 + i * 16, y = 39;
     ctx.fillStyle = '#000'; rect(x - 1, y - 1, 12, 13);
@@ -2816,7 +2895,7 @@ function drawHUD() {
   const sg = ctx.createLinearGradient(96, 0, 334, 0); sg.addColorStop(0, '#2a6aff'); sg.addColorStop(1, spFull ? '#ff5a7a' : '#7ad8ff');
   ctx.fillStyle = '#0a1430'; rect(96, 80, 238, 6);
   ctx.fillStyle = spFull && Math.floor(tick / 6) % 2 ? '#fff6c8' : sg; rect(96, 80, 238 * p.sp / SP_MAX, 6);
-  if (spFull) pxText(`${UX.keyName(UX.options.bindings.KeyK)}:흑월참`, 96, 96, '#ffe14d', 8); else pxText('SP', 96, 96, '#7ad8ff', 7);
+  if (spFull) pxText(`${UX.keyName(UX.options.bindings.KeyK)}:${isViesa()?'흑월 난사':'흑월참'}`, 96, 96, '#ffe14d', 8); else pxText('SP', 96, 96, '#7ad8ff', 7);
   for (let i = 0; i < MAGIC.max; i++) {             // 뇌격 두루마리 칸 (I 키)
     const x = 270 + i * 22, y = 89, on = i < p.mg;
     ctx.fillStyle = '#000'; rect(x - 3, y - 1, 20, 10);
@@ -2868,13 +2947,13 @@ function drawHUD() {
 function updateSkillButtons() {
   document.querySelectorAll('.skillbtn').forEach(b => {
     const id = b.dataset.skill, cd = player ? player.skillCd[id] : SKILLS[id].cd;
-    const ratio = clamp(cd / SKILLS[id].cd, 0, 1), ready = canStartSkill(id);
+    const ratio = isViesa()&&id==='slam'?0:clamp(cd / SKILLS[id].cd, 0, 1), ready = canStartSkill(id);
     b.style.setProperty('--cool', ratio.toFixed(3));
     b.classList.toggle('ready', ready);
     b.dataset.cooldown = cd > 0 ? (cd / 1000).toFixed(1) : '';
     b.disabled = !ready;
     const status = ready ? '준비 완료' : cd > 0 ? `${(cd / 1000).toFixed(1)}초` : scene !== 'play' ? '일시정지' : player.z > 0 ? '착지 후 사용' : '동작 종료 후 사용';
-    b.title = `${SKILLS[id].name} · ${status}`;
+    b.title = `${isViesa()?VIESA_SKILLS[id]?.name||'미사용':SKILLS[id].name} · ${status}`;
     b.setAttribute('aria-label', b.title);
     const label = b.querySelector('.state'); if (label) label.textContent = status;
   });
@@ -2882,9 +2961,10 @@ function updateSkillButtons() {
     const id = SKILL_KEYS[b.dataset.control];
     if (id) {
       const cd = player ? player.skillCd[id] : 0;
-      b.disabled = !canStartSkill(id);
+      const holdingSnipe=isViesa()&&id==='redwave'&&player?.st==='skill'&&player.viesaAction?.phase==='snipe_draw';
+      b.disabled = !holdingSnipe&&!canStartSkill(id);
       b.title = cd > 0 ? `${(cd / 1000).toFixed(1)}초` : b.disabled ? '동작 종료 후 사용' : '준비 완료';
-      b.style.setProperty('--cool', clamp(cd / SKILLS[id].cd, 0, 1).toFixed(3));
+      b.style.setProperty('--cool', (isViesa()&&id==='slam'?0:clamp(cd / SKILLS[id].cd, 0, 1)).toFixed(3));
       b.dataset.cooldown = cd > 0 ? Math.ceil(cd / 1000) : '';
       b.classList.toggle('ready', !b.disabled);
     }
@@ -2926,10 +3006,14 @@ function render() {
   drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY);         // ↓ 월드 좌표 (1.5배 줌)
   drawFloor(theme);
+  if(isViesa()&&player.st==='special'){
+    // Dim only scenery; draw actors and their effects at their original brightness.
+    ctx.fillStyle='rgba(0,0,0,.3)';rect(-40,OY-40,VW+80,VH+80);
+  }
   drawVargulRemains();drawVargulHazards(true);drawSovereignGround();
   if (stage) {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
-    const sp = player.st === 'special' ? player.t * MS : -1;
+    const sp = player.st === 'special' && !isViesa() ? player.t * MS : -1;
     // y 순서로 정렬해서 그린다 (필살기 중에는 흑기사와 그 잔상만 어둠 위에 따로 그림)
     const list = [];
     barrels.forEach(b => list.push({ y: b.y, f: () => drawBarrel(b) }));
@@ -2959,6 +3043,7 @@ function render() {
     drawAurelionHazards();
     drawVargulHazards(false);
     drawSovereignTop();
+    drawViesaProjectiles();
     drawGorathGrab();
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }
@@ -3026,9 +3111,10 @@ function loop(t) {
     if (processed) for (const k in pressed) { pressed[k] -= MS; if (pressed[k] <= 0) delete pressed[k]; }
   }
   ctx.setTransform(RENDER_K, 0, 0, RENDER_K, 0, 0);   // 960x540 좌표계를 실제 해상도로 확대
-  if (scene === 'title' || scene === 'challenge' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
+  if (scene === 'title' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
   else render();
+  if (scene === 'characterSelect') drawCharacterPreview();
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
   $('skillbar').hidden = scene !== 'play';
   syncTouchControls();
