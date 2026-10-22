@@ -395,6 +395,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_ULTIMATE_SUITE){await ready(base+'/embedded.html');await require('./vargul-ultimate.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.VARGUL_MELEE_SUITE){await ready(base+'/embedded.html');await require('./vargul-melee.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_VISUAL_SUITE){await ready(base+'/embedded.html');await require('./vargul-visual.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_ORB_AI){await ready(base+'/embedded.html');await require('./vargul-orb-ai.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_STAGE4){await ready(base+'/embedded.html');await require('./vargul-stage4.cjs')({evaluate,call,errors,root});return;}
