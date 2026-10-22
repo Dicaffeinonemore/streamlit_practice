@@ -47,6 +47,7 @@ module.exports=async({evaluate,call,errors,root})=>{
     assert(bounds.left.right<bounds.right.left,'Two slots remain side by side');
     for(const id of ['left','right','confirm','status']){const b=bounds[id];assert(b.left>=0&&b.right<=width+1&&b.top>=0&&b.bottom<=height+1,'Fits viewport: '+id+' '+width);}
     result.layouts.push({width,height,bounds});
+    assert(await evaluate(`(()=>{const im=$('viesaSelectPortrait').getBoundingClientRect(),name=$('characterViesa').querySelector('.character-name').getBoundingClientRect();return im.bottom<=name.top;})()`),'Full-body portrait stays above the character name');
     const shot=await call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(out,`select-${width}.png`),Buffer.from(shot.data,'base64'));
   }
   await evaluate(`selectCharacter('viesa')`);

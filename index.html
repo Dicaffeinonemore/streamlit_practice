@@ -241,7 +241,7 @@
   .character-visual { position: relative; display: grid; place-items: center; width: 100%; flex: 1 1 0; min-height: 0; margin: 4px 0; }
   .character-visual::after { content: ''; position: absolute; left: 15%; right: 15%; bottom: 8%; height: 15%; border-radius: 50%; background: radial-gradient(ellipse,#ba5d403b,transparent 70%); pointer-events: none; }
   #barelSelectPreview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 9px #0009); }
-  #viesaSelectPortrait { height: 90%; max-width: 85%; object-fit: contain; filter: drop-shadow(0 5px 9px #0009); }
+  #viesaSelectPortrait { position: absolute; inset: 5%; width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 5px 9px #0009); }
   .archer-emblem { height: 78%; max-height: 190px; width: 65%; color: #819995; filter: drop-shadow(0 0 15px #73bfa12b); }
   .character-card .character-name { font: bold clamp(24px,3.2cqw,40px) Batang,Georgia,serif; color: #f0e4da; letter-spacing: .18em; margin-left: .18em; }
   .character-card .character-job { display: block; margin-top: 5px; font-size: clamp(12px,1.6cqw,18px); color: #d7b08f; letter-spacing: .2em; }
@@ -324,12 +324,13 @@
     <div id="viesaControlGuide" hidden>
       <h3>비에사 · 궁수</h3><p>흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.</p>
       <p>이동: WASD / 방향키 · 점프: Space / Ctrl · 대시: Shift / 방향키 두 번</p>
-      <p><span class="cap" data-k="KeyJ">J</span> 화살. 공중에서는 아래 30°로 쏘며 체공합니다. 사격 도중 또는 종료 후 6틱 이내에 다시 누르면 체공 사격이 이어집니다.</p>
-      <p><span class="cap" data-k="KeyH">H</span> 근접 3연타 · <span class="cap" data-k="KeyU">U</span> 6발 연사 (위/아래로 사격 레인 조절)</p>
+      <p><span class="cap" data-k="KeyJ">J</span> 화살 (8 피해). 공중에서는 아래 30°로 쏘며 천천히 내려옵니다. 사격 도중 다시 누르면 연속 사격하며, 땅에 닿으면 착지합니다.</p>
+      <p><span class="cap" data-k="KeyH">H</span> 근접 3연타 · <span class="cap" data-k="KeyU">U</span> 6발 연사 (발당 10 피해, 위/아래로 사격 레인 조절)</p>
+      <p><span class="cap" data-k="KeyI">I</span> 뇌격 두루마리 (보유 시 사용, 화면 내 적에게 80 피해)</p>
       <p><span class="cap" data-k="KeyL">L</span> 장거리 저격. 누르고 있으면 조준, 놓으면 관통 사격. 최소 30틱 조준하며, 일찍 놓아도 30틱에 발사합니다. 2초 유지 시 자동 발사.</p>
       <p><span class="cap" data-k="KeyO">O</span> 돌진 → 지상 백플립 · <span class="cap" data-k="KeyP">P</span> 돌진 → 높은 백플립 → 최대 40틱 체공. P는 공중에서도 착지 전 한 번 사용할 수 있으며, 체공 중 J로 사격을 이어갑니다.</p>
-      <p><span class="cap" data-k="KeyK">K</span> 필살기 ‘흑월 난사’ (SP100). 공중 도약 → 마법진 소환 → 환영 화살 200발 → 거대 화살 폭발. 시전 전체 무적.</p>
-      <p>U/L/O/P는 기존 기술과 같은 쿨타임을 사용합니다. 백플립 회전 중에는 무적이며, 이후 체공 중에는 피격될 수 있습니다. 화살은 무제한입니다.</p>
+      <p><span class="cap" data-k="KeyK">K</span> 필살기 ‘흑월 난사’ (SP100). 공중 도약 → 마법진 소환 → 환영 화살 200발 (발당 4 피해) → 거대 화살 폭발 (160 피해). 시전 전체 무적.</p>
+      <p>U/L/O/P는 기존 기술과 같은 쿨타임을 사용합니다. O/P 돌진은 이동 중 무적이며 적마다 20 추가 피해를 줍니다. Shift 대시는 이동 중 무적입니다. 백플립 회전 중에도 무적이며, 이후 체공 중에는 피격될 수 있습니다. 화살은 무제한입니다.</p>
     </div>
     <p>이동 · 공격 · 점프부터 익혀보세요. 연습장에서는 피해를 받지 않습니다.</p>
     <div class="grid">

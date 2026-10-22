@@ -134,6 +134,7 @@ function startViesaSkill(id){
   const phase=VIESA_SKILLS[id].clip;viesaBeginAction(phase,{id,high:id==='leap'});
   player.skillCd[id]=SKILLS[id].cd;player.vz=0;
   if(id==='leap')player.viesaAirPUsed=true;
+  if(phase==='dash_slash'){player.inv=Math.max(player.inv,2);player.viesaAction.dashHits=new Set();}
   if(phase==='dash_slash')sfx('spdash');
   if(phase==='snipe_draw')sfx('spcharge');
   return true;
@@ -144,14 +145,17 @@ function startViesaAttack(n,melee=false){
   const p=player;
   p.st='atk';p.t=0;p.buf=0;p.hitSet=new Set();p.x0=p.x;p.wave=false;p.viesaFired=false;p.viesaShotQueued=false;p.viesaAction=null;
   p.combo=p.comboT=p.viesaHoverGrace=0;p.viesaClip=n==='air'?'jump_shot':'shot';p.atk=n==='air'?'air':'c1';
-  if(n==='air')p.vz=0;
+  // Repeated air shots keep falling instead of restarting a hover each shot.
+  if(n==='air')p.vz=clamp(p.vz,-1.6,-.25);
   reactAurelionAttack();if(!melee)sfx('pwave');
 }
 function startViesaMelee(n){
   const p=player;startViesaAttack(0,true);p.combo=n;p.viesaClip=['slash1','slash2','kick'][n];p.atk=['c1','c2','c3'][n];sfx('swing',n);
 }
 function updateViesaAttack(){
-  const p=player,name=p.viesaClip,frame=Math.floor(p.t/4)+1,duration=VIESA_ART.clips[name].length*4;
+  const p=player;
+  if(p.viesaClip==='jump_shot'&&p.z<=0){p.st='free';p.t=0;p.viesaShotQueued=false;viesaLanding();return;}
+  const name=p.viesaClip,frame=Math.floor(p.t/4)+1,duration=VIESA_ART.clips[name].length*4;
   const shooting=name==='shot'||name==='jump_shot';
   if(hit(shooting?'KeyJ':'KeyH')){if(shooting)p.viesaShotQueued=true;else p.buf=BUF_MS;}
   if(name==='shot'||name==='jump_shot'){
@@ -178,7 +182,7 @@ function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,lan
   const y=clamp(p.y+laneOffset,GTOP+1,GBOT),mul=p.buff>0?1.5:1;
   hazards.push({type:'viesa_arrow',x:p.x+p.face*26,y,h:p.z+VIESA_ART.worldHeight*.6,dir:p.face,age:0,
     speed,vh:air?-speed*Math.tan(Math.PI/6):0,range,travel:0,depth,aimY:target&&!laneOffset?target.y:y,startY:y,
-    damage:Math.round(ATK.c1.dmg*(snipe?2.5:rapid?.4:.6)*mul),snipe,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
+    damage:Math.round((snipe?ATK.c1.dmg*2.5:rapid?10:8)*mul),snipe,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
   sfx(snipe?'bwave':'pwave');
 }
 function fadeViesaArrow(z){if(!z.fading){z.fading=true;z.fadeAge=0;}}
@@ -208,6 +212,21 @@ function updateViesaProjectile(z){
   if(z.snipe&&(z.x<=camX||z.x>=camX+VW)||z.age>3500)z.dead=true;
   return true;
 }
+// Sweep the whole movement segment; each target takes dash damage only once.
+function viesaDashStrike(from,hits){
+  const p=player;if(!hits)return;
+  const reach=Math.abs(p.x-from)+20,damage=Math.round(20*(p.buff>0?1.5:1));
+  const origin={x:from,y:p.y,h:p.z,face:p.face,depth:24,damage,kd:false};
+  strikeMorgraCrows(reach,20,{x:from,y:p.y,z:p.z,face:p.face});
+  strikeVargulOrbs(reach,20,hits,origin);
+  const blocked=strikeSovereignFists(reach,20,hits,origin);
+  for(const e of enemies){
+    if(!canHit(e)||hits.has(e)||blocked&&isSovereign(e))continue;
+    const dx=(e.x-from)*p.face;
+    if(dx < -20-e.hw||dx > reach+e.hw||Math.abs(e.y-p.y)>=24||Math.abs(e.z-p.z)>=55)continue;
+    hits.add(e);damageEnemy(e,damage,false,1);p.sp=Math.min(SP_MAX,p.sp+5);
+  }
+}
 function updateViesaAction(){
   const p=player,a=p.viesaAction;if(!a){viesaFinish();return;}
   const phase=a.phase;
@@ -230,7 +249,9 @@ function updateViesaAction(){
   }else if(phase==='rapid_end'){
     if(p.t>=16)viesaFinish();
   }else if(phase==='dash_slash'){
+    const previousX=p.x;
     p.x=a.x0+a.face*(VW/4)*Math.min(1,p.t/16);p.z=a.h0;p.vz=0;
+    if(p.t<=16){p.inv=Math.max(p.inv,2);viesaDashStrike(previousX,a.dashHits);}
     const frame=Math.floor(p.t/4)+1;
     if(frame>=5&&frame<=6)playerStrike({dmg:Math.round(ATK.c1.dmg*1.6),reach:ATK.c1.reach,kd:true,fx:2,stop:4});
     if(p.t>=28){viesaNext('backflip');if(a.high&&a.h0>0){p.t=4;p.inv=Math.max(p.inv,1);}}
@@ -260,7 +281,7 @@ function viesaLanding(){
   viesaBeginAction(phase);viesaLandingDust();
 }
 function viesaControlsHeight(){
-  const p=player;return isViesa()&&(p.st==='special'||p.st==='atk'&&p.viesaClip==='jump_shot'||p.st==='free'&&p.viesaHoverGrace>0||
+  const p=player;return isViesa()&&(p.st==='special'||
     p.st==='skill'&&['dash_slash','backflip','hover'].includes(p.viesaAction?.phase));
 }
 function viesaInput(){
@@ -287,7 +308,7 @@ function viesaUltProjectile(kind,cast){
   const z=viesaProjectilePool.pop()||{};
   Object.assign(z,{kind,cast,sx:start.x,sy:start.y,sh:start.h,x:start.x,y:start.y,h:start.h,tx,ty,th,face:p.face,age:0,
     life:Math.max(3,Math.ceil(Math.hypot(tx-start.x,ty-start.y,th-start.h)/(kind==='giant'?55:75))),variant:Math.floor(Math.random()*4),
-    impact:kind==='phantom'&&(cast.arrows%3===0),damage:ATK.c1.dmg*(kind==='giant'?3:.08)*(p.buff>0?1.5:1)});
+    impact:kind==='phantom'&&(cast.arrows%3===0),damage:(kind==='giant'?160:4)*(p.buff>0?1.5:1)});
   viesaUltObjects.push(z);
 }
 function updateViesaUltimate(){

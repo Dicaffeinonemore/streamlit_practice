@@ -18,7 +18,7 @@ SPEC={5:[('idle',8),('walk',8),('run',8)],6:[('slash1',5),('slash2',5),('kick',6
       2:[('rapid_start',4),('rapid_loop',6),('rapid_end',4)],3:[('dash_slash',7),('backflip',8)],
       4:[('ult_leap',6),('ult_summon',4),('ult_barrage',7),('ult_final',6)],
       8:[('hurt',4),('knockdown',6),('getup',6),('death',5)]}
-REFERENCE={5:('idle',0),6:('slash1',0),7:('shot',0),1:('snipe_release',5),2:('rapid_end',3),3:('dash_slash',6),4:('ult_final',5),8:('getup',5)}
+REFERENCE={5:('idle',0),6:('slash1',0),7:('shot',0),1:('snipe_release',5),2:('rapid_end',3),3:('dash_slash',6),4:('ult_final',5),8:('hurt',3)}
 
 def chroma(im):
     rgb=np.array(im.convert('RGB'),dtype=np.float32)
@@ -211,7 +211,7 @@ for number,spec in SPEC.items():
 
 # Body measurements are recorded in original-sheet pixels, excluding hair/bow
 # tips. Skin in the head/torso anchors the body column; feet determine its base.
-def body_measure(frame):
+def body_measure(frame,wide_stance=False):
     rgba=np.array(frame['tile']);rgb=rgba[:,:,:3].astype(float);a=rgba[:,:,3]>128;h,w=a.shape
     r,g,b=rgb[:,:,0],rgb[:,:,1],rgb[:,:,2]
     skin=a&(r>95)&(g>42)&(r>g*1.13)&(g>b*1.08)&(g/r.clip(1)>.38)
@@ -227,12 +227,16 @@ def body_measure(frame):
     crown=a[:head_y+1,max(0,int(cx-w*.07)):min(w,int(cx+w*.07)+1)]
     crown_rows=np.flatnonzero(crown.sum(1)>=max(3,crown.shape[1]*.3))
     if len(crown_rows):head_y=int(crown_rows[0])
-    column=a[:,max(0,int(cx-w*.22)):min(w,int(cx+w*.24))]
+    # Standing ultimate/damage references have feet outside the torso column.
+    # Include both boots so its bent knee is not mistaken for the ground.
+    column=a if wide_stance else a[:,max(0,int(cx-w*.22)):min(w,int(cx+w*.24))]
     feet=np.flatnonzero(column.sum(1)>=2)
     foot=int(feet[-1])+1 if len(feet) else h
     return {'height':foot-head_y,'top':head_y,'foot':foot,'bodyX':cx}
 
-measurements={n:body_measure(raw[name][i]) for n,(name,i) in REFERENCE.items()}
+# Damage, knockdown, getup and death share one scale from a standing hurt pose.
+# The final getup pose still bends its knees, so its height over-enlarges the sheet.
+measurements={n:body_measure(raw[name][i],wide_stance=n in (4,8)) for n,(name,i) in REFERENCE.items()}
 base=measurements[5]['height']
 # Existing Barel importer stores 142px standing art; runtime uses .72.
 target_world=142*.72*.95
@@ -307,9 +311,11 @@ def uri(im):
 for i,im in enumerate(pages):im.save(OUT/f'atlas-{i}.png')
 idle=raw['idle'][0]['tile'];m=measurements[5];portrait=idle.crop((max(0,int(m['bodyX']-idle.height*.25)),max(0,m['top']-8),min(idle.width,int(m['bodyX']+idle.height*.25)),int(idle.height*.62)))
 portrait.thumbnail((180,180),Image.Resampling.LANCZOS);portrait.save(OUT/'portrait.png')
-data={'version':'1.41','id':'viesa','name':'비에사','scale':.72,'worldHeight':target_world,'clips':clips,'sheets':[uri(im) for im in pages],'portrait':uri(portrait)}
+selection_portrait=idle.copy()
+selection_portrait.thumbnail((240,360),Image.Resampling.LANCZOS);selection_portrait.save(OUT/'selection-portrait.png')
+data={'version':'1.41','id':'viesa','name':'비에사','scale':.72,'worldHeight':target_world,'clips':clips,'sheets':[uri(im) for im in pages],'portrait':uri(portrait),'selectionPortrait':uri(selection_portrait)}
 (ROOT/'viesa-art.js').write_text('const VIESA_ART = '+json.dumps(data,separators=(',',':'))+';\n',encoding='utf-8')
-(OUT/'frames.json').write_text(json.dumps({k:v for k,v in data.items() if k not in ['sheets','portrait']},ensure_ascii=False,indent=2),encoding='utf-8')
+(OUT/'frames.json').write_text(json.dumps({k:v for k,v in data.items() if k not in ['sheets','portrait','selectionPortrait']},ensure_ascii=False,indent=2),encoding='utf-8')
 (OUT/'build-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 preview=Image.new('RGB',(1200,((len(SPEC and raw)+5)//6)*220),'#17151d');d=ImageDraw.Draw(preview)
 for i,name in enumerate(raw):
