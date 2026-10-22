@@ -252,7 +252,7 @@ function selectCharacter(id, focus = false) {
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
 function drawCharacterPreview() {
-  const portrait=$('viesaSelectPortrait');if(portrait&&!portrait.src)portrait.src=VIESA_ART.portrait;
+  const portrait=$('viesaSelectPortrait');if(portrait&&!portrait.src)portrait.src=VIESA_ART.selectionPortrait;
   if (!BAREL_ATLAS.naturalWidth) return;
   const canvas = $('barelSelectPreview'), c = canvas.getContext('2d');
   const frame = barelFrame('idle', tick * MS / 1300, true), [x,y,w,h] = frame.atlas;
@@ -828,7 +828,8 @@ function updPlayer() {
   // 중력
   if (!viesaControlsHeight() && (p.z > 0 || p.vz !== 0)) {
     p.jumpTime=(p.jumpTime||0)+1;
-    p.z += p.vz; p.vz -= 0.55;
+    const airShooting=isViesa()&&(p.st==='atk'&&p.viesaClip==='jump_shot'||p.st==='free'&&p.viesaHoverGrace>0);
+    p.z += p.vz; p.vz=airShooting?Math.max(-1.6,p.vz-.08):p.vz-.55;
     if (p.z <= 0) { p.z = 0; p.vz = 0;p.jumpTime=0;if(isViesa())viesaLanding(); }
   }
 
@@ -848,7 +849,7 @@ function updPlayer() {
       if (p.comboT > 0) p.comboT--;
       if (p.z === 0 && hit(...JUMP_KEYS)) { p.vz = 9.6; sfx('jump'); }
       if (!isViesa() && p.sp >= SP_MAX && hit('KeyK', 'KeyX')) { startSpecial(); break; }
-      if (!isViesa() && p.mg > 0 && p.z === 0 && hit('KeyI', 'KeyV')) { startCast(); break; }
+      if (p.mg > 0 && p.z === 0 && hit('KeyI', 'KeyV')) { startCast(); break; }
       if (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ')) {
         if (p.z > 0) startAtk('air');
         else startAtk(p.comboT > 0 && p.combo < 2 ? p.combo + 1 : 0);
@@ -883,6 +884,7 @@ function updPlayer() {
       p.t++;
       const t = p.t * MS;
       p.x = p.x0 + p.face * DASH.dist * (isViesa()?1.15:1) * ease(Math.min(1, t / 150));
+      if(isViesa())p.inv=Math.max(p.inv,2);
       if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
       if (t >= 110 && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
       if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
