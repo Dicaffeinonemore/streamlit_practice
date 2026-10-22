@@ -2134,9 +2134,10 @@ function playerPose(lying) {
 }
 function drawPlayer() {
   const p = player, S = SPRITES.player, sx = p.x - camX, sp = p.st === 'special';
-  drawShadow(sx, p.y, S.sh, p.z);
+  ctx.save();if(p.st==='dead')ctx.globalAlpha*=clamp(1-(p.t-65)/35,0,1);
+  drawShadow(sx, p.y, S.sh, p.z);ctx.restore();
   if (p.inv > 0 && p.st === 'free' && Math.floor(tick / 4) % 2) return;
-  if (p.buff > 0) {                                // 파워업 오라
+  if (p.buff > 0 && p.st !== 'dead') {              // 파워업 오라
     const Hh = S.gy * SC;
     ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';
     ctx.beginPath(); ctx.ellipse(sx, p.y - p.z - Hh * 0.5, S.sh * SC * 1.5, Hh * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;

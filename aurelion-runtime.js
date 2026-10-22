@@ -282,7 +282,8 @@ function drawAurelion(e) {
   if(!isAurelion(e))return false;
   const a=aurelionData(e),pose=aurelionPose(e),f=aurelionFrame(pose.id,pose.f);
   if(!AURELION_SHEETS[f?.sheet]?.naturalWidth)return false;
-  drawShadow(e.x-camX,e.y,SPRITES.boss3.sh,e.z);
+  const alpha=e.st==='dead'?clamp(1-(e.t-aurelionMoves.death.total_frames)/50,0,1):1;
+  ctx.save();ctx.globalAlpha*=alpha;drawShadow(e.x-camX,e.y,SPRITES.boss3.sh,e.z);ctx.restore();
   if(aurelionHaloVisible(e)) {
     paintAurelion(aurelionFxFrame('royal_halo',Math.floor(tick/6)%4),e.x,e.y-e.z-215*AURELION_K,e.face,1,.85,true);
     if(e.p2shown)paintAurelion(aurelionFxFrame('gold_aura',Math.floor(tick/5)%4),e.x,e.y,e.face,.55,.85,true);
@@ -290,7 +291,7 @@ function drawAurelion(e) {
   ctx.save();const tele=aurelionTelegraph(e);
   if(e.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
   else if(tele?.flash&&UX.options.flash&&Math.floor(e.pt/90)%2===0)ctx.filter=tele.flash==='white'?'brightness(2)':tele.flash==='red'?'sepia(1) saturate(5) hue-rotate(310deg)':'sepia(1) saturate(4)';
-  paintAurelion(f,e.x,e.y-e.z,e.face);ctx.restore();
+  paintAurelion(f,e.x,e.y-e.z,e.face,alpha);ctx.restore();
   const drawing=aurelionDrawing(pose.id,pose.f),blade=drawing.hitboxes?.find(b=>b.kind!=='body')?.box;
   const tip=aurelionMoves[pose.id].events?.find(ev=>ev.at==='blade_tip')?.offset;
   e.tipX=e.x+e.face*(blade?blade[0]+blade[2]:tip?.[0]??90)*AURELION_K;
