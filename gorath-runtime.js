@@ -93,7 +93,7 @@ function getGorathPortrait() {
   return gorathPortrait;
 }
 // Hook rules adapted from gorath_framedata.zip to the game's world scale.
-const GORATH_GRAB = { depth: 14, reach: 236, pullSpeed: 6, offset: 54, hold: 50, presses: 8 };
+const GORATH_GRAB = { depth: 14, reach: 236, pullSpeed: 6, offset: 54, hold: 50, presses: 4 };
 const GORATH_ESCAPE_KEYS = ['KeyJ','KeyZ','KeyA','KeyD','KeyW','KeyS','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
 function catchGorathHook(hook) {
   const p=player,o=hook.owner;

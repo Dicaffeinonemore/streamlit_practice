@@ -341,6 +341,9 @@ function vargulBreakOrb(z,destroyed=false){
   if(z.dead)return;z.dead=true;
   vargulFx(z.owner,'frost_burst',z.x,z.y,z.h,{life:18,width:45,height:45});
   if(destroyed){
+    const roll=Math.random(),drops=VARGUL_RULES.orb.drops;
+    const type=roll<drops.potion?'potion':roll<drops.potion+drops.scroll?'scroll':null;
+    if(type)dropItem(type,clamp(z.x,camX+20,camX+VW-20),clamp(z.y,GTOP+8,GBOT-8));
     const e=z.owner;e.gr=Math.min(e.grMax,e.gr+VARGUL_RULES.orb.groggy);e.grT=150;hitStop=Math.max(hitStop,3);if(playerAttackHasDefaultSound())sfx('hit');
     if(e.gr>=e.grMax&&e.st!=='dead'&&!e.phaseT){resetBossFx(e);e.st='stun';e.t=0;e.z=e.vz=e.vx=0;shake=Math.max(shake,16);sfx('groggy');}
   }

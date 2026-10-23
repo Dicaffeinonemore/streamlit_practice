@@ -728,9 +728,11 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       inputDown('KeyJ');for(let i=0;i<4;i++)updPlayer();
       if(player.grab.presses!==1||player.x>=220)return false;
       inputUp('KeyJ');
-      for(let i=0;i<7;i++){inputDown('KeyJ');updPlayer();inputUp('KeyJ');}
+      for(let i=0;i<2;i++){inputDown('KeyJ');updPlayer();inputUp('KeyJ');}
+      if(player.st!=='grabbed'||player.grab.presses!==3)return false;
+      inputDown('KeyJ');updPlayer();inputUp('KeyJ');
       return player.st==='free'&&!player.grab&&h.dead&&b.gr===40&&b.st==='hurt';
-    })()`),true,'Hook pulls gradually, locks skills, and eight fresh presses escape');
+    })()`),true,'Hook pulls gradually, locks skills, and four fresh presses escape');
     assert.equal(await evaluate(`(()=>{
       function setup(dy=0,z=0,inv=0){
         clearInput();player=newPlayer();player.x=220;player.y=420+dy;player.z=z;player.inv=inv;

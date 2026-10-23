@@ -24,7 +24,7 @@ const VARGUL_RULES = {
   sword:{wait:45,active:6,radius:40*.5112,depth:22,damage:12},
   cross:{wait:60,active:18,screenWide:true,depth:16,column:36*.5112,height:90*.5112,damage:15},
   orb:{hp:30,height:70*.5112,bob:6,speed:.9,depthSpeed:.55,accel:.08,range:110,rangeSlack:24,
-    driftPeriod:180,interval:[200,150],flash:20,inv:10,groggy:20},
+    driftPeriod:180,interval:[200,150],flash:20,inv:10,groggy:20,drops:{potion:.25,scroll:.15}},
   shard:{speed:7*.5112,damage:8,depth:14},
   ultimate:{rx:110*.5112,ry:34,outerX:200*.5112,outerY:200*34/110,outerHeight:20*.5112,damage:23,outerDamage:10,
     riseHeight:240,impactTicks:8,waveDelay:8,waveTicks:36,waveHalfWidth:6,waveCount:3,waveInterval:24},

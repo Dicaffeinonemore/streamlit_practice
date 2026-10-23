@@ -25,6 +25,30 @@ function trial(){
     if(stage===4){const s=sovData(e);for(const f of s.fists){const [x,y,h]=sovHome(e,f,s);Object.assign(f,{x,y,h,st:'home',hp:180,max:180});}}
     return e;
   }
+  for(const [roll,want] of [[0,'potion'],[.24999,'potion'],[.25,'scroll'],[.39999,'scroll'],[.4,null],[.999,null]]){
+    setup();vargulEvent(e,{type:'orbs'});const [z]=vargulHazards(e,'orb'),random=Math.random;Math.random=()=>roll;
+    try{
+      vargulBreakOrb(z,true);
+      check((items[0]?.type??null)===want,'Orb drop threshold '+roll);
+      const count=items.length;vargulBreakOrb(z,true);
+      check(items.length===count,'Destroyed orb cannot drop twice');
+      if(count)check(items[0].x>=camX+20&&items[0].x<=camX+VW-20&&items[0].y>=GTOP+8&&items[0].y<=GBOT-8,'Orb loot is reachable');
+      setup();vargulEvent(e,{type:'orbs'});const [removed]=vargulHazards(e,'orb');vargulBreakOrb(removed);
+      check(!items.length,'Orb removal without a kill grants no loot');
+    }finally{Math.random=random;}
+  }
+  result.drops.push('Orb kill drops: potion25%, scroll15%, none60%; no duplicate or cleanup drops');
+  {
+    setup(0,false);e.x=camX+100;player.x=camX+220;player.inv=0;startPat(e,'hook');e.pt=500;
+    const hook={type:'hook',owner:e,x:player.x,y:player.y,h:58,dir:1,dead:false};
+    check(catchGorathHook(hook),'Hook catches player');
+    inputDown('KeyJ');for(let i=0;i<4;i++)updateGorathGrab();
+    check(player.grab?.presses===1,'Holding attack counts once');inputUp('KeyJ');
+    for(const key of ['ArrowLeft','ArrowRight']){inputDown(key);updateGorathGrab();inputUp(key);}
+    check(player.st==='grabbed'&&player.grab.presses===3,'Three presses do not escape');
+    inputDown('KeyJ');updateGorathGrab();inputUp('KeyJ');
+    check(player.st==='free'&&!player.grab&&hook.dead&&e.gr===40,'Fourth press escapes');
+  }
   // Real damage must arrive at all four arena corners from either side, including
   // a nonzero camera origin; the passed interior and airborne player stay safe.
   for(const origin of [24,VW/2,VW-24])for(const px of [1,VW-1])for(const py of [GTOP+1,GBOT-1]){
