@@ -27,9 +27,12 @@ module.exports=async({evaluate,call,errors,root})=>{
     try{
       player.st='free';player.z=0;player.sp=SP_MAX;beginViesaSpecial();
       check(sounds.filter(n=>n==='viesaUltimate').length===1,'Ultimate sample starts once');
+      fireViesaArrow();fireViesaArrow({air:true});
+      check(sounds.filter(n=>n==='viesaArrow').length===2,'Ground and air normal arrows use the arrow sample');
+      sounds.length=0;
       player.st='free';player.skillCd.thrust=0;startViesaSkill('thrust');
       for(let i=0;i<100&&player.st==='skill';i++)updPlayer();
-      check(sounds.filter(n=>n==='viesaRapid').length===1,'Six rapid arrows share one sample');
+      check(sounds.filter(n=>n==='viesaArrow').length===6,'Each rapid arrow plays the arrow sample');
       player.st='free';player.skillCd.redwave=0;startViesaSkill('redwave');
       for(let i=0;i<100&&player.st==='skill';i++)updPlayer();
       check(sounds.filter(n=>n==='viesaSnipe').length===1,'Snipe sample starts on release');

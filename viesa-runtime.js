@@ -183,7 +183,7 @@ function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,lan
   hazards.push({type:'viesa_arrow',x:p.x+p.face*26,y,h:p.z+VIESA_ART.worldHeight*.6,dir:p.face,age:0,
     speed,vh:air?-speed*Math.tan(Math.PI/6):0,range,travel:0,depth,aimY:target&&!laneOffset?target.y:y,startY:y,
     damage:Math.round((snipe?ATK.c1.dmg*2.5:rapid?10:8)*mul),snipe,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
-  if(snipe)sfx('viesaSnipe');else if(!rapid)sfx('pwave');
+  sfx(snipe?'viesaSnipe':'viesaArrow');
 }
 function fadeViesaArrow(z){if(!z.fading){z.fading=true;z.fadeAge=0;}}
 function updateViesaProjectile(z){
@@ -239,7 +239,7 @@ function updateViesaAction(){
     if(p.t>=4&&!a.shots){a.shots++;fireViesaArrow({snipe:true});}
     if(p.t>=24)viesaFinish();
   }else if(phase==='rapid_start'){
-    if(p.t>=16){viesaNext('rapid_loop');sfx('viesaRapid');}
+    if(p.t>=16)viesaNext('rapid_loop');
   }else if(phase==='rapid_loop'){
     if([0,9,18,27,36,45].includes(p.t-1)&&a.shots<6){
       const lane=Number(down('ArrowDown','KeyS'))-Number(down('ArrowUp','KeyW'));
