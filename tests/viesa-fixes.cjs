@@ -3,6 +3,19 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 module.exports=async({evaluate,call,errors,root})=>{
   const out=path.join(root,'artifacts/viesa-fixes');fs.mkdirSync(out,{recursive:true});
   await evaluate('requestAnimationFrame=()=>0;AUDIO.enable(false);VIESA_READY');
+  const samples=await evaluate(`(async()=>{
+    const audio=new AudioContext();
+    try{
+      const durations={};
+      for(const [name,url] of Object.entries(VIESA_SFX_URLS)){
+        const raw=await (await fetch(url)).arrayBuffer();
+        durations[name]=(await audio.decodeAudioData(raw)).duration;
+      }
+      return durations;
+    }finally{await audio.close();}
+  })()`);
+  assert.equal(Object.keys(samples).length,3);
+  assert(Object.values(samples).every(seconds=>seconds>0),'All skill MP3s decode');
   await evaluate(`toTitle();$('btnStart').click();selectCharacter('viesa');drawCharacterPreview();$('viesaSelectPortrait').decode()`);
   const selection=await evaluate(`(()=>{const im=$('viesaSelectPortrait');return {fullBody:im.src===VIESA_ART.selectionPortrait,width:im.naturalWidth,height:im.naturalHeight};})()`);
   assert(selection.fullBody&&selection.height>selection.width,'Selector uses full-body art');
@@ -10,6 +23,19 @@ module.exports=async({evaluate,call,errors,root})=>{
   const result=await evaluate(`(()=>{
     const check=(ok,message)=>{if(!ok)throw Error(message);};
     $('btnCharacterConfirm').click();$('btnGo').click();finishOpening();scene='play';bannerT=0;enemies=[];hazards=[];
+    const originalSfx=AUDIO.sfx,sounds=[];AUDIO.sfx=name=>sounds.push(name);
+    try{
+      player.st='free';player.z=0;player.sp=SP_MAX;beginViesaSpecial();
+      check(sounds.filter(n=>n==='viesaUltimate').length===1,'Ultimate sample starts once');
+      player.st='free';player.skillCd.thrust=0;startViesaSkill('thrust');
+      for(let i=0;i<100&&player.st==='skill';i++)updPlayer();
+      check(sounds.filter(n=>n==='viesaRapid').length===1,'Six rapid arrows share one sample');
+      player.st='free';player.skillCd.redwave=0;startViesaSkill('redwave');
+      for(let i=0;i<100&&player.st==='skill';i++)updPlayer();
+      check(sounds.filter(n=>n==='viesaSnipe').length===1,'Snipe sample starts on release');
+      check(!$('cutin').classList.contains('show'),'Skill casts do not show the Barel caption');
+    }finally{AUDIO.sfx=originalSfx;}
+    player.st='free';player.viesaAction=null;hazards=[];resetViesaEffects();
     const heights=[];player.z=100;player.vz=-1;startViesaAttack('air');
     for(let i=0;i<160&&player.z>0;i++){
       const before=player.z;pressed.KeyJ=true;updPlayer();

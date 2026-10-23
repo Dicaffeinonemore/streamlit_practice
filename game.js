@@ -634,7 +634,7 @@ function startSpecial() {
   p.spTg = best;
   p.spX = best ? best.x : p.x + p.face * 140; p.spY = best ? best.y : p.y;
   p.spX0 = p.x; p.spY0 = p.y;
-  cutIn(); sfx('spcharge');
+  sfx('spcharge');
 }
 function updSpecial() {
   if(isViesa()){updateViesaUltimate();return;}
