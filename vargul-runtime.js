@@ -341,7 +341,7 @@ function vargulBreakOrb(z,destroyed=false){
   if(z.dead)return;z.dead=true;
   vargulFx(z.owner,'frost_burst',z.x,z.y,z.h,{life:18,width:45,height:45});
   if(destroyed){
-    const e=z.owner;e.gr=Math.min(e.grMax,e.gr+VARGUL_RULES.orb.groggy);e.grT=150;hitStop=Math.max(hitStop,3);sfx('hit');
+    const e=z.owner;e.gr=Math.min(e.grMax,e.gr+VARGUL_RULES.orb.groggy);e.grT=150;hitStop=Math.max(hitStop,3);if(playerAttackHasDefaultSound())sfx('hit');
     if(e.gr>=e.grMax&&e.st!=='dead'&&!e.phaseT){resetBossFx(e);e.st='stun';e.t=0;e.z=e.vz=e.vx=0;shake=Math.max(shake,16);sfx('groggy');}
   }
   if(!vargulHazards(z.owner,'orb').length){const a=vargulData(z.owner);a.cooldowns.orb=720;a.hadOrbs=false;}
@@ -357,7 +357,7 @@ function strikeVargulOrbs(reach,behind=8,hitSet=player.hitSet,options={}){
     const overlaps=options.global||dx>=-behind-12&&dx<=reach+12&&Math.abs(z.y-y)<(options.depth??20)&&Math.abs(z.h-(h+44))<45;
     if(!overlaps)continue;
     hitSet.add(z);z.hp=Math.max(0,z.hp-(options.damage??ATK.c1.dmg));z.inv=VARGUL_RULES.orb.inv;hit=true;
-    if(z.hp<=0)vargulBreakOrb(z,true);else{sfx('hit');hitStop=Math.max(hitStop,2);}
+    if(z.hp<=0)vargulBreakOrb(z,true);else{if(playerAttackHasDefaultSound())sfx('hit');hitStop=Math.max(hitStop,2);}
   }
   return hit;
 }

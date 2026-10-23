@@ -208,29 +208,20 @@ function drawMorgraIntro(e) {
   paintMorgra(morgraFrame('intro',introT/MS),e.x,y+pose.offset,e.face,pose.alpha);
   ctx.restore();
 }
-function drawMorgraHazards() {
+function drawMorgraHazards(ground=false) {
   for(const z of hazards) {
     if(z.type!=='morgra'||z.dead)continue;
+    if(ground!==(z.kind==='moon_field'))continue;
     const f=z.age/MS;
     if(z.kind==='moon_field') {
-      if(f>=z.delay) {
-        ctx.save();ctx.fillStyle='rgba(126,67,198,.3)';ctx.beginPath();ctx.rect(0,GTOP,VW,GBOT-GTOP+12);
-        for(const s of z.safe){ctx.moveTo(s.x-camX+42,s.y);ctx.ellipse(s.x-camX,s.y,42,22,0,0,Math.PI*2);}
-        ctx.fill('evenodd');ctx.restore();
-        for(const y of [GTOP+25,420,480])for(let x=camX+30;x<camX+VW;x+=60) {
-          if(!z.safe.some(s=>Math.abs(x-s.x)<55&&Math.abs(y-s.y)<40))paintMorgra(morgraFxFrame('moon_beam',(f-z.delay)/6),x,y);
-        }
-      }
-      for(const s of z.safe) {
-        paintMorgra(morgraFxFrame('safe_zone',Math.floor(f/15)%2),s.x,s.y);
-        ctx.save();ctx.strokeStyle='#e7f5ff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(s.x-camX,s.y,42,22,0,0,Math.PI*2);ctx.stroke();ctx.restore();
-      }
+      drawJudgmentField(z);
     } else if(z.kind==='pillar') {
       paintMorgra(morgraFxFrame(f<z.delay?'warning_circle':'dark_pillar',f<z.delay?Math.floor(f/15)%3:(f-z.delay)/6),z.x,z.y);
       if(f<z.delay){ctx.save();ctx.strokeStyle='#c48cff';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(z.x-camX,z.y,44,22,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
     }
     else {
       const id=z.fx|| (z.kind==='crow'?(z.diving?'crow_dive':'crow_fly'):z.kind);
+      if(id==='moon'&&drawJudgmentMoon(z))continue;
       const n=MORGRA_ART.clips['fx_'+id]?.length||1;
       paintMorgra(morgraFxFrame(id,z.visual?f/(z.life/n):Math.floor(f/5)%n),z.x,z.y-z.h,z.face);
     }

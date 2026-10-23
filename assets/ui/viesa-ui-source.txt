@@ -1,0 +1,4 @@
+Reference: user-supplied 비에사 ui.png (1672 x 941 design coordinates).
+Output: viesa-ui.png, generated with the built-in image_gen tool.
+Prompt: Extract the supplied fantasy archer HUD onto a genuine transparent background. Preserve the gold vines, green leaves, white flowers, blue jewels, archer portraits, red/blue gauges, three scroll slots, three life medallions and U/H/O/P/L skill icons in their original positions. Remove the castle background and all translucent matte residue between ornaments. Keep panel interiors opaque and artwork sharp.
+Integration: tools/build_viesa_ui.py embeds the PNG as viesa-ui-art.js. viesa-ui.js crops the atlas at runtime and supplies live gauges, inventory/life masks and remappable skill keys.

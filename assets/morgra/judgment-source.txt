@@ -1,0 +1,7 @@
+Sources: user-supplied 달의 심판 애니메이션.png (6 x 4 frames) and 달의 심판 장판.png (6 x 4 frames).
+Processing: built-in image_gen, transparent background extraction while preserving all 24 frame positions and sequence. Moon body, glow, lightning, magical floor, runes, crescents, cracks and eruption particles retained.
+Final floor prompt: Preserve the 2048 x 768 six-column four-row atlas. Replace the two baked-in safe windows and circular outlines in every frame with matching cracked magical stone. Keep outer runes, crescents, sparks and erupting light/rocks. Outside each sprite must be transparent. Do not rearrange or resize frames.
+Runtime clips the true safe ellipses (42 x 22 world pixels) at their existing gameplay positions. The continuous floor variant avoids showing additional false safe spots.
+Current embedded assets: judgment-moon.png and judgment-field-gif.png. Previous derivatives retained: judgment-field-solid.png and judgment-field.png. Rebuild: tools/build_judgment_art.py.
+Latest floor source: user-supplied transparent 장판.gif, 1280 x 360, 24 frames, 80ms per frame. No image generation or retouching was applied to this GIF. The builder decodes its existing frames losslessly into a 6 x 4 PNG sheet. Runtime repeats a crack strip between its original holes and places the supplied ellipse rims around the true 42 x 22 safe areas. The glow extends just outside the safe boundary.
+Moon size adjustment: 120px frame cell, preserving the new art aspect ratio and matching the old effect's approximate visible height.

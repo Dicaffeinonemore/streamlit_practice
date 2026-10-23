@@ -15,6 +15,10 @@ let viesaUltObjects=[];
 const viesaEffectPool=[],viesaProjectilePool=[];
 let playerControlCharacter='barel';
 function isViesa(p=player){return p?.characterId==='viesa';}
+function playerAttackHasDefaultSound(){
+  return !isViesa()||player.st==='cast'||player.st==='special'||
+    player.st==='atk'&&['slash1','slash2','kick'].includes(player.viesaClip);
+}
 function playerHurtScale(){return isViesa() ? .9 : 1;}
 function playerBodyHalfWidth(){return 12*playerHurtScale();}
 function playerBodyHeight(){return 90*playerHurtScale();}
@@ -135,22 +139,20 @@ function startViesaSkill(id){
   player.skillCd[id]=SKILLS[id].cd;player.vz=0;
   if(id==='leap')player.viesaAirPUsed=true;
   if(phase==='dash_slash'){player.inv=Math.max(player.inv,2);player.viesaAction.dashHits=new Set();}
-  if(phase==='dash_slash')sfx('spdash');
-  if(phase==='snipe_draw')sfx('spcharge');
   return true;
 }
 function viesaNext(phase){const p=player;p.viesaAction.phase=phase;p.viesaAction.x0=p.x;p.viesaAction.h0=p.z;p.t=0;}
 function viesaFinish(){const p=player;p.st='free';p.t=0;p.skill=null;p.viesaAction=null;p.comboT=0;p.vz=0;}
-function startViesaAttack(n,melee=false){
+function startViesaAttack(n){
   const p=player;
   p.st='atk';p.t=0;p.buf=0;p.hitSet=new Set();p.x0=p.x;p.wave=false;p.viesaFired=false;p.viesaShotQueued=false;p.viesaAction=null;
   p.combo=p.comboT=p.viesaHoverGrace=0;p.viesaClip=n==='air'?'jump_shot':'shot';p.atk=n==='air'?'air':'c1';
   // Repeated air shots keep falling instead of restarting a hover each shot.
   if(n==='air')p.vz=clamp(p.vz,-1.6,-.25);
-  reactAurelionAttack();if(!melee)sfx('pwave');
+  reactAurelionAttack();
 }
 function startViesaMelee(n){
-  const p=player;startViesaAttack(0,true);p.combo=n;p.viesaClip=['slash1','slash2','kick'][n];p.atk=['c1','c2','c3'][n];sfx('swing',n);
+  const p=player;startViesaAttack(0);p.combo=n;p.viesaClip=['slash1','slash2','kick'][n];p.atk=['c1','c2','c3'][n];sfx('swing',n);
 }
 function updateViesaAttack(){
   const p=player;
