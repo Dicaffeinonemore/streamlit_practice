@@ -36,6 +36,7 @@
     setVolumes(musicVolume, sfxVolume);
     prepareBoss();
     prepareEnemyDeath();
+    prepareViesaSkills();
   }
   function init() {
     if (AU.ctx) return AU.ctx;
@@ -106,6 +107,10 @@
   const GAIN = { mobdie: 1.6, pickup: 1.8, swing: 4, dash: 2.5, jump: 2, hurt: 2.5, spdash: 2, pwave: 2.5, bswing: 3.5, bwind: 2, tele: 2.2, tele2: 2.2, orb: 3, bwave: 3, phase2: 2, click: 4, raven: 1.6, barrel: 2 };   // 작게 들리는 소리 보정
   function sfx(name, a) {
     if (!AU.on || !AU.ctx || AU.ctx.state === 'closed') return;
+    if (global.VIESA_SFX_URLS && Object.hasOwn(global.VIESA_SFX_URLS, name)) {
+      playViesaSkill(name);
+      return;
+    }
     if (name === 'mobdie' && playEnemyDeath()) return;
     const f = SFX[name]; if (!f) return;
     AU.gm = GAIN[name] || 1; try { f(a); } catch (e) { /* 무시 */ } AU.gm = 1;
@@ -172,6 +177,25 @@
     const src = AU.ctx.createBufferSource(); src.buffer = enemyDeathBuffer;
     src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();
     return true;
+  }
+  const viesaSkillBuffers = new Map();
+  function prepareViesaSkills() {
+    for (const [name, url] of Object.entries(global.VIESA_SFX_URLS || {})) {
+      const ready = fetch(url).then(r => {
+        if (!r.ok) throw new Error('Viesa skill sample unavailable');
+        return r.arrayBuffer();
+      }).then(decode);
+      viesaSkillBuffers.set(name, ready);
+      ready.catch(() => {});
+    }
+  }
+  function playViesaSkill(name) {
+    // Predecode on audio unlock; a first cast also waits for its sample.
+    viesaSkillBuffers.get(name)?.then(buffer => {
+      if (!AU.on || paused || AU.ctx.state === 'closed') return;
+      const src = AU.ctx.createBufferSource(); src.buffer = buffer;
+      src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();
+    }).catch(() => {});
   }
   function playFile(buf, rate) {
     const c = AU.ctx, now = c.currentTime, bus = c.createGain(), src = c.createBufferSource();

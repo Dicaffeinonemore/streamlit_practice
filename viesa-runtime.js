@@ -121,7 +121,7 @@ function viesaBeginAction(phase,{id=null,high=false}={}){
 function beginViesaSpecial(){
   const p=player;if(p.st!=='free'||p.z>0||p.sp<SP_MAX)return false;
   viesaBeginAction('ult_leap');p.st='special';p.sp=0;p.vz=0;
-  Object.assign(p.viesaAction,{clock:0,hitTimes:new Map(),arrows:0});sfx('spcharge');
+  Object.assign(p.viesaAction,{clock:0,hitTimes:new Map(),arrows:0});sfx('viesaUltimate');
   return true;
 }
 function startViesaSkill(id){
@@ -183,7 +183,7 @@ function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,lan
   hazards.push({type:'viesa_arrow',x:p.x+p.face*26,y,h:p.z+VIESA_ART.worldHeight*.6,dir:p.face,age:0,
     speed,vh:air?-speed*Math.tan(Math.PI/6):0,range,travel:0,depth,aimY:target&&!laneOffset?target.y:y,startY:y,
     damage:Math.round((snipe?ATK.c1.dmg*2.5:rapid?10:8)*mul),snipe,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
-  sfx(snipe?'bwave':'pwave');
+  if(snipe)sfx('viesaSnipe');else if(!rapid)sfx('pwave');
 }
 function fadeViesaArrow(z){if(!z.fading){z.fading=true;z.fadeAge=0;}}
 function updateViesaProjectile(z){
@@ -239,7 +239,7 @@ function updateViesaAction(){
     if(p.t>=4&&!a.shots){a.shots++;fireViesaArrow({snipe:true});}
     if(p.t>=24)viesaFinish();
   }else if(phase==='rapid_start'){
-    if(p.t>=16)viesaNext('rapid_loop');
+    if(p.t>=16){viesaNext('rapid_loop');sfx('viesaRapid');}
   }else if(phase==='rapid_loop'){
     if([0,9,18,27,36,45].includes(p.t-1)&&a.shots<6){
       const lane=Number(down('ArrowDown','KeyS'))-Number(down('ArrowUp','KeyW'));
