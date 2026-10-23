@@ -2,7 +2,7 @@
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 module.exports=async({evaluate,call,errors,root})=>{
   const out=path.join(root,'artifacts/character-select');fs.mkdirSync(out,{recursive:true});
-  await evaluate('requestAnimationFrame=()=>0;AUDIO.enable(false);BAREL_ATLAS.decode()');
+  await evaluate('requestAnimationFrame=()=>0;AUDIO.enable(false);Promise.all([BAREL_ATLAS.decode(),VIESA_READY])');
   const result=await evaluate(`(()=>{
     const check=(v,m)=>{if(!v)throw Error(m);};
     toTitle();const saves=JSON.stringify({...localStorage});$('btnStart').click();
@@ -23,6 +23,12 @@ module.exports=async({evaluate,call,errors,root})=>{
     toTitle();openCharacterSelect();drawCharacterPreview();
     const canvas=$('barelSelectPreview'),data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
     check(data.some((n,i)=>i%4===3&&n>0),'Real player preview is drawn');
+    const preview=$('viesaSelectPortrait'),savedTick=tick;
+    tick=0;drawCharacterPreview();const first=preview.toDataURL();
+    check(preview.getContext('2d').getImageData(0,0,preview.width,preview.height).data.some((n,i)=>i%4===3&&n>0),'Viesa idle preview is drawn');
+    tick=6;drawCharacterPreview();check(preview.toDataURL()!==first,'Viesa idle advances to the next frame');
+    tick=VIESA_ART.clips.idle.length*6;drawCharacterPreview();check(preview.toDataURL()===first,'Viesa idle loops seamlessly');
+    tick=savedTick;
     // Opening a menu must not create or overwrite a checkpoint.
     const checkpoint=UX.checkpoint();openCharacterSelect();check(JSON.stringify(UX.checkpoint())===JSON.stringify(checkpoint),'Menu preserves checkpoint');
     return {flow:true,archerPlayable:true,preview:true,checkpointPreserved:true};

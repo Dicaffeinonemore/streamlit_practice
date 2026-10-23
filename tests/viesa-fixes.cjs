@@ -16,9 +16,9 @@ module.exports=async({evaluate,call,errors,root})=>{
   })()`);
   assert.equal(Object.keys(samples).length,3);
   assert(Object.values(samples).every(seconds=>seconds>0),'All skill MP3s decode');
-  await evaluate(`toTitle();$('btnStart').click();selectCharacter('viesa');drawCharacterPreview();$('viesaSelectPortrait').decode()`);
-  const selection=await evaluate(`(()=>{const im=$('viesaSelectPortrait');return {fullBody:im.src===VIESA_ART.selectionPortrait,width:im.naturalWidth,height:im.naturalHeight};})()`);
-  assert(selection.fullBody&&selection.height>selection.width,'Selector uses full-body art');
+  await evaluate(`toTitle();$('btnStart').click();selectCharacter('viesa');drawCharacterPreview()`);
+  const selection=await evaluate(`(()=>{const im=$('viesaSelectPortrait');return {animated:im.tagName==='CANVAS',visible:im.getContext('2d').getImageData(0,0,im.width,im.height).data.some((n,i)=>i%4===3&&n>0)};})()`);
+  assert(selection.animated&&selection.visible,'Selector draws the animated full-body sprite');
   fs.writeFileSync(path.join(out,'selection.png'),Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
   const result=await evaluate(`(()=>{
     const check=(ok,message)=>{if(!ok)throw Error(message);};
@@ -99,6 +99,15 @@ module.exports=async({evaluate,call,errors,root})=>{
     for(const frame of [VIESA_ART.clips.hurt[3],VIESA_ART.clips.death[0]]){
       check(Math.abs(frame.atlas[3]/idle.atlas[3]-1)<.15,'Standing hurt/death body stays near idle size');
     }
+    for(const frame of VIESA_ART.clips.death){
+      check(frame.anchor[1]===frame.atlas[3],'Each death pose touches the ground at z=0');
+    }
+    // Exercise lethal damage during an airborne skill, including its old action.
+    player.st='free';player.z=100;player.vz=0;player.hp=player.max;player.inv=0;
+    player.viesaAction={phase:'hover'};hurtPlayer(player.max,-1,false);
+    for(let i=0;i<60;i++)updPlayer();
+    check(player.st==='dead'&&player.z===0&&player.vz===0,'Airborne death falls to the floor');
+    check(viesaPose()===VIESA_ART.clips.death.at(-1),'Landed death holds the final grounded pose');
     return {continuousShotHeights:heights,singleShotLanded:true,ultimatePhases:[...phases],standingHeightRatio:ratio,scrollDamage:80,normalArrowDamage:8,rapidArrowDamage:10,ultimateDamage:{phantom:4,explosion:160},invulnerableDashes:dashResults};
   })()`);
   await evaluate(`player.st='special';player.t=10;player.z=110;player.viesaAction={phase:'ult_barrage',clock:10};ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);render()`);

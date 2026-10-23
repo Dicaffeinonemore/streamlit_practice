@@ -252,7 +252,18 @@ function selectCharacter(id, focus = false) {
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
 function drawCharacterPreview() {
-  const portrait=$('viesaSelectPortrait');if(portrait&&!portrait.src)portrait.src=VIESA_ART.selectionPortrait;
+  const preview=$('viesaSelectPortrait'), pc=preview.getContext('2d');
+  const frames=VIESA_ART.clips.idle, pose=frames[Math.floor(tick/6)%frames.length];
+  const sheet=VIESA_SHEETS[pose.sheet];
+  if(sheet.naturalWidth){
+    // Fit the whole clip once so breathing never changes scale or floor height.
+    const left=Math.max(...frames.map(f=>f.anchor[0])),right=Math.max(...frames.map(f=>f.atlas[2]-f.anchor[0]));
+    const top=Math.max(...frames.map(f=>f.anchor[1])),bottom=Math.max(...frames.map(f=>f.atlas[3]-f.anchor[1]));
+    const scale=Math.min(270/(left+right),225/(top+bottom));
+    const [x,y,w,h]=pose.atlas,[ax,ay]=pose.anchor;
+    pc.clearRect(0,0,preview.width,preview.height);pc.imageSmoothingEnabled=false;
+    pc.drawImage(sheet,x,y,w,h,(preview.width+(left-right)*scale)/2-ax*scale,preview.height-8-(bottom+ay)*scale,w*scale,h*scale);
+  }
   if (!BAREL_ATLAS.naturalWidth) return;
   const canvas = $('barelSelectPreview'), c = canvas.getContext('2d');
   const frame = barelFrame('idle', tick * MS / 1300, true), [x,y,w,h] = frame.atlas;

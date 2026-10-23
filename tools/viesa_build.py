@@ -265,6 +265,12 @@ for number,spec in SPEC.items():
             f={'atlas':[0,0,tile.width,tile.height],'anchor':[round(r['pivotX']*scale,3),round(r['pivotY']*scale,3)],
                'source':r['source'],'sourceSheet':number,'drawing':i+1,
                'tip':[round((tipx-r['pivotX'])*scale,3),round((r['pivotY']-tipy)*scale,3)]}
+            if name=='death':
+                # Every collapse pose contacts the floor; a shared row baseline
+                # leaves the shorter final pose hovering even after z reaches 0.
+                shift=tile.height-f['anchor'][1]
+                f['anchor'][1]=tile.height
+                f['tip'][1]=round(f['tip'][1]+shift,3)
             clips[name].append(f);tiles.append((f,tile))
 
 fx_path=next((SRC/'02_Basic_Effects').glob('*.png'));fx_image=Image.open(fx_path).convert('RGB');arr=np.array(fx_image)
