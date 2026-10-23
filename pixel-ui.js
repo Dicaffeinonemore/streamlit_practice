@@ -33,6 +33,7 @@ PIXEL_UI.onload = () => {
 PIXEL_UI.src = PIXEL_UI_SOURCE;
 
 function drawPixelHUD(p) {
+  if(isViesa(p)&&drawViesaUI(p))return true;
   if (!pixelUI.ready) return false;
   const k = W / 1672 * .62;
   // Keep the current width and scale both axes equally to preserve the atlas ratio.

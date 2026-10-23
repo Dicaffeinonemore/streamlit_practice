@@ -71,14 +71,14 @@ function strikeSovereignFists(reach,behind=8,hitSet=player.hitSet,o={}){
       if(!o.global)blocked=true;
       if(hitSet.has(f))continue;
       hitSet.add(f);
-      if(sovWalling(f)){sparks(f.x,f.y,f.h,8,'#ffd2ec');sfx('hit',0);continue;}
+      if(sovWalling(f)){sparks(f.x,f.y,f.h,8,'#ffd2ec');if(playerAttackHasDefaultSound())sfx('hit',0);continue;}
       sovDamageFist(e,f,o.damage??ATK.c1.dmg,!!o.kd);sovPressure(e);
     }
     // Iron wall: every attack from the front side is turned away with sparks.
     if(!o.global&&s.jobs.some(j=>j.id==='wall'&&j.stage==='guard')&&Math.sign(x-e.x)===e.face&&
         Math.abs(e.x-x)<reach+60&&Math.abs(e.y-y)<depth+10){
       blocked=true;
-      if(!hitSet.has(s)){hitSet.add(s);sparks(e.x+e.face*45,e.y,70,8,'#ffd2ec');sfx('hit',0);}
+      if(!hitSet.has(s)){hitSet.add(s);sparks(e.x+e.face*45,e.y,70,8,'#ffd2ec');if(playerAttackHasDefaultSound())sfx('hit',0);}
     }
   }
   return blocked;
@@ -87,7 +87,7 @@ function sovDamageFist(e,f,dmg,kd){
   if(!sovActive(f)||practice)return;
   dmg=Math.round(dmg*(kd?SOV_R.kdFistMul:1));f.hp-=dmg;f.flash=6;
   floatText(f.x,f.y-f.h-30,dmg,'#ffb3d8');impact(f.x,f.y,f.h-12,kd?2:1,Math.sign(f.x-player.x)||1);
-  hitStop=Math.max(hitStop,kd?5:3);sfx('hit',kd?2:0);
+  hitStop=Math.max(hitStop,kd?5:3);if(playerAttackHasDefaultSound())sfx('hit',kd?2:0);
   if(f.hp<=0)sovBreakFist(e,f);
 }
 function sovBreakFist(e,f){

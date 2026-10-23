@@ -187,7 +187,7 @@ const ATK = {
 };
 const LINK_MS = 420, BUF_MS = 220;      // 다음 타 연결 허용 시간 / 선입력 유지 시간
 // 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
-const SPECIAL = { dur: 2100, slash: 14, fin: 70 };
+const SPECIAL = { dur: 2100, slash: 20, fin: 150 };
 // 마법 "뇌격": 두루마리 1개로 화면 안의 모든 적에게 번개. 잡몹은 쓰러지고 보스는 최대 체력의 12% 피해
 const MAGIC = { max: 3, dur: 640, fire: 380, damage: 80 };
 // 첨부 보스전의 전투 기술. 일반 공격보다 강하지만 각각 독립 쿨다운이 있다.
@@ -247,7 +247,9 @@ function selectCharacter(id, focus = false) {
     if (focus && button.dataset.character === id) button.focus();
   });
   $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
-  $('characterSelectionKeys').hidden = id !== 'viesa';
+  $('characterSelectionKeys').textContent = id === 'viesa'
+    ? 'J 화살 · H 근접 · U 연사 · L 저격 · O 지상 백플립 · P 공중 백플립 · K 흑월 난사'
+    : 'J 3연타 · U 돌진 베기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격';
   $('btnCharacterConfirm').disabled = !hero.available;
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
@@ -707,7 +709,7 @@ function fireBolts() {
 }
 
 function damageBarrel(b) {
-  b.hp--; b.flash = 6; hitStop = Math.max(hitStop, 2); sfx('hit', 0);
+  b.hp--; b.flash = 6; hitStop = Math.max(hitStop, 2); if(playerAttackHasDefaultSound())sfx('hit', 0);
   sparks(b.x, b.y, 30, 5, '#d7a86e');
   if (b.hp <= 0) { b.dead = true; sparks(b.x, b.y, 25, 14, '#a1744a'); dropFromBarrel(b); sfx('barrel'); }
 }
@@ -976,7 +978,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   chain.n++; chain.t = CHAIN_MS; chain.max = Math.max(chain.max, chain.n);
   e.hp -= dmg; e.flash = 6;
   hitStop = Math.max(hitStop, kd ? 6 : 3);
-  sfx('hit', kind);
+  if(playerAttackHasDefaultSound())sfx('hit', kind);
   const dir = p.x <= e.x ? 1 : -1, hz = e.z + SPRITES[e.d.sprite].gy * SC * 0.55;
   e.hr = 0; e.hdir = dir; e.hheavy = kind >= 2;
   impact(e.x - dir * e.hw * 0.6, e.y, hz, kind, dir);
@@ -3025,6 +3027,7 @@ function render() {
     ctx.fillStyle='rgba(0,0,0,.3)';rect(-40,OY-40,VW+80,VH+80);
   }
   drawVargulRemains();drawVargulHazards(true);drawSovereignGround();
+  drawMorgraHazards(true);
   if (stage) {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
     const sp = player.st === 'special' && !isViesa() ? player.t * MS : -1;

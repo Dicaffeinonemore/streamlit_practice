@@ -224,6 +224,10 @@
   #skillbar .skillbtn:disabled { filter: brightness(.65); }
   #skillbar .skillbtn.ready:hover { filter: brightness(1.2); }
   #playPause, body.touch #playPause { top: .5%; right: .5%; width: 5.5%; height: 9%; padding: 0; margin: 0; border: 0; border-radius: 0; background-color: transparent !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; box-shadow: none; color: transparent; font-size: 0; image-rendering: pixelated; }
+  body.viesa-player #skillbar { left: 25.5%; top: 27%; }
+  body.viesa-player #skillbar .skillbtn { width: 4.2cqw; aspect-ratio: 148 / 260; background-image: var(--viesa-icon) !important; image-rendering: auto; }
+  body.viesa-player #skillbar .skillbtn .key { top: 28%; left: 25%; font-size: clamp(5px,.7cqw,10px); }
+  body.viesa-player #skillbar .skillbtn .cool, body.viesa-player #skillbar .skillbtn::after { inset: 26% 8% 27% 12%; }
   /* Character selection: two permanent slots, including upcoming heroes. */
   #characterSelect { padding: clamp(14px,3cqw,36px); gap: 14px; background: radial-gradient(ellipse at 25% 55%,#541c2c66,transparent 55%),radial-gradient(ellipse at 85% 30%,#143d3c55,transparent 55%),#08070ded; }
   #characterSelect .selection-kicker { margin: 0; font-size: 11px; letter-spacing: .35em; color: #b99a7e; }
@@ -312,7 +316,7 @@
       </button>
     </div>
     <p id="characterSelectionStatus" role="status" aria-live="polite">바렐 · 흑기사 선택됨</p>
-    <p id="characterSelectionKeys" hidden style="margin:0;font-size:clamp(10px,1.2cqw,13px);color:#c9b5df;text-align:center">J 화살 · H 근접 · U 연사 · L 저격 · O 지상 백플립 · P 공중 백플립 · K 흑월 난사</p>
+    <p id="characterSelectionKeys" style="margin:0;font-size:clamp(10px,1.2cqw,13px);color:#c9b5df;text-align:center">J 3연타 · U 돌진 베기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격</p>
     <div class="actions"><button class="btn secondary" id="btnCharacterBack">타이틀로</button><button class="btn" id="btnCharacterConfirm">바렐로 시작</button></div>
     <p class="selection-help">← → 선택 · Enter 확인 · Esc 돌아가기</p>
   </section>
@@ -462,6 +466,8 @@
 <script src="gorath-art.js"></script>
 <script src="gorath-runtime.js"></script>
 <script src="morgra-art.js"></script>
+<script src="judgment-art.js"></script>
+<script src="judgment-runtime.js"></script>
 <script src="morgra-runtime.js"></script>
 <script src="aurelion-art.js"></script>
 <script src="aurelion-runtime.js"></script>
@@ -477,6 +483,8 @@
 <script src="pixel-ui-art.js"></script>
 <script src="boss-ui-art.js"></script>
 <script src="enemy-ui-art.js"></script>
+<script src="viesa-ui-art.js"></script>
+<script src="viesa-ui.js"></script>
 <script src="pixel-ui.js"></script>
 <script src="game.js"></script>
 </body>

@@ -163,19 +163,31 @@
   });
   // Embedded with the scripts so local, Streamlit and single-HTML builds use
   // the same sample. One buffer, independent sources for simultaneous kills.
-  let enemyDeathBuffer = null, enemyDeathReady = null;
+  let enemyDeathBuffer = null, enemyDeathReady = null, enemyDeathOffset = 0;
   function prepareEnemyDeath() {
     if (!enemyDeathReady && global.ENEMY_DEATH_SFX_URL && AU.ctx) {
       enemyDeathReady = fetch(global.ENEMY_DEATH_SFX_URL).then(r => {
         if (!r.ok) throw new Error('Enemy death sample unavailable');
         return r.arrayBuffer();
-      }).then(decode).then(buffer => { enemyDeathBuffer = buffer; }).catch(() => {});
+      }).then(decode).then(buffer => {
+        // Skip encoded leading silence so the audible hit starts on the killing blow.
+        let first = buffer.length;
+        for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+          const data = buffer.getChannelData(ch);
+          for (let i = 0; i < first; i++) {
+            if (Math.abs(data[i]) > .003) { first = i; break; }
+          }
+        }
+        if (first === buffer.length) return; // Silent sample: retain the immediate fallback.
+        enemyDeathOffset = Math.max(0, first / buffer.sampleRate - .002);
+        enemyDeathBuffer = buffer;
+      }).catch(() => {});
     }
   }
   function playEnemyDeath() {
     if (!enemyDeathBuffer) return false;  // Keep synthesized fallback while loading/on failure.
     const src = AU.ctx.createBufferSource(); src.buffer = enemyDeathBuffer;
-    src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();
+    src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start(0, enemyDeathOffset);
     return true;
   }
   const viesaSkillBuffers = new Map();
