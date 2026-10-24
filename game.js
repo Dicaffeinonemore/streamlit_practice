@@ -102,12 +102,10 @@ const ET = {
            h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진', hook: '갈고리 끌어오기', meat: '고기 덩어리 투척' } },
   boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 850, spd: 1.2, range: 64, score: 3500, kd: true,
            h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼', feather: '깃털 투척', staff: '지팡이 강타', soul: '영혼 추수' } },
-  boss3: { name: '황금왕 아우렐리온', en: 'AURELION', sprite: 'boss3', boss: true, hp: 1500, spd: 1.3, range: 68, score: 6000, kd: true,
-           h: 120, s: 1, hw: 34, pats: { slash3: '삼연 검기', pillars: '황금 기둥', charge: '왕의 돌진', cleave: '황금 중파참', whirl: '황금 선풍' } },
-  boss4: { name: '프로즌 그레이브로드', en: 'FROZEN GRAVELORD', sprite: 'boss4', boss: true, hp: 1900, spd: 1.25, range: 70, score: 8000, kd: true,
-           h: 152, s: 1, hw: 34, orb: 'blue', pats: { frost: '빙결 십자 · 이동 / 점프', slam: '묘지 내려찍기', slash3: '망령 삼연참', orbs: '혼불 탄막' } },
-  boss5: { name: '블랙 문 엠페러', en: 'BLACK MOON EMPEROR', sprite: 'boss5', boss: true, hp: 2400, spd: 1.2, range: 78, score: 12000, kd: true,
-           h: 176, s: 1, hw: 40, orb: 'eclipse', pats: { eclipse: '심연 고리 · 점프로 넘기', slam: '심연 강타', pillars: '지옥불 기둥', orbs: '마염 탄막', charge: '마왕 돌진', ravens: '악령 떼' } },
+  // boss3~5: 이름·체력·키·패턴 등은 mkEnemy 에서 아우렐리온 / 바르굴 / 소버린 정의로 채운다
+  boss3: { name: '황금왕 아우렐리온', en: 'AURELION', sprite: 'boss3', boss: true, spd: 1.3, range: 68, score: 6000, kd: true, s: 1, hw: 34 },
+  boss4: { sprite: 'boss4', boss: true, spd: 1.25, range: 70, score: 8000, kd: true, s: 1 },
+  boss5: { sprite: 'boss5', boss: true, spd: 1.2, range: 78, score: 12000, kd: true, s: 1 },
 };
 // 패턴 시작 후 이 시간(ms) 동안 머리 위에 ! 경고 표시
 ET.boss2.pats=Object.fromEntries(['staff_swing','magic_bolt','teleport','summon','curtain','cackle','aerial_slash','crow_rush','moon','p2_bolt','p2_summon','p2_curtain','p2_teleport'].map(id=>[id,morgraMoves[id].name]));
@@ -498,11 +496,9 @@ function spawnWave(w) {
   }
 }
 function mkEnemy(type, x, y) {
-  // The retained ET.boss4 / runLegacyPat / named renderer are bypassed only
-  // while USE_VARGUL_V136 is enabled; VARGUL_V136_OVERRIDE=false restores them.
-  const base = type==='boss4'&&USE_VARGUL_V136?{...ET[type],name:'바르굴, 얼어붙은 묘지왕',en:'VARGUL, THE FROZEN GRAVELORD',hp:2000,h:VARGUL_ART.worldHeight,hw:19,pats:VARGUL_RULES.names}:
-    type==='boss5'&&USE_SOVEREIGN?{...ET[type],name:'흑월의 군주, 소버린',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyHeight,hw:SOVEREIGN_RULES.hw,pats:SOVEREIGN_RULES.names}:
-    type==='boss3'&&USE_AURELION_V133?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
+  const base = type==='boss4'?{...ET[type],name:'바르굴, 얼어붙은 묘지왕',en:'VARGUL, THE FROZEN GRAVELORD',hp:2000,h:VARGUL_ART.worldHeight,hw:19,pats:VARGUL_RULES.names}:
+    type==='boss5'?{...ET[type],name:'흑월의 군주, 소버린',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyHeight,hw:SOVEREIGN_RULES.hw,pats:SOVEREIGN_RULES.names}:
+    type==='boss3'?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
   const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
@@ -521,7 +517,7 @@ function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life:
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
 function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
-function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'&&USE_AURELION_V133?aurelionGhostFrame():null, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, viesa:id==='player'&&isViesa()?viesaPose():null, barel: id==='player'&&!isViesa()?barelPlayerFrame():null, named: id==='player'&&!isViesa()?namedPlayerFrame():null }); }
+function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'?aurelionGhostFrame():null, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, viesa:id==='player'&&isViesa()?viesaPose():null, barel: id==='player'&&!isViesa()?barelPlayerFrame():null, named: id==='player'&&!isViesa()?namedPlayerFrame():null }); }
 function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
 function dropItem(type, x, y) {
@@ -1001,7 +997,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
     return;
   }
   if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
-    if (e.type!=='boss2' && e.type!=='boss3' && !isVargul(e) && !isSovereign(e) && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
+    if (e.type==='boss1' && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
     if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
     e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
     if (e.gr >= e.grMax) {
@@ -1017,8 +1013,6 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
       resetBossFx(e);
       e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 3;
       if (e.type === 'boss3') spawnAdds(['rogue', 'rogue']);
-      else if (e.type === 'boss4'&&!isVargul(e)) spawnAdds(['archer', 'grunt']);
-      else if (e.type === 'boss5'&&!isSovereign(e)) spawnAdds(['brute', 'archer']);
     } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken') || (isVargul(e)&&e.st==='pat'&&!vargulArmored(e))) { if(isAurelion(e)||isVargul(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
@@ -1043,10 +1037,8 @@ function startAttack(e, pat) {
 }
 
 // ---------------------------------------------------------------- 보스 패턴
-// 고라스: 내려찍기(충격파) / 휩쓸기 / 돌진(분노)
-// 모르그라: 순간이동 / 녹염 탄막 / 까마귀 떼
-// 오렐리온: 삼연 검기 / 화염 기둥 / 왕의 돌진(분노)
-// 체력 절반 이하(2페이즈)에서는 탄 수가 늘고 쿨타임이 짧아진다
+// 고라스: 내려찍기(충격파) / 휩쓸기 / 돌진(분노) / 갈고리 / 고기 투척 — pickPat · runLegacyPat
+// 모르그라 · 아우렐리온 · 바르굴 · 소버린은 각자의 *-runtime.js 에서 고르고 실행한다
 function bossColors(e) { return e.type === 'boss4' ? ['#eaf8ff','#7ad8ff','#365caa'] : e.type === 'boss5' ? ['#ffe4fa','#ff498d','#691a52'] : ['#fff3b8','#f3d26a','#d4a437']; }
 function phase2(e) { return !!e.p2shown; }
 // 2페이즈 돌입: 그로기 게이지를 비우고 각성 모션(무적) 뒤 공격 재개.
@@ -1065,22 +1057,10 @@ function pickPat(e, adx, ady, p2) {
   if(isAurelion(e))return pickAurelionPattern(e,adx,ady);
   if(e.type==='boss2')return pickMorgraPattern(e,adx,ady);
   p2=false;
-  const near = adx < (e.type === 'boss1' ? 110 : 130) && ady < 34;   // 고라스 휩쓸기 사거리 ≈ 108px
+  const near = adx < 110 && ady < 34;              // 고라스 휩쓸기 사거리 ≈ 108px
   let ch = null;
-  if (e.type === 'boss1') {
-    if (near) ch = ['sweep', 'sweep', 'slam', p2 ? 'rage' : 'hook'];
-    else if (adx < 460 && Math.random() < 0.75) ch = p2 ? ['hook', 'meat', 'rage', 'rage', 'slam'] : ['hook', 'meat', 'slam', 'meat', 'sweep'];
-  } else if (e.type === 'boss2') {
-    ch = adx < 110 ? ['teleport', 'staff', 'staff', 'orbs', 'feather'] :
-      (p2 ? ['orbs', 'soul', 'feather', 'ravens', 'teleport', 'soul'] : ['orbs', 'orbs', 'ravens', 'feather', 'soul', 'teleport']);
-  } else if (e.type === 'boss4') {               // 바르굴: 근접 삼연참·내려찍기, 멀면 혼불 탄막
-    if (near) ch = ['frost', 'slash3', 'slam', p2 ? 'frost' : 'orbs'];
-    else ch = ['frost', 'orbs', 'slash3'];
-  } else if (e.type === 'boss5') {               // 모르데카이: 모든 기술을 섞어 쓴다
-    if (near) ch = ['eclipse', 'slam', 'charge', p2 ? 'pillars' : 'orbs'];
-    else ch = ['eclipse', 'pillars', 'orbs', 'ravens'];
-  } else if (near) ch = ['slash3', 'cleave', 'whirl', p2 ? 'charge' : 'pillars', 'cleave'];
-  else if (Math.random() < 0.75) ch = p2 ? ['pillars', 'whirl', 'charge', 'cleave', 'slash3'] : ['pillars', 'slash3', 'charge', 'cleave', 'slash3'];
+  if (near) ch = ['sweep', 'sweep', 'slam', p2 ? 'rage' : 'hook'];
+  else if (adx < 460 && Math.random() < 0.75) ch = p2 ? ['hook', 'meat', 'rage', 'rage', 'slam'] : ['hook', 'meat', 'slam', 'meat', 'sweep'];
   if (!ch) return null;                            // 멀면 조금 더 다가간 뒤 다시 고른다
   const fresh = ch.filter(c => c !== e.last), list = fresh.length ? fresh : ch;
   return list[Math.floor(Math.random() * list.length)];
@@ -1120,7 +1100,6 @@ function bossChase(e) {
     if (pat) startPat(e, pat); else e.atkCd = 12;
   }
 }
-function bossTip(e) { return e.tipX !== null ? [e.tipX, e.tipH] : [e.x + e.face * 28, 130]; }
 function alignY(e, k) { e.y += clamp(player.y - e.y, -k, k); }   // 근접 패턴 예비 동작 중 깊이 맞추기
 
 function runPat(e) {
@@ -1134,26 +1113,6 @@ function runPat(e) {
 function runLegacyPat(e) {
   const p = player, t = e.pt, m = e.marks, p2 = false, f = e.face;
   switch (e.pat) {
-    case 'frost': {
-      const count = p2 ? 2 : 1;
-      for (let k = 0; k < count; k++) {
-        if (t >= 100 + k * 1400 && !m['cross' + k]) {
-          m['cross' + k] = true;
-          hazards.push({ type: 'rift', kind: 'frost', x: camX, y: p.y, width: VW, depth: 17, delay: 950, life: 320, age: 0, owner: e });
-          hazards.push({ type: 'rift', kind: 'frost', x: p.x - 19, y: (GTOP + GBOT) / 2, width: 38, depth: 85, delay: 950, life: 320, age: 0, owner: e });
-          sfx('bwind');
-        }
-      }
-      if (t >= (p2 ? 3300 : 2100)) endPat(e);
-      break;
-    }
-    case 'eclipse': {
-      if (t >= 200 && !m.ring) {
-        m.ring = true; hazards.push({ type: 'eclipse', x: p.x, y: p.y, age: 0, delay: 1200, life: p2 ? 1000 : 1300, owner: e }); sfx('bwind');
-      }
-      if (t >= 3100) endPat(e);
-      break;
-    }
     case 'slam': {                                 // 식칼을 들어 올렸다가 내려꽂고, 양쪽으로 충격파
       if (t < 650) e.bdy = -Math.round(7 * Math.min(1, t / 450));
       else if (!m.a) { m.a = 1; e.bdy = 0; slamImpact(e); }
@@ -1171,18 +1130,17 @@ function runLegacyPat(e) {
       if (t >= 1150) endPat(e);
       break;
     }
-    case 'rage': case 'charge': {                  // 붉게(금빛으로) 번쩍이며 기를 모은 뒤 잔상을 남기며 돌진
-      const rage = e.pat === 'rage', wind = rage ? 550 : 450, end = rage ? 1250 : 1010;
-      if (t < wind) { e.wash = Math.floor(t / (rage ? 90 : 80)) % 2 ? (rage ? '#ff2a2a' : '#ffe27a') : null; e.bdx = rage ? Math.round(Math.sin(t * 0.06)) : 0; alignY(e, 1.6); }
-      else if (t < end) {
+    case 'rage': {                                 // 붉게 번쩍이며 기를 모은 뒤 잔상을 남기며 돌진
+      if (t < 550) { e.wash = Math.floor(t / 90) % 2 ? '#ff2a2a' : null; e.bdx = Math.round(Math.sin(t * 0.06)); alignY(e, 1.6); }
+      else if (t < 1250) {
         if (!m.c) { m.c = 1; sfx('bcharge'); }
         e.wash = null; e.bdx = 0; e.hot = true;
-        e.x += f * (rage ? 170 : 270) * SC / 1000 * MS;
-        if (every(t, rage ? 50 : 35)) ghost(e.x, e.y, e.z, e.d.sprite, f, rage ? '#ff5a2a' : '#ffd23a', 260);
-        if (rage && every(t, 50)) burst(e.x - f * 32, e.y, 4, ['#a8864a', '#a8864a', '#6a4a28']);
-        if (!m.h && Math.abs(p.x - e.x) < 44 && Math.abs(p.y - e.y) < 26 && p.z < 60 && hurtPlayer(rage ? 16 : 18, f, true, e)) m.h = 1;
+        e.x += f * 170 * SC / 1000 * MS;
+        if (every(t, 50)) ghost(e.x, e.y, e.z, e.d.sprite, f, '#ff5a2a', 260);
+        if (every(t, 50)) burst(e.x - f * 32, e.y, 4, ['#a8864a', '#a8864a', '#6a4a28']);
+        if (!m.h && Math.abs(p.x - e.x) < 44 && Math.abs(p.y - e.y) < 26 && p.z < 60 && hurtPlayer(16, f, true, e)) m.h = 1;
       } else e.hot = false;
-      if (t >= (rage ? 1900 : 1700)) endPat(e);
+      if (t >= 1900) endPat(e);
       break;
     }
     case 'hook': {                                 // 사슬 갈고리로 끌어온 뒤 식칼 휩쓸기 연계
@@ -1209,149 +1167,6 @@ function runLegacyPat(e) {
         }
       }
       if (t >= 500 + n * 340 + 700) endPat(e);
-      break;
-    }
-    case 'teleport': {                             // 깃털 속으로 사라졌다가 플레이어 곁에 나타남
-      e.invuln = t < 520;
-      if (t < 250) { e.alpha = 1 - t / 250; if (!m.r1) { m.r1 = 1; sfx('tele'); hazards.push({ type: 'ring', x: e.x, y: e.y, h: 68, age: 0 }); } }
-      else {
-        if (!m.mv) {
-          m.mv = 1; sfx('tele2'); const side = p.x - camX > VW / 2 ? -1 : 1;
-          e.x = clamp(p.x + side * rand(104, 132), camX + 40, camX + VW - 40); e.y = clamp(p.y + rand(-20, 20), GTOP + 10, GBOT);
-          e.face = p.x >= e.x ? 1 : -1;
-          hazards.push({ type: 'ring', x: e.x, y: e.y, h: 68, age: 0 });
-        }
-        e.alpha = clamp((t - 250) / 250, 0, 1);
-      }
-      if (t >= 620) endPat(e, Math.random() < 0.75 ? 'orbs' : null);
-      break;
-    }
-    case 'orbs': {                                 // 지팡이를 휘둘러 녹색 불꽃 구슬을 부채꼴로 발사
-      e.bdy = -Math.round(2 * Math.min(1, t / 300));
-      const n = p2 ? 7 : 5, spread = p2 ? [-30, -20, -10, 0, 10, 20, 30] : [-24, -12, 0, 12, 24];
-      if (t < 500 && every(t, 60)) { const o = bossTip(e); burst(o[0], e.y, o[1], ['#eaffea', '#7dff7a', '#2a6a3a']); }
-      for (let k = 0; k < n; k++) {
-        if (t >= 500 + k * 110 && !m['o' + k]) {
-          m['o' + k] = 1;
-          const o = bossTip(e), ang = Math.atan2(p.y - e.y, p.x - o[0]) + spread[k] * RAD, v = (p2 ? 88 : 78) * SC / 1000 * MS;
-          const flight = Math.max(10, Math.hypot(p.x - o[0], p.y - e.y) / v);
-          hazards.push({ type: 'orb', x: o[0], y: e.y, h: o[1], vx: Math.cos(ang) * v, vy: Math.sin(ang) * v, vh: (48 - o[1]) / flight, age: 0, pal: e.d.orb });
-          sfx('orb');
-        }
-      }
-      if (t >= 500 + n * 110 + 450) endPat(e);
-      break;
-    }
-    case 'ravens': {                               // 까마귀를 풀어놓고 한꺼번에 급강하
-      e.bdy = -Math.round(2 * Math.min(1, t / 300));
-      const n = p2 ? 7 : 5;
-      if (t >= 450 && !m.a) {
-        m.a = 1;
-        for (let i = 0; i < n; i++) {
-          const th = rand(150, 175);                // 화면 위쪽(HUD 아래)에서 맴돈다
-          hazards.push({ type: 'raven', x: clamp(p.x + (i - (n - 1) / 2) * 48, camX + 20, camX + VW - 20),
-            y: clamp(p.y + rand(-24, 24), GTOP + 10, GBOT), h: th + 60, th, age: 0, launch: 600 + i * 170, st: 'in', vx: 0, vy: 0, vh: 0 });
-        }
-        sfx('raven');
-      }
-      if (t >= 450 + n * 170 + 500) endPat(e);
-      break;
-    }
-    case 'feather': {                              // 낮게 날아오는 붉은 깃털 투척
-      const n = p2 ? 3 : 2;
-      for (let k = 0; k < n; k++) {
-        const at = 450 + k * 300;
-        if (t >= at && !m['f' + k]) {
-          m['f' + k] = 1; sfx('bwave');
-          hazards.push({ type: 'feather', x: e.x + f * 40, y: e.y, h: 46, dir: f, age: 0, v: (p2 ? 150 : 125) * SC / 1000 * MS });
-        }
-      }
-      if (t >= 450 + n * 300 + 500) endPat(e);
-      break;
-    }
-    case 'staff': {                                // 휘두르기 뒤 지팡이를 내려쳐 보라색 충격
-      if (t < 500) alignY(e, 1.4);
-      if (t >= 500 && !m.a) {
-        m.a = 1; sfx('bswing'); shake = Math.max(shake, 6);
-        if (inReach(e, p, 104, 28, 70)) hurtPlayer(10, f, false, e);
-      }
-      if (t >= 1100 && !m.b) {
-        m.b = 1; sfx('slam'); shake = Math.max(shake, 12);
-        const cx = e.x + f * 76; burst(cx, e.y, 8, ['#ffffff', '#c8a0ff', '#7a3ac8']);
-        hazards.push({ type: 'ring', x: cx, y: e.y, h: 18, age: 0 });
-        if (Math.abs(p.x - cx) < 40 && Math.abs(p.y - e.y) < 28 && p.z < 24) hurtPlayer(13, f, true, e);
-      }
-      if (t >= 1750) endPat(e);
-      break;
-    }
-    case 'soul': {                                 // 느리게 출발해 점점 빨라지는 유도 영혼
-      const n = p2 ? 3 : 2;
-      for (let k = 0; k < n; k++) {
-        const at = 700 + k * 260;
-        if (t >= at && !m['s' + k]) {
-          m['s' + k] = 1; sfx('orb');
-          hazards.push({ type: 'soul', x: e.x + f * 40, y: e.y, h: 92, vx: f * 0.8, vy: -0.25, vh: 0, age: 0 });
-        }
-      }
-      if (t >= 700 + n * 260 + 700) endPat(e);
-      break;
-    }
-    case 'slash3': {                               // 대검을 내리벤 뒤 되베고, 벨 때마다 황금 검기
-      const n = p2 ? 4 : 3, gap = p2 ? 340 : 420;
-      for (let k = 0; k < n; k++) {
-        const s = k * gap;
-        if (t >= s && t < s + 260) {
-          e.bdy = -1; alignY(e, 1);
-          if (every(t, 50)) { const o = bossTip(e); burst(o[0], e.y, o[1], ['#fff3b8', '#ffd23a', '#d4a437']); }
-        }
-        if (t >= s + 260 && !m['s' + k]) {
-          m['s' + k] = 1; e.bdy = 0; e.x += f * 10;
-          hazards.push({ type: 'wave', colors: bossColors(e), x: e.x + f * 52, y: e.y, h: 52, dir: f, v: (p2 ? 150 : 125) * SC / 1000, age: 0 });
-          shake = Math.max(shake, 5); sfx('bwave');
-        }
-      }
-      if (t >= (n - 1) * gap + 260 + 420) endPat(e);
-      break;
-    }
-    case 'pillars': {                              // 대검을 높이 들었다가 땅에 찍으면 붉은 표식 자리에 불기둥
-      e.bdy = -Math.round(3 * Math.min(1, t / 400));
-      const xs = p2 ? [0, -52, 52, -104, 104] : [0, -60, 60];
-      if (t >= 300 && !m.a) {
-        m.a = 1;
-        xs.forEach((o, i) => hazards.push({ type: 'pillar', colors: bossColors(e), x: clamp(p.x + o, camX + 20, camX + VW - 20), y: p.y, age: 0, delay: 620 + i * 100, life: 650, hit: false }));
-      }
-      if (t >= 920 && !m.b) { m.b = 1; shake = Math.max(shake, 8); }
-      if (t >= 300 + 620 + xs.length * 100 + 700) endPat(e);
-      break;
-    }
-    case 'cleave': {                               // 머리 위에서 내리쳐 전방으로 황금 충격파
-      if (t < 700) e.wash = t > 400 && Math.floor(t / 90) % 2 ? '#ffe27a' : null;
-      else e.wash = null;
-      if (t >= 820 && !m.a) {
-        m.a = 1; e.hot = true; sfx('bwave'); shake = Math.max(shake, 16);
-        hazards.push({ type: 'shock', colors: bossColors(e), x: e.x + f * 60, y: e.y, dir: f, age: 0, hit: false, gold: true });
-        if (p2) hazards.push({ type: 'shock', colors: bossColors(e), x: e.x - f * 60, y: e.y, dir: -f, age: 0, hit: false, gold: true });
-        burst(e.x + f * 60, e.y, 8, ['#fff3b8', '#ffd23a', '#d4a437']);
-      }
-      if (t >= 820 && t < 1100 && !m.h && inReach(e, p, 92, 30, 70) && hurtPlayer(16, f, true, e)) m.h = 1;
-      if (t >= 1100) e.hot = false;
-      if (t >= 1900) endPat(e);
-      break;
-    }
-    case 'whirl': {                                // 검기를 두르고 회전하며 세 번 휩쓴다
-      if (t < 600) e.wash = Math.floor(t / 90) % 2 ? '#ffe27a' : null;
-      else e.wash = null;
-      if (t >= 900 && t < 2000) {
-        e.hot = true; if (!m.s) { m.s = 1; sfx('bcharge'); }
-        e.x += f * 34 * SC / 1000 * MS; alignY(e, 0.8);
-        [1000, 1330, 1660].forEach((at, k) => {
-          if (t >= at && !m['h' + k]) {
-            m['h' + k] = 1; sfx('bwave'); shake = Math.max(shake, 8);
-            if (Math.abs(p.x - e.x) < 76 && Math.abs(p.y - e.y) < 32 && p.z < 18) hurtPlayer(11, f, false, e);
-          }
-        });
-      } else e.hot = false;
-      if (t >= 2400) endPat(e);
       break;
     }
   }
@@ -1740,8 +1555,8 @@ function updIntro() {
   if(isVargul(b))updateVargulIntro(b);
   if(isSovereign(b))updateSovereignIntro(b);
   if(isAurelion(b))updateAurelionIntro(b);
-  b.z = (b.type === 'boss2' || b.type === 'boss3'||isVargul(b)||isSovereign(b)) ? 0 : 360 * (1 - ease(Math.min(1, u / 0.25)));   // 오렐리온은 떨어지지 않고 빛기둥 속에서 나타난다
-  if (!introLand && u >= 0.25 && b.type !== 'boss2' && !isAurelion(b)&&!isVargul(b)&&!isSovereign(b)) {
+  b.z = b.type === 'boss1' ? 360 * (1 - ease(Math.min(1, u / 0.25))) : 0;   // 고라스만 하늘에서 떨어지고, 나머지는 각자의 등장 연출로 나타난다
+  if (!introLand && u >= 0.25 && b.type === 'boss1') {
     introLand = true; b.z = 0; shake = 22; sfx('land');
     for (let k = 0; k < 7; k++) burst(b.x + (k - 3) * 10, b.y, 4, ['#fff0c0', '#c8b890', '#8a7a5a']);
     impact(b.x, b.y, 10, 2, 1);
@@ -2676,12 +2491,6 @@ function drawTopFx(L) {
       for (let k = 0; k < 3; k++) L.arc(x - z.dir * k * 4, y, 11, (z.dir > 0 ? -58 : 122) * RAD, (z.dir > 0 ? 58 : 238) * RAD, k ? '#7f98d8' : '#ffffff', 2, 1 - k * 0.25);
     }
   }
-  for (const e of enemies) {                       // 황금왕 2페이즈: 왕관에서 불티
-    if (e.type === 'boss5' && !isSovereign(e) && e.st !== 'dead')
-      for (let i = 0; i < 4; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 50, fxY(e.y, e.z + 60 + Math.random() * 100), Math.random() < 0.5 ? '#ff498d' : '#c48adb');
-    if (e.type === 'boss3' && !isAurelion(e) && phase2(e) && e.st !== 'dead')
-      for (let i = 0; i < 5; i++) L.put(fxX(e.x) + (Math.random() - 0.5) * 16, fxY(e.y, e.z + 138) - Math.random() * 12, Math.random() < 0.5 ? '#ffd23a' : '#ff7a1a');
-  }
   const p = player;
   if (p.st === 'skill' && !(NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth && namedPlayerFrame())) {
     const t = p.t * MS, px = fxX(p.x), py = fxY(p.y, p.z + 54), f = p.face;
@@ -2814,8 +2623,8 @@ function portraitHD(id) {
   return c;
 }
 function portrait(id) {
-  if(id==='boss4'&&USE_VARGUL_V136&&getVargulPortrait())return getVargulPortrait();
-  if(id==='boss5'&&USE_SOVEREIGN&&getSovereignPortrait())return getSovereignPortrait();
+  if(id==='boss4'&&getVargulPortrait())return getVargulPortrait();
+  if(id==='boss5'&&getSovereignPortrait())return getSovereignPortrait();
   if(id==='boss3'&&getAurelionPortrait())return getAurelionPortrait();
   if(id==='boss2' && getMorgraPortrait())return getMorgraPortrait();
   if(id==='boss1' && getGorathPortrait())return getGorathPortrait();

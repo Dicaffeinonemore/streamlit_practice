@@ -10,7 +10,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const scripts = JSON.parse(fs.readFileSync(path.join(root, 'server.py'), 'utf8').match(/SCRIPTS = (\[.*?\])/)[1]);
 for (const name of scripts) new vm.Script(fs.readFileSync(path.join(root, name), 'utf8'), { filename: name });
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.AURELION_V133==='false'?'<script>globalThis.AURELION_V133_OVERRIDE=false</script>':'')+(process.env.VARGUL_V136==='false'?'<script>globalThis.VARGUL_V136_OVERRIDE=false</script>':'')+(process.env.VARGUL_SUITE?'<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>':''));
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.VARGUL_SUITE?'<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>':''));
 const bgmPath=path.join(root,'assets/bgm/boss.mp3');
 const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
 const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
@@ -332,7 +332,8 @@ function combatChecks() {
   const missing = new Set(), originalFrame = hdFrame;
   hdFrame = (id, name) => { if (HD[id].N[name] === undefined) missing.add(id + ':' + name); return originalFrame(id, name); };
   let patterns = 0;
-  for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const p2 of [false, true]) for (const pat of Object.keys(type==='boss4'&&USE_VARGUL_V136?VARGUL_TIMELINES[p2?1:0]:ET[type].pats)) {
+  const bossPats = type => { const id0 = nextId, pats = mkEnemy(type, 0, 0).d.pats; nextId = id0; return pats; };
+  for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const p2 of [false, true]) for (const pat of Object.keys(type==='boss4'?VARGUL_TIMELINES[p2?1:0]:bossPats(type))) {
     reset(); startStage(Number(type.slice(-1)) - 1); scene = 'play'; player.x = 210; player.inv = 99999;
     const b = mkEnemy(type, 370, 420); enemies = [b]; if (p2) {b.hp = b.max * .4;b.p2shown=true;} startPat(b, pat);
     for (let i = 0; i < 270 && b.st === 'pat'; i++) { updEnemy(b); updHazards(); updFx(); if (i % 45 === 0) render(); }
@@ -803,7 +804,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
         if(b.invuln||b.phaseT||b.hp!==2200)return false;
         damageEnemy(b,b.max*2,true);if(b.st!=='dead')return false;
       }
-      return ET.boss1.hp<ET.boss2.hp&&ET.boss2.hp<ET.boss3.hp&&ET.boss3.hp<ET.boss4.hp&&ET.boss4.hp<ET.boss5.hp;
+      const id0=nextId,hp=['boss1','boss2','boss3','boss4','boss5'].map(t=>mkEnemy(t,0,0).max);nextId=id0;return hp.every((v,i)=>!i||hp[i-1]<v);
     })()`),true,'Stage difficulty increases; other bosses only reset groggy and boost phase damage');
     assert.equal(await evaluate(`(()=>{
       player=newPlayer();startStage(1);scene='play';player.inv=0;player.x=220;player.y=420;
