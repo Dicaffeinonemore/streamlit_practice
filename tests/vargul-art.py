@@ -51,10 +51,12 @@ motion_count = 0
 green_pixels = 0
 mask_nonzero = {}
 for e in manifest['entries']:
-    original = (SRC / e['source']).read_bytes()
+    # original/, unused/, reference/ were removed in cleanup (kept under the pre-cleanup tag);
+    # the organized copy must still match the recorded ZIP hash.
+    if e['role'] in ('unused', 'reference'):
+        continue
     organized = (SRC / e['file']).read_bytes()
-    assert original == organized
-    assert hashlib.sha256(original).hexdigest() == e['sha256']
+    assert hashlib.sha256(organized).hexdigest() == e['sha256']
     assert e['sha256'] == provenance[Path(e['source']).name]
     if e['role'] != 'motion':
         continue
@@ -150,7 +152,7 @@ result = {'motion_frames': motion_count, 'motion_clips': 24, 'fx_rows': 15,
           'fx_frames_each_variant': fx_count, 'green_spill_pixels': green_pixels,
           'alpha_reconstruction_max_error': max_alpha_reconstruction_error,
           'art_bytes': summary['art_bytes'], 'aurelion_bytes': summary['aurelion_art_bytes'],
-          'mask_nonzero_pixels': mask_nonzero, 'source_hashes': '37/37 identical',
+          'mask_nonzero_pixels': mask_nonzero, 'source_hashes': '27/27 identical (motion+fx)',
           'runtime_connected': False, 'result': 'PASS'}
 (ROOT / 'artifacts/vargul-1.36/art/validation.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
 print(json.dumps({k: v for k, v in result.items() if k != 'mask_nonzero_pixels'}, indent=2))
