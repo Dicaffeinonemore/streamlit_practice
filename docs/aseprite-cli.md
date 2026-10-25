@@ -1,5 +1,11 @@
 # Steam Aseprite CLI 연동
 
+일반 플레이어 idle도 10프레임을 기본 적용했다. 기존 1300ms 루프를 유지하며 [idle 적용·검증·복구 보고서](barel-idle-10-implementation.md)에 원본 보완·정렬과 상태 복귀 결과를 정리했다.
+
+바렐 3타 `combo2`도 검증 후 10프레임을 기본 적용했다. [3타 적용·검증·복구 보고서](barel-combo2-10-implementation.md)에 마지막 공격 메타데이터와 독립적인 legacy 복구 방법을 정리했다.
+
+바렐 2타 `combo1`도 검증 후 10프레임을 기본 적용했다. [combo1 적용·검증·복구 안내](barel-combo1-10-implementation.md)를 참고한다. 1타·2타의 모드 선택과 폴백은 독립적이다.
+
 현재 실게임 `combo0`는 새 10프레임 테스트 모드를 기본으로 사용한다. 아래 기존 6프레임 테스트 설명과 별개로 [10프레임 적용·검증·복구 안내](barel-combo0-10-implementation.md)를 참고한다. 기존 CLI와 테스트 소스는 보존했다.
 
 ## 구조 분석과 적용 범위

@@ -1,0 +1,14 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),A=require('../src/animation/aseprite.js');
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const metadata=read('assets/aseprite/barel-idle-10/barel-idle-10.animation.json');
+const data=read('assets/aseprite/exports/barel-idle-10/barel-idle-10.json');
+const asset=A.parse(data,{metadata}),clip=asset.clips.idle;
+assert(clip.loop);assert.equal(clip.duration,1300);
+for(let i=0;i<10;i++)assert.equal(A.frameAt(clip,i*130,true).index,i);
+for(const [t,index] of [[1299.999,9],[1300,0],[1430,1],[2599.999,9],[2600,0],[-1,9]])assert.equal(A.frameAt(clip,t,true).index,index);
+assert.throws(()=>A.parse(data,{metadata:{...metadata,durationMs:1301}}));
+assert.throws(()=>A.parse(data,{metadata:{...metadata,loop:false}}));
+assert.throws(()=>A.parse(data,{metadata:{...metadata,combat:false}}));
+assert.throws(()=>A.parse(data,{metadata:{...metadata,combat:{durationMs:1300}}}));
+const player=new A.AnimationPlayer(asset.clips);assert(player.play('idle',{loop:true}));player.advance(1300);assert.equal(player.index,0);
+console.log('PASS non-combat idle loop metadata, exact F10/F1 wrap, repeated cycles, invalid timing/schema rejection');

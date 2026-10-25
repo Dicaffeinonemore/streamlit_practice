@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "idle",
+  "animationType": "loop",
+  "loop": true,
+  "clip": "idle",
+  "sprite": "../exports/barel-idle-10/barel-idle-10.json",
+  "anchor": [
+    200,
+    416
+  ],
+  "frameOffsets": [
+    [
+      0.0,
+      1
+    ],
+    [
+      4.821,
+      0
+    ],
+    [
+      6.21,
+      0
+    ],
+    [
+      6.595,
+      0
+    ],
+    [
+      7.298,
+      1
+    ],
+    [
+      6.557,
+      0
+    ],
+    [
+      5.736,
+      1
+    ],
+    [
+      5.585,
+      1
+    ],
+    [
+      5.841,
+      0
+    ],
+    [
+      1.309,
+      0
+    ]
+  ],
+  "renderScale": 0.4,
+  "durationMs": 1300,
+  "expectedDurationsMs": [
+    130,
+    130,
+    130,
+    130,
+    130,
+    130,
+    130,
+    130,
+    130,
+    130
+  ],
+  "source": {
+    "file": "source/original.png",
+    "sha256": "9e910d98d75c7248427eb9d08bd4bba84a365062180c1e5814a8ff6d6ceb61e8",
+    "resampled": false,
+    "redrawn": false,
+    "pixelCloneRepair": "F1-F9 missing front toes use only unoccluded supplied F10 toe samples; mappings in separation.json"
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 355,
+    "headSourceTop": 206,
+    "canvasGround": 416,
+    "worldOffsetsApplied": false,
+    "footAnalysis": {
+      "alphaThreshold": 128,
+      "rows": [
+        400,
+        417
+      ],
+      "centroids": [
+        {
+          "left": 119.47121212121212,
+          "right": 275.70703125
+        },
+        {
+          "left": 109.9001367989056,
+          "right": 275.6353383458647
+        },
+        {
+          "left": 107.14492753623189,
+          "right": 275.6133828996283
+        },
+        {
+          "left": 106.37481481481481,
+          "right": 275.6133828996283
+        },
+        {
+          "left": 105.30124223602485,
+          "right": 275.28044280442805
+        },
+        {
+          "left": 106.42796005706134,
+          "right": 275.6353383458647
+        },
+        {
+          "left": 106.90303907380608,
+          "right": 276.80252100840335
+        },
+        {
+          "left": 107.90303907380608,
+          "right": 276.10526315789474
+        },
+        {
+          "left": 106.44822695035461,
+          "right": 277.0477941176471
+        },
+        {
+          "left": 112.73469387755102,
+          "right": 279.8263888888889
+        }
+      ],
+      "targetPairMidpoint": 197.58912168560607,
+      "method": "Least-squares common translation of two sole centroids, referenced to F1"
+    }
+  },
+  "clock": {
+    "source": "tick * MS",
+    "legacyPeriodMs": 1300,
+    "resetOnIdleEntry": false
+  }
+}

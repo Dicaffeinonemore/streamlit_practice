@@ -1,0 +1,10 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),A=require('../src/animation/aseprite.js');
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const metadata=read('assets/aseprite/barel-dash-10/barel-dash-10.animation.json');
+const data=read('assets/aseprite/exports/barel-dash-10/barel-dash-10.json');
+const asset=A.parse(data,{metadata}),clip=asset.clips.dash;
+assert(!clip.loop);assert.equal(clip.duration,190);
+for(let i=0;i<10;i++)assert.equal(A.frameAt(clip,i*19).index,i);
+assert.equal(A.frameAt(clip,190).index,9);assert.equal(A.frameAt(clip,380).index,9);
+for(const mutation of [{loop:true},{durationMs:200},{animationType:'unknown'},{combat:{durationMs:190}}])assert.throws(()=>A.parse(data,{metadata:{...metadata,...mutation}}));
+console.log('PASS non-combat oneshot metadata: exact ten frames/190ms, hold final frame, invalid timing/type/combat rejected');

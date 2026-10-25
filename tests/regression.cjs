@@ -15,6 +15,11 @@ const bgmPath=path.join(root,'assets/bgm/boss.mp3');
 const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
 const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
 const allowed = new Set(['index.html', ...scripts]);
+for(const name of ['assets/aseprite/barel-dash-10/barel-dash-10.animation.json','assets/aseprite/exports/barel-dash-10/barel-dash-10.json','assets/aseprite/exports/barel-dash-10/barel-dash-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-walk-10/barel-walk-10.animation.json','assets/aseprite/exports/barel-walk-10/barel-walk-10.json','assets/aseprite/exports/barel-walk-10/barel-walk-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-idle-10/barel-idle-10.animation.json','assets/aseprite/exports/barel-idle-10/barel-idle-10.json','assets/aseprite/exports/barel-idle-10/barel-idle-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-combo2-10/barel-combo2-10.animation.json','assets/aseprite/exports/barel-combo2-10/barel-combo2-10.json','assets/aseprite/exports/barel-combo2-10/barel-combo2-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-combo1-10/barel-combo1-10.animation.json','assets/aseprite/exports/barel-combo1-10/barel-combo1-10.json','assets/aseprite/exports/barel-combo1-10/barel-combo1-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-combo0-10/barel-combo0-10.animation.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.png'])allowed.add(name);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
@@ -390,6 +395,12 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.BAREL_DASH_SUITE){await ready(base+'/index.html');await require('./barel-dash-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_WALK_SUITE){await ready(base+'/index.html');await require('./barel-walk-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_IDLE_SUITE){await ready(base+'/index.html');await require('./barel-idle-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO2_SUITE){await ready(base+'/index.html');await require('./barel-combo2-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO1_SUITE){await ready(base+'/index.html');await require('./barel-combo1-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.STAGE_WIPE_SUITE){await ready(base+'/index.html');await require('./stage-wipe.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BAREL_COMBO0_SUITE){await ready(base+'/index.html');await require('./barel-combo0-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.JUDGMENT_SUITE){await ready(base+'/embedded.html');await require('./judgment.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_UI_SUITE){await ready(base+'/embedded.html');await require('./viesa-ui.cjs')({evaluate,call,errors,root});return;}

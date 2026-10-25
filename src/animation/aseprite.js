@@ -30,15 +30,24 @@
     }
     if (metadata) {
       const clip = clips[metadata.clip], combat = metadata.combat;
+      const validLink = combat && (metadata.terminalAttack === true
+        ? combat.comboLinkMs === null
+        : Number.isFinite(combat.comboLinkMs) && combat.activeEndMs <= combat.comboLinkMs && combat.comboLinkMs < combat.durationMs);
+      const looping = metadata.animationType === 'loop' && metadata.loop === true;
+      const noncombat = looping || (metadata.animationType === 'oneshot' && metadata.loop === false);
+      const validTiming = noncombat
+        ? combat == null && positive(metadata.durationMs) && clip?.duration === metadata.durationMs
+        : combat && [combat.durationMs, combat.activeStartMs, combat.activeEndMs].every(Number.isFinite) && validLink &&
+          clip?.duration === combat.durationMs && 0 <= combat.activeStartMs && combat.activeStartMs < combat.activeEndMs && combat.activeEndMs <= combat.durationMs;
       if (metadata.schemaVersion !== 1 || !Array.isArray(metadata.anchor) || metadata.anchor.length !== 2 || !metadata.anchor.every(Number.isFinite) ||
           !clip || !Array.isArray(metadata.frameOffsets) || metadata.frameOffsets.length !== frames.length ||
           !metadata.frameOffsets.every(v => Array.isArray(v) && v.length === 2 && v.every(Number.isFinite)) ||
           !Array.isArray(metadata.expectedDurationsMs) || metadata.expectedDurationsMs.length !== frames.length ||
           frames.some((f, i) => f.duration !== metadata.expectedDurationsMs[i]) ||
-          !combat || ![combat.durationMs, combat.activeStartMs, combat.activeEndMs, combat.comboLinkMs].every(Number.isFinite) ||
-          clip.duration !== combat.durationMs || !(0 <= combat.activeStartMs && combat.activeStartMs < combat.activeEndMs && combat.activeEndMs <= combat.comboLinkMs && combat.comboLinkMs < combat.durationMs)) {
+          !validTiming) {
         throw new Error('Aseprite: metadata/timing mismatch');
       }
+      if (looping) clip.loop = true;
     }
     return { frames, clips, tags, image: data.meta?.image, meta: data.meta, metadata };
   }
@@ -61,7 +70,7 @@
     const m = animation.metadata, clip = animation.clips[m.clip], c = m.combat;
     return { frame: frameAt(clip, elapsedMs), elapsedMs,
       active: elapsedMs >= c.activeStartMs && elapsedMs < c.activeEndMs,
-      canLink: elapsedMs >= c.comboLinkMs && elapsedMs < c.durationMs,
+      canLink: Number.isFinite(c.comboLinkMs) && elapsedMs >= c.comboLinkMs && elapsedMs < c.durationMs,
       ended: elapsedMs >= c.durationMs };
   }
   function sampleActor(animation, actor, tickMs) {
