@@ -5,7 +5,7 @@
   let mode = requested || config.mode || 'aseprite10';
   if (!['legacy', 'aseprite10'].includes(mode)) mode = 'aseprite10';
   let animation = null, error = null;
-  const metadataUrl = config.metadataUrl || 'assets/aseprite/barel-combo1-10/barel-combo1-10.animation.json';
+  const metadataUrl = config.metadataUrl || 'assets/aseprite/barel-combo1-dot-10/barel-combo1-dot-10.animation.json';
   function validate(asset) {
     const m = asset.metadata, clip = asset.clips[m.clip], c = m.combat;
     if (m.character !== 'barel' || m.attackId !== 'combo1' || m.clip !== 'basic-attack-2' ||

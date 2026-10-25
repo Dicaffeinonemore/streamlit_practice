@@ -1,8 +1,9 @@
 // Actual browser game tests, shared by local HTTP and Streamlit iframe.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,errors,root,environment})=>{
-  const out=path.join(root,'artifacts/barel-combo2-10',environment);fs.mkdirSync(out,{recursive:true});
+  const out=path.join(root,'artifacts/barel-combo2-dot-10',environment);fs.mkdirSync(out,{recursive:true});
   for(const id of [0,1,2])assert.equal(await evaluate(`BarelCombo${id}.ready`),true);
+  for(const id of [0,1,2])assert.equal(await evaluate(`BarelCombo${id}.frameFor({characterId:'barel',st:'atk',atk:'c${id+1}',combo:${id},t:0},1000/60).image.src.includes('barel-combo${id}-dot-10.png')`),true,'Each hit must select its supplied dot atlas by default');
   assert.equal(await evaluate('BarelCombo2.status().effective'),'aseprite10');
   await evaluate("globalThis.BarelIdle?.setMode('legacy')");
   await evaluate('window.combo2NativeRAF=requestAnimationFrame;requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();showScreen(null)');
@@ -40,7 +41,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
         window.BAREL_COMBO2_CONFIG={};
         window.fetch=async(url,...args)=>{
           const name=String(url);
-          if(name.endsWith('barel-combo2-10.animation.json')){
+          if(name.endsWith('barel-combo2-dot-10.animation.json')){
             if(failure==='http')return {ok:false,status:503};
             if(failure==='parse')return {ok:true,json:async()=>{throw SyntaxError('Malformed combo2 JSON')}};
             if(['metadata','offset','scale','terminal','events'].includes(failure)){
@@ -54,7 +55,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
             }
           }
           const response=await nativeFetch(url,...args);
-          if(name.endsWith('/barel-combo2-10.json')){
+          if(name.endsWith('/barel-combo2-dot-10.json')){
             const data=await response.json();
             if(failure==='timing')data.frames[0].duration=71;
             if(failure==='image')data.meta.image='missing-combo2-test.png';
@@ -134,8 +135,8 @@ function trial(){
   combo2Setup('aseprite10');startAtk(2);inputDown('Space');updPlayer();inputUp('Space');
   check(player.st==='atk'&&player.z===0,'Attack jump cancel remains blocked');
   combo2Setup('aseprite10');inputDown('Space');updPlayer();inputUp('Space');updPlayer();
-  check(player.z>0&&!barelPlayerFrame().image,'Normal jump retained');
-  startAtk('air');check(!barelPlayerFrame().image,'Air attack retained');
+  check(player.z>0&&BarelCombo2.frameFor(player,MS)===null,'Normal jump retained');
+  startAtk('air');check(player.atk==='air'&&BarelCombo2.frameFor(player,MS)===null,'Air attack retained');
   check(BarelCombo2.frameFor({characterId:'viesa',st:'atk',atk:'c3',combo:2,t:3},MS)===null,'Other characters excluded');
   window.combo2ContactSheet=face=>{
     combo2Setup('aseprite10');startAtk(2);const times=[0,70,130,200,220,249,340,370,460,550];

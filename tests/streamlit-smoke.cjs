@@ -77,6 +77,9 @@ async function evaluate(expression, contextId) {
     assert(result, 'Game did not initialize through Streamlit. '+log);
     await delay(500);
     assert.equal(result.canvas, true); assert.equal(result.width, 960); assert.equal(result.height, 540);
+    if(process.env.BAREL_GRABBED_SUITE){await require('./barel-grabbed-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
+    if(process.env.BAREL_AIR_ATTACK_SUITE){await require('./barel-air-attack-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
+    if(process.env.BAREL_JUMP_SUITE){await require('./barel-jump-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
     if(process.env.BAREL_DASH_SUITE){await require('./barel-dash-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
     if(process.env.BAREL_WALK_SUITE){await require('./barel-walk-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
     if(process.env.BAREL_IDLE_SUITE){await require('./barel-idle-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}

@@ -80,12 +80,12 @@ function trial(){
  for(const key of [null,'KeyD','KeyA']){
   dashSetup('aseprite10');if(key)inputDown(key);startDash(1);for(let i=0;i<13;i++)update();
   check(player.st==='free','Exit free');check(!!player.walk===!!key,'Exit follows held movement');
-  check(barelPlayerFrame().image?.src.includes(key?'barel-walk-10.png':'barel-idle-10.png'),'Exit correct clip');transitions.push({key,st:player.st,walk:player.walk});
+  check(barelPlayerFrame().image?.src.includes(key?'barel-walk-dot-10.png':'barel-idle-dot-10.png'),'Exit correct clip');transitions.push({key,st:player.st,walk:player.walk});
  }
  dashSetup('aseprite10');inputDown('ShiftLeft');update();inputUp('ShiftLeft');check(player.st==='dash','Existing dash key');
  dashSetup('aseprite10');inputDown('KeyD');update();inputUp('KeyD');update();inputDown('KeyD');update();check(player.st==='dash','Existing double tap');
  dashSetup('aseprite10');startDash(1);for(let i=0;i<6;i++)update();inputDown('KeyJ');update();
- check(player.st==='atk'&&player.combo===0&&barelPlayerFrame().image?.src.includes('barel-combo0-10.png'),'Attack priority after110ms');
+ check(player.st==='atk'&&player.combo===0&&barelPlayerFrame().image?.src.includes('barel-combo0-dot-10.png'),'Attack priority after110ms');
  for(let i=0;i<5;i++)update();check(BarelDashFx.status().length===0,'Cancel drains afterimages');
  dashSetup('aseprite10');startAtk(0);inputDown('ShiftLeft');update();check(player.st==='dash','Existing attack to dash cancel');
  dashSetup('aseprite10');startDash(1);inputDown('KeyA');for(let i=0;i<5;i++)update();check(player.face===1,'Existing dash facing fixed');

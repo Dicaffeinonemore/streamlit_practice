@@ -5,7 +5,7 @@
   let mode=new URLSearchParams(root.location?.search||'').get('barelWalk')||config.mode||'aseprite10';
   if(!['legacy','aseprite10'].includes(mode))mode='aseprite10';
   let animation=null,error=null;
-  const url=config.metadataUrl||'assets/aseprite/barel-walk-10/barel-walk-10.animation.json';
+  const url=config.metadataUrl||'assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json';
   function validate(asset){
     const m=asset.metadata,clip=asset.clips[m.clip];
     if(m.character!=='barel'||m.animationId!=='walk'||m.animationType!=='loop'||m.loop!==true||m.combat!=null||
