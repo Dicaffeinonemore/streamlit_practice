@@ -77,6 +77,7 @@ async function evaluate(expression, contextId) {
     assert(result, 'Game did not initialize through Streamlit. '+log);
     await delay(500);
     assert.equal(result.canvas, true); assert.equal(result.width, 960); assert.equal(result.height, 540);
+    if(process.env.BAREL_COMBO0_SUITE){await require('./barel-combo0-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
     // Reproduce a first interaction without browser activation inside the component.
     await evaluate("localStorage.removeItem('sf_snd');dispatchEvent(new PointerEvent('pointerdown',{pointerType:'touch'}))", gameContext);
     await delay(100);

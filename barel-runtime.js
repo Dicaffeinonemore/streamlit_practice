@@ -11,6 +11,8 @@ function barelPlayerFrame() {
   const p=player,t=p.t*MS;
   if(p.st==='grabbed')return barelFrame('hook',t/650,true);
   if(p.st==='atk') {
+    const replacement=globalThis.BarelCombo0?.frameFor(p,MS);
+    if(replacement)return replacement;
     const a=ATK[p.atk] || ATK.c1, duration=p.atk==='air'?400:a.wind+a.act+a.rec;
     return barelFrame(p.atk==='air'?'air':'combo'+p.combo,t/duration);
   }
@@ -26,13 +28,15 @@ function barelPlayerFrame() {
   return p.walk?barelFrame('walk',(p.walkTime||0)/900,true):barelFrame('idle',tick*MS/1300,true);
 }
 function paintBarel(frame,actor,alpha=1) {
-  if(!frame || !BAREL_ATLAS.complete || !BAREL_ATLAS.naturalWidth)return false;
+  const image=frame?.image || BAREL_ATLAS;
+  if(!frame || !image.complete || !image.naturalWidth)return false;
   const [x,y,w,h]=frame.atlas,[ax,ay]=frame.anchor;
   ctx.save();ctx.translate(actor.x-camX,actor.y-(actor.z||0));ctx.scale(actor.face||1,1);
-  ctx.scale(BAREL_PLAYER_SCALE,BAREL_PLAYER_SCALE);
+  const scale=BAREL_PLAYER_SCALE*(frame.renderScale || 1);
+  ctx.scale(scale,scale);
   ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
   if(actor.flash>0 && UX.options.flash)ctx.filter='brightness(1.8)';
-  ctx.drawImage(BAREL_ATLAS,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
+  ctx.drawImage(image,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
 }
 function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alpha=1) {
   const f=barelFrame(name,progress);if(!f || !BAREL_ATLAS.naturalWidth)return;
