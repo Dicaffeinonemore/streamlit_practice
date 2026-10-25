@@ -1,7 +1,7 @@
 // Shared real-browser suite for local HTTP and the actual Streamlit iframe.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,errors,root,environment})=>{
-  const out=path.join(root,'artifacts/barel-combo0-10-v2',environment);
+  const out=path.join(root,'artifacts/barel-combo0-dot-10',environment);
   fs.mkdirSync(out,{recursive:true});
   assert.equal(await evaluate('BarelCombo0.ready'),true);
   assert.equal(await evaluate('BarelCombo0.status().effective'),'aseprite10');
@@ -50,7 +50,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
             if(failure==='parse')return {ok:true,json:async()=>{throw SyntaxError('test malformed JSON')}};
           }
           const response=await fetchOriginal(url,...args);
-          if(String(url).endsWith('/barel-combo0-10.json')){
+          if(String(url).endsWith('/barel-combo0-dot-10.json')){
             const data=await response.json();
             if(failure==='timing')data.frames[0].duration=41;
             if(failure==='image')data.meta.image='missing-barel-test.png';
@@ -118,9 +118,9 @@ function trial(){
   player.t=200/MS;startSkill('thrust');
   check(player.st==='skill'&&!barelPlayerFrame().image,'Skill uses existing clip');
   barelComboTestSetup('aseprite10');inputDown('Space');updPlayer();inputUp('Space');updPlayer();
-  check(player.z>0&&!barelPlayerFrame().image,'Jump preserved');
+  check(player.z>0&&BarelCombo0.frameFor(player,MS)===null,'Jump preserved');
   barelComboTestSetup('aseprite10');startAtk(1);check(!barelPlayerFrame().image,'Other combo unchanged');
-  startAtk('air');check(!barelPlayerFrame().image,'Air attack unchanged');
+  startAtk('air');check(player.atk==='air'&&BarelCombo0.frameFor(player,MS)===null,'Air attack unchanged');
   window.barelComboTestSheet=(face)=>{
     barelComboTestSetup('aseprite10');startAtk(0);
     const times=[0,40,70,105,130,155,185,230,255,295];

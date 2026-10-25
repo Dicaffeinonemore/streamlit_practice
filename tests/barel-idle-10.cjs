@@ -1,7 +1,7 @@
 // Actual idle rendering and state transitions in local Chrome/Streamlit.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,errors,root,environment})=>{
-  const out=path.join(root,'artifacts/barel-idle-10',environment);fs.mkdirSync(out,{recursive:true});
+  const out=path.join(root,'artifacts/barel-idle-dot-10',environment);fs.mkdirSync(out,{recursive:true});
   for(const object of ['BarelIdle','BarelCombo0','BarelCombo1','BarelCombo2'])assert.equal(await evaluate(`${object}.ready`),true);
   assert.equal(await evaluate('BarelIdle.status().effective'),'aseprite10');
   await evaluate('window.idleNativeRAF=requestAnimationFrame;requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();showScreen(null)');
@@ -35,14 +35,14 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
   const fallback=await evaluate(`(async()=>{
     const original=BarelIdle,nativeFetch=fetch,oldConfig=window.BAREL_IDLE_CONFIG,results=[];
     try{
-      for(const failure of ['http','parse','timing','image','bounds','metadata','offset','scale','period','clock','loop']){
+      for(const failure of ['http','parse','timing','image','bounds','metadata','offset','scale','period','clock','loop','preview']){
         window.BAREL_IDLE_CONFIG={};
         window.fetch=async(url,...args)=>{
           const name=String(url);
-          if(name.endsWith('barel-idle-10.animation.json')){
+          if(name.endsWith('barel-idle-dot-10.animation.json')){
             if(failure==='http')return {ok:false,status:503};
             if(failure==='parse')return {ok:true,json:async()=>{throw SyntaxError('Malformed idle JSON')}};
-            if(['metadata','offset','scale','period','clock','loop'].includes(failure)){
+            if(['metadata','offset','scale','period','clock','loop','preview'].includes(failure)){
               const data=await (await nativeFetch(url,...args)).json();
               if(failure==='metadata')data.animationId='walk';
               if(failure==='offset')data.frameOffsets[0]=[999,0];
@@ -50,11 +50,12 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
               if(failure==='period')data.durationMs=1400;
               if(failure==='clock')data.clock.source='player.t * MS';
               if(failure==='loop')data.loop=false;
+              if(failure==='preview')data.previewBounds[0]=999;
               return {ok:true,json:async()=>data};
             }
           }
           const response=await nativeFetch(url,...args);
-          if(name.endsWith('/barel-idle-10.json')){
+          if(name.endsWith('/barel-idle-dot-10.json')){
             const data=await response.json();
             if(failure==='timing')data.frames[0].duration=131;
             if(failure==='image')data.meta.image='missing-idle-test.png';
@@ -73,13 +74,14 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
     return results;
   })()`);
   assert.deepEqual(errors,[]);
-  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({environment,...results,realtime,fallback,
+  const previews=await require('./barel-idle-dot-preview.cjs')({evaluate,call,root,out});
+  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({environment,...results,realtime,fallback,previews,
     defaultMode:await evaluate('BarelIdle.status()'),browserErrors:errors},null,2));
-  console.log('PASS '+environment+': idle 10 frames/1300ms, two native RAF loops, flip/ground/size, walk/attacks/full-combo/jump/hurt/down return, unchanged actor/collision, 11 error fallbacks, default aseprite10');
+  console.log('PASS '+environment+': idle dot 10 frames/1300ms, gameplay and both boss-selection previews animate, stable fit, mode fallback, state transitions, 12 error fallbacks, default aseprite10');
 };
 function trial(){
   const check=(v,m)=>{if(!v)throw Error(m);};
-  window.idleIsNew=()=>!!barelPlayerFrame()?.image?.src.includes('/barel-idle-10.png');
+  window.idleIsNew=()=>!!barelPlayerFrame()?.image?.src.includes('/barel-idle-dot-10.png');
   window.idleSetup=mode=>{
     clearInput();selectedCharacterId='barel';player=newPlayer(0,'barel');startStage(0);
     scene='play';showScreen(null);practice=false;camX=0;camLock=true;lockAt=0;waveIdx=0;

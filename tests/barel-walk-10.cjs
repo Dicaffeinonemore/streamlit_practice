@@ -1,11 +1,11 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,errors,root,environment})=>{
- const out=path.join(root,'artifacts/barel-walk-10',environment);fs.mkdirSync(out,{recursive:true});
+ const out=path.join(root,'artifacts/barel-walk-dot-10',environment);fs.mkdirSync(out,{recursive:true});
  for(const object of ['BarelWalk','BarelIdle','BarelCombo0','BarelCombo1','BarelCombo2'])assert.equal(await evaluate(`${object}.ready`),true);
  assert.equal(await evaluate('BarelWalk.status().effective'),'aseprite10');
  await evaluate('window.walkRAF=requestAnimationFrame;requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();showScreen(null)');
  await evaluate('new Promise(resolve=>walkRAF(()=>resolve()))');
- assert.equal(await evaluate(`(()=>{clearInput();selectedCharacterId='barel';player=newPlayer(0,'barel');startStage(0);scene='play';inputDown('KeyD');updPlayer();return barelPlayerFrame().image?.src.includes('/barel-walk-10.png');})()`),true,'Default walk must render the supplied atlas without setMode or query overrides');
+ assert.equal(await evaluate(`(()=>{clearInput();selectedCharacterId='barel';player=newPlayer(0,'barel');startStage(0);scene='play';inputDown('KeyD');updPlayer();return barelPlayerFrame().image?.src.includes('/barel-walk-dot-10.png');})()`),true,'Default walk must render the supplied atlas without setMode or query overrides');
  const results=await evaluate(`(${trial.toString()})()`);
  for(const face of [1,-1]){
   const png=await evaluate(`walkSheet(${face})`);fs.writeFileSync(path.join(out,`ten-frames-${face}.png`),Buffer.from(png,'base64'));
@@ -13,7 +13,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
  const realtime=await evaluate(`(async()=>{
   walkSetup('aseprite10');inputDown('KeyD');update();last=performance.now();acc=0;const started=last,seen={},trace=[];let previous=-1,wraps=0;
   return new Promise((resolve,reject)=>{function sample(now){try{loop(now);const f=barelPlayerFrame();
-   if(!f.image?.src.includes('barel-walk-10.png'))throw Error('Walk missing in live loop');
+   if(!f.image?.src.includes('barel-walk-dot-10.png'))throw Error('Walk missing in live loop');
    seen[f.index]=true;if(previous===9&&f.index===0)wraps++;previous=f.index;
    trace.push({wallMs:now-started,clockMs:player.walkTime,index:f.index,x:player.x,y:player.y,camX});
    if(now-started<2100)walkRAF(sample);else{inputUp('KeyD');resolve({seen:Object.keys(seen).map(Number),wraps,trace});}}catch(error){reject(error);}}
@@ -26,7 +26,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
   try{for(const failure of ['http','parse','image','timing','bounds','metadata','offset','scale','period','clock','loop']){
    window.BAREL_WALK_CONFIG={mode:'aseprite10'};
    window.fetch=async(url,...args)=>{const name=String(url);
-    if(name.endsWith('barel-walk-10.animation.json')){
+    if(name.endsWith('barel-walk-dot-10.animation.json')){
      if(failure==='http')return {ok:false,status:503};
      if(failure==='parse')return {ok:true,json:async()=>{throw SyntaxError('Invalid walk JSON')}};
      const data=await(await nativeFetch(url,...args)).json();
@@ -36,7 +36,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
      return {ok:true,json:async()=>data};
     }
     const response=await nativeFetch(url,...args);
-    if(name.endsWith('/barel-walk-10.json')){const data=await response.json();
+    if(name.endsWith('/barel-walk-dot-10.json')){const data=await response.json();
      if(failure==='timing')data.frames[0].duration=91;if(failure==='bounds')data.frames[1].frame.x=99999;
      if(failure==='image')data.meta.image='missing-walk.png';return {ok:true,json:async()=>data};}
     return response;};
@@ -46,7 +46,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
   }}finally{window.fetch=nativeFetch;window.BarelWalk=original;window.BAREL_WALK_CONFIG=config;}
   BarelWalk.setMode('aseprite10');return results;})()`);
  assert.deepEqual(errors,[]);
- const metadata=JSON.parse(fs.readFileSync(path.join(root,'assets/aseprite/barel-walk-10/barel-walk-10.animation.json'),'utf8'));
+ const metadata=JSON.parse(fs.readFileSync(path.join(root,'assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json'),'utf8'));
  for(const sample of realtime.trace)sample.frontContactWorldX=sample.x+(metadata.visualReview.feet[sample.index].front.soleX-224)*metadata.renderScale*.72;
  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({environment,...results,realtime,fallback,visualReview:metadata.visualReview,defaultMode:await evaluate('BarelWalk.status()'),browserErrors:errors},null,2));
  console.log('PASS '+environment+': supplied walk atlas active by default without override; 10 x 90ms, live loops, flip, movement/camera/depth parity, state transitions, 11 fallbacks. Original gait preserved.');
@@ -60,7 +60,7 @@ function trial(){
   hazards=[];arena=null;barrels=[];items=[];parts=[];texts=[];impacts=[];bursts=[];ghosts=[];bolts=[];
   hitStop=shake=flashT=clearT=slowT=0;tick=0;player.x=300;player.y=420;player.inv=0;BarelWalk.setMode(mode);
  };
- const step=()=>{tick++;updPlayer();};
+ const step=()=>{tick++;updPlayer();globalThis.BarelJump?.observe(player);};
  walkSetup('aseprite10');player.walk=true;
  for(const [time,index] of [[0,0],[89.999,0],[90,1],[810,9],[899.999,9],[900,0],[990,1],[1800,0]]){
   player.walkTime=time;check(barelPlayerFrame().index===index,'Boundary '+time);
@@ -94,11 +94,12 @@ function trial(){
   if(kind==='jump')check(player.vz>0,'Jump entered');
   if(kind==='hurt')check(player.st==='hurt','Hurt entered');
   if(kind==='down')check(player.st==='down','Down entered');
-  while((player.st!=='free'||player.z>0||!player.walk)&&count++<200){
+  while((player.st!=='free'||player.z>0||player.vz!==0||!player.walk||
+         kind==='jump'&&!!globalThis.BarelJump?.frameFor(player,MS))&&count++<200){
    if(kind==='combo'&&player.st==='atk'&&player.combo<2&&player.t*MS>150)player.buf=220;
    step();
   }
-  check(count<200&&barelPlayerFrame().image?.src.includes('barel-walk-10.png'),'Return from '+kind);returns.push({kind,ticks:count});
+  check(count<200&&barelPlayerFrame().image?.src.includes('barel-walk-dot-10.png'),'Return from '+kind);returns.push({kind,ticks:count});
  }
  walkSetup('aseprite10');player.walk=true;player.walkTime=180;hitStop=4;const clock=player.walkTime;
  for(let i=0;i<3;i++)update();check(player.walkTime===clock&&barelPlayerFrame().index===2,'Hitstop freezes walk clock');

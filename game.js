@@ -264,12 +264,7 @@ function drawCharacterPreview() {
     pc.clearRect(0,0,preview.width,preview.height);pc.imageSmoothingEnabled=false;
     pc.drawImage(sheet,x,y,w,h,(preview.width+(left-right)*scale)/2-ax*scale,preview.height-8-(bottom+ay)*scale,w*scale,h*scale);
   }
-  if (!BAREL_ATLAS.naturalWidth) return;
-  const canvas = $('barelSelectPreview'), c = canvas.getContext('2d');
-  const frame = barelFrame('idle', tick * MS / 1300, true), [x,y,w,h] = frame.atlas;
-  const scale = Math.min(250/w, 225/h);
-  c.clearRect(0,0,canvas.width,canvas.height);c.imageSmoothingEnabled = false;
-  c.drawImage(BAREL_ATLAS,x,y,w,h,(canvas.width-w*scale)/2,canvas.height-h*scale-8,w*scale,h*scale);
+  drawBarelIdlePreview($('barelSelectPreview'),tick*MS);
 }
 function openCharacterSelect(challengeStage = null) {
   characterSelectBossStage = Number.isInteger(challengeStage) ? challengeStage : null;
@@ -380,6 +375,7 @@ function openBossChallenge() {
     button.onclick = () => openCharacterSelect(i); list.appendChild(button);
   });
   scene = 'challenge'; showScreen('challenge');
+  drawBarelIdlePreview($('barelChallengePreview'),tick*MS);
 }
 function beginBossChallenge(i) {
   if (!Number.isInteger(i) || !STAGES[i] || !UX.records().stages[i]) return;
@@ -450,6 +446,7 @@ function onKeyOnce(code) {
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
+  globalThis.BarelJump?.reset();
   globalThis.BarelDashFx?.clear();
   resetViesaEffects();syncPlayerCharacterUI(player.characterId);
   vargulRemains=[];sovereignRemains=[];
@@ -1487,6 +1484,7 @@ function update() {
   if (shake > 0) shake *= 0.85;
 
   updPlayer();
+  globalThis.BarelJump?.observe(player);
   if (scene !== 'play') return true;
   if (practice) {
     enemies.forEach(updEnemy); updHazards(); updFx(); updatePractice();
@@ -2973,6 +2971,7 @@ function loop(t) {
   else if (scene === 'opening') drawOpening();
   else render();
   if (scene === 'characterSelect') drawCharacterPreview();
+  if (scene === 'challenge') drawBarelIdlePreview($('barelChallengePreview'),tick*MS);
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
   $('skillbar').hidden = scene !== 'play';
   syncTouchControls();

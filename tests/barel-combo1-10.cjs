@@ -1,7 +1,7 @@
 // Real Chrome game suite, shared by local HTTP and the Streamlit component.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,errors,root,environment})=>{
-  const out=path.join(root,'artifacts/barel-combo1-10',environment);fs.mkdirSync(out,{recursive:true});
+  const out=path.join(root,'artifacts/barel-combo1-dot-10',environment);fs.mkdirSync(out,{recursive:true});
   assert.equal(await evaluate('BarelCombo0.ready'),true);
   assert.equal(await evaluate('BarelCombo1.ready'),true);
   assert.equal(await evaluate('BarelCombo1.status().effective'),'aseprite10');
@@ -46,7 +46,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
         window.BAREL_COMBO1_CONFIG={};
         window.fetch=async(url,...args)=>{
           const name=String(url);
-          if(name.endsWith('barel-combo1-10.animation.json')){
+          if(name.endsWith('barel-combo1-dot-10.animation.json')){
             if(failure==='http')return {ok:false,status:503};
             if(failure==='parse')return {ok:true,json:async()=>{throw SyntaxError('Malformed combo1 JSON')}};
             if(['metadata','offset','scale'].includes(failure)){
@@ -58,7 +58,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
             }
           }
           const response=await nativeFetch(url,...args);
-          if(name.endsWith('/barel-combo1-10.json')){
+          if(name.endsWith('/barel-combo1-dot-10.json')){
             const data=await response.json();
             if(failure==='timing')data.frames[0].duration=71;
             if(failure==='image')data.meta.image='missing-combo1-test.png';
@@ -130,8 +130,8 @@ function trial(){
   combo1Setup('aseprite10');startAtk(1);check(!startSkill('thrust'),'Startup skill cancel blocked');
   player.t=170/MS;check(startSkill('thrust')&&!barelPlayerFrame().image,'Existing recovery skill cancel');
   combo1Setup('aseprite10');inputDown('Space');updPlayer();inputUp('Space');updPlayer();
-  check(player.z>0&&!barelPlayerFrame().image,'Jump retained');
-  startAtk('air');check(!barelPlayerFrame().image,'Air attack retained');
+  check(player.z>0&&BarelCombo1.frameFor(player,MS)===null,'Jump retained');
+  startAtk('air');check(player.atk==='air'&&BarelCombo1.frameFor(player,MS)===null,'Air attack retained');
   const otherActor={characterId:'viesa',st:'atk',atk:'c2',combo:1,t:3};
   check(BarelCombo1.frameFor(otherActor,MS)===null,'Other character excluded');
   window.combo1ContactSheet=face=>{

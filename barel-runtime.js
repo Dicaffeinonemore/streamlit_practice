@@ -9,8 +9,10 @@ function barelFrame(name, progress = 0, loop = false) {
 }
 function barelPlayerFrame() {
   const p=player,t=p.t*MS;
-  if(p.st==='grabbed')return barelFrame('hook',t/650,true);
+  if(p.st==='grabbed')return globalThis.BarelGrabbed?.frameFor(p,MS) || barelFrame('hook',t/650,true);
   if(p.st==='atk') {
+    const air=globalThis.BarelAirAttack?.frameFor(p,MS);
+    if(air)return air;
     const replacement=globalThis.BarelCombo0?.frameFor(p,MS) || globalThis.BarelCombo1?.frameFor(p,MS) || globalThis.BarelCombo2?.frameFor(p,MS);
     if(replacement)return replacement;
     const a=ATK[p.atk] || ATK.c1, duration=p.atk==='air'?400:a.wind+a.act+a.rec;
@@ -23,6 +25,8 @@ function barelPlayerFrame() {
   if(p.st==='hurt') return barelFrame('hurt',t/280);
   if(p.st==='down') return barelFrame('down',t/930);
   if(p.st==='dead') return barelFrame('death',t/1000);
+  const jump=globalThis.BarelJump?.frameFor(p,MS,scene!=='clear'&&scene!=='ending');
+  if(jump)return jump;
   if(p.z>0) return barelFrame('jump',p.vz>0?.25:.65);
   if(scene==='clear'||scene==='ending') return barelFrame('victory',tick*MS/1500,true);
   const walk=globalThis.BarelWalk?.frameFor(p);
@@ -41,6 +45,27 @@ function paintBarel(frame,actor,alpha=1) {
   ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
   if(actor.flash>0 && UX.options.flash)ctx.filter='brightness(1.8)';
   ctx.drawImage(image,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
+}
+// Shared stable framing for ordinary and boss-challenge selection previews.
+function drawBarelIdlePreview(canvas,elapsedMs){
+  if(!canvas)return false;
+  let view=globalThis.BarelIdle?.preview(elapsedMs);
+  if(!view){
+    if(!BAREL_ATLAS.complete||!BAREL_ATLAS.naturalWidth)return false;
+    const frames=BAREL_ART.clips.idle;
+    view={image:BAREL_ATLAS,frame:barelFrame('idle',elapsedMs/1300,true),bounds:[
+      Math.min(...frames.map(f=>-f.anchor[0])),Math.min(...frames.map(f=>-f.anchor[1])),
+      Math.max(...frames.map(f=>f.atlas[2]-f.anchor[0])),Math.max(...frames.map(f=>f.atlas[3]-f.anchor[1]))]};
+  }
+  const c=canvas.getContext('2d'),[left,top,right,bottom]=view.bounds;
+  const scale=Math.min(Math.min(250,canvas.width-16)/(right-left),Math.min(225,canvas.height-16)/(bottom-top));
+  c.clearRect(0,0,canvas.width,canvas.height);
+  const [sx,sy,w,h]=view.frame.atlas,[ax,ay]=view.frame.anchor;
+  const x=(canvas.width-(left+right)*scale)/2,y=canvas.height-8-bottom*scale;
+  c.save();
+  try{c.globalAlpha=1;c.imageSmoothingEnabled=false;c.drawImage(view.image,sx,sy,w,h,x-ax*scale,y-ay*scale,w*scale,h*scale);}
+  finally{c.restore();}
+  return true;
 }
 function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alpha=1) {
   const f=barelFrame(name,progress);if(!f || !BAREL_ATLAS.naturalWidth)return;

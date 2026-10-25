@@ -15,6 +15,12 @@ const bgmPath=path.join(root,'assets/bgm/boss.mp3');
 const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
 const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
 const allowed = new Set(['index.html', ...scripts]);
+for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-grabbed-10/barel-grabbed-10.animation.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-air-attack-10/barel-air-attack-10.animation.json','assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.json','assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-jump-10/barel-jump-10.animation.json','assets/aseprite/exports/barel-jump-10/barel-jump-10.json','assets/aseprite/exports/barel-jump-10/barel-jump-10.png'])allowed.add(name);
+for(let i=0;i<3;i++){const name=`barel-combo${i}-dot-10`;for(const file of [`assets/aseprite/${name}/${name}.animation.json`,`assets/aseprite/exports/${name}/${name}.json`,`assets/aseprite/exports/${name}/${name}.png`])allowed.add(file);}
 for(const name of ['assets/aseprite/barel-dash-10/barel-dash-10.animation.json','assets/aseprite/exports/barel-dash-10/barel-dash-10.json','assets/aseprite/exports/barel-dash-10/barel-dash-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-10/barel-walk-10.animation.json','assets/aseprite/exports/barel-walk-10/barel-walk-10.json','assets/aseprite/exports/barel-walk-10/barel-walk-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-idle-10/barel-idle-10.animation.json','assets/aseprite/exports/barel-idle-10/barel-idle-10.json','assets/aseprite/exports/barel-idle-10/barel-idle-10.png'])allowed.add(name);
@@ -395,6 +401,9 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_AIR_ATTACK_SUITE){await ready(base+'/index.html');await require('./barel-air-attack-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_JUMP_SUITE){await ready(base+'/index.html');await require('./barel-jump-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_DASH_SUITE){await ready(base+'/index.html');await require('./barel-dash-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_WALK_SUITE){await ready(base+'/index.html');await require('./barel-walk-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_IDLE_SUITE){await ready(base+'/index.html');await require('./barel-idle-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}

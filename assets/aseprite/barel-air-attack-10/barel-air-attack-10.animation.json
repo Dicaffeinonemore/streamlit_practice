@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "air",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "air",
+  "sprite": "../exports/barel-air-attack-10/barel-air-attack-10.json",
+  "anchor": [
+    224,
+    384
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+  ],
+  "durationMs": 400,
+  "renderScale": 0.7473684210526316,
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 190,
+    "worldOffsetsApplied": false,
+    "method": "Pelvis registration; F10 sole defines ground; actor.z applied once"
+  },
+  "clock": {
+    "source": "player.t * MS",
+    "mapping": "remaining-flight",
+    "termination": "landing-or-interrupt",
+    "legacyVisualDurationMs": 400,
+    "hitPoseFloor": 5
+  },
+  "combatReference": {
+    "damage": 14,
+    "reach": 64,
+    "knockdown": true,
+    "hitStopTicks": 5,
+    "effectiveHitStopTicks": 6,
+    "forwardPerTick": 2.6,
+    "active": "every-air-attack-step",
+    "gravityPerTick": 0.55,
+    "maxFlightTicks": 36
+  },
+  "source": {
+    "file": "source/original.png",
+    "sha256": "0ade8aa05bc3aa6e30c1afc0f086cad5571051004760dd15306d943fdaec37c9",
+    "resampled": false,
+    "redrawn": false,
+    "pixelClones": false
+  }
+}

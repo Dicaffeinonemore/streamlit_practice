@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
+SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -207,6 +207,50 @@ def prepare_streamlit_component(review: bool = False) -> Path:
             "assets/aseprite/barel-dash-10/barel-dash-10.animation.json",
             "assets/aseprite/exports/barel-dash-10/barel-dash-10.json",
             "assets/aseprite/exports/barel-dash-10/barel-dash-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    for combo_index in range(3):
+        if f"src/animation/barel-combo{combo_index}.js" in files:
+            name = f"barel-combo{combo_index}-dot-10"
+            animation_files = (
+                f"assets/aseprite/{name}/{name}.animation.json",
+                f"assets/aseprite/exports/{name}/{name}.json",
+                f"assets/aseprite/exports/{name}/{name}.png",
+            )
+            files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-jump.js" in files:
+        animation_files = (
+            "assets/aseprite/barel-jump-10/barel-jump-10.animation.json",
+            "assets/aseprite/exports/barel-jump-10/barel-jump-10.json",
+            "assets/aseprite/exports/barel-jump-10/barel-jump-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-air-attack.js" in files:
+        animation_files = (
+            "assets/aseprite/barel-air-attack-10/barel-air-attack-10.animation.json",
+            "assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.json",
+            "assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-idle.js" in files:
+        animation_files = (
+            "assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json",
+            "assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.json",
+            "assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-grabbed.js" in files:
+        animation_files = (
+            "assets/aseprite/barel-grabbed-10/barel-grabbed-10.animation.json",
+            "assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.json",
+            "assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-walk.js" in files:
+        animation_files = (
+            "assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json",
+            "assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json",
+            "assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png",
         )
         files.update(name for name in animation_files if (ROOT / name).is_file())
     for name in sorted(files):
