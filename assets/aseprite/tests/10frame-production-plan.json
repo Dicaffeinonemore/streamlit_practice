@@ -1,0 +1,112 @@
+{
+  "status": "blocked_on_artwork_quality",
+  "description": "Production plan only. Not a playable ten-frame animation or adapter metadata.",
+  "date": "2026-10-25",
+  "character": "barel",
+  "attack": "combo0",
+  "source": "black-knight-basic-attack-350ms.aseprite",
+  "totalMs": 350,
+  "combat": {
+    "activeStartMs": 128.5,
+    "activeEndMs": 230,
+    "comboLinkMs": 267.5,
+    "timeSource": "player.t * MS"
+  },
+  "frameCountPlanned": 10,
+  "approvedNewFrames": 0,
+  "frames": [
+    {
+      "index": 1,
+      "source": "F1",
+      "durationMs": 40,
+      "status": "existing_reference",
+      "task": "Basic stance"
+    },
+    {
+      "index": 2,
+      "source": "A",
+      "durationMs": 30,
+      "status": "artwork_required",
+      "task": "Coordinated sword lift; redraw shoulders, elbows and wrists; retain original crest and armor",
+      "rejectedCandidates": [
+        "../../../artifacts/aseprite-10frame-review/rejected-A-01.png",
+        "../../../artifacts/aseprite-10frame-review/rejected-A-02.png"
+      ]
+    },
+    {
+      "index": 3,
+      "source": "F2",
+      "durationMs": 35,
+      "status": "existing_reference",
+      "task": "High-ready stance"
+    },
+    {
+      "index": 4,
+      "source": "B",
+      "durationMs": 25,
+      "status": "artwork_required",
+      "task": "Shoulder/elbow-driven acceleration; cape trails torso"
+    },
+    {
+      "index": 5,
+      "source": "C",
+      "durationMs": 25,
+      "status": "artwork_required",
+      "task": "Blade crosses forward center during active window"
+    },
+    {
+      "index": 6,
+      "source": "F3",
+      "durationMs": 30,
+      "status": "existing_reference",
+      "task": "Contact pose"
+    },
+    {
+      "index": 7,
+      "source": "F4-revised",
+      "durationMs": 45,
+      "status": "artwork_required",
+      "task": "Low forward follow-through; remove unintended sword-tip reversal"
+    },
+    {
+      "index": 8,
+      "source": "D",
+      "durationMs": 25,
+      "status": "artwork_required",
+      "task": "Deceleration and torso recovery after active window closes"
+    },
+    {
+      "index": 9,
+      "source": "F5",
+      "durationMs": 40,
+      "status": "existing_reference",
+      "task": "Recovery"
+    },
+    {
+      "index": 10,
+      "source": "F6",
+      "durationMs": 55,
+      "status": "existing_reference",
+      "task": "Return to basic stance"
+    }
+  ],
+  "registration": {
+    "anchorReference": [
+      67,
+      143
+    ],
+    "offsets": "Undecided until approved drawings exist; do not infer from rejected images.",
+    "checks": [
+      "pelvis registration",
+      "persistent support-foot contact",
+      "shoulder/elbow/wrist continuity",
+      "sword-tip path without reversal",
+      "cape lag",
+      "same source pixel density and equipment silhouettes"
+    ]
+  },
+  "gates": {
+    "asepriteExport": "Do not create a ten-frame .aseprite/PNG/JSON until all five missing or revised drawings pass review.",
+    "comparisonPlayback": "Unavailable; retain working six-frame test page."
+  }
+}

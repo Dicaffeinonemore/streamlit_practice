@@ -15,13 +15,14 @@ const bgmPath=path.join(root,'assets/bgm/boss.mp3');
 const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
 const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
 const allowed = new Set(['index.html', ...scripts]);
+for(const name of ['assets/aseprite/barel-combo0-10/barel-combo0-10.animation.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.png'])allowed.add(name);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
   if(name==='favicon.ico'){res.writeHead(204).end();return;}
   if(name==='assets/bgm/boss.mp3'&&fs.existsSync(bgmPath)){res.setHeader('Content-Type','audio/mpeg');res.end(fs.readFileSync(bgmPath));return;}
   if(name==='production.html'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(embedded.replace('<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>',''));return;}
   if (name !== 'embedded.html' && !allowed.has(name)) { res.writeHead(404).end(); return; }
-  res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
+  res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8');
   res.end(name === 'embedded.html' ? embedded : (name==='index.html'?html:fs.readFileSync(path.join(root, name))));
 });
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-test-'));
@@ -389,6 +390,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.BAREL_COMBO0_SUITE){await ready(base+'/index.html');await require('./barel-combo0-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.JUDGMENT_SUITE){await ready(base+'/embedded.html');await require('./judgment.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_UI_SUITE){await ready(base+'/embedded.html');await require('./viesa-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.MORGRA_DEATH_SUITE){await ready(base+'/embedded.html');await require('./morgra-death.cjs')({evaluate,call,errors,root});return;}
