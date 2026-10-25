@@ -77,6 +77,11 @@ async function evaluate(expression, contextId) {
     assert(result, 'Game did not initialize through Streamlit. '+log);
     await delay(500);
     assert.equal(result.canvas, true); assert.equal(result.width, 960); assert.equal(result.height, 540);
+    if(process.env.BAREL_DASH_SUITE){await require('./barel-dash-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
+    if(process.env.BAREL_WALK_SUITE){await require('./barel-walk-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
+    if(process.env.BAREL_IDLE_SUITE){await require('./barel-idle-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
+    if(process.env.BAREL_COMBO2_SUITE){await require('./barel-combo2-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
+    if(process.env.BAREL_COMBO1_SUITE){await require('./barel-combo1-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
     if(process.env.BAREL_COMBO0_SUITE){await require('./barel-combo0-10.cjs')({evaluate:expression=>evaluate(expression,gameContext),call,errors,root,environment:'streamlit'});return;}
     // Reproduce a first interaction without browser activation inside the component.
     await evaluate("localStorage.removeItem('sf_snd');dispatchEvent(new PointerEvent('pointerdown',{pointerType:'touch'}))", gameContext);

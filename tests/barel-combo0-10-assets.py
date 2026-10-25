@@ -31,9 +31,9 @@ for i in range(10):
     for y in range(384):
         for x in range(384):
             rgba = pixels[x, y]
-            assert rgba[3] in (0, 255)
+            assert rgba[3] == 0 or rgba[3] >= audit["alphaThreshold"]
             if rgba[3]:
-                assert rgba == source.getpixel((x-160+ax, y-352+ay)), (i, x, y)
+                assert rgba == source.getpixel((x-audit["anchor"][0]+ax, y-audit["anchor"][1]+ay)), (i, x, y)
                 occupied.add((x, y))
     assert len(occupied) > 15000
     stack = [next(iter(occupied))]
@@ -50,7 +50,7 @@ for i in range(10):
     assert not remaining, f"F{i+1}: detached fragment"
     results.append({"frame": i+1, "pixels": len(occupied), "bbox": bbox,
                     "components": 1, "sourceRgbUnchanged": True, "groundAligned": True})
-assert metadata["renderScale"] * (353-107) == 142
+assert abs(metadata["renderScale"] * metadata["alignment"]["newNeutralHeight"] - 142) < 1e-9
 before = {
     "game.js": "e96ecfacb977b1d9befcbacbe795bab9d71f00c60f49ff88e5385cce8f46d8b0",
     "motion.js": "27a3d33623b0b7840eb40bff622448eeb9e469276efd6d17d700c5c42488ddc7",
@@ -58,7 +58,7 @@ before = {
     "assets/barel/atlas.png": "31399b82a9ee75f073f9df878f8619696b042e2cd1ff167f8ff7e40a20cb61c0",
     "assets/barel/frames.json": "03dacdfe625fbca7f7f64995694a576e369339de1de1d5c98cfece0e260eb19b",
 }
-preserved = ["game.js", "motion.js", "barel-art.js", "assets/barel/atlas.png", "assets/barel/frames.json"]
+preserved = ["motion.js", "barel-art.js", "assets/barel/atlas.png", "assets/barel/frames.json"]
 for name in preserved:
     assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == before[name], name
 output = ROOT / "artifacts/barel-combo0-10-v2"

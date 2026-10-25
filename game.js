@@ -450,6 +450,7 @@ function onKeyOnce(code) {
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
+  globalThis.BarelDashFx?.clear();
   resetViesaEffects();syncPlayerCharacterUI(player.characterId);
   vargulRemains=[];sovereignRemains=[];
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
@@ -619,6 +620,7 @@ function startDash(d) {
   const p = player;
   p.st = 'dash'; p.t = 0; p.x0 = p.x; p.face = d; p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false;
   p.inv = Math.max(p.inv, DASH.inv); p.dashCd = DASH.cd;
+  if(!isViesa())globalThis.BarelDashFx?.start(p);
   burst(p.x - d * 12, p.y, 4, ['#d8c8a8', '#a8864a', '#6a4a28']);
   sfx('dash');
 }
@@ -894,7 +896,8 @@ function updPlayer() {
       const t = p.t * MS;
       p.x = p.x0 + p.face * DASH.dist * (isViesa()?1.15:1) * ease(Math.min(1, t / 150));
       if(isViesa())p.inv=Math.max(p.inv,2);
-      if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
+      if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
+      else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
       if (t >= 110 && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
       if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
       break;
@@ -1538,6 +1541,7 @@ function update() {
 
 function updFx() {
   updateViesaEffects();
+  globalThis.BarelDashFx?.update(player,MS);
   for (const a of impacts) a.age += MS;
   impacts = impacts.filter(a => a.age < 450);
   for (const s of bursts) s.age += MS;
@@ -2889,6 +2893,34 @@ function render() {
   }
   if (clearT > 20 && scene === 'play') outlineText('VICTORY!', W / 2, H / 2 - 20, '#ffd23f', 'bold 64px sans-serif');
   drawVargulDebug();
+  drawStageEntryWipe();
+}
+
+// Reveal each stage from left to right during the existing intro timer.
+// No extra gameplay delay; pausing also freezes bannerT and this transition.
+function drawStageEntryWipe() {
+  if (scene !== 'intro' && !(scene === 'pause' && resumeScene === 'intro')) return;
+  const elapsed = 160 - bannerT;
+  const duration = UX.options.lowFx ? 12 : 36;
+  if (elapsed >= duration) return;
+  const u = clamp(elapsed / duration, 0, 1);
+  ctx.save();
+  ctx.fillStyle = '#08060b';
+  if (UX.options.lowFx) {
+    ctx.globalAlpha = 1 - u;
+    rect(0, 0, W, H);
+  } else {
+    const slant = H * .18, edge = -2 + ease(u) * (W + slant + 4);
+    ctx.beginPath();
+    ctx.moveTo(edge, 0); ctx.lineTo(W + slant, 0);
+    ctx.lineTo(W + slant, H); ctx.lineTo(edge - slant, H);
+    ctx.closePath(); ctx.fill();
+    if (u > 0) {
+      ctx.beginPath(); ctx.moveTo(edge, 0); ctx.lineTo(edge - slant, H);
+      ctx.strokeStyle = 'rgba(150,25,45,.65)'; ctx.lineWidth = 2; ctx.stroke();
+    }
+  }
+  ctx.restore();
 }
 
 // 보스 등장: 위아래 검은 띠(시네마 화면) + 미끄러져 들어오는 이름 카드

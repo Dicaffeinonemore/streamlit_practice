@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "walk",
+  "animationType": "loop",
+  "loop": true,
+  "clip": "walk",
+  "sprite": "../exports/barel-walk-10/barel-walk-10.json",
+  "anchor": [
+    224,
+    416
+  ],
+  "frameOffsets": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "renderScale": 0.4092219020172911,
+  "durationMs": 900,
+  "expectedDurationsMs": [
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90
+  ],
+  "source": {
+    "file": "source/original.png",
+    "sha256": "cf0702793d07a9d7f72559a04e76e0ed2b33352f59e3ab005711d00992bea66e",
+    "resampled": false,
+    "redrawn": false,
+    "pixelClones": false
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 347,
+    "canvasGround": 416,
+    "worldOffsetsApplied": false
+  },
+  "clock": {
+    "source": "player.walkTime",
+    "legacyPeriodMs": 900,
+    "resetOnStart": true,
+    "continueOnFacingChange": true
+  },
+  "visualReview": {
+    "feet": [
+      {
+        "rear": {
+          "bottom": 413,
+          "soleX": 116.91089108910892
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 246.9689440993789
+        }
+      },
+      {
+        "rear": {
+          "bottom": 413,
+          "soleX": 145.36363636363637
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 255.62264150943398
+        }
+      },
+      {
+        "rear": {
+          "bottom": 415,
+          "soleX": 192.64150943396226
+        },
+        "front": {
+          "bottom": 415,
+          "soleX": 235.24576271186442
+        }
+      },
+      {
+        "rear": {
+          "bottom": 414,
+          "soleX": 135.7913043478261
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 252.8046875
+        }
+      },
+      {
+        "rear": {
+          "bottom": 414,
+          "soleX": 128.59259259259258
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 256.206106870229
+        }
+      },
+      {
+        "rear": {
+          "bottom": 413,
+          "soleX": 118.73949579831933
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 253.11920529801324
+        }
+      },
+      {
+        "rear": {
+          "bottom": 413,
+          "soleX": 138.975
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 248.02717391304347
+        }
+      },
+      {
+        "rear": {
+          "bottom": 415,
+          "soleX": 182.9255319148936
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 233.2803738317757
+        }
+      },
+      {
+        "rear": {
+          "bottom": 413,
+          "soleX": 135.29166666666666
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 251.09459459459458
+        }
+      },
+      {
+        "rear": {
+          "bottom": 414,
+          "soleX": 127.5909090909091
+        },
+        "front": {
+          "bottom": 414,
+          "soleX": 248.79508196721312
+        }
+      }
+    ],
+    "frontSoleRangeSourcePx": 22.925733038453302,
+    "frontSoleRangeWorldPx": 6.754832696978288,
+    "worldTravelPerCycle": 167.4,
+    "approved": false,
+    "reviewedIn": [
+      "local Chrome",
+      "local Streamlit iframe"
+    ],
+    "reason": "Front foot remains the forward ground contact throughout the cycle without alternating stance. Original gait preserved at the unchanged 900ms period / 186 world units per second.",
+    "activation": {
+      "defaultMode": "aseprite10",
+      "reason": "User explicitly requested activating this exact supplied artwork despite the previously reported gait limitation."
+    }
+  }
+}

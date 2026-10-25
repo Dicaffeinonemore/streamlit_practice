@@ -5,6 +5,9 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
   fs.mkdirSync(out,{recursive:true});
   assert.equal(await evaluate('BarelCombo0.ready'),true);
   assert.equal(await evaluate('BarelCombo0.status().effective'),'aseprite10');
+  await evaluate("globalThis.BarelIdle?.setMode('legacy')");
+  await evaluate("globalThis.BarelCombo1?.setMode('legacy')");
+  await evaluate("globalThis.BarelCombo2?.setMode('legacy')");
   await evaluate('window.barelTestNativeRAF=requestAnimationFrame;requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();showScreen(null)');
   const results=await evaluate(`(${trial.toString()})()`);
   for(const face of [1,-1]){
@@ -108,7 +111,7 @@ function trial(){
   barelComboTestSetup('aseprite10');startAtk(0);player.buf=200;player.t=267.5/MS-1;updPlayer();
   check(player.combo===1&&player.atk==='c2'&&!barelPlayerFrame().image,'Buffered combo1');
   barelComboTestSetup('aseprite10');startAtk(0);inputDown('ShiftLeft');updPlayer();inputUp('ShiftLeft');
-  check(player.st==='dash'&&!barelPlayerFrame().image,'Input dash cancels attack');
+  check(player.st==='dash'&&BarelCombo0.frameFor(player,MS)===null,'Input dash cancels attack');
   barelComboTestSetup('aseprite10');startAtk(0);check(hurtPlayer(5,-1,false),'Hit accepted');
   check(player.st==='hurt'&&player.hp===95&&!barelPlayerFrame().image,'Hurt cancels visual');
   barelComboTestSetup('aseprite10');startAtk(0);check(!startSkill('thrust'),'Startup skill cancel remains blocked');
