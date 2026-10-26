@@ -14,7 +14,6 @@ import json
 import os
 import re
 import shutil
-import socketserver
 import threading
 import tempfile
 import webbrowser
@@ -23,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
+SCRIPTS = ["motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-dash-attack.js", "src/animation/barel-hurt.js", "src/animation/barel-down.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "game.js"]   # 순서 중요: motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -202,6 +201,21 @@ def prepare_streamlit_component(review: bool = False) -> Path:
             "assets/aseprite/exports/barel-walk-10/barel-walk-10.png",
         )
         files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-down.js" in files:
+        name = "barel-knockdown-getup-design-10"
+        files.update((f"assets/aseprite/{name}/{name}.animation.json",
+                      f"assets/aseprite/exports/{name}/{name}.json",
+                      f"assets/aseprite/exports/{name}/{name}.png"))
+    if "src/animation/barel-hurt.js" in files:
+        name = "barel-hurt-12"
+        files.update((f"assets/aseprite/{name}/{name}.animation.json",
+                      f"assets/aseprite/exports/{name}/{name}.json",
+                      f"assets/aseprite/exports/{name}/{name}.png"))
+    if "src/animation/barel-dash-attack.js" in files:
+        name = "barel-dash-attack-10"
+        files.update((f"assets/aseprite/{name}/{name}.animation.json",
+                      f"assets/aseprite/exports/{name}/{name}.json",
+                      f"assets/aseprite/exports/{name}/{name}.png"))
     if "src/animation/barel-dash.js" in files:
         animation_files = (
             "assets/aseprite/barel-dash-10/barel-dash-10.animation.json",
@@ -219,6 +233,10 @@ def prepare_streamlit_component(review: bool = False) -> Path:
             )
             files.update(name for name in animation_files if (ROOT / name).is_file())
     if "src/animation/barel-jump.js" in files:
+        name = "barel-jump-revised-10"
+        files.update((f"assets/aseprite/{name}/{name}.animation.json",
+                      f"assets/aseprite/exports/{name}/{name}.json",
+                      f"assets/aseprite/exports/{name}/{name}.png"))
         animation_files = (
             "assets/aseprite/barel-jump-10/barel-jump-10.animation.json",
             "assets/aseprite/exports/barel-jump-10/barel-jump-10.json",
@@ -288,7 +306,7 @@ def run_streamlit():
     height = 1000 if review else 680
     component = components.declare_component("black_moon_reference" if review else "black_moon_game", path=str(directory))
     component(height=height, key="reference" if review else "game", default=None)
-    st.caption("v1.41 · 비에사 · 필살기 흑월 난사")
+    st.caption("v1.51 · 바렐 넉다운·기상 모션 적용(10장)")
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -301,13 +319,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 
-def bind_server() -> socketserver.TCPServer:
+def bind_server() -> http.server.ThreadingHTTPServer:
     # Windows 에서는 SO_REUSEADDR 가 "이미 사용 중인 포트에도 바인딩"을 허용해 버리므로 끈다
-    socketserver.TCPServer.allow_reuse_address = os.name != "nt"
+    http.server.ThreadingHTTPServer.allow_reuse_address = os.name != "nt"
+    http.server.ThreadingHTTPServer.request_queue_size = 128
     last_error = None
     for port in range(START_PORT, START_PORT + PORT_TRIES):
         try:
-            return socketserver.TCPServer(("127.0.0.1", port), Handler)
+            return http.server.ThreadingHTTPServer(("127.0.0.1", port), Handler)
         except OSError as e:       # 포트 사용 중 등 -> 다음 포트 시도
             last_error = e
     raise SystemExit(f"사용 가능한 포트를 찾지 못했습니다 ({START_PORT}~{START_PORT + PORT_TRIES - 1}): {last_error}")
