@@ -224,7 +224,8 @@ function newPlayer(score = 0, characterId = selectedCharacterId) {
   const archer=characterId==='viesa';
   return { characterId:archer?'viesa':'barel', x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26*(archer ? .9 : 1), hw: 16*(archer ? .9 : 1), hp: archer?80:100, max: archer?80:100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
-    inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
+    hurtKind: 'hurt_high', hurtDuration: 17, hurtFrameEnds: null,
+    inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, dashGrace: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
     skill: null, skillCd: Object.fromEntries(Object.keys(SKILLS).map(id => [id, 0])), skillHits: new Set(), skillDest: 0,
     spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
 }
@@ -247,7 +248,7 @@ function selectCharacter(id, focus = false) {
   $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
   $('characterSelectionKeys').textContent = id === 'viesa'
     ? 'J 화살 · H 근접 · U 연사 · L 저격 · O 지상 백플립 · P 공중 백플립 · K 흑월 난사'
-    : 'J 3연타 · U 돌진 베기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격';
+    : 'J 3연타 · 대시 중 공격: 대시 찌르기 · U 돌진 베기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격';
   $('btnCharacterConfirm').disabled = !hero.available;
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
@@ -359,7 +360,7 @@ function updatePractice() {
   if (!enemies.length || enemies[0].st === 'dead') { enemies = [mkEnemy('grunt', clamp(player.x + 110, 100, 550), player.y)]; enemies[0].training = true; }
   const label = code => UX.keyName(UX.options.bindings[code]);
   const steps = [['move', '이동: 방향키 또는 이동 버튼으로 허수아비에게 접근하세요'], ['attack', `공격: ${label('KeyJ')} / 공격 버튼으로 같은 줄의 적을 맞히세요`],
-    ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 대시 버튼 또는 방향키 두 번`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
+    ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 방향키 두 번 · 대시 중 공격: 대시 찌르기`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
   const next = steps.find(([id]) => !practiceDone.has(id));
   $('practiceText').textContent = next ? `연습 ${practiceDone.size}/5 · ${next[1]}` : '연습 완료! 실전에서 공격 예고를 보고 피하세요.';
 }
@@ -461,7 +462,8 @@ function startStage(i, restored = false) {
   const p = player;
   p.x = 80; p.y = 420; p.z = 0; p.vx = 0; p.vz = 0; p.face = 1; p.st = 'free'; p.t = 0; p.inv = 90;
   p.grab = null; p.skill = null;p.viesaAction=null;p.viesaClip=null;p.jumpTime=0;p.viesaHoverGrace=0;p.viesaAirPUsed=false;p.viesaLanding=null; for (const id in p.skillCd) p.skillCd[id] = 0;
-  p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.spTg = null;
+  p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.dashGrace=0; p.spTg = null;
+  p.hurtKind='hurt_high';p.hurtDuration=17;p.hurtFrameEnds=null;
   p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
   stageStartScore = p.score;
   if (!practice && !bossChallenge) { stageEntry = entrySnapshot(); UX.saveCheckpoint(stageEntry); }
@@ -558,16 +560,25 @@ function startAtk(n) {
   sfx('swing', n);
 }
 
-function hurtPlayer(dmg, dir, kd, source=null) {
+// The center of the actual overlapping vertical band, in world height coordinates.
+function playerImpactHeight(low,high){
+  return (Math.max(player.z,low)+Math.min(player.z+playerBodyHeight(),high))/2;
+}
+function hurtPlayer(dmg, dir, kd, source=null, contact=null) {
   dmg = Math.round(dmg * (source?.damageScale ?? (source?.boss && source.p2shown ? (source.type==='boss2'?1.5:1.3) : 1)));
   const p = player;
   if (practice) return false;
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special' || p.st === 'grabbed') return false;
+  if(!isViesa()){
+    const height=contact?.hitHeight??source?.hitHeight??source?.h??(p.z+56);
+    const ticks=contact?.hitstunTicks??source?.hitstunTicks??source?.hitstun??source?.d?.hitstun??17;
+    globalThis.BarelHurt?.begin(p,height,Number.isFinite(ticks)?ticks:17);
+  }
   stat.damage += Math.min(p.hp, dmg);
   p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; p.skill = null;p.viesaAction=null;p.viesaHoverGrace=0;p.viesaLanding=null; chain.n = 0;
   hitStop = Math.max(hitStop, kd ? 6 : 4); shake = Math.max(shake, kd ? 12 : 7);
   floatText(p.x, p.y - p.z - 110, dmg, '#ff5a6a');
-  impact(p.x - dir * 6, p.y, p.z + 56, kd ? 2 : 1, dir);
+  impact(p.x - dir * 6, p.y, p.z + (!isViesa()&&!kd&&p.z===0?(p.hurtImpactHeight||56):56), kd ? 2 : 1, dir);
   sfx(kd ? 'hurtH' : 'hurt');
   if (p.hp <= 0) {
     p.hp = 0; p.lives--; stat.deaths++; p.st = 'dead'; p.t = 0; p.vz = 6; p.vx = dir * 4; sfx('pdie'); return true;
@@ -617,9 +628,66 @@ function startDash(d) {
   const p = player;
   p.st = 'dash'; p.t = 0; p.x0 = p.x; p.face = d; p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false;
   p.inv = Math.max(p.inv, DASH.inv); p.dashCd = DASH.cd;
+  p.dashGrace=0;
   if(!isViesa())globalThis.BarelDashFx?.start(p);
   burst(p.x - d * 12, p.y, 4, ['#d8c8a8', '#a8864a', '#6a4a28']);
   sfx('dash');
+}
+
+// One clock in simulation ticks: F1..F10 = 3/4/4/3/3/6/6/6/6/6.
+function startDashAttack() {
+  const p=player;
+  if(isViesa()||p.z!==0)return false;
+  const direction=Number(down('ArrowRight','KeyD'))-Number(down('ArrowLeft','KeyA'));
+  if(direction)p.face=direction;
+  p.st='dash_attack';p.t=0;p.inv=0;p.buf=0;p.combo=p.comboT=0;p.atk=null;
+  p.dashGrace=0;p.hitSet=new Set();p.dashAttackHit=false;p.dashFlash=false;
+  p.vx=p.vz=0;p.wave=false;
+  reactAurelionAttack();sfx('swing',2);return true;
+}
+function dashAttackStrike() {
+  const p=player,box=BarelDashAttack.data?.hitbox;
+  if(!box)return;
+  const damage=Math.round(ATK.c1.dmg*1.4*(p.buff>0?1.5:1));
+  strikeMorgraCrows(box.reach, -box.front);
+  strikeVargulOrbs(box.reach,-box.front,p.hitSet,{depth:box.depth,damage});
+  const blocked=strikeSovereignFists(box.reach,-box.front,p.hitSet,{depth:box.depth,damage,kd:true});
+  for(const e of enemies){
+    const dx=(e.x-p.x)*p.face;
+    const height=e.d.h*e.d.s;
+    if(!canHit(e)||p.hitSet.has(e)||blocked&&isSovereign(e)||dx+e.hw<box.front||dx-e.hw>box.reach||
+       Math.abs(e.y-p.y)>=box.depth||e.z>box.top||e.z+height<box.bottom)continue;
+    const hp=e.hp;
+    p.hitSet.add(e);damageEnemy(e,damage,true,2);
+    if(e.hp<hp){p.dashAttackHit=true;p.sp=Math.min(SP_MAX,p.sp+8);hitStop=Math.max(hitStop,6);}
+  }
+  for(const b of barrels){
+    const dx=(b.x-p.x)*p.face;
+    if(!b.dead&&!p.hitSet.has(b)&&dx+b.hw>=box.front&&dx-b.hw<=box.reach&&Math.abs(b.y-p.y)<box.depth){
+      p.hitSet.add(b);damageBarrel(b);
+    }
+  }
+}
+function updDashAttack(){
+  const p=player,t=p.t;
+  const height=BarelDashAttack.data?.bodyHeight||93.54;
+  if(t>=3&&t<7)p.x+=p.face*height*.06;
+  else if(t>=7&&t<14)p.x+=p.face*height*.08;
+  else if(t>=14&&t<17)p.x+=p.face*height*.04;
+  if(t>=3&&t<14&&t%2===1)ghost(p.x,p.y,0,'player',p.face,'#9E1A1F',150);
+  if(t===14&&!p.dashFlash){
+    p.dashFlash=true;const box=BarelDashAttack.data?.hitbox;
+    const x=p.x+p.face*(box?.reach||104),h=BarelDashAttack.data?.bladeTip[1]||56;
+    impact(x,p.y,h,1,p.face);burst(x,p.y,h,['#ffffff','#ff9aa6','#ff3a4a']);shake=Math.max(shake,3);
+  }
+  if(t>=14&&t<23)dashAttackStrike();
+  if(hit('KeyJ','KeyZ'))p.buf=BUF_MS;
+  if(t>=29){
+    if(hit(...JUMP_KEYS)){p.st='free';p.t=0;p.vz=9.6;sfx('jump');return;}
+    if(p.buf>0){startAtk(0);return;}
+  }
+  p.t++;
+  if(p.t>=47){p.st='free';p.t=0;}
 }
 
 function aimPlayerSkill() {
@@ -712,6 +780,7 @@ function damageBarrel(b) {
 function canStartSkill(id) {
   if(isViesa())return canStartViesaSkill(id);
   const p = player;
+  if(p?.st==='dash_attack'&&(!p.dashAttackHit||p.t<23))return false;
   if (!p || !SKILLS[id] || p.skillCd[id] > 0 || p.z > 0 || p.st === 'dead' || p.st === 'down' ||
       p.st === 'hurt' || p.st === 'special' || p.st === 'cast' || p.st === 'skill' || p.st === 'grabbed') return false;
   if (p.st === 'atk') {
@@ -819,6 +888,7 @@ function updPlayer() {
   if (p.buff > 0) p.buff--;
   if (p.buf > 0) p.buf -= MS;
   if (p.dashCd > 0) p.dashCd--;
+  if(p.dashGrace>0)p.dashGrace--;
   for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
   if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
@@ -827,10 +897,14 @@ function updPlayer() {
   else for (const code in SKILL_KEYS) {
     if (canStartSkill(SKILL_KEYS[code]) && hit(code) && startSkill(SKILL_KEYS[code])) return;
   }
-  if (p.dashCd <= 0 && p.z === 0 && (p.st === 'free' || p.st === 'atk') && hit('ShiftLeft')) dashReq = p.face;
+  const dashCancelable=p.st==='free'||p.st==='atk'||p.st==='dash_attack'&&p.t>=29;
+  if (p.dashCd <= 0 && p.z === 0 && dashCancelable && hit('ShiftLeft')) dashReq = p.face;
   if (dashReq) {                                   // 방향키 두 번: 지상에서 이동·공격 중 언제든 대시 (공격은 취소)
     const d = dashReq; dashReq = 0;
-    if (p.dashCd <= 0 && p.z === 0 && (p.st === 'free' || p.st === 'atk')) startDash(d);
+    if (p.dashCd <= 0 && p.z === 0 && dashCancelable) startDash(d);
+  }
+  if(!isViesa()&&p.z===0&&(p.st==='dash'||p.st==='free'&&p.dashGrace>0)&&hit('KeyJ','KeyZ')){
+    startDashAttack();return;
   }
 
   // 중력
@@ -896,9 +970,12 @@ function updPlayer() {
       if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
       else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
       if (t >= 110 && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
-      if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
+      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=isViesa()?0:7; }
       break;
     }
+    case 'dash_attack':
+      updDashAttack();
+      break;
     case 'special':
       p.t++;
       updSpecial();
@@ -913,8 +990,11 @@ function updPlayer() {
       if (p.t * MS >= MAGIC.dur) { p.st = 'free'; p.t = 0; }
       break;
     case 'hurt':
-      p.t++; p.x += p.vx; p.vx *= 0.85;
-      if (p.t > 16) { p.st = 'free'; p.t = 0; }
+      if(isViesa()||!p.hurtFrameEnds||globalThis.BarelHurt?.canKnockback(p)){
+        p.x += p.vx; p.vx *= 0.85;
+      }else p.vx=0;
+      p.t++;
+      if (p.t >= (isViesa()?17:(p.hurtDuration||17))) { p.st = 'free'; p.t = 0; }
       break;
     case 'down':
       p.t++; p.x += p.vx; p.vx *= 0.96;

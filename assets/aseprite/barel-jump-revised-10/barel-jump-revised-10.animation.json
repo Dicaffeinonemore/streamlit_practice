@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "jump",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "jump",
+  "sprite": "../exports/barel-jump-revised-10/barel-jump-revised-10.json",
+  "anchor": [
+    320,
+    576
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50
+  ],
+  "durationMs": 500,
+  "renderScale": 0.45776918117343646,
+  "poseMap": {
+    "prejump": 1,
+    "riseFast": [
+      2,
+      3
+    ],
+    "riseSlow": 4,
+    "apex": [
+      5,
+      6
+    ],
+    "fall": [
+      7,
+      8
+    ],
+    "landing": [
+      9,
+      10
+    ]
+  },
+  "selection": {
+    "fastRiseAbove": 4,
+    "fastRiseFirstTicks": 4,
+    "apexLow": -2,
+    "apexHigh": 1,
+    "apexFirstTicks": 5,
+    "fastFallBelow": -5,
+    "landingFirstTicks": 4,
+    "landingVisualTicks": 6
+  },
+  "physicsReference": {
+    "initialVz": 9.6,
+    "gravityPerTick": 0.55,
+    "prejumpDelayTicks": 0,
+    "landingLockTicks": 0
+  },
+  "alignment": {
+    "comparison": "idle F1 helmet width -> new jump F3 helmet width; uniform scale for all poses",
+    "idleHelmetBand": [
+      18,
+      38
+    ],
+    "jumpHelmetBand": [
+      24,
+      42
+    ],
+    "idleHelmetWidth": 40,
+    "jumpHelmetWidth": 44,
+    "idleRenderScale": 0.5035460992907801,
+    "idleHeightInRenderUnits": 129.91489361702128,
+    "idleHalfHeightInSourcePixels": 141.9,
+    "torsoCenters": [
+      [
+        162.0,
+        119.0
+      ],
+      [
+        196.0,
+        136.0
+      ],
+      [
+        182.0,
+        164.0
+      ],
+      [
+        210.0,
+        148.0
+      ],
+      [
+        208.0,
+        149.0
+      ],
+      [
+        178.0,
+        154.0
+      ],
+      [
+        197.0,
+        147.0
+      ],
+      [
+        206.0,
+        134.0
+      ],
+      [
+        205.0,
+        123.0
+      ],
+      [
+        189.0,
+        127.0
+      ]
+    ],
+    "rawPivots": [
+      [
+        162,
+        215
+      ],
+      [
+        196,
+        278
+      ],
+      [
+        182,
+        306
+      ],
+      [
+        210,
+        290
+      ],
+      [
+        208,
+        291
+      ],
+      [
+        178,
+        296
+      ],
+      [
+        197,
+        289
+      ],
+      [
+        206,
+        276
+      ],
+      [
+        205,
+        219
+      ],
+      [
+        189,
+        231
+      ]
+    ],
+    "pivots": [
+      [
+        162,
+        215
+      ],
+      [
+        196,
+        278
+      ],
+      [
+        182,
+        306
+      ],
+      [
+        210,
+        290
+      ],
+      [
+        208,
+        291
+      ],
+      [
+        178,
+        296
+      ],
+      [
+        197,
+        289
+      ],
+      [
+        206,
+        276
+      ],
+      [
+        205,
+        219
+      ],
+      [
+        189,
+        231
+      ]
+    ]
+  },
+  "source": {
+    "file": "source/original.png",
+    "sha256": "55cb8e3c3fbf9d9a0c7590c24c84bb8d747157c136200e9ebd982190443afc5a",
+    "resampled": false
+  },
+  "separation": {
+    "count": 10,
+    "boxes": [
+      [
+        16,
+        114,
+        316,
+        330
+      ],
+      [
+        310,
+        82,
+        634,
+        332
+      ],
+      [
+        618,
+        32,
+        940,
+        334
+      ],
+      [
+        954,
+        26,
+        1266,
+        312
+      ],
+      [
+        1284,
+        6,
+        1588,
+        264
+      ],
+      [
+        18,
+        340,
+        322,
+        622
+      ],
+      [
+        326,
+        358,
+        654,
+        618
+      ],
+      [
+        628,
+        374,
+        954,
+        622
+      ],
+      [
+        954,
+        408,
+        1304,
+        628
+      ],
+      [
+        1278,
+        384,
+        1594,
+        616
+      ]
+    ],
+    "alphaThreshold": 1,
+    "componentThreshold": 1500
+  }
+}

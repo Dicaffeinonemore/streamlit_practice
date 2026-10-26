@@ -3,8 +3,14 @@
 const PIXEL_UI = new Image();
 const BOSS_UI = new Image();
 const ENEMY_UI = new Image();
-ENEMY_UI.src = ENEMY_UI_SOURCE;
-BOSS_UI.src = BOSS_UI_SOURCE;
+// Large data URLs can fail to decode while the rest of the art loads; retry rather than keep the plain bar.
+function loadUIImage(img, source) {
+  let tries = 0;
+  img.onerror = () => { if (tries++ < 5) setTimeout(() => { img.src = source; }, 400 * tries); };
+  img.src = source;
+}
+loadUIImage(ENEMY_UI, ENEMY_UI_SOURCE);
+loadUIImage(BOSS_UI, BOSS_UI_SOURCE);
 const pixelUI = { ready: false, hud: null, emptyScrolls: [], emptyLives: [] };
 function uiCrop(x, y, w, h) {
   const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
@@ -85,6 +91,7 @@ function enemyHUDPortrait(e) {
   return portrait;
 }
 function drawPixelEnemyBar(e) {
+  if(isViesa()&&drawViesaEnemyBar(e))return true;
   if (!ENEMY_UI.complete || !ENEMY_UI.naturalWidth) return false;
   const portrait = enemyHUDPortrait(e);
   if (!portrait) return false;
