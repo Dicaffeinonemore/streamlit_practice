@@ -501,11 +501,11 @@
     return r;
   }
   // 흑기사 3콤보 (예비 동작 wind → 휘두름 act → 회수 rec, ms)
-  const HATK = [
-    { name: '일섬', wind: 90, act: 110, rec: 150, rad: 30 },
-    { name: '역일섬', wind: 70, act: 100, rec: 140, rad: 30 },
-    { name: '참격', wind: 200, act: 140, rec: 340, rad: 36 },
-  ];
+  // 타이밍은 combat-data.js 가 기준이다. rad 는 그림(칼 궤적 반지름)용.
+  const HATK = [['c1', 30], ['c2', 30], ['c3', 36]].map(([id, rad]) => {
+    const m = global.COMBAT_FRAME_DATA.barel.combo.moves[id];
+    return { name: m.name, wind: m.windMs, act: m.actMs, rec: m.recMs, rad };
+  });
   const HR = { ang: -34, hx: 3, hy: 13, lean: 1, crouch: 1, jy: 0 };   // 기본 자세: 두 손으로 대검을 낮게, 칼끝은 앞 아래
   const HK = [
     { w: { ang: 125, hx: -3, hy: -10, lean: -2, crouch: 0 }, s: { ang: -30, hx: 10, hy: 6, lean: 5, crouch: 2 } },   // 어깨 위에서 대각선으로
