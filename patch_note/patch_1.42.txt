@@ -1,0 +1,28 @@
+v1.42 — 바렐 3연타 프레임 데이터와 콤보 끊김 수정
+
+문제
+- 일반 적의 피격 경직이 모든 공격에 18틱으로 고정되어 있었음.
+- 바렐 2타(역일섬)가 맞은 뒤 3타(참격)가 들어오기까지 실제 22틱(가장 늦게 누르면 26틱)이 걸려,
+  망령 병사·흑창병·흑철 중기사 모두 3타 전에 경직이 4틱 일찍 풀렸음. 1타→2타(16틱)는 연결됐음.
+
+변경
+- combat-data.js 추가: 공격별 피격 경직(hitstun)을 한곳에서 관리하는 전투 프레임 데이터.
+  일섬 22틱, 역일섬 28틱, 참격·공중 베기는 넉다운이라 해당 없음. 적 기본값은 기존 18틱.
+- game.js: ATK에 공격 id를 붙이고, playerStrike → damageEnemy 로 id를 넘겨
+  일반 적의 'hurt' 시간을 enemyHitstun(적, 공격)으로 정함. 보스는 기존 10틱 그대로.
+- index.html, server.py SCRIPTS: game.js 바로 앞에 combat-data.js 연결.
+
+바뀌지 않은 것
+- 공격 모션·판정 범위·피해·히트스톱·연결 허용 시간, 보스 전투, 플레이어 피격, 비에사의 공격,
+  스킬·마법·투사체의 피격 경직(18틱).
+
+측정 (실제 게임 루프, 60fps 틱, 히트스톱 제외)
+- 1타→2타: 간격 16~19틱 / 경직 22틱 / 여유 3~6틱
+- 2타→3타: 간격 22~26틱 / 경직 28틱 / 여유 2~6틱
+- 세 적 모두 가장 빠른 입력과 가장 늦은 입력에서 3연타가 끊기지 않음.
+- 상세 표: docs/barel-frame-data.md
+
+검증
+- FRAME_DATA_SUITE=1 node tests/regression.cjs   (PowerShell: $env:FRAME_DATA_SUITE='1'; node tests/regression.cjs)
+  역일섬 경직을 18틱으로 되돌리면 "c2→c3 사이에 경직이 풀림 (margin -4)"로 실패하는 것을 확인함.
+- node tools/report_frame_data.cjs 로 문서 재생성.
