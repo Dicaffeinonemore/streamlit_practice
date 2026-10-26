@@ -89,15 +89,16 @@ const sfx = (name, a) => AUDIO.sfx(name, a);
 // 적 정의. wind=공격 예고, act=공격 판정 유지, rec=공격 후 경직 (틱)
 // 보스는 pats 의 패턴(ms 단위 타임라인)으로 싸운다
 const ET = {
-  grunt: { name: '망령 병사', sprite: 'infantry', hp: 40, spd: 1.2, dmg: 8, range: 56, wind: 28, act: 10, rec: 30, kb: 3, score: 100,
+  // 일반 적의 체력·속도·피해·사거리·예고/판정/경직은 combat-data.js (enemyCombatStats) 에서 온다
+  grunt: { name: '망령 병사', sprite: 'infantry', ...enemyCombatStats('grunt'), score: 100,
            h: 96, s: 1, hw: 18 },
-  rogue: { name: '흑창병', sprite: 'spearman', hp: 28, spd: 2.0, dmg: 6, range: 78, wind: 18, act: 8, rec: 22, kb: 2, score: 150,
+  rogue: { name: '흑창병', sprite: 'spearman', ...enemyCombatStats('rogue'), score: 150,
            h: 96, s: 1, hw: 18 },
-  brute: { name: '흑철 중기사', sprite: 'knight', hp: 100, spd: 0.9, dmg: 16, range: 68, wind: 44, act: 12, rec: 44, kb: 6, score: 300, kd: true,
+  brute: { name: '흑철 중기사', sprite: 'knight', ...enemyCombatStats('brute'), score: 300,
            h: 100, s: 1, hw: 22 },
   // 궁병: 거리를 두고 같은 줄(깊이)에 서서 활을 당긴 뒤(예고) 화살을 쏜다. 줄을 바꾸거나 점프하면 피할 수 있다
-  archer: { name: '망령 궁수', sprite: 'archer', hp: 30, spd: 1.5, dmg: 7, range: 260, wind: 42, act: 6, rec: 46, kb: 3, score: 200,
-           h: 96, s: 1, hw: 18, ranged: true },
+  archer: { name: '망령 궁수', sprite: 'archer', ...enemyCombatStats('archer'), score: 200,
+           h: 96, s: 1, hw: 18 },
   boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 700, spd: 1.05, range: 62, score: 2000, kd: true,
            h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진', hook: '갈고리 끌어오기', meat: '고기 덩어리 투척' } },
   boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 850, spd: 1.2, range: 64, score: 3500, kd: true,
@@ -177,25 +178,22 @@ for (const i of [3, 4]) for (const w of STAGES[i].waves) if (!w.boss && w.e.leng
 // 플레이어 3콤보: 예비 동작(wind) → 휘두름(act) → 회수(rec), ms. 휘두름 35% 지점부터 판정
 const SP_MAX = 100;           // 필살기 게이지: 적을 때릴수록 차오른다
 const GROGGY_TICKS = 300;     // 보스 기절 시간 (5초 = 300틱)
+// 수치는 combat-data.js 의 COMBAT_FRAME_DATA.barel 에서 온다 (타이밍 wind/act/rec 은 HATK 를 거쳐 같은 값)
+const BAREL_COMBAT = COMBAT_FRAME_DATA.barel, COMBO_RULES = BAREL_COMBAT.combo;
+const barelAttack = (id, m) => ({ id, dmg: m.damage, reach: m.reachPx, kd: m.knockdown, step: m.stepPx, stop: m.hitstopTicks, fx: m.fx });
 const ATK = {
-  c1:  { ...HATK[0], id: 'c1', dmg: 10, reach: 80, kd: false, step: 8,  stop: 3, fx: 0 },   // 일섬: 어깨 위에서 대각선으로 내려 벤다
-  c2:  { ...HATK[1], id: 'c2', dmg: 11, reach: 82, kd: false, step: 8,  stop: 3, fx: 1 },   // 역일섬: 낮은 곳에서 위로 올려 벤다
-  c3:  { ...HATK[2], id: 'c3', dmg: 16, reach: 98, kd: true,  step: 16, stop: 7, fx: 2 },   // 참격: 머리 위로 들어 땅까지 내려찍고 검기 발사
-  air: { id: 'air', dmg: 14, reach: 64, kd: true, stop: 5, fx: 2 },
+  c1:  { ...HATK[0], ...barelAttack('c1', COMBO_RULES.moves.c1) },   // 일섬: 어깨 위에서 대각선으로 내려 벤다
+  c2:  { ...HATK[1], ...barelAttack('c2', COMBO_RULES.moves.c2) },   // 역일섬: 낮은 곳에서 위로 올려 벤다
+  c3:  { ...HATK[2], ...barelAttack('c3', COMBO_RULES.moves.c3) },   // 참격: 머리 위로 들어 땅까지 내려찍고 검기 발사
+  air: barelAttack('air', BAREL_COMBAT.air),
 };
-const LINK_MS = 420, BUF_MS = 220;      // 다음 타 연결 허용 시간 / 선입력 유지 시간
+const LINK_MS = COMBAT_FRAME_DATA.input.linkMs, BUF_MS = COMBAT_FRAME_DATA.input.bufferMs;   // 다음 타 연결 허용 시간 / 선입력 유지 시간
 // 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
 const SPECIAL = { dur: 2100, slash: 20, fin: 150 };
 // 마법 "뇌격": 두루마리 1개로 화면 안의 모든 적에게 번개. 잡몹은 쓰러지고 보스는 최대 체력의 12% 피해
 const MAGIC = { max: 3, dur: 640, fire: 380, damage: 80 };
 // 첨부 보스전의 전투 기술. 일반 공격보다 강하지만 각각 독립 쿨다운이 있다.
-const SKILLS = {
-  thrust: { name: '돌진 베기', key: 'U', cd: 4600, dur: 700 },
-  slam:   { name: '내려찍기', key: 'H', cd: 6000, dur: 820 },
-  whirl:  { name: '회전 베기', key: 'O', cd: 7000, dur: 760 },
-  leap:   { name: '점프 강하', key: 'P', cd: 8000, dur: 960 },
-  redwave:{ name: '붉은 파동', key: 'L', cd: 6500, dur: 720 },
-};
+const SKILLS = Object.fromEntries(Object.entries(BAREL_COMBAT.skills).map(([id, s]) => [id, { name: s.name, key: s.key, cd: s.cooldownMs, dur: s.durMs }]));
 const SKILL_KEYS = { KeyU: 'thrust', KeyH: 'slam', KeyO: 'whirl', KeyP: 'leap', KeyL: 'redwave' };
 const INTRO_MS = 2000;                 // 보스 등장 연출 길이
 const CHAIN_MS = 1700;                 // 이 시간 안에 다시 때리면 연속 히트가 이어진다
@@ -612,7 +610,8 @@ function launchWave() {
   sfx('pwave');
 }
 
-const DASH = { dist: 80, dur: 190, inv: 15, cd: 31 };   // 이동 거리(px), 길이(ms), 무적·쿨타임(틱)
+const DASH_DATA = BAREL_COMBAT.dash;
+const DASH = { dist: DASH_DATA.distPx, dur: DASH_DATA.durMs, inv: DASH_DATA.invulnerableTicks, cd: DASH_DATA.cooldownTicks };   // 이동 거리(px), 길이(ms), 무적·쿨타임(틱)
 function startDash(d) {
   const p = player;
   p.st = 'dash'; p.t = 0; p.x0 = p.x; p.face = d; p.combo = 0; p.comboT = 0; p.buf = 0; p.wave = false;
@@ -768,48 +767,50 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
 }
 function updSkill() {
   if(isViesa()){updateViesaAction();return;}
-  const p = player, id = p.skill, t = p.t * MS, prev = (p.t - 1) * MS;
+  const p = player, id = p.skill, t = p.t * MS, prev = (p.t - 1) * MS, S = BAREL_COMBAT.skills[id];
   if (id === 'thrust') {
-    if (t >= 180 && t <= 360 + MS) {
-      const u = ease((t - 180) / 180);
-      p.x = lerp(p.x0, p.skillDest, u); p.inv = Math.max(p.inv, 4);
+    const [from, to] = S.travelMs;
+    if (t >= from && t <= to + MS) {
+      const u = ease((t - from) / (to - from));
+      p.x = lerp(p.x0, p.skillDest, u); if (S.invulnerableWhileTravel) p.inv = Math.max(p.inv, 4);
       if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#ff6b78', 210);
-      if (t >= 240) skillStrike(0, 28, 68, 8, false, 1);
-      if (prev < 240 && t >= 240) {
+      if (t >= S.strikeFromMs) skillStrike(0, S.damage, S.reachPx, S.behindPx, S.knockdown, S.fx);
+      if (prev < S.strikeFromMs && t >= S.strikeFromMs) {
         impact(p.x + p.face * 42, p.y, 55, 1, p.face);
         burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); sfx('hit', 2);
       }
     }
   } else if (id === 'slam') {
-    if (prev < 330 && t >= 330) {
-      skillStrike(0, 24, 130, 10, true, 2); groundSmash(p.x + p.face * 84, p.y);
+    if (prev < S.strikeMs && t >= S.strikeMs) {
+      skillStrike(0, S.damage, S.reachPx, S.behindPx, S.knockdown, S.fx); groundSmash(p.x + p.face * 84, p.y);
     }
   } else if (id === 'whirl') {
-    if (t >= 100 && t < 540) p.inv = Math.max(p.inv, 4);
-    [200, 330, 460].forEach((at, k) => {
+    if (t >= S.invulnerableMs[0] && t < S.invulnerableMs[1]) p.inv = Math.max(p.inv, 4);
+    S.strikeMs.forEach((at, k) => {
       if (prev < at && t >= at) {
-        skillStrike(k, 16, 110, 110, false, 1); sfx('swing', k === 1 ? 2 : 1);
+        skillStrike(k, S.damage, S.reachPx, S.behindPx, S.knockdown, S.fx); sfx('swing', k === 1 ? 2 : 1);
         impact(p.x + p.face * (k === 1 ? -14 : 20), p.y, 54, 1, p.face);
       }
     });
   } else if (id === 'redwave') {
-    if (prev < 300 && t >= 300) {
+    if (prev < S.fireMs && t >= S.fireMs) {
       hazards.push({ type: 'pwave', red: true, x: p.x + p.face * 32, y: p.y,
         h: 44, dir: p.face, age: 0, travel: 0, hits: new Set(),
-        damage: Math.round(24 * (p.buff > 0 ? 1.5 : 1)) });
+        damage: Math.round(S.damage * (p.buff > 0 ? 1.5 : 1)) });
       sfx('pwave');
     }
   } else if (id === 'leap') {
-    if (t >= 120 && t < 560) {
-      const u = (t - 120) / 440;
-      p.x = lerp(p.x0, p.skillDest, ease(u)); p.z = Math.sin(Math.PI * u) * 88; p.inv = Math.max(p.inv, 4);
+    const [from, to] = S.travelMs;
+    if (t >= from && t < to) {
+      const u = (t - from) / (to - from);
+      p.x = lerp(p.x0, p.skillDest, ease(u)); p.z = Math.sin(Math.PI * u) * S.heightPx; p.inv = Math.max(p.inv, 4);
       if (every(t, 40)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 220);
     }
-    if (prev < 560 && t >= 560) {
-      p.z = 0; skillStrike(0, 26, 76, 38, true, 2); groundSmash(p.x + p.face * 34, p.y);
+    if (prev < S.strikeMs && t >= S.strikeMs) {
+      p.z = 0; skillStrike(0, S.damage, S.reachPx, S.behindPx, S.knockdown, S.fx); groundSmash(p.x + p.face * 34, p.y);
     }
   }
-  if (t >= SKILLS[id].dur) { p.st = 'free'; p.t = 0; p.z = 0; p.skill = null; p.inv = Math.max(p.inv, 10); }
+  if (t >= SKILLS[id].dur) { p.st = 'free'; p.t = 0; p.z = 0; p.skill = null; p.inv = Math.max(p.inv, BAREL_COMBAT.skillEndInvulnerableTicks); }
 }
 
 function updPlayer() {
@@ -869,18 +870,18 @@ function updPlayer() {
       const A = ATK[p.atk];
       p.t++;
       if (p.atk === 'air') {
-        p.x += p.face * 2.6;
+        p.x += p.face * BAREL_COMBAT.air.forwardPxPerTick;
         playerStrike(A);
         if (p.z <= 0 && p.vz === 0) { p.st = 'free'; p.t = 0; p.comboT = 0; p.combo = 0; }
         break;
       }
       const t = p.t * MS, hitAt = A.wind + A.act;
       if (t >= A.wind && t < hitAt + MS) p.x = p.x0 + A.step * p.face * ease((t - A.wind) / A.act);   // 휘두르며 한 걸음
-      if (t >= A.wind + A.act * 0.35 && t < hitAt + 30) playerStrike(A);
+      if (t >= A.wind + A.act * COMBO_RULES.activeStartRatio && t < hitAt + COMBO_RULES.activeTailMs) playerStrike(A);
       if (hit('KeyJ', 'KeyZ')) p.buf = BUF_MS;
-      if (p.combo === 2 && !p.wave && t >= A.wind + A.act * 0.6) { p.wave = true; launchWave(); }
-      if (p.combo === 2 && !p.smash && t >= A.wind + A.act * 0.85) { p.smash = true; groundSmash(p.tipX || p.x + p.face * 90, p.y); }
-      if (p.buf > 0 && p.combo < 2 && t >= hitAt + A.rec * 0.45) { startAtk(p.combo + 1); break; }
+      if (p.combo === 2 && !p.wave && t >= A.wind + A.act * COMBO_RULES.moves.c3.waveRatio) { p.wave = true; launchWave(); }
+      if (p.combo === 2 && !p.smash && t >= A.wind + A.act * COMBO_RULES.moves.c3.smashRatio) { p.smash = true; groundSmash(p.tipX || p.x + p.face * 90, p.y); }
+      if (p.buf > 0 && p.combo < 2 && t >= hitAt + A.rec * COMBO_RULES.cancelRatio) { startAtk(p.combo + 1); break; }
       if (t >= hitAt + A.rec) {
         p.st = 'free'; p.t = 0;
         p.comboT = p.combo < 2 ? Math.round(LINK_MS / MS) : 0;
@@ -891,11 +892,11 @@ function updPlayer() {
     case 'dash': {                                 // 150ms 동안 80px 미끄러지듯 이동, 푸른 잔상. 110ms 뒤부터 공격으로 연결 가능
       p.t++;
       const t = p.t * MS;
-      p.x = p.x0 + p.face * DASH.dist * (isViesa()?1.15:1) * ease(Math.min(1, t / 150));
+      p.x = p.x0 + p.face * DASH.dist * (isViesa()?1.15:1) * ease(Math.min(1, t / DASH_DATA.moveMs));
       if(isViesa())p.inv=Math.max(p.inv,2);
       if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
       else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
-      if (t >= 110 && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
+      if (t >= DASH_DATA.attackCancelMs && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
       if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
       break;
     }
@@ -1017,7 +1018,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null)
     } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken') || (isVargul(e)&&e.st==='pat'&&!vargulArmored(e))) { if(isAurelion(e)||isVargul(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
-  if (e.type === 'brute' && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
+  if (COMBAT_FRAME_DATA.enemies[e.type]?.armorWhileWind && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
   if (kd) { e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 4; }
   else { e.st = 'hurt'; e.t = 0; e.hurtT = enemyHitstun(e, attackId); e.vx = dir * e.d.kb * 0.6; }
   e.pat = null;
@@ -1243,10 +1244,11 @@ function updEnemy(e) {
 
     case 'act': {
       if (e.pat === 'swing') {
-        if (e.t <= d.act && !e.hitSet.has(p) && inReach(e, p, d.range + 8, 20, 55)) {
+        const EH = COMBAT_FRAME_DATA.enemies.hit;
+        if (e.t <= d.act && !e.hitSet.has(p) && inReach(e, p, d.range + EH.reachPadPx, EH.depthPx, EH.heightPx)) {
           if (hurtPlayer(d.dmg, e.face, !!d.kd, e)) e.hitSet.add(p);
         }
-        if (e.t > d.act + 2) { e.st = 'rec'; e.t = 0; e.recT = d.rec; e.atkCd = rand(15, 45); }
+        if (e.t > d.act + EH.activeGraceTicks) { e.st = 'rec'; e.t = 0; e.recT = d.rec; e.atkCd = rand(15, 45); }
       } else if (e.pat === 'shoot') {
         if (e.t === 1) { hazards.push({ type: 'arrow', owner: e, damage: d.dmg, x: e.x + e.face * 40, y: e.y, h: 50, dir: e.face, age: 0 }); sfx('swing', 0); }
         if (e.t > d.act) { e.st = 'rec'; e.t = 0; e.recT = d.rec; e.atkCd = rand(60, 110); }

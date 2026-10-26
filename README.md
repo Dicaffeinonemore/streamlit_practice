@@ -2,7 +2,11 @@
 
 ## v1.42 — 바렐 3연타 프레임 데이터
 
-일반 적의 피격 경직이 모든 공격에 18틱으로 고정되어 있어, 바렐의 2타 → 3타(22틱) 사이에 적이 먼저 풀리던 문제를 고쳤습니다. 공격별 피격 경직은 `combat-data.js` 한 곳에서 관리하며(일섬 22틱, 역일섬 28틱), 보스·비에사·스킬은 기존 값 그대로입니다. 실측 표는 [docs/barel-frame-data.md](docs/barel-frame-data.md), 변경 내용은 [v1.42 패치 노트](patch_note/patch_1.42.txt)에 있습니다. 검증: `FRAME_DATA_SUITE=1 node tests/regression.cjs` → `node tools/report_frame_data.cjs`.
+일반 적의 피격 경직이 모든 공격에 18틱으로 고정되어 있어, 바렐의 2타 → 3타(22틱) 사이에 적이 먼저 풀리던 문제를 고쳤습니다(일섬 22틱, 역일섬 28틱).
+
+바렐과 일반 적의 전투 수치(3연타·공중 베기·대시·스킬 5종, 적 4종의 체력·예고·판정·경직)는 이제 **`combat-data.js` 한 파일**에 있고 게임은 그 값을 읽기만 합니다. 밸런스 조정은 이 파일에서만 하세요. 보스와 비에사는 기존 파일을 따릅니다. 장별 예고·판정·회수 표와 실측 결과는 [docs/barel-frame-data.md](docs/barel-frame-data.md), 변경·검증 기록은 [v1.42 패치 노트](patch_note/patch_1.42.txt)에 있습니다.
+
+검증: `node tests/combat-data.cjs`(스프라이트 타이밍 일치), `FRAME_DATA_SUITE=1 node tests/regression.cjs` → `node tools/report_frame_data.cjs`.
 
 ## v1.41 — 플레이어블 궁수 비에사 추가(필살기 흑월 난사 포함)
 
