@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "attackId": "combo1",
+  "clip": "basic-attack-2",
+  "sprite": "../exports/barel-combo1-dot-10/barel-combo1-dot-10.json",
+  "anchor": [
+    200,
+    352
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "renderScale": 0.7634408602150538,
+  "expectedDurationsMs": [
+    70,
+    35,
+    35,
+    30,
+    30,
+    20,
+    20,
+    20,
+    25,
+    25
+  ],
+  "combat": {
+    "durationMs": 310,
+    "activeStartMs": 105,
+    "activeEndMs": 200,
+    "comboLinkMs": 233
+  },
+  "source": {
+    "file": "source/original.png",
+    "sha256": "45f40be72dbe53afd34bbd0b376c65de95ed4bc0514b5c1cd65ca1bd0b7263f8",
+    "resampled": false,
+    "redrawn": false,
+    "pixelClones": false
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newNeutralHeight": 186,
+    "neutralFrame": 9,
+    "canvasGround": 352,
+    "worldOffsetsApplied": false,
+    "note": "Original dot source density; shared display scale and sole alignment only"
+  },
+  "phases": {
+    "preparationFrames": [
+      1,
+      1
+    ],
+    "risingStartupFrames": [
+      2,
+      2
+    ],
+    "primaryStrikeFrames": [
+      3,
+      4
+    ],
+    "activeFollowThroughFrames": [
+      5,
+      5
+    ],
+    "recoveryFrames": [
+      6,
+      10
+    ]
+  }
+}

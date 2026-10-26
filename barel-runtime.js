@@ -9,30 +9,63 @@ function barelFrame(name, progress = 0, loop = false) {
 }
 function barelPlayerFrame() {
   const p=player,t=p.t*MS;
-  if(p.st==='grabbed')return barelFrame('hook',t/650,true);
+  if(p.st==='grabbed')return globalThis.BarelGrabbed?.frameFor(p,MS) || barelFrame('hook',t/650,true);
   if(p.st==='atk') {
+    const air=globalThis.BarelAirAttack?.frameFor(p,MS);
+    if(air)return air;
+    const replacement=globalThis.BarelCombo0?.frameFor(p,MS) || globalThis.BarelCombo1?.frameFor(p,MS) || globalThis.BarelCombo2?.frameFor(p,MS);
+    if(replacement)return replacement;
     const a=ATK[p.atk] || ATK.c1, duration=p.atk==='air'?400:a.wind+a.act+a.rec;
     return barelFrame(p.atk==='air'?'air':'combo'+p.combo,t/duration);
   }
   if(p.st==='skill') return SKILLS[p.skill] ? barelFrame(p.skill==='redwave'?'cast':p.skill,t/SKILLS[p.skill].dur) : barelFrame('idle');
   if(p.st==='special') return t<1260?barelFrame('super1',t/1260):barelFrame('super2',(t-1260)/740);
   if(p.st==='cast') return barelFrame('cast',t/MAGIC.dur);
-  if(p.st==='dash') return barelFrame('dash',t/DASH.dur);
+  if(p.st==='dash') return globalThis.BarelDash?.frameFor(p,MS,DASH.dur) || barelFrame('dash',t/DASH.dur);
   if(p.st==='hurt') return barelFrame('hurt',t/280);
   if(p.st==='down') return barelFrame('down',t/930);
   if(p.st==='dead') return barelFrame('death',t/1000);
+  const jump=globalThis.BarelJump?.frameFor(p,MS,scene!=='clear'&&scene!=='ending');
+  if(jump)return jump;
   if(p.z>0) return barelFrame('jump',p.vz>0?.25:.65);
   if(scene==='clear'||scene==='ending') return barelFrame('victory',tick*MS/1500,true);
+  const walk=globalThis.BarelWalk?.frameFor(p);
+  if(walk)return walk;
+  const idle=globalThis.BarelIdle?.frameFor(p,tick*MS);
+  if(idle)return idle;
   return p.walk?barelFrame('walk',(p.walkTime||0)/900,true):barelFrame('idle',tick*MS/1300,true);
 }
 function paintBarel(frame,actor,alpha=1) {
-  if(!frame || !BAREL_ATLAS.complete || !BAREL_ATLAS.naturalWidth)return false;
+  const image=frame?.image || BAREL_ATLAS;
+  if(!frame || !image.complete || !image.naturalWidth)return false;
   const [x,y,w,h]=frame.atlas,[ax,ay]=frame.anchor;
   ctx.save();ctx.translate(actor.x-camX,actor.y-(actor.z||0));ctx.scale(actor.face||1,1);
-  ctx.scale(BAREL_PLAYER_SCALE,BAREL_PLAYER_SCALE);
+  const scale=BAREL_PLAYER_SCALE*(frame.renderScale || 1);
+  ctx.scale(scale,scale);
   ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
   if(actor.flash>0 && UX.options.flash)ctx.filter='brightness(1.8)';
-  ctx.drawImage(BAREL_ATLAS,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
+  ctx.drawImage(image,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
+}
+// Shared stable framing for ordinary and boss-challenge selection previews.
+function drawBarelIdlePreview(canvas,elapsedMs){
+  if(!canvas)return false;
+  let view=globalThis.BarelIdle?.preview(elapsedMs);
+  if(!view){
+    if(!BAREL_ATLAS.complete||!BAREL_ATLAS.naturalWidth)return false;
+    const frames=BAREL_ART.clips.idle;
+    view={image:BAREL_ATLAS,frame:barelFrame('idle',elapsedMs/1300,true),bounds:[
+      Math.min(...frames.map(f=>-f.anchor[0])),Math.min(...frames.map(f=>-f.anchor[1])),
+      Math.max(...frames.map(f=>f.atlas[2]-f.anchor[0])),Math.max(...frames.map(f=>f.atlas[3]-f.anchor[1]))]};
+  }
+  const c=canvas.getContext('2d'),[left,top,right,bottom]=view.bounds;
+  const scale=Math.min(Math.min(250,canvas.width-16)/(right-left),Math.min(225,canvas.height-16)/(bottom-top));
+  c.clearRect(0,0,canvas.width,canvas.height);
+  const [sx,sy,w,h]=view.frame.atlas,[ax,ay]=view.frame.anchor;
+  const x=(canvas.width-(left+right)*scale)/2,y=canvas.height-8-bottom*scale;
+  c.save();
+  try{c.globalAlpha=1;c.imageSmoothingEnabled=false;c.drawImage(view.image,sx,sy,w,h,x-ax*scale,y-ay*scale,w*scale,h*scale);}
+  finally{c.restore();}
+  return true;
 }
 function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alpha=1) {
   const f=barelFrame(name,progress);if(!f || !BAREL_ATLAS.naturalWidth)return;
@@ -42,6 +75,7 @@ function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alp
 }
 function drawBarelPlayer() {
   const p=player,t=p.t*MS;
+  globalThis.BarelDashFx?.draw();
   if(!paintBarel(barelPlayerFrame(),p,p.st==='dead'?clamp(1-(p.t-65)/35,0,1):1))return false;
   p.tipX=p.x+p.face*72;p.tipH=p.z+68;
   const fx=(name,u,dx=60,w=200,h=160)=>barelEffect(name,u,p.x+p.face*dx,p.y-p.z,w,h);
@@ -49,7 +83,7 @@ function drawBarelPlayer() {
     const a=ATK[p.atk] || ATK.c1,u=(t-(a.wind||0))/((a.act||200)+100);
     if(u>=0&&u<1)fx(p.combo===1?'rise':p.combo===2?'impact':'slash',u);
   }
-  if(p.st==='dash')barelEffect('dust',t/DASH.dur,p.x-p.face*24,p.y+2,120,30,p.face);
+  if(p.st==='dash'&&!globalThis.BarelDash?.hasBakedEffects())barelEffect('dust',t/DASH.dur,p.x-p.face*24,p.y+2,120,30,p.face);
   if(p.st==='skill' && SKILLS[p.skill]) {
     const start={thrust:180,slam:330,whirl:150,leap:560,redwave:220}[p.skill];
     const u=(t-start)/(SKILLS[p.skill].dur-start);

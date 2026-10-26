@@ -212,6 +212,8 @@
 
   #title.named-title #btnBossChallenge { position: absolute; left: 5%; bottom: 13%; margin: 0; padding: 1.2cqw 2cqw; font-size: clamp(12px,1.7cqw,20px); letter-spacing: 0; }
   #challengeList { display: grid; gap: 8px; }
+  .challenge-roster { display: grid; grid-template-columns: minmax(80px,150px) minmax(0,1fr); gap: 12px; align-items: center; }
+  #barelChallengePreview { width: 100%; height: auto; image-rendering: pixelated; }
   #challengeList .challenge-boss { margin: 0; padding: 12px; font-size: clamp(12px,1.6cqw,18px); text-align: left; }
   #challengeList .challenge-boss:disabled { opacity: .45; cursor: default; transform: none; }
   /* Supplied gold pixel atlas. Keep live key labels and cooldown overlays. */
@@ -277,7 +279,7 @@
   <div class="screen dialog" id="challenge"><h2>보스챌린지</h2>
     <div class="dialog-body"><p>본편에서 클리어한 보스에게 다시 도전하세요.</p>
     <p>체력 100 · 목숨 3 · 필살기 100 · 뇌격 3회로 시작합니다.<br>본편 진행과 점수 기록은 유지됩니다.</p>
-    <div id="challengeList"></div></div>
+    <div class="challenge-roster"><canvas id="barelChallengePreview" width="200" height="250" aria-label="바렐 대기 모션"></canvas><div id="challengeList"></div></div></div>
     <div class="actions"><button class="btn secondary" id="btnChallengeBack">타이틀로</button></div>
   </div>
   <div class="screen dialog" id="challengeResult"><h2 id="challengeResultTitle"></h2>
@@ -460,6 +462,16 @@
 <script src="zone-art.js"></script>
 <script src="zone-runtime.js"></script>
 <script src="barel-art.js"></script>
+<script src="src/animation/aseprite.js"></script>
+<script src="src/animation/barel-combo0.js"></script>
+<script src="src/animation/barel-combo1.js"></script>
+<script src="src/animation/barel-combo2.js"></script>
+<script src="src/animation/barel-idle.js"></script>
+<script src="src/animation/barel-walk.js"></script>
+<script src="src/animation/barel-dash.js"></script>
+<script src="src/animation/barel-jump.js"></script>
+<script src="src/animation/barel-air-attack.js"></script>
+<script src="src/animation/barel-grabbed.js"></script>
 <script src="barel-runtime.js"></script>
 <script src="viesa-art.js"></script>
 <script src="viesa-runtime.js"></script>
