@@ -1,7 +1,5 @@
 'use strict';
-// One flag selects the complete replacement. Legacy boss4 code/art stays intact.
-const USE_VARGUL_V136=globalThis.VARGUL_V136_OVERRIDE!==false;
-const VARGUL_SHEETS=USE_VARGUL_V136?VARGUL_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;}):[];
+const VARGUL_SHEETS=VARGUL_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;});
 const VARGUL_MELEE_FRAMES={};
 const VARGUL_MELEE_READY=Promise.all(Object.entries(VARGUL_MELEE_SOURCES).map(async([kind,src])=>{
   const im=new Image();im.src=src;await im.decode();
@@ -43,7 +41,7 @@ const VARGUL_READY=Promise.all([...VARGUL_SHEETS.map(im=>im.decode()),VARGUL_MEL
 VARGUL_READY.catch(()=>{});
 const VARGUL_DEBUG=globalThis.VARGUL_DEBUG_OVERRIDE===true||new URLSearchParams(location.search).get('debug')==='1';
 let vargulDebug=false,vargulDebugMove=0,vargulRepeat=null,vargulRemains=[];
-function isVargul(e){return USE_VARGUL_V136&&e?.type==='boss4';}
+function isVargul(e){return e?.type==='boss4';}
 function vargulData(e){return e.vargul||={cooldowns:{},pressure:0,forceSweep:false,repeats:0,lastMove:null,token:0,stats:{runs:[],hits:[],events:[]}};}
 function vargulHazards(e,kind){return hazards.filter(z=>z.type==='vargul'&&z.owner===e&&!z.dead&&(!kind||z.kind===kind));}
 function clearVargulHazards(e){for(const z of vargulHazards(e))z.dead=true;}
@@ -590,7 +588,6 @@ function drawVargulBoxes(e){
   ctx.save();ctx.lineWidth=1;box(geo.body,'#6dff9e');if(e.vargul?.current?.attack)box(vargulAttackBox(e,e.vargul.current),'#ff5276');ctx.restore();
 }
 function drawVargulHazards(ground=false){
-  if(!USE_VARGUL_V136)return;
   for(const z of hazards){
     if(z.type!=='vargul'||z.dead)continue;
     const t=Math.max(0,z.age/MS),floor=['sword','cross','ultimate'].includes(z.kind),waiting=z.kind==='ice_wave'||floor&&!z.boom&&z.stage!=='impact';
@@ -666,7 +663,7 @@ function vargulDebugStart(){
   spawnWave({e:[['boss4',1]],boss:true});
 }
 function vargulDebugKey(code){
-  if(!VARGUL_DEBUG||!USE_VARGUL_V136)return false;
+  if(!VARGUL_DEBUG)return false;
   if(code==='F2'){vargulDebugStart();return true;}
   if(code==='F8'){vargulDebug=!vargulDebug;aurelionDebug=vargulDebug;return true;}
   const e=enemies.find(isVargul);if(!e)return false;

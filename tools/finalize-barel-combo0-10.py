@@ -1,0 +1,37 @@
+"""Write registration metadata without modifying any image pixels."""
+import hashlib
+import json
+from pathlib import Path
+
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[1]
+folder = ROOT / "assets/aseprite/barel-combo0-10"
+source = folder / "source/original.png"
+digest = "16f5ba967deea50fec789e309c513e1763a5f1611e5b8dbd9c8132bb9d03c413"
+assert hashlib.sha256(source.read_bytes()).hexdigest() == digest
+(folder / "source").mkdir(exist_ok=True)
+boxes = [Image.open(folder / f"F{i:02}.png").getbbox() for i in range(1, 11)]
+audit = json.loads((folder / "separation.json").read_text())
+origin = audit["anchor"]
+neutral_height = boxes[0][3] - boxes[0][1]
+metadata = {
+    "schemaVersion": 1, "character": "barel", "attackId": "combo0",
+    "clip": "basic-attack",
+    "sprite": "../exports/barel-combo0-10/barel-combo0-10.json",
+    "anchor": origin,
+    "frameOffsets": [[0, origin[1]-box[3]] for box in boxes],
+    "renderScale": 142 / neutral_height,
+    "expectedDurationsMs": [40, 30, 35, 25, 25, 30, 45, 25, 40, 55],
+    "combat": {"durationMs": 350, "activeStartMs": 128.5,
+               "activeEndMs": 230, "comboLinkMs": 267.5},
+    "source": {"file": "source/original.png", "sha256": digest,
+               "resampled": False, "redrawn": False},
+    "alignment": {"referenceLegacyHeight": 142, "newNeutralHeight": neutral_height,
+                  "canvasGround": origin[1], "worldOffsetsApplied": False,
+                  "note": "Shared render scale and sole corrections only. Source poses and retained RGBA are preserved."},
+}
+(folder / "barel-combo0-10.animation.json").write_text(
+    json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+print("Saved Barel combo0 metadata and preserved original source")

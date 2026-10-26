@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "attackId": "combo0",
+  "clip": "basic-attack",
+  "sprite": "../exports/tests/black-knight-basic-attack-350ms.json",
+  "anchor": [67, 143],
+  "offsetUnits": "source-pixels-before-scale-and-facing",
+  "frameOffsets": [[0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],
+  "expectedDurationsMs": [65,55,50,50,55,75],
+  "combat": {
+    "durationMs": 350,
+    "activeStartMs": 128.5,
+    "activeEndMs": 230,
+    "comboLinkMs": 267.5
+  },
+  "movementReference": { "windMs": 90, "actMs": 110, "stepWorld": 8, "spriteScale": 0.72 },
+  "groundAnalysis": {
+    "alphaThreshold": 128,
+    "soleRegion": [0,139,100,143],
+    "bottomPixelY": [142,142,142,142,142,142],
+    "soleCentroidX": [60.27,34.75,30.88,30.31,54.77,59.54],
+    "classification": "World advancement is independent of local stance changes. Sole-region centroids do not identify a persistent planted foot; sliding remains unconfirmed. No compensating offsets applied."
+  }
+}

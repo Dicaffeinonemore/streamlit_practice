@@ -1,8 +1,5 @@
 'use strict';
-// One flag selects the Sovereign. The legacy boss5 (블랙 문 엠페러) code and art stay intact;
-// SOVEREIGN_OVERRIDE=false before the scripts load restores it.
-const USE_SOVEREIGN=globalThis.SOVEREIGN_OVERRIDE!==false;
-const SOV_SHEETS=USE_SOVEREIGN?SOVEREIGN_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;}):[];
+const SOV_SHEETS=SOVEREIGN_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;});
 Promise.all(SOV_SHEETS.map(im=>im.decode())).catch(()=>{});
 const SOV_R=SOVEREIGN_RULES,SOV_A=SOVEREIGN_ART;
 // Fist body box: half extents of the gauntlet drawing in world px.
@@ -10,7 +7,7 @@ const SOV_FIST={len:SOV_A.fistLength,h:SOV_A.fistHeight,hw:SOV_A.fistLength*.45,
 const SOV_FIRST_STAGE={direct:'wind',slam:'rise',hammer:'rise',grab:'wind',clap:'move',wave:'rise',wall:'move',whirl:'warn',
   backhand:'warn',meteor:'rise',ultimate:'merge',beam:'charge'};
 let sovereignRemains=[];
-function isSovereign(e){return USE_SOVEREIGN&&e?.type==='boss5';}
+function isSovereign(e){return e?.type==='boss5';}
 function sovP2(e){return e.p2shown?1:0;}
 function sovData(e){
   return e.sov||={now:0,jobs:[],cooldowns:{},marks:[],waves:[],fx:[],pressure:0,pressureT:0,forceBackhand:false,
@@ -57,7 +54,7 @@ function sovImpact(e,f){sovFx(e,'fist_impact',f.x,f.y,10,80,70,18);shake=Math.ma
 // ---------------------------------------------------------------- Barel hits the fists (fists are shields)
 // Returns true when a fist (or the iron wall) took the strike: the body is not hit by it.
 function strikeSovereignFists(reach,behind=8,hitSet=player.hitSet,o={}){
-  if(!USE_SOVEREIGN||!hitSet)return false;
+  if(!hitSet)return false;
   const p=player,x=o.x??p.x,y=o.y??p.y,h=o.h??p.z,face=o.face??p.face,depth=o.depth??24;
   let blocked=false;
   for(const e of enemies){
@@ -791,7 +788,6 @@ function drawSovGiant(e,s){
 }
 // Fists are separate objects in the depth-sorted list; the back fist goes behind the body.
 function sovereignDrawList(list){
-  if(!USE_SOVEREIGN)return;
   for(const e of enemies){
     if(!isSovereign(e)||!e.sov)continue;
     const s=e.sov;
@@ -804,7 +800,6 @@ function sovereignDrawList(list){
   }
 }
 function drawSovereignGround(){
-  if(!USE_SOVEREIGN)return;
   for(const r of sovereignRemains){
     sovPaint(SOV_A.clips.death.at(-1),r.x,r.y,{face:r.face});
     for(const f of r.fists)sovPaint(SOV_A.clips.fallen_p2[1],f.x,f.y,{face:f.face});
@@ -828,7 +823,6 @@ function drawSovereignGround(){
   }
 }
 function drawSovereignTop(){
-  if(!USE_SOVEREIGN)return;
   for(const e of enemies){
     if(!isSovereign(e)||!e.sov)continue;
     const s=e.sov,beam=s.jobs.find(j=>j.id==='beam'&&j.stage==='fire');

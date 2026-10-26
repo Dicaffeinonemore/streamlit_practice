@@ -1,12 +1,10 @@
 'use strict';
-// One startup flag selects the complete 1.33 integration, not merely its art.
-const USE_AURELION_V133 = globalThis.AURELION_V133_OVERRIDE !== false;
 const AURELION_K = .55 * .85;
 const AURELION_SFX = {kneel_voice:'bwind',holy_chant:'mcharge',holy_strike:'pillar',armor_fall:'land',
   armor_rise:'bwind',royal_decree:'phase2',royal_roar:'phase2',roar_short:'bcharge',grunt_lift:'bwind',
   slam_impact:'land',blade_stuck:'hit',swing_heavy:'swing',blade_charge:'mcharge',wave_release:'bwave',
   guard_ring:'mcharge',parry_clang:'hit',heavy_breath:'bwind',whirl:'swing'};
-const AURELION_SHEETS = USE_AURELION_V133 ? AURELION_ART.sheets.map(src => {const im=new Image();im.src=src;return im;}) : [];
+const AURELION_SHEETS = AURELION_ART.sheets.map(src => {const im=new Image();im.src=src;return im;});
 const AURELION_READY = Promise.all(AURELION_SHEETS.map(im=>im.decode()));
 // A failed image uses the retained renderer; combat remains deterministic.
 AURELION_READY.catch(()=>{});
@@ -14,7 +12,7 @@ const aurelionMoves=AURELION_ART.timing;
 const aurelionRules=AURELION_ART.boss;
 const AURELION_ATTACKS=['combo','sword_wave','cleave','charge','judgment','guard','whirl','taunt'];
 let aurelionDebug=false;
-function isAurelion(e){return USE_AURELION_V133 && e?.type==='boss3';}
+function isAurelion(e){return e?.type==='boss3';}
 function aurelionData(e){return e.aurelion ||= {cooldowns:{},pressure:0,forceGuard:false,lastMove:null,repeats:0,halo:false,stats:{events:{},opportunities:0,hits:[]}};}
 function aurelionIn(ranges,f){return (ranges||[]).some(([a,b])=>f>=a&&f<=b);}
 function aurelionDrawing(id,f=0){const m=aurelionMoves[id];if(m.loop)f%=m.total_frames;return m.drawings.find(d=>f<d.start+d.duration)||m.drawings.at(-1);}
@@ -110,7 +108,6 @@ function chaseAurelion(e) {
   if(pat)startPat(e,pat);else e.atkCd=6;
 }
 function reactAurelionAttack() {
-  if(!USE_AURELION_V133)return;
   for(const e of enemies)if(isAurelion(e)&&e.st==='chase'&&!e.phaseT&&player.st!=='down') {
     const a=aurelionData(e);
     if(!a.cooldowns.guard&&Math.abs(e.x-player.x)<170*AURELION_K&&Math.abs(e.y-player.y)<20&&
@@ -306,7 +303,7 @@ function drawAurelionBoxes(e) {
   ctx.save();ctx.lineWidth=1;for(const b of d.hurtboxes||[])draw(b,'#71ff9a');for(const b of d.hitboxes||[])draw(b.box,'#ff5276');ctx.restore();
 }
 function updateAurelionHazard(z) {
-  if(!USE_AURELION_V133||z.type!=='aurelion')return false;
+  if(z.type!=='aurelion')return false;
   const e=z.owner,f=z.age/MS-(z.delay||0),def=AURELION_ART.projectiles[z.kind];
   if(e?.st==='dead'||e?.phaseT>0){z.dead=true;return true;}
   if(f<0)return true;
@@ -325,7 +322,6 @@ function updateAurelionHazard(z) {
   return true;
 }
 function drawAurelionHazards() {
-  if(!USE_AURELION_V133)return;
   for(const z of hazards)if(z.type==='aurelion'&&!z.dead) {
     const f=z.age/MS-(z.delay||0);if(f<0)continue;
     const def=AURELION_ART.projectiles[z.kind],fx=AURELION_ART.effects[z.fx];
@@ -338,7 +334,6 @@ function drawAurelionHazards() {
 }
 let aurelionPortrait=null;
 function getAurelionPortrait() {
-  if(!USE_AURELION_V133)return null;
   const f=aurelionFrame('idle'),im=AURELION_SHEETS[f.sheet];if(!im?.naturalWidth)return null;
   if(!aurelionPortrait){const c=document.createElement('canvas');c.width=c.height=64;c.hd=true;
     const [x,y,w,h]=f.atlas;c.getContext('2d').drawImage(im,x+w*.2,y+h*.03,w*.65,h*.35,0,0,64,64);aurelionPortrait=c;}

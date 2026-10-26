@@ -10,18 +10,30 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const scripts = JSON.parse(fs.readFileSync(path.join(root, 'server.py'), 'utf8').match(/SCRIPTS = (\[.*?\])/)[1]);
 for (const name of scripts) new vm.Script(fs.readFileSync(path.join(root, name), 'utf8'), { filename: name });
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.AURELION_V133==='false'?'<script>globalThis.AURELION_V133_OVERRIDE=false</script>':'')+(process.env.VARGUL_V136==='false'?'<script>globalThis.VARGUL_V136_OVERRIDE=false</script>':'')+(process.env.VARGUL_SUITE?'<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>':''));
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.VARGUL_SUITE?'<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>':''));
 const bgmPath=path.join(root,'assets/bgm/boss.mp3');
 const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
 const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
 const allowed = new Set(['index.html', ...scripts]);
+for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-grabbed-10/barel-grabbed-10.animation.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-air-attack-10/barel-air-attack-10.animation.json','assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.json','assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-jump-10/barel-jump-10.animation.json','assets/aseprite/exports/barel-jump-10/barel-jump-10.json','assets/aseprite/exports/barel-jump-10/barel-jump-10.png'])allowed.add(name);
+for(let i=0;i<3;i++){const name=`barel-combo${i}-dot-10`;for(const file of [`assets/aseprite/${name}/${name}.animation.json`,`assets/aseprite/exports/${name}/${name}.json`,`assets/aseprite/exports/${name}/${name}.png`])allowed.add(file);}
+for(const name of ['assets/aseprite/barel-dash-10/barel-dash-10.animation.json','assets/aseprite/exports/barel-dash-10/barel-dash-10.json','assets/aseprite/exports/barel-dash-10/barel-dash-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-walk-10/barel-walk-10.animation.json','assets/aseprite/exports/barel-walk-10/barel-walk-10.json','assets/aseprite/exports/barel-walk-10/barel-walk-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-idle-10/barel-idle-10.animation.json','assets/aseprite/exports/barel-idle-10/barel-idle-10.json','assets/aseprite/exports/barel-idle-10/barel-idle-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-combo2-10/barel-combo2-10.animation.json','assets/aseprite/exports/barel-combo2-10/barel-combo2-10.json','assets/aseprite/exports/barel-combo2-10/barel-combo2-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-combo1-10/barel-combo1-10.animation.json','assets/aseprite/exports/barel-combo1-10/barel-combo1-10.json','assets/aseprite/exports/barel-combo1-10/barel-combo1-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-combo0-10/barel-combo0-10.animation.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.png'])allowed.add(name);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
   if(name==='favicon.ico'){res.writeHead(204).end();return;}
   if(name==='assets/bgm/boss.mp3'&&fs.existsSync(bgmPath)){res.setHeader('Content-Type','audio/mpeg');res.end(fs.readFileSync(bgmPath));return;}
   if(name==='production.html'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(embedded.replace('<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>',''));return;}
   if (name !== 'embedded.html' && !allowed.has(name)) { res.writeHead(404).end(); return; }
-  res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
+  res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8');
   res.end(name === 'embedded.html' ? embedded : (name==='index.html'?html:fs.readFileSync(path.join(root, name))));
 });
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-test-'));
@@ -332,7 +344,8 @@ function combatChecks() {
   const missing = new Set(), originalFrame = hdFrame;
   hdFrame = (id, name) => { if (HD[id].N[name] === undefined) missing.add(id + ':' + name); return originalFrame(id, name); };
   let patterns = 0;
-  for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const p2 of [false, true]) for (const pat of Object.keys(type==='boss4'&&USE_VARGUL_V136?VARGUL_TIMELINES[p2?1:0]:ET[type].pats)) {
+  const bossPats = type => { const id0 = nextId, pats = mkEnemy(type, 0, 0).d.pats; nextId = id0; return pats; };
+  for (const type of ['boss1', 'boss2', 'boss3', 'boss4', 'boss5']) for (const p2 of [false, true]) for (const pat of Object.keys(type==='boss4'?VARGUL_TIMELINES[p2?1:0]:bossPats(type))) {
     reset(); startStage(Number(type.slice(-1)) - 1); scene = 'play'; player.x = 210; player.inv = 99999;
     const b = mkEnemy(type, 370, 420); enemies = [b]; if (p2) {b.hp = b.max * .4;b.p2shown=true;} startPat(b, pat);
     for (let i = 0; i < 270 && b.st === 'pat'; i++) { updEnemy(b); updHazards(); updFx(); if (i % 45 === 0) render(); }
@@ -388,6 +401,16 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_AIR_ATTACK_SUITE){await ready(base+'/index.html');await require('./barel-air-attack-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_JUMP_SUITE){await ready(base+'/index.html');await require('./barel-jump-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_DASH_SUITE){await ready(base+'/index.html');await require('./barel-dash-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_WALK_SUITE){await ready(base+'/index.html');await require('./barel-walk-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_IDLE_SUITE){await ready(base+'/index.html');await require('./barel-idle-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO2_SUITE){await ready(base+'/index.html');await require('./barel-combo2-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO1_SUITE){await ready(base+'/index.html');await require('./barel-combo1-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.STAGE_WIPE_SUITE){await ready(base+'/index.html');await require('./stage-wipe.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.BAREL_COMBO0_SUITE){await ready(base+'/index.html');await require('./barel-combo0-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.JUDGMENT_SUITE){await ready(base+'/embedded.html');await require('./judgment.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_UI_SUITE){await ready(base+'/embedded.html');await require('./viesa-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.MORGRA_DEATH_SUITE){await ready(base+'/embedded.html');await require('./morgra-death.cjs')({evaluate,call,errors,root});return;}
@@ -803,7 +826,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
         if(b.invuln||b.phaseT||b.hp!==2200)return false;
         damageEnemy(b,b.max*2,true);if(b.st!=='dead')return false;
       }
-      return ET.boss1.hp<ET.boss2.hp&&ET.boss2.hp<ET.boss3.hp&&ET.boss3.hp<ET.boss4.hp&&ET.boss4.hp<ET.boss5.hp;
+      const id0=nextId,hp=['boss1','boss2','boss3','boss4','boss5'].map(t=>mkEnemy(t,0,0).max);nextId=id0;return hp.every((v,i)=>!i||hp[i-1]<v);
     })()`),true,'Stage difficulty increases; other bosses only reset groggy and boost phase damage');
     assert.equal(await evaluate(`(()=>{
       player=newPlayer();startStage(1);scene='play';player.inv=0;player.x=220;player.y=420;
