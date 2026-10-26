@@ -184,7 +184,10 @@ function vargulBoxHit(e,box,depth,oldX=e.x){
   return p.x+playerBodyHalfWidth()>=left&&p.x-playerBodyHalfWidth()<=right&&Math.abs(p.y-e.y)<depth*playerHurtScale()&&p.z+playerBodyHeight()>=e.z+h&&p.z<=e.z+h+height;
 }
 function vargulHurt(e,attack,source=e){
-  const before=player.hp,hit=hurtPlayer(attack.damage,Math.sign(player.x-source.x)||source.face||e.face,!!attack.knockdown,source);
+  const current=vargulData(e).current;
+  const box=source===e&&current?.attack?vargulAttackBox(e,current):null;
+  const hitHeight=box?playerImpactHeight(e.z+box[1],e.z+box[1]+box[3]):(source.h??player.z+56);
+  const before=player.hp,hit=hurtPlayer(attack.damage,Math.sign(player.x-source.x)||source.face||e.face,!!attack.knockdown,source,{hitHeight,hitstunTicks:attack.hitstunTicks??attack.hitstun});
   if(hit){const a=vargulData(e);a.stats.hits.push({id:a.move,elapsed:a.cursor,base:attack.damage,damage:before-player.hp});if(a.stats.hits.length>200)a.stats.hits.shift();}
   return hit;
 }

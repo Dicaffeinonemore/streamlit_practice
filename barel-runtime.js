@@ -3,12 +3,15 @@ const BAREL_ATLAS = new Image(); BAREL_ATLAS.src = BAREL_ART.atlas;
 const BAREL_PORTRAIT = new Image(); BAREL_PORTRAIT.src = BAREL_ART.portrait; BAREL_PORTRAIT.hd = true;
 // Match the ordinary soldiers' display scale and pixel sampling.
 const BAREL_PLAYER_SCALE = .72;
+// Keep the original seven-frame atlas clip accessible under its backup name.
+BAREL_ART.clips.hurt_old ||= BAREL_ART.clips.hurt;
 function barelFrame(name, progress = 0, loop = false) {
   const frames = BAREL_ART.clips[name];
   return frames && frames[Math.min(frames.length-1, Math.max(0, Math.floor((loop ? progress%1 : Math.min(.99999,progress))*frames.length)))];
 }
 function barelPlayerFrame() {
   const p=player,t=p.t*MS;
+  if(p.st==='dash_attack')return globalThis.BarelDashAttack?.frameFor(p,MS)||barelFrame('thrust',p.t/47);
   if(p.st==='grabbed')return globalThis.BarelGrabbed?.frameFor(p,MS) || barelFrame('hook',t/650,true);
   if(p.st==='atk') {
     const air=globalThis.BarelAirAttack?.frameFor(p,MS);
@@ -22,8 +25,8 @@ function barelPlayerFrame() {
   if(p.st==='special') return t<1260?barelFrame('super1',t/1260):barelFrame('super2',(t-1260)/740);
   if(p.st==='cast') return barelFrame('cast',t/MAGIC.dur);
   if(p.st==='dash') return globalThis.BarelDash?.frameFor(p,MS,DASH.dur) || barelFrame('dash',t/DASH.dur);
-  if(p.st==='hurt') return barelFrame('hurt',t/280);
-  if(p.st==='down') return barelFrame('down',t/930);
+  if(p.st==='hurt') return globalThis.BarelHurt?.frameFor(p)||barelFrame('hurt_old',t/280);
+  if(p.st==='down') return globalThis.BarelDown?.frameFor(p)||barelFrame('down',t/930);
   if(p.st==='dead') return barelFrame('death',t/1000);
   const jump=globalThis.BarelJump?.frameFor(p,MS,scene!=='clear'&&scene!=='ending');
   if(jump)return jump;
@@ -43,7 +46,7 @@ function paintBarel(frame,actor,alpha=1) {
   const scale=BAREL_PLAYER_SCALE*(frame.renderScale || 1);
   ctx.scale(scale,scale);
   ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
-  if(actor.flash>0 && UX.options.flash)ctx.filter='brightness(1.8)';
+  if(actor.flash>0 && UX.options.flash)ctx.filter=actor.st==='hurt'?'brightness(1.5) sepia(1) saturate(8) hue-rotate(310deg)':'brightness(1.8)';
   ctx.drawImage(image,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
 }
 // Shared stable framing for ordinary and boss-challenge selection previews.
@@ -84,6 +87,9 @@ function drawBarelPlayer() {
     if(u>=0&&u<1)fx(p.combo===1?'rise':p.combo===2?'impact':'slash',u);
   }
   if(p.st==='dash'&&!globalThis.BarelDash?.hasBakedEffects())barelEffect('dust',t/DASH.dur,p.x-p.face*24,p.y+2,120,30,p.face);
+  if(p.st==='dash_attack'&&p.t>=3&&p.t<14)barelEffect('dust',(p.t-3)/11,p.x-p.face*24,p.y+2,120,30,p.face);
+  for(const dust of globalThis.BarelJump?.dustFor(p)||[])
+    barelEffect('dust',dust.age/8,dust.x,dust.y,58,16,dust.face,.65);
   if(p.st==='skill' && SKILLS[p.skill]) {
     const start={thrust:180,slam:330,whirl:150,leap:560,redwave:220}[p.skill];
     const u=(t-start)/(SKILLS[p.skill].dur-start);
