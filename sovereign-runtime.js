@@ -41,9 +41,9 @@ function sovTouch(f,o={}){
   return p.st!=='dead'&&p.x>=Math.min(f.x,from)-hw&&p.x<=Math.max(f.x,from)+hw&&
     Math.abs(p.y-f.y)<(o.depth??20)*playerHurtScale()&&p.z<=hi&&p.z+playerBodyHeight()>=lo;
 }
-function sovHurt(e,job,key,damage,kd,from,push=0){
+function sovHurt(e,job,key,damage,kd,from,push=0,hitHeight=from.h??player.z+56){
   if(job.hits.has(key))return false;
-  const dir=Math.sign(player.x-from.x)||e.face,hit=hurtPlayer(damage,dir,kd,e);
+  const dir=Math.sign(player.x-from.x)||e.face,hit=hurtPlayer(damage,dir,kd,e,{hitHeight});
   if(hit){job.hits.add(key);if(push)player.vx=dir*push;}
   return hit;
 }
@@ -414,7 +414,7 @@ function sovJobTick(e,s,job){
         [a,b].forEach((f,i)=>{
           const ang=th+i*Math.PI,old=f.x;
           f.x=e.x+Math.cos(ang)*Wh.rx;f.y=e.y+Math.sin(ang)*Wh.ry;f.h=Wh.height;f.face=-Math.sign(Math.sin(ang))||1;f.trail=true;f.glow='white';
-          if(sovTouch(f,{fromX:old,low:Wh.low,high:Wh.high,depth:22}))sovHurt(e,job,'spin',Wh.damage,false,e,Wh.push);
+          if(sovTouch(f,{fromX:old,low:Wh.low,high:Wh.high,depth:22}))sovHurt(e,job,'spin',Wh.damage,false,e,Wh.push,playerImpactHeight(Wh.low,Wh.high));
         });
         if(st>=Wh.spin-1){job.dangerDone=true;go('dazed');}
       }else if(job.stage==='dazed'){
@@ -433,7 +433,7 @@ function sovJobTick(e,s,job){
       }else if(job.stage==='swing'){
         job.danger=true;a.trail=true;
         const old=a.x,left=K.swing-st;a.x+=(job.tx-a.x)/left;a.y+=(job.lane-a.y)/left;a.h=60;
-        if(sovTouch(a,{fromX:old,depth:26}))sovHurt(e,job,'bh',K.damage,false,e,K.push);
+        if(sovTouch(a,{fromX:old,depth:26}))sovHurt(e,job,'bh',K.damage,false,e,K.push,a.h);
         if(st>=K.swing-1){job.dangerDone=true;go('recover');}
       }else if(job.stage==='recover'){a.trail=false;a.glow=null;if(st>=rec-1)sovEndJob(e,s,job);}
       break;
@@ -516,7 +516,7 @@ function sovJobTick(e,s,job){
         if(st>=B.charge-1){e.y=job.lane;go('fire');sfx('bolt');shake=Math.max(shake,6);}
       }else if(job.stage==='fire'){
         job.danger=true;if(body)body.drawing=9+Math.floor(st/6)%4;
-        if(Math.abs(p.y-job.lane)<=B.depth*playerHurtScale()&&p.z+playerBodyHeight()>=B.low&&p.z<=B.high&&(p.x-e.x)*e.face>0)sovHurt(e,job,'beam',B.damage,false,e);
+        if(Math.abs(p.y-job.lane)<=B.depth*playerHurtScale()&&p.z+playerBodyHeight()>=B.low&&p.z<=B.high&&(p.x-e.x)*e.face>0)sovHurt(e,job,'beam',B.damage,false,e,0,playerImpactHeight(B.low,B.high));
         if(st>=fire-1){job.dangerDone=true;go('recovery');}
       }else if(job.stage==='recovery'){
         if(body)body.drawing=13+Math.min(3,Math.floor(st/B.recovery*4));
