@@ -1,5 +1,9 @@
 # 흑월의 기사 — BLACK MOON KNIGHT
 
+## v1.42 — 바렐 3연타 프레임 데이터
+
+일반 적의 피격 경직이 모든 공격에 18틱으로 고정되어 있어, 바렐의 2타 → 3타(22틱) 사이에 적이 먼저 풀리던 문제를 고쳤습니다. 공격별 피격 경직은 `combat-data.js` 한 곳에서 관리하며(일섬 22틱, 역일섬 28틱), 보스·비에사·스킬은 기존 값 그대로입니다. 실측 표는 [docs/barel-frame-data.md](docs/barel-frame-data.md), 변경 내용은 [v1.42 패치 노트](patch_note/patch_1.42.txt)에 있습니다. 검증: `FRAME_DATA_SUITE=1 node tests/regression.cjs` → `node tools/report_frame_data.cjs`.
+
 ## v1.41 — 플레이어블 궁수 비에사 추가(필살기 흑월 난사 포함)
 
 새 게임의 캐릭터 선택에서 바렐(흑기사) 또는 비에사(궁수)를 고릅니다. 선택한 캐릭터는 저장·이어하기·재시작에 함께 기록됩니다. 이전 저장은 바렐로 유지됩니다.

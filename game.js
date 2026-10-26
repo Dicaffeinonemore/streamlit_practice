@@ -178,10 +178,10 @@ for (const i of [3, 4]) for (const w of STAGES[i].waves) if (!w.boss && w.e.leng
 const SP_MAX = 100;           // 필살기 게이지: 적을 때릴수록 차오른다
 const GROGGY_TICKS = 300;     // 보스 기절 시간 (5초 = 300틱)
 const ATK = {
-  c1:  { ...HATK[0], dmg: 10, reach: 80, kd: false, step: 8,  stop: 3, fx: 0 },   // 일섬: 어깨 위에서 대각선으로 내려 벤다
-  c2:  { ...HATK[1], dmg: 11, reach: 82, kd: false, step: 8,  stop: 3, fx: 1 },   // 역일섬: 낮은 곳에서 위로 올려 벤다
-  c3:  { ...HATK[2], dmg: 16, reach: 98, kd: true,  step: 16, stop: 7, fx: 2 },   // 참격: 머리 위로 들어 땅까지 내려찍고 검기 발사
-  air: { dmg: 14, reach: 64, kd: true, stop: 5, fx: 2 },
+  c1:  { ...HATK[0], id: 'c1', dmg: 10, reach: 80, kd: false, step: 8,  stop: 3, fx: 0 },   // 일섬: 어깨 위에서 대각선으로 내려 벤다
+  c2:  { ...HATK[1], id: 'c2', dmg: 11, reach: 82, kd: false, step: 8,  stop: 3, fx: 1 },   // 역일섬: 낮은 곳에서 위로 올려 벤다
+  c3:  { ...HATK[2], id: 'c3', dmg: 16, reach: 98, kd: true,  step: 16, stop: 7, fx: 2 },   // 참격: 머리 위로 들어 땅까지 내려찍고 검기 발사
+  air: { id: 'air', dmg: 14, reach: 64, kd: true, stop: 5, fx: 2 },
 };
 const LINK_MS = 420, BUF_MS = 220;      // 다음 타 연결 허용 시간 / 선입력 유지 시간
 // 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
@@ -586,7 +586,7 @@ function playerStrike(A) {
   for (const e of enemies) {
     if (!canHit(e) || p.hitSet.has(e) || sovBlock&&isSovereign(e)) continue;
     if (inReach(p, e, A.reach, 24, 55)) {
-      p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd, A.fx);
+      p.hitSet.add(e); damageEnemy(e, Math.round(A.dmg * mul), A.kd, A.fx, false, A.id);
       if(A.pushScale&&!e.boss&&e.hp>0)e.vx*=A.pushScale;
       p.sp = Math.min(SP_MAX, p.sp + (A.kd ? 8 : 5)); landed = true;
     }
@@ -961,7 +961,8 @@ function heal(n) {
 
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
-function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
+// attackId: combat-data.js 의 공격 이름. 일반 적의 피격 경직 길이를 정한다 (없으면 적 기본값)
+function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null) {
   if(isVargul(e)&&interceptVargulDamage(e))return;
   if(isSovereign(e)&&interceptSovereignDamage(e))return;
   if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
@@ -1018,7 +1019,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   }
   if (e.type === 'brute' && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
   if (kd) { e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 4; }
-  else { e.st = 'hurt'; e.t = 0; e.vx = dir * e.d.kb * 0.6; }
+  else { e.st = 'hurt'; e.t = 0; e.hurtT = enemyHitstun(e, attackId); e.vx = dir * e.d.kb * 0.6; }
   e.pat = null;
 }
 function spawnAdds(types) {
@@ -1221,7 +1222,7 @@ function updEnemy(e) {
 
     case 'hurt':
       e.x += e.vx; e.vx *= 0.85;
-      if (e.t > (e.boss ? 10 : 18)) { e.st = 'chase'; e.t = 0; e.wait = rand(0, 12); }
+      if (e.t > (e.boss ? 10 : (e.hurtT || 18))) { e.st = 'chase'; e.t = 0; e.wait = rand(0, 12); }
       break;
 
     case 'stun':                                    // 5초간 기절
