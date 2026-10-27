@@ -1,0 +1,28 @@
+v1.42 — 바렐 대시 공격(대시 찌르기) 추가
+
+대시 중 J/Z 공격 및 대시 종료 후 6틱 내 공격으로 발동. 반대 방향 입력 시 돌아서며 지상 전용.
+10프레임, 47틱. 5~6번 공격, 8번부터 일반 공격·점프·대시 캔슬.
+적에게 명중한 경우 6번 종료부터 스킬 캔슬. 무적 없음. 별도 기술 쿨타임 없음.
+1타 피해의 1.4배(14), 넉다운, 기존 넉다운 넉백/경직, SP +8, 히트스톱 6.
+기존 찌르기의 깊이 허용치 38과 강공격 적중 효과/효과음 사용.
+
+원본: assets_src/barel/barel_dash_attack.png (1600x538 RGBA)
+알파 연결 요소 10개 + 작은 분리 조각을 가장 가까운 프레임에 합침.
+무손실 PNG, 원본 픽셀 유지, nearest 렌더, Aseprite JSON/animation manifest.
+긴 칼날을 담도록 공통 셀 640x640, 피벗 [320,576]. 프레임마다 몸통 중앙/발바닥을 피벗에 정렬.
+기존 idle 뿔 제외 몸 키 258px × 0.5035460993 / 원본 1번 몸 키 227px
+= renderScale 0.5723123067. 월드 배율은 여기에 기존 0.72 적용.
+5번 칼끝: 발 피벗 기준 전방 103.8403px, 높이 56.0408px.
+공격 박스(월드 좌표, 바라보는 방향 기준): x [8,103.840], 높이 [44.041,68.041], 깊이 ±38.
+이동량은 몸 키의 0.92배(표의 틱별 수치 합계)를 적용.
+
+실행 확인 범위: 게임 시작 및 대시 중 공격 발동. 별도 테스트 단계/회귀 테스트 없음.
+로컬 서버는 병렬 아트 파일 요청이 누락되지 않도록 ThreadingHTTPServer로 응답.
+
+추가: tools/build-barel-dash-attack.py, src/animation/barel-dash-attack.js,
+assets_src/barel/barel_dash_attack.png,
+assets/aseprite/barel-dash-attack-10/ (F01~F10, 원본, 아틀라스, JSON manifest),
+assets/aseprite/exports/barel-dash-attack-10/ (PNG/JSON), patch_note/patch_1.42.txt.
+수정: game.js, barel-runtime.js, index.html, server.py, README.md.
+실행 결과: 실제 Shift → J 입력으로 dash → dash_attack 발동, 무적 0,
+10프레임 재생 후 free 복귀, 브라우저 예외 0.

@@ -1,0 +1,21 @@
+v1.51 — 바렐 넉다운·기상 모션 적용(10장)
+
+제작 완료한 barel-knockdown-getup-design-10 Aseprite/PNG/JSON을 down 상태에 연결.
+원본 편집용 1100ms 시간표는 보존하고 게임에서는 3/4/12/3/4/10/6/5/5/4틱(합계56)으로 배정.
+F1 준비 → F2 뒤로 휘청임 → F3 공중 낙하 → F4 등 착지 → F5 구름 → F6 누움
+→ F7 무릎 기상 → F8 일어섬 → F9 회수 → F10 준비.
+체공 중에는 F3을 유지하며 캐릭터의 기존 z를 한 번만 적용.
+기존 기상 조건 t>55 && z===0, 초기 vz=5, 넉백 방향×3.5, 감쇠0.96, 기상 무적100 유지.
+비에사/사망 모션과 피격·넉다운 조건은 변경하지 않음.
+크기는 idle F1 투구 너비40px와 신규 F1 너비52px를 비교해 배율0.3873431533 적용.
+기존 플레이어 배율0.72와 nearest 유지. 셀640×640, 피벗[320,576].
+로컬/Streamlit 자산 목록 연결. 기존 down atlas는 로딩 실패 시 대체 경로로 유지.
+
+추가: src/animation/barel-down.js, tools/finalize-barel-knockdown-getup-design-10.py,
+assets/aseprite/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.animation.json.
+수정: barel-runtime.js, index.html, server.py, README.md.
+
+실행 확인: 적 중기사의 실제 강공격 판정으로 down 진입, vz5/vx3.5 확인.
+새 10프레임 전체 표시 후 56틱에 free 복귀, 기상 무적100 확인. 브라우저 예외0.
+실행 기록: artifacts/barel-down-launch.json, 캡처 barel-down-F01.png~F10.png.
+별도 회귀 테스트 없이 게임 실행과 넉다운 재생만 확인.
