@@ -403,6 +403,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.L_SKILL_HIT_SUITE){await ready(base+'/index.html');await require('./l-skill-hit.cjs')({evaluate,errors});return;}
     if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_AIR_ATTACK_SUITE){await ready(base+'/index.html');await require('./barel-air-attack-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_JUMP_SUITE){await ready(base+'/index.html');await require('./barel-jump-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
