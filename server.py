@@ -306,7 +306,7 @@ def run_streamlit():
     height = 1000 if review else 680
     component = components.declare_component("black_moon_reference" if review else "black_moon_game", path=str(directory))
     component(height=height, key="reference" if review else "game", default=None)
-    st.caption("v1.51 · 바렐 넉다운·기상 모션 적용(10장)")
+    st.caption("v1.52 · 전투 데이터 파일 · 3연타 끊김 수정")
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):

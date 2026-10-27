@@ -11,7 +11,7 @@ function barelFrame(name, progress = 0, loop = false) {
 }
 function barelPlayerFrame() {
   const p=player,t=p.t*MS;
-  if(p.st==='dash_attack')return globalThis.BarelDashAttack?.frameFor(p,MS)||barelFrame('thrust',p.t/47);
+  if(p.st==='dash_attack')return globalThis.BarelDashAttack?.frameFor(p,MS)||barelFrame('thrust',p.t/DASH_ATTACK.frameEndTicks.at(-1));
   if(p.st==='grabbed')return globalThis.BarelGrabbed?.frameFor(p,MS) || barelFrame('hook',t/650,true);
   if(p.st==='atk') {
     const air=globalThis.BarelAirAttack?.frameFor(p,MS);

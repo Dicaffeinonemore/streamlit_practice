@@ -12,7 +12,7 @@
     get data(){return animation?.metadata;},
     frameFor(actor,tickMs){
       if(!animation||actor.st!=='dash_attack')return null;
-      const ends=[3,7,11,14,17,23,29,35,41,47];
+      const ends=root.COMBAT_FRAME_DATA.barel.dashAttack.frameEndTicks;   // combat-data.js 와 같은 표
       const index=ends.findIndex(end=>actor.t<end);
       return animation.frames[index<0?9:index];
     }

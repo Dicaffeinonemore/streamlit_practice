@@ -187,7 +187,8 @@ const ATK = {
   c3:  { ...HATK[2], ...barelAttack('c3', COMBO_RULES.moves.c3) },   // 참격: 머리 위로 들어 땅까지 내려찍고 검기 발사
   air: barelAttack('air', BAREL_COMBAT.air),
 };
-const LINK_MS = COMBAT_FRAME_DATA.input.linkMs, BUF_MS = COMBAT_FRAME_DATA.input.bufferMs;   // 다음 타 연결 허용 시간 / 선입력 유지 시간
+const LINK_MS = COMBAT_FRAME_DATA.input.linkMs, BUF_MS = COMBAT_FRAME_DATA.input.bufferMs;
+const PLAYER_DATA = COMBAT_FRAME_DATA.player, DASH_ATTACK = BAREL_COMBAT.dashAttack;   // 이동·점프·피격·넉다운 / 대시 찌르기   // 다음 타 연결 허용 시간 / 선입력 유지 시간
 // 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
 const SPECIAL = { dur: 2100, slash: 20, fin: 150 };
 // 마법 "뇌격": 두루마리 1개로 화면 안의 모든 적에게 번개. 잡몹은 쓰러지고 보스는 최대 체력의 12% 피해
@@ -222,7 +223,7 @@ function newPlayer(score = 0, characterId = selectedCharacterId) {
   const archer=characterId==='viesa';
   return { characterId:archer?'viesa':'barel', x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26*(archer ? .9 : 1), hw: 16*(archer ? .9 : 1), hp: archer?80:100, max: archer?80:100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
-    hurtKind: 'hurt_high', hurtDuration: 17, hurtFrameEnds: null,
+    hurtKind: 'hurt_high', hurtDuration: COMBAT_FRAME_DATA.player.hurt.defaultHitstunTicks, hurtFrameEnds: null,
     inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, dashGrace: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
     skill: null, skillCd: Object.fromEntries(Object.keys(SKILLS).map(id => [id, 0])), skillHits: new Set(), skillDest: 0,
     spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
@@ -461,7 +462,7 @@ function startStage(i, restored = false) {
   p.x = 80; p.y = 420; p.z = 0; p.vx = 0; p.vz = 0; p.face = 1; p.st = 'free'; p.t = 0; p.inv = 90;
   p.grab = null; p.skill = null;p.viesaAction=null;p.viesaClip=null;p.jumpTime=0;p.viesaHoverGrace=0;p.viesaAirPUsed=false;p.viesaLanding=null; for (const id in p.skillCd) p.skillCd[id] = 0;
   p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.dashGrace=0; p.spTg = null;
-  p.hurtKind='hurt_high';p.hurtDuration=17;p.hurtFrameEnds=null;
+  p.hurtKind='hurt_high';p.hurtDuration=PLAYER_DATA.hurt.defaultHitstunTicks;p.hurtFrameEnds=null;
   p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
   stageStartScore = p.score;
   if (!practice && !bossChallenge) { stageEntry = entrySnapshot(); UX.saveCheckpoint(stageEntry); }
@@ -569,20 +570,22 @@ function hurtPlayer(dmg, dir, kd, source=null, contact=null) {
   if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special' || p.st === 'grabbed') return false;
   if(!isViesa()){
     const height=contact?.hitHeight??source?.hitHeight??source?.h??(p.z+56);
-    const ticks=contact?.hitstunTicks??source?.hitstunTicks??source?.hitstun??source?.d?.hitstun??17;
-    globalThis.BarelHurt?.begin(p,height,Number.isFinite(ticks)?ticks:17);
+    const base=PLAYER_DATA.hurt.defaultHitstunTicks;
+    const ticks=contact?.hitstunTicks??source?.hitstunTicks??source?.hitstun??source?.d?.hitstun??base;
+    globalThis.BarelHurt?.begin(p,height,Number.isFinite(ticks)?ticks:base);
   }
   stat.damage += Math.min(p.hp, dmg);
   p.hp -= dmg; p.flash = 5; p.combo = 0; p.buf = 0; p.wave = false; p.skill = null;p.viesaAction=null;p.viesaHoverGrace=0;p.viesaLanding=null; chain.n = 0;
-  hitStop = Math.max(hitStop, kd ? 6 : 4); shake = Math.max(shake, kd ? 12 : 7);
+  hitStop = Math.max(hitStop, kd ? PLAYER_DATA.knockdown.hitstopTicks : PLAYER_DATA.hurt.hitstopTicks); shake = Math.max(shake, kd ? 12 : 7);
   floatText(p.x, p.y - p.z - 110, dmg, '#ff5a6a');
   impact(p.x - dir * 6, p.y, p.z + (!isViesa()&&!kd&&p.z===0?(p.hurtImpactHeight||56):56), kd ? 2 : 1, dir);
   sfx(kd ? 'hurtH' : 'hurt');
   if (p.hp <= 0) {
     p.hp = 0; p.lives--; stat.deaths++; p.st = 'dead'; p.t = 0; p.vz = 6; p.vx = dir * 4; sfx('pdie'); return true;
   }
-  if (kd || p.z > 0) { p.st = 'down'; p.t = 0; p.vz = 5; p.vx = dir * 3.5; }
-  else { p.st = 'hurt'; p.t = 0; p.vx = dir * 2; p.inv = 40; }
+  const KD = PLAYER_DATA.knockdown, HU = PLAYER_DATA.hurt;
+  if (kd || p.z > 0) { p.st = 'down'; p.t = 0; p.vz = KD.launchVz; p.vx = dir * KD.knockbackPx; }
+  else { p.st = 'hurt'; p.t = 0; p.vx = dir * HU.knockbackPx; p.inv = HU.invulnerableTicks; }
   return true;
 }
 
@@ -647,7 +650,7 @@ function startDashAttack() {
 function dashAttackStrike() {
   const p=player,box=BarelDashAttack.data?.hitbox;
   if(!box)return;
-  const damage=Math.round(ATK.c1.dmg*1.4*(p.buff>0?1.5:1));
+  const damage=Math.round(ATK.c1.dmg*DASH_ATTACK.damageRatioOfC1*(p.buff>0?1.5:1));
   strikeMorgraCrows(box.reach, -box.front);
   strikeVargulOrbs(box.reach,-box.front,p.hitSet,{depth:box.depth,damage});
   const blocked=strikeSovereignFists(box.reach,-box.front,p.hitSet,{depth:box.depth,damage,kd:true});
@@ -657,8 +660,8 @@ function dashAttackStrike() {
     if(!canHit(e)||p.hitSet.has(e)||blocked&&isSovereign(e)||dx+e.hw<box.front||dx-e.hw>box.reach||
        Math.abs(e.y-p.y)>=box.depth||e.z>box.top||e.z+height<box.bottom)continue;
     const hp=e.hp;
-    p.hitSet.add(e);damageEnemy(e,damage,true,2);
-    if(e.hp<hp){p.dashAttackHit=true;p.sp=Math.min(SP_MAX,p.sp+8);hitStop=Math.max(hitStop,6);}
+    p.hitSet.add(e);damageEnemy(e,damage,DASH_ATTACK.knockdown,2);
+    if(e.hp<hp){p.dashAttackHit=true;p.sp=Math.min(SP_MAX,p.sp+DASH_ATTACK.spGain);hitStop=Math.max(hitStop,DASH_ATTACK.hitstopTicks);}
   }
   for(const b of barrels){
     const dx=(b.x-p.x)*p.face;
@@ -670,23 +673,23 @@ function dashAttackStrike() {
 function updDashAttack(){
   const p=player,t=p.t;
   const height=BarelDashAttack.data?.bodyHeight||93.54;
-  if(t>=3&&t<7)p.x+=p.face*height*.06;
-  else if(t>=7&&t<14)p.x+=p.face*height*.08;
-  else if(t>=14&&t<17)p.x+=p.face*height*.04;
+  const step=DASH_ATTACK.move.find(m=>t>=m.fromTick&&t<m.toTick);
+  if(step)p.x+=p.face*height*step.bodyRatioPerTick;
   if(t>=3&&t<14&&t%2===1)ghost(p.x,p.y,0,'player',p.face,'#9E1A1F',150);
-  if(t===14&&!p.dashFlash){
+  const [strikeFrom,strikeTo]=DASH_ATTACK.strikeTicks;
+  if(t===strikeFrom&&!p.dashFlash){
     p.dashFlash=true;const box=BarelDashAttack.data?.hitbox;
     const x=p.x+p.face*(box?.reach||104),h=BarelDashAttack.data?.bladeTip[1]||56;
     impact(x,p.y,h,1,p.face);burst(x,p.y,h,['#ffffff','#ff9aa6','#ff3a4a']);shake=Math.max(shake,3);
   }
-  if(t>=14&&t<23)dashAttackStrike();
+  if(t>=strikeFrom&&t<strikeTo)dashAttackStrike();
   if(hit('KeyJ','KeyZ'))p.buf=BUF_MS;
-  if(t>=29){
-    if(hit(...JUMP_KEYS)){p.st='free';p.t=0;p.vz=9.6;sfx('jump');return;}
+  if(t>=DASH_ATTACK.cancelTick){
+    if(hit(...JUMP_KEYS)){p.st='free';p.t=0;p.vz=PLAYER_DATA.jump.initialVz;sfx('jump');return;}
     if(p.buf>0){startAtk(0);return;}
   }
   p.t++;
-  if(p.t>=47){p.st='free';p.t=0;}
+  if(p.t>=DASH_ATTACK.frameEndTicks[DASH_ATTACK.frameEndTicks.length-1]){p.st='free';p.t=0;}
 }
 
 function aimPlayerSkill() {
@@ -779,7 +782,7 @@ function damageBarrel(b) {
 function canStartSkill(id) {
   if(isViesa())return canStartViesaSkill(id);
   const p = player;
-  if(p?.st==='dash_attack'&&(!p.dashAttackHit||p.t<23))return false;
+  if(p?.st==='dash_attack'&&(!p.dashAttackHit||p.t<DASH_ATTACK.skillCancelOnHitTick))return false;
   if (!p || !SKILLS[id] || p.skillCd[id] > 0 || p.z > 0 || p.st === 'dead' || p.st === 'down' ||
       p.st === 'hurt' || p.st === 'special' || p.st === 'cast' || p.st === 'skill' || p.st === 'grabbed') return false;
   if (p.st === 'atk') {
@@ -898,7 +901,7 @@ function updPlayer() {
   else for (const code in SKILL_KEYS) {
     if (canStartSkill(SKILL_KEYS[code]) && hit(code) && startSkill(SKILL_KEYS[code])) return;
   }
-  const dashCancelable=p.st==='free'||p.st==='atk'||p.st==='dash_attack'&&p.t>=29;
+  const dashCancelable=p.st==='free'||p.st==='atk'||p.st==='dash_attack'&&p.t>=DASH_ATTACK.cancelTick;
   if (p.dashCd <= 0 && p.z === 0 && dashCancelable && hit('ShiftLeft')) dashReq = p.face;
   if (dashReq) {                                   // 방향키 두 번: 지상에서 이동·공격 중 언제든 대시 (공격은 취소)
     const d = dashReq; dashReq = 0;
@@ -912,7 +915,7 @@ function updPlayer() {
   if (!viesaControlsHeight() && (p.z > 0 || p.vz !== 0)) {
     p.jumpTime=(p.jumpTime||0)+1;
     const airShooting=isViesa()&&(p.st==='atk'&&p.viesaClip==='jump_shot'||p.st==='free'&&p.viesaHoverGrace>0);
-    p.z += p.vz; p.vz=airShooting?Math.max(-1.6,p.vz-.08):p.vz-.55;
+    p.z += p.vz; p.vz=airShooting?Math.max(-1.6,p.vz-.08):p.vz-PLAYER_DATA.jump.gravityPerTick;
     if (p.z <= 0) { p.z = 0; p.vz = 0;p.jumpTime=0;if(isViesa())viesaLanding(); }
   }
 
@@ -923,14 +926,14 @@ function updPlayer() {
       if (down('ArrowRight', 'KeyD')) ax += 1;
       if (down('ArrowUp', 'KeyW')) ay -= 1;
       if (down('ArrowDown', 'KeyS')) ay += 1;
-      const sp = (p.z > 0 ? 2.6 : 3.1)*(isViesa()?1.1:1);
-      p.x += ax * sp; p.y += ay * sp * 0.75;
+      const MV = PLAYER_DATA.move, sp = (p.z > 0 ? MV.airPxPerTick : MV.groundPxPerTick)*(isViesa()?1.1:1);
+      p.x += ax * sp; p.y += ay * sp * MV.depthRatio;
       if (ax) p.face = ax;
       p.walk = !!(ax || ay);
       p.walkTime = p.walk && p.z === 0 ? (wasWalking ? p.walkTime + MS : 0) : 0;
       p.t++;
       if (p.comboT > 0) p.comboT--;
-      if (p.z === 0 && hit(...JUMP_KEYS)) { p.vz = 9.6; sfx('jump'); }
+      if (p.z === 0 && hit(...JUMP_KEYS)) { p.vz = PLAYER_DATA.jump.initialVz; sfx('jump'); }
       if (!isViesa() && p.sp >= SP_MAX && hit('KeyK', 'KeyX')) { startSpecial(); break; }
       if (p.mg > 0 && p.z === 0 && hit('KeyI', 'KeyV')) { startCast(); break; }
       if (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ')) {
@@ -971,7 +974,7 @@ function updPlayer() {
       if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
       else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
       if (t >= DASH_DATA.attackCancelMs && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
-      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=isViesa()?0:7; }
+      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=isViesa()?0:DASH_ATTACK.graceTicks; }
       break;
     }
     case 'dash_attack':
@@ -992,14 +995,14 @@ function updPlayer() {
       break;
     case 'hurt':
       if(isViesa()||!p.hurtFrameEnds||globalThis.BarelHurt?.canKnockback(p)){
-        p.x += p.vx; p.vx *= 0.85;
+        p.x += p.vx; p.vx *= PLAYER_DATA.hurt.knockbackDecay;
       }else p.vx=0;
       p.t++;
-      if (p.t >= (isViesa()?17:(p.hurtDuration||17))) { p.st = 'free'; p.t = 0; }
+      if (p.t >= (isViesa()?PLAYER_DATA.hurt.defaultHitstunTicks:(p.hurtDuration||PLAYER_DATA.hurt.defaultHitstunTicks))) { p.st = 'free'; p.t = 0; }
       break;
     case 'down':
-      p.t++; p.x += p.vx; p.vx *= 0.96;
-      if (p.t > 55 && p.z === 0) { p.st = 'free'; p.t = 0; p.inv = 100; }
+      p.t++; p.x += p.vx; p.vx *= PLAYER_DATA.knockdown.knockbackDecay;
+      if (p.t > PLAYER_DATA.knockdown.getupAfterTicks && p.z === 0) { p.st = 'free'; p.t = 0; p.inv = PLAYER_DATA.knockdown.getupInvulnerableTicks; }
       break;
     case 'dead':
       p.t++; p.x += p.vx; p.vx *= 0.96;
