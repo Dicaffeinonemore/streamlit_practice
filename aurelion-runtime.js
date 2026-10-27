@@ -128,7 +128,10 @@ function interceptAurelionDamage(e,kd,fixedDamage) {
     if(heavy){setAurelionTimeline(e,'guard','broken');e.gr=Math.min(e.grMax,e.gr+30);e.grT=150;return false;}
     setAurelionTimeline(e,'guard','parry');
     // Existing short hurt animation, with no damage, invincibility or chain mutation.
-    if(!['special','dead','down'].includes(player.st)){player.st='hurt';player.t=0;player.vx=0;player.skill=null;player.buf=0;}
+    if(!['special','dead','down'].includes(player.st)){
+      if(!isViesa())globalThis.BarelHurt?.begin(player,player.z+56,17);
+      player.st='hurt';player.t=0;player.vx=0;player.skill=null;player.buf=0;
+    }
     return true;
   }
   if(!aurelionPunishable(e)) {
@@ -143,9 +146,9 @@ function aurelionBoxHit(box,depth,x,y,face=1,h=0,oldX=x) {
   const right=Math.max(x,oldX)+Math.max(bx*face,(bx+bw)*face)*k;
   return p.x+playerBodyHalfWidth()>=left&&p.x-playerBodyHalfWidth()<=right&&Math.abs(p.y-y)<depth*playerHurtScale()&&p.z+playerBodyHeight()>=h+by*k&&p.z<=h+(by+bh)*k;
 }
-function aurelionHurtPlayer(e,attack,source=e) {
+function aurelionHurtPlayer(e,attack,source=e,hitHeight=source.h??player.z+56) {
   const hpBefore=player.hp;
-  const hit=hurtPlayer(attack.damage,source.face??e.face,!!attack.knockdown,source);
+  const hit=hurtPlayer(attack.damage,source.face??e.face,!!attack.knockdown,source,{hitHeight,hitstunTicks:attack.hitstunTicks??attack.hitstun});
   if(hit){hitStop=Math.max(hitStop,attack.hitstop||0);const a=aurelionData(e);a.stats.hits.push({move:a.move,frame:a.cursor,baseDamage:attack.damage,damage:hpBefore-player.hp});
     if(player.st==='down'&&Math.random()<aurelionRules.phases[e.p2shown?1:0].taunt.chance)a.tauntPending=true;}
   return hit;
@@ -202,7 +205,7 @@ function runAurelionPattern(e) {
       const attack={...m.attack,...(hb.kind==='body'?m.body_attack:m.hit_attacks?.[entry.index])};
       // Upgrade the first successful hit, even if the opening swings were dodged.
       if(a.move==='whirl'&&!a.whirlLanded){attack.damage=16;attack.knockdown=true;}
-      if(aurelionBoxHit(hb.box,hb.depth,e.x,e.y,e.face)&&aurelionHurtPlayer(e,attack)){
+      if(aurelionBoxHit(hb.box,hb.depth,e.x,e.y,e.face)&&aurelionHurtPlayer(e,attack,e,playerImpactHeight(hb.box[1]*AURELION_K,(hb.box[1]+hb.box[3])*AURELION_K))){
         if(a.move==='whirl')a.whirlLanded=true;
         a.hitInstances.add(entry.instance);break;
       }
@@ -315,7 +318,7 @@ function updateAurelionHazard(z) {
     const old=z.x;
     if(z.kind==='gold_wave')z.x+=z.face*def.speed[e.p2shown?'phase2':'phase1']*AURELION_K;
     const active=!def.active_frames||aurelionIn([def.active_frames],f);
-    if(active&&!z.hit&&aurelionBoxHit(def.hitbox,def.depth,z.x,z.y,z.face,z.h,old)&&aurelionHurtPlayer(e,def,z))z.hit=true;
+    if(active&&!z.hit&&aurelionBoxHit(def.hitbox,def.depth,z.x,z.y,z.face,z.h,old)&&aurelionHurtPlayer(e,def,z,playerImpactHeight(z.h+def.hitbox[1]*AURELION_K,z.h+(def.hitbox[1]+def.hitbox[3])*AURELION_K)))z.hit=true;
     if(z.kind==='gold_wave'&&z.hit)z.dead=true;
   }
   if(f>=(def?.lifetime||z.life)||z.x<camX-180||z.x>camX+VW+180)z.dead=true;

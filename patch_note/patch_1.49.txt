@@ -1,0 +1,45 @@
+v1.49 — 바렐 피격 모션 교체(상단/하단 구분)
+기록일: 2026-10-26
+저장소 최신 커밋의 버전 v1.48 다음 번호 사용.
+
+기존 구현
+- 상단 3장/하단 3장 구조가 아닌 hurt 7장의 단일 순차 재생(280ms 표시).
+- 실제 일반 피격 경직 17틱. 초기 넉백 방향×2, 매 틱 0.85 감쇠, 피격 무적 40틱.
+- 상단/하단 선택 및 하단 전용 hurtbox가 없었음. 강공격 또는 공중 피격은 기존 down 진입.
+
+교체
+- 원본 assets_src/barel/barel_hurt.png, 1448×1086 RGBA, 4열×3행 12프레임.
+- 알파 연결 요소로 12개 자세 분리, 작은 조각은 실제 픽셀 최단거리로 소유 프레임에 병합.
+- 무손실 PNG / Aseprite JSON / animation manifest. 원본 픽셀 유지, nearest 렌더.
+- 직전 바렐 대시 공격과 같은 640×640 셀 / 공통 [320,576] 기준점.
+- 몸통 중심 x와 가장 아래 불투명 줄 y를 정렬. F2~F6 피벗 x=190, F7~F10 x=209로 통일.
+- F12 뿔 제외 몸 키 293px. 기존 idle 몸 키 258px×0.5035460993에 맞춘 렌더 배율 0.4433955414.
+- 기존 플레이어 월드 배율 0.72 유지. 원본·좌표·배율은 manifest에 기록.
+- 실제 기존 atlas와 7프레임/피벗은 assets/aseprite/hurt_old/에 백업. 런타임 hurt_old 별칭도 보존.
+
+동작
+- 상단: F2→F3→F4→F5→F6→F12. 기본 가중치 3/5/5/5/6/6.
+- 하단: F7→F8→F9→F10→F11→F12. 요청 기본 가중치 3/5/5/6/6/5를 보관.
+- 최종 F12는 두 모션 모두 6틱 고정. 하단 기본표의 마지막 5틱보다 명시된 고정 6틱 규칙 우선.
+- 실제 경직에서 6틱을 뺀 나머지를 첫 5장 가중치에 비례 배분. 기본 실제 경직은 기존 17틱.
+- 공격에 hitstunTicks/hitstun이 있으면 그 값을 사용. 새 피격마다 종류·시간·순서 초기화.
+- 맞은 높이(발 기준)가 기존 몸 판정 높이 90의 55%(49.5) 이상이면 상단.
+- 투사체 h와 보스 공격의 실제 수직 겹침 구간을 전달. 높이 없는 기존 근접은 기존 적중 높이 56 사용.
+- 첫 3장만 기존 넉백 속도/감쇠로 이동. 나머지는 이동 정지.
+- F7~F10에만 새 굽힌 실루엣 기준 높이 84.919114 적용, F11/F12 및 기타 상태는 기존 90.
+- 피격 무적 40틱, 기존 강공격/공중 피격 넉다운·사망 조건과 down 모션 유지.
+- 기존 히트스톱에서 t=0 유지. 기존 플래시를 붉게 표시하고 상단 높이 82 / 하단 45에서 기존 적중 이펙트 사용.
+
+실행 확인 범위: 게임 시작, 적의 상단/하단 공격에 피격될 때 각각의 모션 표시.
+별도 테스트 단계 및 회귀 테스트는 실행하지 않음.
+실행 결과: 게임 시작 오류 0, 적 보병 근접 공격으로 hurt_high F2/3/4/5/6/12,
+낮은 적 화살(h=35)로 hurt_low F7/8/9/10/11/12 표시 후 free 복귀.
+두 경우 t=0, 경직 17틱, 무적 40틱, 히트스톱 4틱 확인. 브라우저 예외 0.
+실행 캡처: artifacts/barel-hurt-high.png, artifacts/barel-hurt-low.png.
+
+추가: tools/build-barel-hurt.py, src/animation/barel-hurt.js,
+assets_src/barel/barel_hurt.png, assets/aseprite/barel-hurt-12/,
+assets/aseprite/exports/barel-hurt-12/, assets/aseprite/hurt_old/, patch_note/patch_1.49.txt.
+수정: game.js, barel-runtime.js, viesa-runtime.js(공용 몸 높이),
+aurelion-runtime.js, vargul-runtime.js, morgra-runtime.js, sovereign-runtime.js(적중 높이 전달),
+index.html, server.py, README.md.

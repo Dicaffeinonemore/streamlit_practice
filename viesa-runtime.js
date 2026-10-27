@@ -21,7 +21,7 @@ function playerAttackHasDefaultSound(){
 }
 function playerHurtScale(){return isViesa() ? .9 : 1;}
 function playerBodyHalfWidth(){return 12*playerHurtScale();}
-function playerBodyHeight(){return 90*playerHurtScale();}
+function playerBodyHeight(){return isViesa()?90*playerHurtScale():(globalThis.BarelHurt?.bodyHeight(player)??90);}
 function viesaFrame(name,index=0){const list=VIESA_ART.clips[name];return list?.[Math.min(list.length-1,Math.max(0,Math.floor(index)))];}
 function viesaEffect(name,x,y,h=0,extra={}){
   if(viesaEffects.length>=128)return;

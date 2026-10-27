@@ -1,0 +1,10 @@
+Reference: user-supplied Desktop/흑월의 기사 리부트/비에사 적 ui.png (2171x724).
+Output: assets/ui/viesa-enemy-ui.png (2020x778 RGBA).
+Tool: built-in image_gen, transparent_background=true.
+Prompt:
+Use case: background-extraction. Extract ONLY the small enemy HP/name panel in the TOP RIGHT of the supplied game screenshot (gold vine/green leaf frame with blue diamond jewels, hexagonal armored undead portrait on its LEFT, dark navy nameplate, red HP bar underneath). Output a single isolated, tightly framed wide horizontal game UI asset on genuine transparent background. Preserve the original panel shape, proportions, gold filigree, leaves and blue diamonds exactly. Remove ALL ice castle/background pixels outside and between ornaments; no rectangular matte, no white background, no floor, no other UI. Make the dark navy NAMEPLATE EMPTY (no letters); make the interior of the HP gauge a FULL red glossy bar rather than the sample partly depleted bar, since the game will clip it to live health. Keep the undead knight sample portrait in its hexagonal frame for placement reference; it will be replaced dynamically at runtime. Keep panel interiors opaque. Leave a small transparent margin around the whole ornament, no cropping jewels or leaves. Do not add extra ornaments or redesign. Intended use: replace Viesa's regular enemy target HP HUD.
+
+Integration: tools/build_viesa_ui.py embeds both Viesa HUD PNGs into viesa-ui-art.js.
+viesa-ui.js renders the target frame, actual enemy portrait, live name, HP and damage trail.
+pixel-ui.js selects the frame only when isViesa(); Barel and boss frames use their existing path.
+Layout: right=8, top=56, width=190 in the existing 960x540 canvas.

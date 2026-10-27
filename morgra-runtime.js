@@ -112,7 +112,7 @@ function runMorgraPattern(e) {
   if(!e.morgraHit)for(const hb of d.hitboxes||[]) {
     const [x,y,w,h]=hb.box,k=morgraScale(),dx=(p.x-e.x)*e.face,hover=morgraHover(e);
     if(dx+playerBodyHalfWidth()>=x*k&&dx-playerBodyHalfWidth()<=(x+w)*k&&Math.abs(p.y-e.y)<hb.depth*playerHurtScale()&&p.z+playerBodyHeight()>=hover+y*k&&p.z<=hover+(y+h)*k) {
-      if(hurtPlayer(m.attack.damage,e.face,!!m.attack.knockdown,e)){e.morgraHit=true;hitStop=Math.max(hitStop,m.attack.hitstop||0);}
+      if(hurtPlayer(m.attack.damage,e.face,!!m.attack.knockdown,e,{hitHeight:playerImpactHeight(hover+y*k,hover+(y+h)*k),hitstunTicks:m.attack.hitstunTicks??m.attack.hitstun})){e.morgraHit=true;hitStop=Math.max(hitStop,m.attack.hitstop||0);}
     }
   }
   if(f>=m.total_frames){e.morgraMove=null;endPat(e,id==='teleport'&&Math.random()<.5?'cackle':null);}
@@ -165,8 +165,8 @@ function updateMorgraHazard(z) {
   const [bx,by,bw,bh]=def.hitbox;
   const left=Math.min(oldX,z.x)+Math.min(bx*z.face,(bx+bw)*z.face)*k;
   const right=Math.max(oldX,z.x)+Math.max(bx*z.face,(bx+bw)*z.face)*k;
-  if(p.x+10*playerHurtScale()>=left&&p.x-10*playerHurtScale()<=right&&Math.abs(p.y-z.y)<def.depth*playerHurtScale()&&p.z+85*playerHurtScale()>=z.h+by*k&&p.z<=z.h+(by+bh)*k) {
-    if(hurtPlayer(def.damage,z.face,!!def.knockdown,z)) {z.dead=true;morgraFx('bolt_hit',z.x,z.y,z.h,z.owner,18);}
+  if(p.x+10*playerHurtScale()>=left&&p.x-10*playerHurtScale()<=right&&Math.abs(p.y-z.y)<def.depth*playerHurtScale()&&p.z+Math.min(85*playerHurtScale(),playerBodyHeight())>=z.h+by*k&&p.z<=z.h+(by+bh)*k) {
+    if(hurtPlayer(def.damage,z.face,!!def.knockdown,z,{hitHeight:playerImpactHeight(z.h+by*k,z.h+(by+bh)*k),hitstunTicks:def.hitstunTicks??def.hitstun})) {z.dead=true;morgraFx('bolt_hit',z.x,z.y,z.h,z.owner,18);}
   }
   if(f>(def.lifetime||160)||z.x<camX-150||z.x>camX+VW+150)z.dead=true;
   return true;

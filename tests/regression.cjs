@@ -27,6 +27,8 @@ for(const name of ['assets/aseprite/barel-idle-10/barel-idle-10.animation.json',
 for(const name of ['assets/aseprite/barel-combo2-10/barel-combo2-10.animation.json','assets/aseprite/exports/barel-combo2-10/barel-combo2-10.json','assets/aseprite/exports/barel-combo2-10/barel-combo2-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-combo1-10/barel-combo1-10.animation.json','assets/aseprite/exports/barel-combo1-10/barel-combo1-10.json','assets/aseprite/exports/barel-combo1-10/barel-combo1-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-combo0-10/barel-combo0-10.animation.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.json','assets/aseprite/exports/barel-combo0-10/barel-combo0-10.png'])allowed.add(name);
+// v1.42~v1.51 바렐 모션(대시 찌르기·피격·넉다운·새 점프): 없으면 테스트 안에서만 옛 모션·판정 없음으로 떨어진다
+for(const name of ['barel-dash-attack-10','barel-hurt-12','barel-knockdown-getup-design-10','barel-jump-revised-10'])for(const file of [`assets/aseprite/${name}/${name}.animation.json`,`assets/aseprite/exports/${name}/${name}.json`,`assets/aseprite/exports/${name}/${name}.png`])allowed.add(file);
 const server = http.createServer((req, res) => {
   const name = req.url === '/' ? 'index.html' : req.url.slice(1);
   if(name==='favicon.ico'){res.writeHead(204).end();return;}
@@ -417,6 +419,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.DEATH_FADE_SUITE){await ready(base+'/embedded.html');await require('./death-fade.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_FIXES_SUITE){await ready(base+'/embedded.html');await require('./viesa-fixes.cjs')({evaluate,call,errors,root});return;}
     if(process.env.CHARACTER_SELECT_SUITE){await ready(base+'/embedded.html');await require('./character-select.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.FRAME_DATA_SUITE){await ready(base+'/index.html');await require('./frame-data.cjs')({evaluate,call,errors,root});return;}
     if(process.env.COMBAT_UPDATE_SUITE){await ready(base+'/embedded.html');await require('./combat-update.cjs')({evaluate,call,errors,root});return;}
     if(process.env.SOVEREIGN_MOTION_SUITE){await ready(base+'/embedded.html');await require('./sovereign-motion.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_INTRO_HUD_SUITE){await ready(base+'/embedded.html');await require('./boss-intro-hud.cjs')({evaluate,call,errors,root});return;}
