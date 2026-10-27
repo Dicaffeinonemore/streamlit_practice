@@ -37,6 +37,7 @@
     prepareBoss();
     prepareEnemyDeath();
     prepareViesaSkills();
+    prepareBarelSamples();
   }
   function init() {
     if (AU.ctx) return AU.ctx;
@@ -65,6 +66,20 @@
     s.connect(fl); fl.connect(g); g.connect(AU.sfxB); s.start(t, Math.random()); s.stop(t + dur + 0.05);
   }
   const SFX = {
+    swordSwing(i = 0) {
+      i = Math.max(0, Math.min(2, i));
+      nz(.11 + i * .018, .28, 'bandpass', 1700 - i * 180, 5800 - i * 350, { q: .65, a: .004 });
+      nz(.07 + i * .015, .12, 'highpass', 4800, 2200, { d: .018, a: .003 });
+    },
+    swordHit(i = 0) {
+      i = Math.max(0, Math.min(2, i));
+      // A fast cutting edge, a dry contact, then a short steel resonance.
+      nz(.075 + i * .012, .48, 'bandpass', 6400 - i * 450, 1600, { q: .8, a: .002 });
+      nz(.045, .22, 'highpass', 7500, 3200, { a: .001 });
+      nz(.055 + i * .008, .2, 'lowpass', 1400, 420, { a: .002 });
+      tone(2450 - i * 220, .095 + i * .018, 'sine', .075, { f2: 1500 - i * 140, d: .006, a: .001 });
+      tone(3700 - i * 270, .065, 'sine', .035, { f2: 2400, d: .009, a: .001 });
+    },
     swing(i) { nz(0.16 + i * 0.04, 0.2 + i * 0.05, 'bandpass', 700 - i * 150, 2600 + i * 500, { q: 1.2 }); tone(260 - i * 40, 0.12, 'sine', 0.08, { f2: 110 }); },
     dash() { nz(0.2, 0.22, 'highpass', 500, 3200); },
     jump() { tone(420, 0.12, 'triangle', 0.1, { f2: 820 }); nz(0.08, 0.1, 'highpass', 900, 3000); },
@@ -107,6 +122,10 @@
   const GAIN = { mobdie: 1.6, pickup: 1.8, swing: 4, dash: 2.5, jump: 2, hurt: 2.5, spdash: 2, pwave: 2.5, bswing: 3.5, bwind: 2, tele: 2.2, tele2: 2.2, orb: 3, bwave: 3, phase2: 2, click: 4, raven: 1.6, barrel: 2 };   // 작게 들리는 소리 보정
   function sfx(name, a) {
     if (!AU.on || !AU.ctx || AU.ctx.state === 'closed') return;
+    const sampleName = name === 'hurtH' ? 'hurt' : name;
+    if (global.BAREL_SFX_URLS && Object.hasOwn(global.BAREL_SFX_URLS, sampleName)) {
+      playBarelSample(sampleName, a); return;
+    }
     if (global.VIESA_SFX_URLS && Object.hasOwn(global.VIESA_SFX_URLS, name)) {
       playViesaSkill(name);
       return;
@@ -191,6 +210,49 @@
     return true;
   }
   const viesaSkillBuffers = new Map();
+  const barelSamples = new Map();
+  function prepareBarelSamples() {
+    if (!AU.ctx) return Promise.resolve([]);
+    for (const [name,url] of Object.entries(global.BAREL_SFX_URLS || {})) {
+      if (barelSamples.has(name)) continue;
+      const sample = {buffer:null,offset:0,last:-Infinity};
+      sample.ready = fetch(url).then(r=>{
+        if(!r.ok)throw Error('Barel sample unavailable');return r.arrayBuffer();
+      }).then(decode).then(buffer=>{
+        let first=buffer.length;
+        for(let ch=0;ch<buffer.numberOfChannels;ch++){
+          const data=buffer.getChannelData(ch);
+          for(let i=0;i<first;i++)if(Math.abs(data[i])>.003){first=i;break;}
+        }
+        if(first===buffer.length)throw Error('Silent Barel sample');
+        sample.offset=Math.max(0,first/buffer.sampleRate-.002);sample.buffer=buffer;
+        return true;
+      }).catch(()=>false);
+      barelSamples.set(name,sample);
+    }
+    return Promise.all([...barelSamples.values()].map(s=>s.ready));
+  }
+  function playBarelSample(name, options) {
+    const sample=barelSamples.get(name);if(!sample)return;
+    const requested=AU.ctx.currentTime;
+    const play=()=>{
+      if(!sample.buffer||!AU.on||paused||AU.ctx.state==='closed'||
+        AU.ctx.currentTime-requested>.15||AU.ctx.currentTime-sample.last<.018)return;
+      sample.last=AU.ctx.currentTime;
+      const src=AU.ctx.createBufferSource();src.buffer=sample.buffer;
+      const limit=options?.duration;
+      if(Number.isFinite(limit)&&limit>0){
+        const duration=Math.min(limit,sample.buffer.duration-sample.offset),gain=AU.ctx.createGain(),now=AU.ctx.currentTime;
+        gain.gain.setValueAtTime(1,now);gain.gain.setValueAtTime(1,now+Math.max(0,duration-.008));
+        gain.gain.linearRampToValueAtTime(0,now+duration);
+        src.connect(gain);gain.connect(AU.sfxB);src.onended=()=>{src.disconnect();gain.disconnect();};
+        src.start(0,sample.offset,duration);
+      }else{
+        src.connect(AU.sfxB);src.onended=()=>src.disconnect();src.start(0,sample.offset);
+      }
+    };
+    if(sample.buffer)play();else sample.ready.then(play);
+  }
   function prepareViesaSkills() {
     for (const [name, url] of Object.entries(global.VIESA_SFX_URLS || {})) {
       const ready = fetch(url).then(r => {
@@ -317,5 +379,6 @@
   ['keydown', 'pointerdown', 'pointerup', 'touchend', 'click'].forEach(ev => global.addEventListener(ev, gesture, true));
 
   global.AUDIO = { sfx, music, bossMusic: i => music(i, 1, true), victoryMusic: (i, final) => music(i, 1, false, final ? 'ending' : 'victory'), currentMusic, renderPreview, stop, silence, toggle, enable, pause, setVolumes, isOn: () => AU.on,
+    barelSamplesReady: prepareBarelSamples,
     setBossFile, clearBossFile, bossInfo, onBossInfo: f => bossFile.listeners.push(f) };
 })(window);

@@ -3,13 +3,52 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 module.exports=async({evaluate,call,errors,root,environment})=>{
   const out=path.join(root,'artifacts/barel-combo2-dot-10',environment);fs.mkdirSync(out,{recursive:true});
   for(const id of [0,1,2])assert.equal(await evaluate(`BarelCombo${id}.ready`),true);
+  assert.equal(await evaluate('BarelComboFx.ready'),true);
   for(const id of [0,1,2])assert.equal(await evaluate(`BarelCombo${id}.frameFor({characterId:'barel',st:'atk',atk:'c${id+1}',combo:${id},t:0},1000/60).image.src.includes('barel-combo${id}-dot-10.png')`),true,'Each hit must select its supplied dot atlas by default');
   assert.equal(await evaluate('BarelCombo2.status().effective'),'aseprite10');
   await evaluate("globalThis.BarelIdle?.setMode('legacy')");
   await evaluate('window.combo2NativeRAF=requestAnimationFrame;requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();showScreen(null)');
   await evaluate('new Promise(resolve=>combo2NativeRAF(()=>resolve()))');
   const results=await evaluate(`(${trial.toString()})()`);
+  const samples=await evaluate(`(async()=>{
+    AUDIO.stop(0);AUDIO.enable(true);
+    const ready=await AUDIO.barelSamplesReady();
+    if(ready.length!==6||ready.some(ok=>!ok))throw Error('All six supplied MP3s must decode');
+    const nativeStart=AudioBufferSourceNode.prototype.start,played=[];
+    AudioBufferSourceNode.prototype.start=function(...args){
+      if(this.buffer){
+        const data=this.buffer.getChannelData(0);let peak=0,energy=0;
+        for(const v of data){if(!Number.isFinite(v))throw Error('Invalid MP3 PCM');peak=Math.max(peak,Math.abs(v));energy+=v*v;}
+        played.push({duration:this.buffer.duration,offset:args[1]||0,limit:args[2]??null,peak,rms:Math.sqrt(energy/data.length)});
+      }
+      return nativeStart.apply(this,args);
+    };
+    try{
+      AUDIO.sfx('swordHit');AUDIO.sfx('barelWave');AUDIO.sfx('barelFinalHit');
+      if(played.length!==3||played.some(p=>p.peak<=.003||p.rms<=0)||new Set(played.map(p=>p.duration)).size!==3)throw Error('Distinct audible MP3 sources must play');
+      AUDIO.sfx('hurtH');
+      if(played.length!==4||played[3].peak<=.003||played[3].rms<=0)throw Error('Heavy hurt must play the supplied hurt MP3');
+      AUDIO.sfx('barelSlam');
+      if(played.length!==5||played[4].peak<=.003||played[4].rms<=0)throw Error('P/H must play the supplied impact MP3');
+      AUDIO.sfx('barelCombo',{duration:.88});
+      if(played.length!==6||played[5].peak<=.003||played[5].rms<=0||!(played[5].limit>0&&played[5].limit<=.88))throw Error('Combo sample must play with a duration bounded before the finisher');
+      AUDIO.pause(true);AUDIO.sfx('swordHit');AUDIO.sfx('barelWave');AUDIO.sfx('barelFinalHit');
+      AUDIO.sfx('hurt');AUDIO.sfx('hurtH');
+      AUDIO.sfx('barelSlam');
+      AUDIO.sfx('barelCombo',{duration:.88});
+      if(played.length!==6)throw Error('Paused samples must stay silent');
+      AUDIO.pause(false);AUDIO.enable(false);AUDIO.sfx('swordHit');
+      AUDIO.sfx('hurt');AUDIO.sfx('hurtH');
+      AUDIO.sfx('barelSlam');
+      AUDIO.sfx('barelCombo',{duration:.88});
+      if(played.length!==6)throw Error('Muted sample must stay silent');
+      return {ready,played};
+    }finally{AudioBufferSourceNode.prototype.start=nativeStart;AUDIO.pause(false);AUDIO.enable(false);}
+  })()`);
+  results.samples=samples;
   for(const face of [1,-1]){
+    const fx=await evaluate(`comboFxSheet(${face})`);
+    fs.writeFileSync(path.join(out,`supplied-effects-${face}.png`),Buffer.from(fx,'base64'));
     const png=await evaluate(`combo2ContactSheet(${face})`);
     fs.writeFileSync(path.join(out,`ten-frames-${face}.png`),Buffer.from(png,'base64'));
     const chain=await evaluate(`combo2ChainSheet(${face})`);
@@ -76,7 +115,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
   assert.deepEqual(errors,[]);
   const result={environment,...results,realtime,fallback,defaultMode:await evaluate('BarelCombo2.status()'),browserErrors:errors};
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(result,null,2));
-  console.log('PASS '+environment+': combo2 10 real frames/680ms, unchanged 16 damage/knockdown/step16/hitstop7, wave284/smash319, full combo chain/free return, cancel/jump/flip, ten failure fallbacks, default aseprite10');
+  console.log('PASS '+environment+': supplied FX rows 1/2/3 with six cels and blade timing, no projectile/ground smash, sword sounds, unchanged combo damage/knockdown/hitstop, chain/cancel/jump/flip and loader fallbacks');
 };
 function trial(){
   const check=(v,m)=>{if(!v)throw Error(m);};
@@ -89,10 +128,102 @@ function trial(){
     BarelCombo0.setMode('aseprite10');BarelCombo1.setMode('aseprite10');BarelCombo2.setMode(mode);
   };
   const a=ATK.c3;
+  for(let combo=0;combo<3;combo++){
+    combo2Setup('aseprite10');startAtk(combo);const a=ATK[player.atk],seen=new Set();
+    for(let time=0;time<a.wind+a.act+a.rec;time+=1){
+      player.t=time/MS;const f=BarelComboFx.frameFor(player,MS);
+      if(time<a.wind||time>=a.wind+a.act+70)check(f===null,'No FX in windup or late recovery');
+      if(f){check(f.row===combo,'Top/middle/bottom row matches combo');seen.add(f.index);}
+    }
+    check(seen.size===6,'All six supplied FX cels play for hit '+combo);
+    player.t=(a.wind+a.act*.35)/MS;
+    check(BarelComboFx.frameFor(player,MS).index===2,'Bright cel starts with blade contact');
+    player.st='dash';check(BarelComboFx.frameFor(player,MS)===null,'Cancel stops FX immediately');
+  }
+  combo2Setup('aseprite10');startAtk('air');check(BarelComboFx.frameFor(player,MS)===null,'No supplied ground-combo FX on air attack');
+  player.characterId='viesa';player.atk='c1';check(BarelComboFx.frameFor(player,MS)===null,'No Barel FX on Viesa');
+  window.comboFxSheet=face=>{
+    combo2Setup('aseprite10');ctx.save();ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle='#20242c';ctx.fillRect(0,0,cv.width,cv.height);ctx.scale(cv.width/960,cv.height/540);
+    for(let combo=0;combo<3;combo++)for(let index=0;index<6;index++){
+      startAtk(combo);const a=ATK[player.atk],peak=a.wind+a.act*.35,end=a.wind+a.act+70;
+      const time=index<2?a.wind+(peak-a.wind)*(index+.5)/2:peak+(end-peak)*(index-2+.5)/4;
+      Object.assign(player,{t:time/MS,x:80+index*160,y:155+combo*180,z:0,face,flash:0});
+      paintBarel(barelPlayerFrame(),player);BarelComboFx.draw(player,MS);
+      ctx.fillStyle='#eee';ctx.font='11px sans-serif';ctx.fillText((combo+1)+' / '+(index+1),index*160+10,combo*180+172);
+    }
+    ctx.restore();return cv.toDataURL('image/png').split(',')[1];
+  };
+  const nativeSfx=AUDIO.sfx,sounds=[];
+  try{
+    AUDIO.sfx=(name,kind)=>sounds.push({name,kind});
+    for(const attack of [0,1,2,'air']){
+      combo2Setup('aseprite10');const e=mkEnemy('brute',340,420);enemies=[e];
+      startAtk(attack);playerStrike(ATK[player.atk]);
+      check(sounds.slice(-3).map(s=>s.name).join(',')==='swordSwing,hurt,swordHit','Sword swing, enemy hurt and cutting contact for '+attack);
+    }
+    combo2Setup('aseprite10');startAtk(0);
+    check(sounds.at(-1).name==='swordSwing','A miss only plays the swing');
+    for(const st of ['atk','skill','special','cast']){
+      player.st=st;player.skill='thrust';playerHitSfx(2);
+      check(sounds.at(-1).name==='swordHit','All Barel impact states use sword MP3: '+st);
+    }
+    player.st='skill';player.skill='redwave';playerHitSfx(1);
+    check(sounds.at(-1).name==='barelWave','L impact uses wave sample');
+    combo2Setup('aseprite10');startSkill('redwave');player.t=300/MS;updSkill();
+    check(sounds.at(-1).name==='barelWave','L launch uses wave sample');
+    const wave=hazards.find(z=>z.type==='pwave'&&z.red);check(!!wave,'L projectile created');
+    const target=mkEnemy('brute',wave.x+5,wave.y);enemies=[target];player.st='free';player.skill=null;
+    const hp=target.hp;updHazards();
+    check(target.hp<hp&&sounds.at(-1).name==='barelWave','L projectile retains wave sound after player recovers');
+    for(const [skill,time] of [['slam',330],['leap',560]]){
+      combo2Setup('aseprite10');startSkill(skill);
+      const enemy=mkEnemy('brute',player.x+30,player.y);enemy.hp=enemy.max=1000;enemies=[enemy];
+      player.t=time/MS;const before=sounds.length;updSkill();
+      check(enemy.hp<1000,'P/H impact deals damage');
+      check(sounds.slice(before).some(s=>s.name==='hurt')&&sounds.slice(before).every(s=>['hurt','barelSlam'].includes(s.name)),'P/H contact and ground impact retain their MP3 plus enemy hurt: '+skill);
+    }
+    combo2Setup('aseprite10');player.st='special';player.spX=350;player.spY=420;
+    const victim=mkEnemy('brute',350,420);victim.hp=victim.max=1000;enemies=[victim];
+    const comboStart=sounds.length;
+    for(let k=0;k<4;k++){victim.inv=0;specialHit(false,k);}
+    const comboSounds=sounds.slice(comboStart);
+    check(comboSounds.filter(s=>s.name==='barelCombo').length===1,'Special combo sample starts once across all four slashes');
+    check(comboSounds.some(s=>s.name==='hurt')&&comboSounds.every(s=>['hurt','barelCombo'].includes(s.name)),'Combo keeps enemy hurt and replaces individual sword samples');
+    victim.inv=0;const before=sounds.length;
+    barrels=[{x:350,y:420,hp:2,dead:false}];specialHit(true,4);
+    check(sounds.slice(before).some(s=>s.name==='hurt')&&sounds.slice(before).every(s=>['hurt','barelFinalHit'].includes(s.name)),'Final impact retains finisher sound plus enemy hurt');
+    player.characterId='viesa';player.st='atk';player.viesaClip='slash1';playerHitSfx(0);
+    check(sounds.at(-1).name==='hit','Viesa retains her original contact sound');
+    for(const characterId of ['barel','viesa'])for(const heavy of [false,true]){
+      combo2Setup('aseprite10');player.characterId=characterId;player.inv=0;
+      const before=sounds.length;
+      check(hurtPlayer(5,1,heavy),'Player receives damage');
+      check(sounds.slice(before).some(s=>s.name===(heavy?'hurtH':'hurt')),'Shared hurt audio for '+characterId+' heavy='+heavy);
+    }
+    for(const characterId of ['barel','viesa'])for(const type of Object.keys(ET)){
+      combo2Setup('aseprite10');player.characterId=characterId;
+      const enemy=mkEnemy(type,350,420);enemies=[enemy];const hp=enemy.hp,before=sounds.length;
+      damageEnemy(enemy,1,false);
+      check(enemy.hp<hp&&sounds.slice(before).filter(s=>s.name==='hurt').length===1,'Successful hit plays enemy hurt for '+characterId+' -> '+type);
+      enemy.invuln=true;const blocked=sounds.length;damageEnemy(enemy,1,false);
+      check(sounds.length===blocked,'Invulnerable target makes no successful hit sound');
+    }
+  }finally{AUDIO.sfx=nativeSfx;}
   check(a.wind===200&&a.act===140&&a.rec===340,'Existing timing');
   check(a.dmg===16&&a.reach===98&&a.step===16&&a.stop===7&&a.kd===true,'Existing combat/knockdown');
   check(BUF_MS===220&&a.wind+a.act*.35===249&&a.wind+a.act+30===370,'Hit range and input buffer');
-  check(a.wind+a.act*.6===284&&a.wind+a.act*.85===319,'Existing wave/smash times');
+  const originalEffect=barelEffect,overlays=[];
+  try{
+    barelEffect=(...args)=>overlays.push(args[0]);
+    for(const mode of ['legacy','aseprite10'])for(const attack of [0,1,2,'air']){
+      combo2Setup(mode);startAtk(attack);
+      for(let time=0;time<680;time+=10){player.t=time/MS;drawBarelPlayer();}
+    }
+    check(overlays.length===0,'Basic attacks do not draw the old atlas effect overlays');
+    combo2Setup('aseprite10');player.st='skill';player.skill='thrust';player.t=250/MS;drawBarelPlayer();
+    check(overlays.includes('slash'),'Skill overlay remains available');
+  }finally{barelEffect=originalEffect;}
   combo2Setup('aseprite10');startAtk(2);
   const boundaries=[[0,0],[69.999,0],[70,1],[130,2],[200,3],[220,4],[249,5],[284,5],[319,5],[340,6],[370,7],[460,8],[550,9],[679.999,9]];
   for(const [time,index] of boundaries){player.t=time/MS;check(barelPlayerFrame().index===index,'Frame at '+time);}
@@ -108,9 +239,9 @@ function trial(){
     check(player.st==='free'&&player.combo===0&&player.comboT===0,'Terminal attack returns to free/reset combo');
     check(hp-e.hp===16&&player.x===316,'Single 16 damage hit and step 16');
     check(e.st==='down'&&e.vx===4&&e.vz===5,'Original knockdown and knockback');
-    check(player.wave&&player.smash&&hazards.filter(z=>z.type==='pwave').length===1,'Both finish effects emitted once');
-    const wave=trace.find(t=>t.wave),smash=trace.find(t=>t.smash),firstHit=trace.find(t=>t.hp<hp);
-    check(wave.tick===18&&smash.tick===20&&firstHit.tick===15,'Existing tick quantization of events/hit');
+    check(trace.every(t=>!t.wave&&!t.smash&&t.waves===0),'Basic finisher emits no wave or ground smash');
+    const firstHit=trace.find(t=>t.hp<hp);
+    check(firstHit.tick===15,'Existing tick quantization of blade hit');
     if(mode==='aseprite10')check(frames.size===10,'All 10 frames at 60Hz');
     traces[mode]=trace;
   }
@@ -157,6 +288,6 @@ function trial(){
       paintBarel(barelPlayerFrame(),{x,y,z:0,face,flash:0});
     });ctx.restore();return cv.toDataURL('image/png').split(',')[1];
   };
-  return {durationMs:680,activeMs:[249,370],nextCombo:null,waveMs:284,smashMs:319,damage:16,reach:98,step:16,
+  return {durationMs:680,activeMs:[249,370],nextCombo:null,waveMs:null,smashMs:null,damage:16,reach:98,step:16,
     knockback:{vx:4,vz:5,state:'down'},hitStopTicks:7,boundaries,traces,hitstop:frozen,earlierCombosPreserved:true};
 }
