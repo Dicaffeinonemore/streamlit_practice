@@ -84,6 +84,13 @@ function lightCaps(code, on) {
 
 // ---------------------------------------------------------------- 사운드 (audio.js: 합성 효과음 + 스테이지 BGM)
 const sfx = (name, a) => AUDIO.sfx(name, a);
+function playerHitSfx(kind = 0, sound = null) {
+  if (sound === 'none') return;
+  if (!playerAttackHasDefaultSound()) return;
+  const skillSound = player.st === 'skill' ?
+    {redwave:'barelWave',slam:'barelSlam',leap:'barelSlam'}[player.skill] : null;
+  sfx(!isViesa() ? (sound || skillSound || 'swordHit') : 'hit', kind);
+}
 
 // ---------------------------------------------------------------- 데이터
 // 적 정의. wind=공격 예고, act=공격 판정 유지, rec=공격 후 경직 (틱)
@@ -553,9 +560,9 @@ function startAtk(n) {
   if(isViesa()){startViesaAttack(n);return;}
   const p = player;
   p.st = 'atk'; p.t = 0; p.buf = 0; p.hitSet = new Set(); p.x0 = p.x; p.wave = false; p.smash = false;
-  if (n === 'air') { p.atk = 'air';reactAurelionAttack(); sfx('swing', 2); return; }
+  if (n === 'air') { p.atk = 'air';reactAurelionAttack(); sfx('swordSwing', 2); return; }
   p.combo = n; p.atk = ['c1', 'c2', 'c3'][n];reactAurelionAttack();
-  sfx('swing', n);
+  sfx('swordSwing', n);
 }
 
 function hurtPlayer(dmg, dir, kd, source=null) {
@@ -599,7 +606,7 @@ function playerStrike(A) {
 }
 // 대검이 땅에 박히는 순간: 돌 파편 · 흙먼지 · 붉은 불꽃
 function groundSmash(x, y) {
-  shake = Math.max(shake, 10); sfx('slam');
+  shake = Math.max(shake, 10); playerHitSfx(2);
   for (let i = 0; i < 12; i++) parts.push({ x: x + rand(-14, 14), y: y + rand(-6, 6), z: rand(2, 10), vx: rand(-3.2, 3.2), vz: rand(3, 7.5), life: rand(22, 38), col: ['#2a2a30', '#4a4a52', '#1a1a1e', '#6a6a72'][i % 4] });
   burst(x, y, 6, ['#ffffff', '#c8c8d0', '#6a6a72']);
   burst(x, y, 10, ['#ff5a6a', '#a01a24', '#5a0a12']);
@@ -663,20 +670,23 @@ function updSpecial() {
 }
 function specialHit(last, k) {
   const p = player, f = p.face, mul = p.buff > 0 ? 1.5 : 1;
+  // One continuous combo sample, rather than four overlapping copies.
+  if (!last && k === 0) sfx('barelCombo', {duration:.88});
+  const hitSound = last ? 'barelFinalHit' : 'none';
   const dmg = Math.round((last ? SPECIAL.fin : SPECIAL.slash) * mul), rx = last ? 110 : 80, ry = last ? 60 : 44;
-  strikeVargulOrbs(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg});
-  const sovBlock=strikeSovereignFists(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg,kd:true});
+  strikeVargulOrbs(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg,hitSound});
+  const sovBlock=strikeSovereignFists(rx,rx,new Set(),{x:p.spX,y:p.spY,h:0,depth:ry,damage:dmg,kd:true,hitSound});
   let any = false;
   for (const e of enemies) {
     if (!canHit(e) || sovBlock&&isSovereign(e)) continue;
-    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1); any = true; }
+    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1, false, hitSound); any = true; }
   }
   for (const b of barrels) {
-    if (!b.dead && Math.abs(b.x - p.spX) < rx && Math.abs(b.y - p.spY) < ry) damageBarrel(b);
+    if (!b.dead && Math.abs(b.x - p.spX) < rx && Math.abs(b.y - p.spY) < ry) damageBarrel(b, hitSound);
   }
   if (!any) impact(p.spX - f * 12, p.spY, 72 + (k === 1 ? 16 : (k === 0 ? 4 : -8)), last ? 2 : 1, f);
-  if (last) { flashT = 240; shake = Math.max(shake, 18); hitStop = Math.max(hitStop, 6); sfx('moon'); }
-  else { shake = Math.max(shake, 6); sfx('spslash', k); }
+  if (last) { flashT = 240; shake = Math.max(shake, 18); hitStop = Math.max(hitStop, 6); playerHitSfx(2, hitSound); }
+  else { shake = Math.max(shake, 6); }
 }
 
 function startCast() {
@@ -689,7 +699,7 @@ function startCast() {
 function fireBolts() {
   const p = player, xs = [];
   p.castFired = true; flashT = 200; flashCol = '207,224,255'; shake = Math.max(shake, 22); hitStop = Math.max(hitStop, 4);
-  sfx('bolt');
+  playerHitSfx(2);
   strikeVargulOrbs(0,0,new Set(),{global:true,damage:MAGIC.damage});
   strikeSovereignFists(0,0,new Set(),{global:true,damage:MAGIC.damage});
   for (const e of enemies) {
@@ -703,8 +713,8 @@ function fireBolts() {
   xs.forEach((q, i) => bolts.push({ x: q[0], y: q[1], age: -i * 45, seed: (Math.random() * 999) | 0 }));
 }
 
-function damageBarrel(b) {
-  b.hp--; b.flash = 6; hitStop = Math.max(hitStop, 2); if(playerAttackHasDefaultSound())sfx('hit', 0);
+function damageBarrel(b, hitSound = null) {
+  b.hp--; b.flash = 6; hitStop = Math.max(hitStop, 2); playerHitSfx(0, hitSound);
   sparks(b.x, b.y, 30, 5, '#d7a86e');
   if (b.hp <= 0) { b.dead = true; sparks(b.x, b.y, 25, 14, '#a1744a'); dropFromBarrel(b); sfx('barrel'); }
 }
@@ -777,7 +787,7 @@ function updSkill() {
       if (t >= 240) skillStrike(0, 28, 68, 8, false, 1);
       if (prev < 240 && t >= 240) {
         impact(p.x + p.face * 42, p.y, 55, 1, p.face);
-        burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); sfx('hit', 2);
+        burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); playerHitSfx(2);
       }
     }
   } else if (id === 'slam') {
@@ -797,7 +807,7 @@ function updSkill() {
       hazards.push({ type: 'pwave', red: true, x: p.x + p.face * 32, y: p.y,
         h: 44, dir: p.face, age: 0, travel: 0, hits: new Set(),
         damage: Math.round(24 * (p.buff > 0 ? 1.5 : 1)) });
-      sfx('pwave');
+      sfx('barelWave');
     }
   } else if (id === 'leap') {
     if (t >= 120 && t < 560) {
@@ -878,8 +888,7 @@ function updPlayer() {
       if (t >= A.wind && t < hitAt + MS) p.x = p.x0 + A.step * p.face * ease((t - A.wind) / A.act);   // 휘두르며 한 걸음
       if (t >= A.wind + A.act * 0.35 && t < hitAt + 30) playerStrike(A);
       if (hit('KeyJ', 'KeyZ')) p.buf = BUF_MS;
-      if (p.combo === 2 && !p.wave && t >= A.wind + A.act * 0.6) { p.wave = true; launchWave(); }
-      if (p.combo === 2 && !p.smash && t >= A.wind + A.act * 0.85) { p.smash = true; groundSmash(p.tipX || p.x + p.face * 90, p.y); }
+      // The basic finisher hits with the blade, without a projectile or ground FX.
       if (p.buf > 0 && p.combo < 2 && t >= hitAt + A.rec * 0.45) { startAtk(p.combo + 1); break; }
       if (t >= hitAt + A.rec) {
         p.st = 'free'; p.t = 0;
@@ -895,7 +904,10 @@ function updPlayer() {
       if(isViesa())p.inv=Math.max(p.inv,2);
       if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
       else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
-      if (t >= 110 && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
+      // A held attack may have consumed its press before the dash canceled it.
+      const dashAttack = t >= 110 && (isViesa() ? hit('KeyJ') :
+        hit('KeyJ', 'KeyZ') || down('KeyJ', 'KeyZ'));
+      if (dashAttack) { startAtk(0); break; }
       if (t >= DASH.dur) { p.st = 'free'; p.t = 0; }
       break;
     }
@@ -961,7 +973,7 @@ function heal(n) {
 
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
-function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
+function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, hitSound = null) {
   if(isVargul(e)&&interceptVargulDamage(e))return;
   if(isSovereign(e)&&interceptSovereignDamage(e))return;
   if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
@@ -973,8 +985,9 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false) {
   if (e.boss && !fixedDamage) dmg = Math.round(dmg * (1 + Math.min(0.5, 0.05 * chain.n)));   // 연속 히트가 이어질수록 보스에게 최대 +50%
   chain.n++; chain.t = CHAIN_MS; chain.max = Math.max(chain.max, chain.n);
   e.hp -= dmg; e.flash = 6;
+  if (dmg > 0) sfx('hurt');
   hitStop = Math.max(hitStop, kd ? 6 : 3);
-  if(playerAttackHasDefaultSound())sfx('hit', kind);
+  playerHitSfx(kind, hitSound);
   const dir = p.x <= e.x ? 1 : -1, hz = e.z + SPRITES[e.d.sprite].gy * SC * 0.55;
   e.hr = 0; e.hdir = dir; e.hheavy = kind >= 2;
   impact(e.x - dir * e.hw * 0.6, e.y, hz, kind, dir);
@@ -1436,8 +1449,8 @@ function updHazards() {
         break;
       case 'pwave': {                              // 흑기사의 검기: 처음 닿은 적에게 적중
         z.vargulHits ||= new Set();
-        strikeVargulOrbs(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1))});
-        const sovBlock=strikeSovereignFists(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1))});
+        strikeVargulOrbs(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1)),hitSound:z.red?'barelWave':'swordHit'});
+        const sovBlock=strikeSovereignFists(z.red?23:14,z.red?23:14,z.vargulHits,{x:z.x,y:z.y,h:z.h-44,face:z.dir,depth:26,damage:z.red?z.damage:Math.round(8*(p.buff>0?1.5:1)),hitSound:z.red?'barelWave':'swordHit'});
         if (sovBlock && !z.red) { z.dead = true; break; }
         if (z.red) {
           const from = z.x, step = Math.min(9, 520 - z.travel);
@@ -1446,7 +1459,7 @@ function updHazards() {
             if (!canHit(e) || z.hits.has(e.id) || sovBlock&&isSovereign(e) || Math.abs(e.y - z.y) >= 26 ||
                 Math.abs(e.z + 44 - z.h) >= 38 ||
                 e.x + e.hw < Math.min(from, z.x) - 14 || e.x - e.hw > Math.max(from, z.x) + 14) continue;
-            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1);
+            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1, false, 'barelWave');
             p.sp = Math.min(SP_MAX, p.sp + 4);
           }
           if (z.travel >= 520) z.dead = true;
