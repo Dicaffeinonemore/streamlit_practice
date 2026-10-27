@@ -338,14 +338,14 @@ function moveVargulOrb(z,t){
   z.y=clamp(z.y+clamp(z.vy,-r.depthSpeed,r.depthSpeed),GTOP+14,GBOT-12);
   z.h=r.height+Math.sin(t/24+z.index*Math.PI)*r.bob;
 }
-function vargulBreakOrb(z,destroyed=false){
+function vargulBreakOrb(z,destroyed=false,hitSound=null){
   if(z.dead)return;z.dead=true;
   vargulFx(z.owner,'frost_burst',z.x,z.y,z.h,{life:18,width:45,height:45});
   if(destroyed){
     const roll=Math.random(),drops=VARGUL_RULES.orb.drops;
     const type=roll<drops.potion?'potion':roll<drops.potion+drops.scroll?'scroll':null;
     if(type)dropItem(type,clamp(z.x,camX+20,camX+VW-20),clamp(z.y,GTOP+8,GBOT-8));
-    const e=z.owner;e.gr=Math.min(e.grMax,e.gr+VARGUL_RULES.orb.groggy);e.grT=150;hitStop=Math.max(hitStop,3);if(playerAttackHasDefaultSound())sfx('hit');
+    const e=z.owner;e.gr=Math.min(e.grMax,e.gr+VARGUL_RULES.orb.groggy);e.grT=150;hitStop=Math.max(hitStop,3);playerHitSfx(0,hitSound);
     if(e.gr>=e.grMax&&e.st!=='dead'&&!e.phaseT){resetBossFx(e);e.st='stun';e.t=0;e.z=e.vz=e.vx=0;shake=Math.max(shake,16);sfx('groggy');}
   }
   if(!vargulHazards(z.owner,'orb').length){const a=vargulData(z.owner);a.cooldowns.orb=720;a.hadOrbs=false;}
@@ -360,8 +360,10 @@ function strikeVargulOrbs(reach,behind=8,hitSet=player.hitSet,options={}){
     const x=options.x??p.x,y=options.y??p.y,h=options.h??p.z,face=options.face??p.face,dx=(z.x-x)*face;
     const overlaps=options.global||dx>=-behind-12&&dx<=reach+12&&Math.abs(z.y-y)<(options.depth??20)&&Math.abs(z.h-(h+44))<45;
     if(!overlaps)continue;
+    const hpBefore=z.hp;
     hitSet.add(z);z.hp=Math.max(0,z.hp-(options.damage??ATK.c1.dmg));z.inv=VARGUL_RULES.orb.inv;hit=true;
-    if(z.hp<=0)vargulBreakOrb(z,true);else{if(playerAttackHasDefaultSound())sfx('hit');hitStop=Math.max(hitStop,2);}
+    if(z.hp<hpBefore)sfx('hurt');
+    if(z.hp<=0)vargulBreakOrb(z,true,options.hitSound);else{playerHitSfx(0,options.hitSound);hitStop=Math.max(hitStop,2);}
   }
   return hit;
 }

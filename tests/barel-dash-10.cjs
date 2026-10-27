@@ -87,6 +87,20 @@ function trial(){
  dashSetup('aseprite10');startDash(1);for(let i=0;i<6;i++)update();inputDown('KeyJ');update();
  check(player.st==='atk'&&player.combo===0&&barelPlayerFrame().image?.src.includes('barel-combo0-dot-10.png'),'Attack priority after110ms');
  for(let i=0;i<5;i++)update();check(BarelDashFx.status().length===0,'Cancel drains afterimages');
+ for(const mode of ['legacy','aseprite10'])for(const trigger of ['shift','doubleTap'])for(const attackKey of ['KeyJ','KeyZ']){
+  dashSetup(mode);inputDown(attackKey);update();
+  check(player.st==='atk'&&!pressed[attackKey],'Initial attack consumes the press while key stays held');
+  if(trigger==='shift'){inputDown('ShiftLeft');update();inputUp('ShiftLeft');}
+  else{inputDown('KeyD');update();inputUp('KeyD');update();inputDown('KeyD');update();inputUp('KeyD');}
+  check(player.st==='dash','Held-attack sequence starts dash: '+trigger);
+  while(player.st==='dash'&&player.t*MS<100)update();
+  check(player.st==='dash','Held attack respects dash startup');
+  for(let i=0;i<2&&player.st==='dash';i++)update();
+  check(player.st==='atk'&&player.atk==='c1','Held attack connects after dash startup: '+mode+'/'+trigger+'/'+attackKey);
+  inputUp(attackKey);const enemy=mkEnemy('grunt',player.x+40,player.y);enemies=[enemy];const hp=enemy.hp;
+  for(let i=0;i<17;i++)update();
+  check(enemy.hp<hp,'Dash attack deals real damage');
+ }
  dashSetup('aseprite10');startAtk(0);inputDown('ShiftLeft');update();check(player.st==='dash','Existing attack to dash cancel');
  dashSetup('aseprite10');startDash(1);inputDown('KeyA');for(let i=0;i<5;i++)update();check(player.face===1,'Existing dash facing fixed');
  dashSetup('aseprite10');startDash(1);for(let i=0;i<6;i++)update();
