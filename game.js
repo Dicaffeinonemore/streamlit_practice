@@ -749,7 +749,7 @@ function specialHit(last, k) {
   let any = false;
   for (const e of enemies) {
     if (!canHit(e) || sovBlock&&isSovereign(e)) continue;
-    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1, false, hitSound); any = true; }
+    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1, false, null, hitSound); any = true; }
   }
   for (const b of barrels) {
     if (!b.dead && Math.abs(b.x - p.spX) < rx && Math.abs(b.y - p.spY) < ry) damageBarrel(b, hitSound);
@@ -879,7 +879,7 @@ function updSkill() {
       hazards.push({ type: 'pwave', red: true, x: p.x + p.face * 32, y: p.y,
         h: 44, dir: p.face, age: 0, travel: 0, hits: new Set(),
         damage: Math.round(S.damage * (p.buff > 0 ? 1.5 : 1)) });
-      sfx('pwave');
+      sfx('barelWave');
     }
   } else if (id === 'leap') {
     const [from, to] = S.travelMs;
@@ -1056,7 +1056,8 @@ function heal(n) {
 // ---------------------------------------------------------------- 적
 // kind: 적중 이펙트 단계 (0 가벼운 타격 / 1 연결기 / 2 마무리)
 // attackId: combat-data.js 의 공격 이름. 일반 적의 피격 경직 길이를 정한다 (없으면 적 기본값)
-function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null) {
+// hitSound: 발사체/필살기 전용 사운드. 경직 판정용 attackId와 별도 인자로 전달한다.
+function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null, hitSound = null) {
   if(isVargul(e)&&interceptVargulDamage(e))return;
   if(isSovereign(e)&&interceptSovereignDamage(e))return;
   if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
@@ -1543,7 +1544,7 @@ function updHazards() {
             if (!canHit(e) || z.hits.has(e.id) || sovBlock&&isSovereign(e) || Math.abs(e.y - z.y) >= 26 ||
                 Math.abs(e.z + 44 - z.h) >= 38 ||
                 e.x + e.hw < Math.min(from, z.x) - 14 || e.x - e.hw > Math.max(from, z.x) + 14) continue;
-            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1, false, 'barelWave');
+            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1, false, null, 'barelWave');
             p.sp = Math.min(SP_MAX, p.sp + 4);
           }
           if (z.travel >= 520) z.dead = true;
