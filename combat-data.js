@@ -14,10 +14,20 @@
 // 보스(고라스~소버린)와 비에사는 각자의 *-data.js / *-runtime.js 를 따른다.
 // =====================================================================================
 const COMBAT_FRAME_DATA = {
-  version: 2,
+  version: 3,   // v3: 패치 1.42~1.51(대시 찌르기·피격·넉다운·점프) 수치 추가
 
   // 입력: 버튼을 미리 눌러 둔 것을 기억하는 시간, 한 타가 끝난 뒤 다음 타로 이어 줄 시간 (비에사도 같이 씀)
   input: { bufferMs: 220, linkMs: 420 },
+
+  // ------------------------------------------------------------- 플레이어 공통 (바렐 · 비에사)
+  player: {
+    move: { groundPxPerTick: 3.1, airPxPerTick: 2.6, depthRatio: 0.75 },     // 비에사는 여기에 ×1.1
+    jump: { initialVz: 9.6, gravityPerTick: 0.55 },                          // 약 36틱 체공, 최고 높이 약 88px
+    // 피격: 경직은 맞힌 공격이 hitstunTicks 를 주면 그 값, 아니면 기본값 (바렐 1.49 상단/하단 모션이 이 길이에 맞춰 재생)
+    hurt: { defaultHitstunTicks: 17, invulnerableTicks: 40, knockbackPx: 2, knockbackDecay: 0.85, hitstopTicks: 4 },
+    // 넉다운: 강공격·공중 피격. getupAfterTicks 가 지나고 땅에 있으면 일어남 (바렐 1.51 모션 56틱 = 55 + 1)
+    knockdown: { launchVz: 5, knockbackPx: 3.5, knockbackDecay: 0.96, getupAfterTicks: 55, getupInvulnerableTicks: 100, hitstopTicks: 6 },
+  },
 
   barel: {
     // ------------------------------------------------------------- 지상 3연타
@@ -49,6 +59,28 @@ const COMBAT_FRAME_DATA = {
     // ------------------------------------------------------------- 대시
     dash: { distPx: 80, durMs: 190, moveMs: 150, attackCancelMs: 110, invulnerableTicks: 15, cooldownTicks: 31,
             sprite: 'assets/aseprite/barel-dash-10/barel-dash-10.animation.json' },
+
+    // ------------------------------------------------------------- 바렐 전용 모션 파일 (위 player 값과 맞물려 있음, tests/combat-data.cjs 가 확인)
+    motions: {
+      hurt:      'assets/aseprite/barel-hurt-12/barel-hurt-12.animation.json',                                     // 1.49 상단/하단 12장
+      knockdown: 'assets/aseprite/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.animation.json', // 1.51 넉다운·기상 10장
+      jump:      'assets/aseprite/barel-jump-revised-10/barel-jump-revised-10.animation.json',                     // 1.50 점프 10장
+    },
+
+    // ------------------------------------------------------------- 대시 찌르기 (1.42) — 대시 중, 또는 대시가 끝나고 graceTicks 안에 공격
+    // 틱 단위. 판정 박스(앞 8 ~ 103.84px, 높이 44~68, 깊이 ±38)와 몸 키는 스프라이트 manifest 에서 읽는다.
+    dashAttack: { name: '대시 찌르기',
+      frameEndTicks: [3, 7, 11, 14, 17, 23, 29, 35, 41, 47],   // 10장이 끝나는 틱 (장별 3/4/4/3/3/6/6/6/6/6)
+      strikeTicks: [14, 23],                                   // 5~6번 장: 판정 (끝 틱 미포함)
+      move: [ { fromTick: 3, toTick: 7, bodyRatioPerTick: 0.06 },   // 틱마다 몸 키 × 비율만큼 전진 (합계 몸 키의 0.92배)
+              { fromTick: 7, toTick: 14, bodyRatioPerTick: 0.08 },
+              { fromTick: 14, toTick: 17, bodyRatioPerTick: 0.04 } ],
+      cancelTick: 29,                // 8번 장부터 일반 공격·점프·대시로 캔슬
+      skillCancelOnHitTick: 23,      // 맞혔을 때만 6번 장이 끝나면 스킬로 캔슬
+      graceTicks: 7,                 // 대시가 끝난 뒤 이 틱 안에 누르면 발동
+      damageRatioOfC1: 1.4,          // 일섬 피해 × 1.4 = 14
+      knockdown: true, hitstopTicks: 6, spGain: 8, invulnerable: false,
+      sprite: 'assets/aseprite/barel-dash-attack-10/barel-dash-attack-10.animation.json' },
 
     // ------------------------------------------------------------- 스킬 (각자 쿨타임)
     // behindPx: 등 뒤로 닿는 거리. 스킬 판정 깊이는 38px, 높이 85px 로 공통이다.

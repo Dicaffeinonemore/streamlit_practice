@@ -16,7 +16,7 @@ const head = cols => [row(cols), row(cols.map(() => '---'))];
 const PH = { windup: '예고', active: '**판정**', recovery: '회수' };
 const out = [];
 
-out.push('# 바렐 · 일반 적 — 전투 프레임 데이터', '');
+out.push('# 바렐 · 일반 적 — 전투 프레임 데이터 (v1.52, 패치 1.51 기준)', '');
 out.push('> `node tools/report_frame_data.cjs` 가 `combat-data.js`, 스프라이트 메타데이터, 실측 결과로 자동 생성한다. 직접 고치지 말고 `combat-data.js` 를 고친 뒤 다시 측정한다.', '');
 out.push('단위: 60fps 틱(1틱 = 16.7ms). 히트스톱 동안은 적의 경직도 함께 멈추므로 간격에서 뺐다.', '');
 
@@ -51,12 +51,46 @@ for (const c of r.chains) {
 }
 out.push('');
 out.push('- 가장 빠르게: 매 틱 공격 키를 눌러 선입력으로 연결. 가장 늦게: 각 타의 회수가 끝나기 바로 전 틱에 누름.');
-out.push('- v1.41 까지는 모든 공격의 경직이 18틱이라 2타→3타(22틱)에서 세 적 모두 4틱 먼저 풀렸다.', '');
+out.push('- v1.51 까지는 모든 공격의 경직이 18틱이라 2타→3타(22틱)에서 세 적 모두 4틱 먼저 풀렸다.', '');
 
 out.push('## 공중 베기 · 대시', '');
 const A = B.air, DS = B.dash;
 out.push(`- ${A.name}: 피해 ${A.damage}, 사거리 ${A.reachPx}px, ${A.knockdown ? '넉다운' : '경직'}, 히트스톱 ${A.hitstopTicks}틱, 틱마다 ${A.forwardPxPerTick}px 전진. 착지할 때까지 판정 유지.`);
-out.push(`- 대시: ${DS.distPx}px 를 ${DS.moveMs}ms 동안 이동, 전체 ${DS.durMs}ms. 무적 ${DS.invulnerableTicks}틱, 쿨타임 ${DS.cooldownTicks}틱. ${DS.attackCancelMs}ms 부터 공격으로 캔슬.`, '');
+out.push(`- 대시: ${DS.distPx}px 를 ${DS.moveMs}ms 동안 이동, 전체 ${DS.durMs}ms. 무적 ${DS.invulnerableTicks}틱, 쿨타임 ${DS.cooldownTicks}틱. 바렐은 대시 중 공격이 대시 찌르기가 된다(비에사는 ${DS.attackCancelMs}ms 부터 1타로 캔슬).`, '');
+
+// ---------------------------------------------------------------- 1.42 대시 찌르기
+const DA = B.dashAttack, ends = DA.frameEndTicks, daMeta = meta(DA.sprite), box = daMeta.hitbox;
+const daDamage = Math.round(B.combo.moves.c1.damage * DA.damageRatioOfC1);
+out.push('## 대시 찌르기 (v1.42)', '');
+out.push(`대시 중, 또는 대시가 끝나고 ${DA.graceTicks}틱 안에 공격. 반대 방향을 누르고 있으면 돌아서며, 지상 전용이다. 무적 없음, 별도 쿨타임 없음(대시 쿨타임 사용).`, '');
+out.push(...head(['장', ...ends.map((_, i) => i + 1)]));
+out.push(row(['틱', ...ends.map((e, i) => `${ends[i - 1] || 0}–${e}`)]));
+out.push(row(['구간', ...ends.map((e, i) => {
+  const from = ends[i - 1] || 0;
+  if (from >= DA.strikeTicks[0] && e <= DA.strikeTicks[1]) return '**판정**';
+  if (from >= DA.cancelTick) return '캔슬 가능';
+  if (from >= DA.strikeTicks[1]) return '회수';
+  return DA.move.some(m => from < m.toTick && e > m.fromTick) ? '전진' : '준비';
+})]), '');
+out.push(`- 전체 ${ends.at(-1)}틱. 판정 ${DA.strikeTicks[0]}–${DA.strikeTicks[1] - 1}틱(5~6번 장), 앞 ${box.front}~${box.reach}px · 높이 ${box.bottom}~${box.top}px · 깊이 ±${box.depth}px.`);
+out.push(`- 피해 ${daDamage}(일섬 × ${DA.damageRatioOfC1}), 넉다운, 히트스톱 ${DA.hitstopTicks}틱, SP +${DA.spGain}. 맞히면 ${DA.skillCancelOnHitTick}틱부터 스킬로, ${DA.cancelTick}틱(8번 장)부터 공격·점프·대시로 캔슬.`);
+out.push(`- 전진: ${DA.move.map(m => `${m.fromTick}–${m.toTick - 1}틱 몸 키×${m.bodyRatioPerTick}`).join(', ')} (몸 키 ${Math.round(daMeta.bodyHeight * 10) / 10}px, 합계 약 ${Math.round(DA.move.reduce((s, m) => s + (m.toTick - m.fromTick) * m.bodyRatioPerTick, 0) * daMeta.bodyHeight)}px).`);
+out.push(`- 적과 80px 이하로 붙어서 쓰면 대시로 적을 지나쳐 맞지 않는다(대시 80px + 전진). 110px 이상 떨어져서 쓰는 기술이다.`, '');
+
+// ---------------------------------------------------------------- 플레이어 공통: 점프 · 피격 · 넉다운
+const P = D.player, hurtMeta = meta(B.motions.hurt), downMeta = meta(B.motions.knockdown);
+out.push('## 플레이어 공통 — 이동 · 점프 · 피격 · 넉다운 (바렐 · 비에사)', '');
+out.push(...head(['항목', '값', '바렐 모션']));
+out.push(row(['이동', `지상 ${P.move.groundPxPerTick} / 공중 ${P.move.airPxPerTick} px/틱, 깊이 ×${P.move.depthRatio} (비에사 ×1.1)`, '-']));
+// 게임과 같은 순서(z += vz → vz -= 중력)로 틱마다 계산
+let air = 0, apex = 0; for (let z = 0, vz = P.jump.initialVz; ; air++) { z += vz; vz -= P.jump.gravityPerTick; if (z <= 0) break; apex = Math.max(apex, z); }
+apex = Math.round(apex * 100) / 100;
+out.push(row(['점프', `초기 속도 ${P.jump.initialVz}, 중력 ${P.jump.gravityPerTick}/틱 → 체공 ${air}틱, 최고 ${apex}px`, '10장, 상승·정점·하강 속도로 장 선택, 착지 6틱 (v1.50)']));
+out.push(row(['피격', `경직 ${P.hurt.defaultHitstunTicks}틱(공격이 정하면 그 값), 무적 ${P.hurt.invulnerableTicks}틱, 넉백 ${P.hurt.knockbackPx}px×${P.hurt.knockbackDecay}, 히트스톱 ${P.hurt.hitstopTicks}`,
+  `상단/하단 각 6장, 마지막 ${hurtMeta.recoveryTicks}틱 고정, 맞은 높이 ${Math.round(hurtMeta.highThreshold * 100)}% 기준 (v1.49)`]));
+out.push(row(['넉다운', `띄움 ${P.knockdown.launchVz}, 넉백 ${P.knockdown.knockbackPx}px×${P.knockdown.knockbackDecay}, ${P.knockdown.getupAfterTicks}틱 뒤 착지 상태면 기상, 기상 무적 ${P.knockdown.getupInvulnerableTicks}틱, 히트스톱 ${P.knockdown.hitstopTicks}`,
+  `10장 ${downMeta.tickDurations.join('/')}틱 = ${downMeta.tickDurations.reduce((a, b) => a + b, 0)}틱 (v1.51)`]));
+out.push('');
 
 out.push('## 바렐 스킬', '');
 out.push(...head(['스킬', '키', '쿨타임', '길이', '타격 시점(ms)', '피해', '앞/뒤 사거리', '결과', '무적']));

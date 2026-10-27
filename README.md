@@ -1,5 +1,13 @@
 # 흑월의 기사 — BLACK MOON KNIGHT
 
+## v1.52 — 전투 데이터 파일(combat-data.js)과 3연타 끊김 수정
+
+바렐과 일반 적의 전투 수치는 이제 **`combat-data.js` 한 파일**에 있고 게임은 그 값을 읽기만 합니다. 3연타·공중 베기·대시·대시 찌르기·스킬 5종, 플레이어 공통 이동·점프·피격·넉다운(비에사 포함), 일반 적 4종이 들어 있습니다. 밸런스 조정은 이 파일에서만 하세요. 보스와 비에사 고유 기술은 기존 파일을 따릅니다.
+
+일반 적의 피격 경직이 모든 공격에 18틱이라 바렐 2타 → 3타(22틱) 사이에 적이 먼저 풀리던 문제도 고쳤습니다(일섬 22틱, 역일섬 28틱). 장별 예고·판정·회수 표와 실측 결과는 [docs/barel-frame-data.md](docs/barel-frame-data.md), 변경·검증 기록은 [v1.52 패치 노트](patch_note/patch_1.52.txt)에 있습니다.
+
+검증: `node tests/combat-data.cjs`(데이터 ↔ 모션 파일 일치), `FRAME_DATA_SUITE=1 node tests/regression.cjs` → `node tools/report_frame_data.cjs`.
+
 ## v1.51 — 바렐 넉다운·기상 모션 적용(10장)
 
 제작한 Aseprite 10프레임을 바렐의 `down` 상태에 적용했습니다. 넘어짐→누움→무릎 기상→복귀를 기존 56틱에 맞춰 표시하고, 체공·넉백·기상 무적은 유지합니다. 크기는 실제 idle의 투구 너비로 맞췄습니다. [변경 내역](patch_note/patch_1.51.txt).
