@@ -79,10 +79,7 @@ function drawBarelPlayer() {
   if(!paintBarel(barelPlayerFrame(),p,p.st==='dead'?clamp(1-(p.t-65)/35,0,1):1))return false;
   p.tipX=p.x+p.face*72;p.tipH=p.z+68;
   const fx=(name,u,dx=60,w=200,h=160)=>barelEffect(name,u,p.x+p.face*dx,p.y-p.z,w,h);
-  if(p.st==='atk') {
-    const a=ATK[p.atk] || ATK.c1,u=(t-(a.wind||0))/((a.act||200)+100);
-    if(u>=0&&u<1)fx(p.combo===1?'rise':p.combo===2?'impact':'slash',u);
-  }
+  globalThis.BarelComboFx?.draw(p,MS);
   if(p.st==='dash'&&!globalThis.BarelDash?.hasBakedEffects())barelEffect('dust',t/DASH.dur,p.x-p.face*24,p.y+2,120,30,p.face);
   if(p.st==='skill' && SKILLS[p.skill]) {
     const start={thrust:180,slam:330,whirl:150,leap:560,redwave:220}[p.skill];

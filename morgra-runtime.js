@@ -127,6 +127,7 @@ function strikeMorgraCrows(reach,behind=0,origin=player) {
     const dx=(h.x-p.x)*p.face;
     if(h.kind==='crow'&&!h.dead&&dx>=-behind-15&&dx<=reach+15&&Math.abs(h.y-p.y)<26&&Math.abs(h.h-(p.z+55))<55) {
       h.dead=true;h.owner.gr=Math.min(h.owner.grMax,h.owner.gr+8);h.owner.grT=150;
+      sfx('hurt');
       morgraFx('bolt_hit',h.x,h.y,h.h,h.owner,18);
     }
   }
