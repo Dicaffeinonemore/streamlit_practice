@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["combat-data.js", "motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-dash-attack.js", "src/animation/barel-hurt.js", "src/animation/barel-down.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "game.js"]   # 순서 중요: combat-data.js(전투 수치) → motion.js(엔진) 먼저
+SCRIPTS = ["perf-runtime.js", "combat-data.js", "motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-dash-attack.js", "src/animation/barel-hurt.js", "src/animation/barel-down.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "game.js"]   # 순서 중요: combat-data.js(전투 수치) → motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -65,6 +65,13 @@ def build_single_html() -> str:
                 "같은 버전으로 포함되어 있는지 확인하세요."
             )
         code = script.read_text(encoding="utf-8")
+        # The standalone export remains self-contained; normal play uses cached files.
+        def embed_image(asset: re.Match) -> str:
+            image_path = ROOT / asset.group(0)
+            extension = image_path.suffix.lstrip(".")
+            mime = "jpeg" if extension == "jpg" else extension
+            return "data:image/" + mime + ";base64," + base64.b64encode(image_path.read_bytes()).decode("ascii")
+        code = re.sub(r"assets/runtime/[a-f0-9]+\.(?:png|webp|gif|jpg)", embed_image, code)
         return f"<script>\n{code}\n</script>"
 
     html = re.sub(r'<script\s+src=([\"\'])([^\"\']+)\1\s*>\s*</script>', inline_script, html)
@@ -179,6 +186,10 @@ def prepare_streamlit_component(review: bool = False) -> Path:
             files.update(name for name in animation_files if (ROOT / name).is_file())
         html = embed_boss_bgm(html)
         html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
+    if not review:
+        manifest = ROOT / "data/runtime-assets.json"
+        if manifest.is_file():
+            files.update(json.loads(manifest.read_text(encoding="utf-8")))
     files.add("streamlit-bridge.js")
     if "src/animation/barel-idle.js" in files:
         animation_files = (
@@ -314,8 +325,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
     def end_headers(self):
-        # 개발 중 수정사항이 바로 반영되도록 캐시 비활성화
-        self.send_header("Cache-Control", "no-store")
+        # Content-hashed images can be cached; editable scripts refresh immediately.
+        if self.path.startswith("/assets/runtime/"):
+            self.send_header("Cache-Control", "public, max-age=31536000, immutable")
+        else:
+            self.send_header("Cache-Control", "no-cache")
         super().end_headers()
 
 

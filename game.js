@@ -5,13 +5,27 @@
 const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 const W = 960, H = 540;
-// 캔버스 실제 픽셀은 화면 크기에 맞춘다 (게임 좌표는 그대로 960x540). 4K에서 과부하 없게 최대 3배
-let RENDER_K = 1;
+// Fixed game coordinates; balanced mode avoids extra pixels on high-DPI laptops.
+let RENDER_K = 1, renderRevision = 0;
 function fitCanvas() {
-  RENDER_K = clamp((cv.clientWidth || W) * (window.devicePixelRatio || 1) / W, 1, 3);
+  const limit = UX.options.quality === 'high' && !UX.options.lowFx ? 2 : 1;
+  RENDER_K = clamp((cv.clientWidth || W) * (window.devicePixelRatio || 1) / W, 1, limit);
   cv.width = Math.round(W * RENDER_K); cv.height = Math.round(H * RENDER_K);
+  renderRevision++;
 }
 addEventListener('resize', fitCanvas);
+// 피격 번쩍임. ctx.filter='brightness()'는 그릴 때마다 중간 버퍼를 만들어 공격·피격 순간 프레임이 떨어진다.
+// 대신 같은 그림을 'lighter'로 한 번 더 겹친다: c + (gain-1)·c = gain·c 이므로 밝기 gain(≤2)과 같은 결과다.
+let flashGain = 1;
+function drawLit(im, sx, sy, sw, sh, dx, dy, dw, dh, gain = flashGain) {
+  if (im.naturalWidth * im.naturalHeight > 4 * 1024 * 1024) {
+    im = GameAssets.frame(im, sx, sy, sw, sh); sx = sy = 0; sw = im.width; sh = im.height;
+  }
+  ctx.drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh);
+  if (gain <= 1) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= Math.min(1, gain - 1);
+  ctx.drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh); ctx.restore();
+}
 // 스프라이트 보간: 화면에서 2배 이상 커지면 도트를 또렷하게(nearest), 그보다 작으면 고품질로 부드럽게 줄인다.
 // k = 그릴 크기 / 원본 픽셀 크기. 현재 변환(줌, 해상도 배율)까지 곱해서 판단한다
 function smoothFor(k, c = ctx) {
@@ -459,6 +473,7 @@ function startStage(i, restored = false) {
   vargulRemains=[];sovereignRemains=[];
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
+  GameAssets.prepareStage(i);
   arena = null;
   camX = 0; camLock = false; waveIdx = 0; clearT = 0; goT = 0; flashT = 0;
   enemies = []; items = []; parts = []; texts = []; target = null; hazards = []; impacts = []; bursts = []; ghosts = []; bolts = [];
@@ -2735,7 +2750,7 @@ function portrait(id) {
     const f=namedClip('player','idle');
     if(f && f.source==='player_base') {
       const c=document.createElement('canvas');c.width=c.height=64;c.hd=true;
-      c.getContext('2d').drawImage(NAMED_ATLAS,f.atlas[0]+195-f.rect[0],f.atlas[1]+140-f.rect[1],140,140,0,0,64,64);
+      c.getContext('2d',{willReadFrequently:true}).drawImage(NAMED_ATLAS,f.atlas[0]+195-f.rect[0],f.atlas[1]+140-f.rect[1],140,140,0,0,64,64);
       return portraitCache.playerNamed=c;
     }
   }
@@ -2926,6 +2941,7 @@ function drawVignette() {
 
 function render() {
   const theme = stage ? stage.theme : 'stage1';
+  flashGain = 1;
   ctx.save();
   if (UX.options.shake && shake > 0.5 && scene !== 'pause' && scene !== 'settings') ctx.translate(rand(-shake, shake) * 0.6, rand(-shake, shake) * 0.6);
   drawBackdrop(theme, camX * Z);
@@ -3054,16 +3070,40 @@ function renderIdle() {   // 타이틀/튜토리얼 뒤 배경: 스테이지 풍
 }
 
 // ---------------------------------------------------------------- 루프
-let last = 0, acc = 0;
+let last = 0, acc = 0, frozenFrame = '';
+let loopRequest = 0, loopTimeout = 0;
+let waitingAssets = false;
+function scheduleLoop(delay = 0) {
+  if (delay) loopTimeout = setTimeout(() => { loopTimeout = 0; loopRequest = requestAnimationFrame(loop); }, delay);
+  else loopRequest = requestAnimationFrame(loop);
+}
+function wakeLoop() {
+  clearTimeout(loopTimeout); cancelAnimationFrame(loopRequest);
+  loopTimeout = 0; scheduleLoop();
+}
+for (const event of ['keydown', 'pointerdown', 'input', 'change', 'visibilitychange', 'bmk-assets-ready']) addEventListener(event, wakeLoop);
 function loop(t) {
-  const real = Math.min(100, t - last); last = t;
+  let real = Math.min(100, t - last); last = t;
+  if (GameAssets.loading) {
+    waitingAssets = true; acc = 0; GamePerf.reset(); scheduleLoop(100); return;
+  }
+  if (waitingAssets) { real = 0; waitingAssets = false; }
   const frozen = ['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene);
+  const frozenKey = `${scene}|${renderRevision}|${GameAssets.revision}`;
+  if (document.hidden || (frozen && frozenFrame === frozenKey)) {
+    GamePerf.reset();
+    scheduleLoop(document.hidden ? 1000 : 200);
+    return;
+  }
+  frozenFrame = frozen ? frozenKey : '';
+  const updateStart = performance.now();
   acc += frozen ? 0 : slowT > 0 ? real * 0.3 : real;
   if (!frozen && slowT > 0) slowT -= real;
   while (acc >= MS) {
     const processed = update(); acc -= MS;
     if (processed) for (const k in pressed) { pressed[k] -= MS; if (pressed[k] <= 0) delete pressed[k]; }
   }
+  const renderStart = performance.now();
   ctx.setTransform(RENDER_K, 0, 0, RENDER_K, 0, 0);   // 960x540 좌표계를 실제 해상도로 확대
   if (scene === 'title' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
@@ -3074,8 +3114,10 @@ function loop(t) {
   $('skillbar').hidden = scene !== 'play';
   syncTouchControls();
   $('practiceGuide').hidden = !practice || scene !== 'play';
-  requestAnimationFrame(loop);
+  GamePerf.record(t, renderStart - updateStart, performance.now() - renderStart);
+  scheduleLoop();
 }
 UX.mount();
 fitCanvas();
-requestAnimationFrame(t => { last = t; loop(t); });
+GameAssets.prepareStage(0);
+loopRequest = requestAnimationFrame(t => { last = t; loop(t); });

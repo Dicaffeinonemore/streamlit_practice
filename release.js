@@ -20,6 +20,7 @@ function drawReleaseBackdrop(theme, scroll) {
   const paint = image => {
     const height = HORIZON + 4, scale = Math.max(W / image.naturalWidth, height / image.naturalHeight);
     const dw = image.naturalWidth * scale, dh = image.naturalHeight * scale;
+    const tile = GameAssets.tile(image, 0, 0, image.naturalWidth, image.naturalHeight, dw, dh);
     ctx.imageSmoothingEnabled = false;
     const offset = stage ? scroll : 0, first = Math.floor(offset / dw);
     for (let n = first; n * dw - offset < W; n++) {
@@ -27,7 +28,7 @@ function drawReleaseBackdrop(theme, scroll) {
       ctx.save();
       ctx.translate(n % 2 ? right : left, height - dh);
       if (n % 2) ctx.scale(-1, 1);
-      ctx.drawImage(image, 0, 0, right - left, dh);
+      ctx.drawImage(tile, 0, 0, right - left, dh);
       ctx.restore();
     }
   };

@@ -4,10 +4,10 @@ const AURELION_SFX = {kneel_voice:'bwind',holy_chant:'mcharge',holy_strike:'pill
   armor_rise:'bwind',royal_decree:'phase2',royal_roar:'phase2',roar_short:'bcharge',grunt_lift:'bwind',
   slam_impact:'land',blade_stuck:'hit',swing_heavy:'swing',blade_charge:'mcharge',wave_release:'bwave',
   guard_ring:'mcharge',parry_clang:'hit',heavy_breath:'bwind',whirl:'swing'};
-const AURELION_SHEETS = AURELION_ART.sheets.map(src => {const im=new Image();im.src=src;return im;});
-const AURELION_READY = Promise.all(AURELION_SHEETS.map(im=>im.decode()));
+const AURELION_GROUP = GameAssets.group(2,AURELION_ART.sheets);
+const AURELION_SHEETS = AURELION_GROUP.images;
+const AURELION_READY = AURELION_GROUP.ready;
 // A failed image uses the retained renderer; combat remains deterministic.
-AURELION_READY.catch(()=>{});
 const aurelionMoves=AURELION_ART.timing;
 const aurelionRules=AURELION_ART.boss;
 const AURELION_ATTACKS=['combo','sword_wave','cleave','charge','judgment','guard','whirl','taunt'];
@@ -266,7 +266,7 @@ function paintAurelion(f,x,y,face=1,alpha=1,k=.85,add=false) {
   const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor,d=k/(AURELION_ART.hd||1);   // atlas keeps source pixels
   ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(d);
   if(add)ctx.globalCompositeOperation='lighter';
-  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
+  drawLit(im,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
 }
 function aurelionTelegraph(e) {
   const a=e.aurelion;if(e.st!=='pat'||!a?.current)return null;
@@ -289,9 +289,10 @@ function drawAurelion(e) {
     if(e.p2shown)paintAurelion(aurelionFxFrame('gold_aura',Math.floor(tick/5)%4),e.x,e.y,e.face,.55,.85,true);
   }
   ctx.save();const tele=aurelionTelegraph(e);
-  if(e.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
-  else if(tele?.flash&&UX.options.flash&&Math.floor(e.pt/90)%2===0)ctx.filter=tele.flash==='white'?'brightness(2)':tele.flash==='red'?'sepia(1) saturate(5) hue-rotate(310deg)':'sepia(1) saturate(4)';
-  paintAurelion(f,e.x,e.y-e.z,e.face,alpha);ctx.restore();
+  if(e.flash>0&&UX.options.flash)flashGain=1.8;
+  else if(tele?.flash==='white'&&UX.options.flash&&Math.floor(e.pt/90)%2===0)flashGain=2;
+  else if(tele?.flash&&UX.options.flash&&Math.floor(e.pt/90)%2===0)ctx.filter=tele.flash==='red'?'sepia(1) saturate(5) hue-rotate(310deg)':'sepia(1) saturate(4)';
+  paintAurelion(f,e.x,e.y-e.z,e.face,alpha);ctx.restore();flashGain=1;
   const drawing=aurelionDrawing(pose.id,pose.f),blade=drawing.hitboxes?.find(b=>b.kind!=='body')?.box;
   const tip=aurelionMoves[pose.id].events?.find(ev=>ev.at==='blade_tip')?.offset;
   e.tipX=e.x+e.face*(blade?blade[0]+blade[2]:tip?.[0]??90)*AURELION_K;

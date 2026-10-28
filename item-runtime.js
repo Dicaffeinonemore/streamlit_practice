@@ -51,8 +51,7 @@ function drawItemSprite(key, x, bottom, maxWidth, maxHeight, flash = false) {
   if (!s || s.w <= 0 || s.h <= 0) return false;
   const scale = Math.min(maxWidth/s.w, maxHeight/s.h), w = s.w*scale, h = s.h*scale;
   ctx.save(); ctx.imageSmoothingEnabled = false;
-  if (flash) ctx.filter = 'brightness(2)';
-  ctx.drawImage(s.image, s.x, s.y, s.w, s.h, Math.round(x-w/2), Math.round(bottom-h), Math.round(w), Math.round(h));
+  drawLit(s.image, s.x, s.y, s.w, s.h, Math.round(x-w/2), Math.round(bottom-h), Math.round(w), Math.round(h), flash ? 2 : 1);
   ctx.restore();
   return true;
 }

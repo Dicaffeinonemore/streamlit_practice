@@ -52,7 +52,8 @@ module.exports=async({evaluate,call,errors,root,base,ready})=>{
   if(!result.benchmark&&fs.existsSync(path.join(out,'benchmark.json')))result.benchmark=JSON.parse(fs.readFileSync(path.join(out,'benchmark.json'),'utf8'));
   result.externalResources=await evaluate('performance.getEntriesByType("resource").filter(r=>!r.name.startsWith("data:")).map(r=>r.name)');
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(result,null,2));
-  assert.deepEqual(result.externalResources,[],'Embedded game uses no external asset requests');
+  assert.deepEqual(result.externalResources.filter(url=>!url.startsWith(base+'/assets/aseprite/')),[],
+    'Embedded scripts and images are self-contained; animation metadata stays on the game server');
   await ready(base+'/production.html');await evaluate('VARGUL_READY');
   assert.equal(await evaluate('VARGUL_DEBUG'),false,'Production disables debug');
   const before=await evaluate('scene');await key('F2');assert.equal(await evaluate('scene'),before,'Debug shortcuts do nothing in production');

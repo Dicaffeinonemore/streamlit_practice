@@ -388,6 +388,8 @@
     <p class="tips">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
   </div>
   <div class="screen dialog" id="settings"><h2>설정</h2><div class="dialog-body">
+    <div class="setting-row"><label for="renderQuality">화질</label><select id="renderQuality"><option value="balanced">기본 · 960×540</option><option value="high">고화질 · 최대 1920×1080</option></select></div>
+    <div class="setting-row"><label for="showPerformance">성능 표시 (FPS)</label><input id="showPerformance" type="checkbox"></div>
     <div class="setting-row"><label for="lowFx">이펙트 감소 (저사양)</label><input id="lowFx" type="checkbox"></div>
 <label class="setting-row">음악 <input id="musicVolume" aria-label="음악 음량" type="range" min="0" max="100"></label>
     <label class="setting-row">효과음 <input id="sfxVolume" aria-label="효과음 음량" type="range" min="0" max="100"></label>
@@ -444,6 +446,9 @@
     <button data-control="KeyL" class="touch-skill" data-skill="redwave" style="--x:4.00;--y:0.47" aria-label="붉은 파동"><span class="cool"></span></button>
   </div>
 </div>
+<output id="performanceStats" hidden style="position:fixed;top:8px;left:8px;z-index:100;pointer-events:none;background:#090b12dd;color:#d8f4ff;padding:6px 10px;font:12px monospace"></output>
+<script src="perf-runtime.js"></script>
+<div id="assetLoading" hidden role="status" style="position:fixed;inset:0;z-index:99;display:grid;place-items:center;background:#080610dd;color:#e3f2ff;font:18px sans-serif;pointer-events:none">그래픽 불러오는 중…</div>
 <script src="combat-data.js"></script>
 <script src="motion.js"></script>
 <script src="sprites.js"></script>

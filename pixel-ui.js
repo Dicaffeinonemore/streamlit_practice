@@ -85,7 +85,7 @@ function enemyHUDPortrait(e) {
   const left = clamp(frame.anchor[0] - size / 2, 0, w - size);
   const top = e.type === 'rogue' ? h * .16 : 0;
   const portrait = document.createElement('canvas'); portrait.width = portrait.height = 128;
-  const c = portrait.getContext('2d'); c.imageSmoothingEnabled = false;
+  const c = portrait.getContext('2d', { willReadFrequently: true }); c.imageSmoothingEnabled = false;
   c.drawImage(NAMED_ATLAS, sx + left, sy + top, size, size, 0, 0, 128, 128);
   enemyPortraitCache.set(role, portrait);
   return portrait;

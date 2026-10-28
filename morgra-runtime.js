@@ -1,5 +1,6 @@
 'use strict';
-const MORGRA_ATLAS=new Image();MORGRA_ATLAS.src=MORGRA_ART.atlas;
+const MORGRA_GROUP=GameAssets.group(1,[MORGRA_ART.atlas]);
+const MORGRA_ATLAS=MORGRA_GROUP.images[0];
 const MORGRA_REVIVE={death:110,wait:45,rise:106,hp:1200,groggy:240};
 const morgraScale=()=>MORGRA_ART.scale*BOSS_VISUAL_SCALE;
 const morgraMoves={...MORGRA_ART.timing};
@@ -25,7 +26,7 @@ function paintMorgra(f,x,y,face=1,alpha=1,k=BOSS_VISUAL_SCALE) {
   if(!f||!MORGRA_ATLAS.naturalWidth)return false;
   const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor,d=k/(MORGRA_ART.hd||1);   // atlas keeps source pixels
   ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(d);
-  ctx.drawImage(MORGRA_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
+  drawLit(MORGRA_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
 }
 function beginMorgraRevival(e) {
   resetBossFx(e);e.hp=0;e.gr=0;e.grT=0;e.st='reviving';e.t=0;e.invuln=true;e.remove=false;
@@ -183,9 +184,9 @@ function drawMorgra(e) {
   else if(e.st==='intro'){id='intro';f=introT/MS;}
   else if(e.st==='pat'){id=e.morgraMove||morgraResolve(e,e.pat);f=e.pt/MS;}
   drawShadow(e.x-camX,e.y,SPRITES.boss2.sh,e.z);
-  ctx.save();if(e.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
+  if(e.flash>0&&UX.options.flash)flashGain=1.8;
   paintMorgra(morgraFrame(id,f),e.x,e.y-e.z-morgraHover(e),e.face,e.st==='dead'?clamp(1-(e.t-65)/55,0,1):e.alpha);
-  ctx.restore();
+  flashGain=1;
   if(e.st==='reviving'&&e.t>=217&&e.t<241)paintMorgra(morgraFxFrame('teleport_burst',(e.t-217)/6),e.x,e.y);
   return true;
 }

@@ -1,5 +1,6 @@
 'use strict';
-const VARGUL_SHEETS=VARGUL_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;});
+const VARGUL_GROUP=GameAssets.group(3,VARGUL_ART.sheets,()=>VARGUL_MELEE_READY);
+const VARGUL_SHEETS=VARGUL_GROUP.images;
 const VARGUL_MELEE_FRAMES={};
 const VARGUL_MELEE_READY=Promise.all(Object.entries(VARGUL_MELEE_SOURCES).map(async([kind,src])=>{
   const im=new Image();im.src=src;await im.decode();
@@ -37,8 +38,7 @@ const VARGUL_MELEE_READY=Promise.all(Object.entries(VARGUL_MELEE_SOURCES).map(as
     VARGUL_MELEE_FRAMES[kind].push({image:frame,spans,width:frame.width,height:frame.height});
   }
 }));
-const VARGUL_READY=Promise.all([...VARGUL_SHEETS.map(im=>im.decode()),VARGUL_MELEE_READY]);
-VARGUL_READY.catch(()=>{});
+const VARGUL_READY=VARGUL_GROUP.ready;
 const VARGUL_DEBUG=globalThis.VARGUL_DEBUG_OVERRIDE===true||new URLSearchParams(location.search).get('debug')==='1';
 let vargulDebug=false,vargulDebugMove=0,vargulRepeat=null,vargulRemains=[];
 function isVargul(e){return e?.type==='boss4';}
@@ -444,14 +444,15 @@ function paintVargul(frame,x,y,face=1,alpha=1,k=VARGUL_ART.scale,add=false){
   const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,d=k/(VARGUL_ART.hd||1);   // atlas is HD x stored pixels
   ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(d);
   if(add)ctx.globalCompositeOperation='lighter';
-  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
+  drawLit(im,sx,sy,w,h,-ax*k,-ay*k,w*d,h*d);ctx.restore();return true;
 }
 function paintVargulFx(id,progress,x,y,width,height,alpha=1,face=1){
   const frames=VARGUL_ART.clips['fx_'+id+'_add'];if(!frames)return;
   const f=frames[Math.min(frames.length-1,Math.max(0,Math.floor(progress*frames.length)))],im=VARGUL_SHEETS[f.sheet];if(!im?.naturalWidth)return;
   const [sx,sy,w,h]=f.atlas;
+  const cached=GameAssets.sprite(im,sx,sy,w,h,width*Z*RENDER_K,height*Z*RENDER_K);
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha*=alpha;ctx.translate(x-camX,y);ctx.scale(face,1);smoothFor(height/h);
-  ctx.drawImage(im,sx,sy,w,h,-width/2,-height,width,height);ctx.restore();
+  drawLit(cached,0,0,cached.width,cached.height,-width/2,-height,width,height);ctx.restore();
 }
 function paintVargulCrossWarning(progress,z,alpha){
   const height=480*.5112*.35,depth=VARGUL_RULES.cross.depth;
@@ -498,13 +499,21 @@ function paintVargulCrossEruption(z,age){
 function vargulTelegraph(e){const t=e.vargul?.current;return e.st==='pat'&&t?{warning:!!t.warning,white:!!t.white}:null;}
 function vargulAuraVisible(e){return e.p2shown&&!e.phaseT&&!['down','stun','dead','intro'].includes(e.st)&&!e.vargul?.current?.hidden;}
 function vargulVisualScale(pose){return VARGUL_ART.scale*(VARGUL_VISUAL_SCALES[pose.clip]?.[pose.drawing-1]??1);}
+const vargulMeleeProgress = new WeakMap();
 function vargulMeleeEffectData(e,t=e.vargul?.current){
   if(!t?.attack)return null;
   const id=t.attack.id,kind=id.startsWith('dash')?'thrust':'slash';
   if(!/^(combo|dash|sweep)/.test(id))return null;
   // Keep one continuous animation across launch/dash, including the return pass.
-  const timeline=e.vargul?.timeline||[],segment=timeline.filter(v=>v.attack?.id===id);
-  const index=Math.max(0,segment.indexOf(t)),progress=index/Math.max(1,segment.length-1);
+  const timeline=e.vargul?.timeline||[];
+  let progressMap=vargulMeleeProgress.get(timeline);
+  if(!progressMap){
+    progressMap=new Map();const groups=new Map();
+    for(const frame of timeline)if(frame.attack){const key=frame.attack.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(frame);}
+    for(const frames of groups.values())frames.forEach((frame,index)=>progressMap.set(frame,index/Math.max(1,frames.length-1)));
+    vargulMeleeProgress.set(timeline,progressMap);
+  }
+  const progress=progressMap.get(t)||0;
   const large=id==='combo3'||id==='sweep_back';
   const frame=VARGUL_MELEE_FRAMES[kind]?.[Math.min(7,Math.floor(progress*8))];
   const geo=VARGUL_MEASUREMENTS[t.clip][t.drawing-1];
@@ -569,14 +578,14 @@ function drawVargul(e){
   drawShadow(e.x-camX,e.y,SPRITES.boss4.sh,e.z);
   if(vargulAuraVisible(e))paintVargulFx('frost_aura',(tick%96)/96,e.x,e.y-e.z,150,170,.38);
   ctx.save();const tele=vargulTelegraph(e);
-  if(e.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
-  else if(tele?.white&&UX.options.flash&&Math.floor(e.pt/90)%2===0)ctx.filter='brightness(2)';
+  if(e.flash>0&&UX.options.flash)flashGain=1.8;
+  else if(tele?.white&&UX.options.flash&&Math.floor(e.pt/90)%2===0)flashGain=2;
   const crossfade=e.phaseT>0&&a.transitionAge>=VARGUL_RULES.down+VARGUL_RULES.awaken;
   if(crossfade){
     const u=(a.transitionAge-VARGUL_RULES.down-VARGUL_RULES.awaken)/8;
     paintVargul(frame,e.x,e.y,e.face,1-u,visualScale);paintVargul(VARGUL_ART.clips.p2_idle[0],e.x,e.y,e.face,u,vargulVisualScale({clip:'p2_idle',drawing:1}));
   }else paintVargul(frame,e.x,e.y-e.z,e.face,1,visualScale);
-  ctx.restore();
+  ctx.restore();flashGain=1;
   if(vargulAuraVisible(e)){
     const mask=VARGUL_ART.clips['mask_'+pose.clip]?.[pose.drawing-1],pulse=.20+.65*(.5+.5*Math.sin(tick*Math.PI*2/90));
     if(mask)paintVargul(mask,e.x,e.y-e.z,e.face,pulse,visualScale,true);
@@ -618,8 +627,8 @@ function drawVargulHazards(ground=false){
         if(z.kind==='sword'){ctx.beginPath();ctx.ellipse(z.x-camX,z.y,d.radius,d.depth,0,0,Math.PI*2);ctx.stroke();}
         else{ctx.strokeRect(0,z.y-d.depth,VW,2*d.depth);ctx.strokeRect(z.x-camX-d.column,GTOP,2*d.column,GBOT-GTOP);}ctx.restore();}
     }else if(z.kind==='orb'){
-      const size=42,alpha=z.inv>0?.45:1;ctx.save();if(z.flash>0&&UX.options.flash)ctx.filter='brightness(2)';
-      paintVargulFx('ice_orb',(t%52)/52,z.x,z.y-z.h+size/2,size,size,alpha);ctx.restore();
+      const size=42,alpha=z.inv>0?.45:1;ctx.save();if(z.flash>0&&UX.options.flash)flashGain=2;
+      paintVargulFx('ice_orb',(t%52)/52,z.x,z.y-z.h+size/2,size,size,alpha);ctx.restore();flashGain=1;
       const x=z.x-camX,y=z.y-z.h-size/2-7,barWidth=size+4;
       ctx.save();ctx.fillStyle='#182532';ctx.fillRect(x-barWidth/2,y,barWidth,4);
       ctx.fillStyle='#89dcff';ctx.fillRect(x-barWidth/2+1,y+1,(barWidth-2)*clamp(z.hp/z.maxHp,0,1),2);ctx.restore();
@@ -658,7 +667,7 @@ function drawVargulRemains(){for(const r of vargulRemains)paintVargul(VARGUL_ART
 let vargulPortrait=null;
 function getVargulPortrait(){
   const f=VARGUL_ART.clips.p1_idle[0],im=VARGUL_SHEETS[f.sheet];if(!im?.naturalWidth)return null;
-  if(!vargulPortrait){const c=document.createElement('canvas');c.width=c.height=64;c.hd=true;const [x,y,w,h]=f.atlas;c.getContext('2d').drawImage(im,x+w*.2,y+h*.1,w*.55,h*.35,0,0,64,64);vargulPortrait=c;}
+  if(!vargulPortrait){const c=document.createElement('canvas');c.width=c.height=64;c.hd=true;const [x,y,w,h]=f.atlas;c.getContext('2d',{willReadFrequently:true}).drawImage(im,x+w*.2,y+h*.1,w*.55,h*.35,0,0,64,64);vargulPortrait=c;}
   return vargulPortrait;
 }
 function vargulDebugStart(){
