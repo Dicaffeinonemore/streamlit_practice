@@ -46,8 +46,9 @@ function paintBarel(frame,actor,alpha=1) {
   const scale=BAREL_PLAYER_SCALE*(frame.renderScale || 1);
   ctx.scale(scale,scale);
   ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
-  if(actor.flash>0 && UX.options.flash)ctx.filter=actor.st==='hurt'?'brightness(1.5) sepia(1) saturate(8) hue-rotate(310deg)':'brightness(1.8)';
-  ctx.drawImage(image,x,y,w,h,-ax,-ay,w,h);ctx.restore();return true;
+  const lit=actor.flash>0 && UX.options.flash;
+  if(lit && actor.st==='hurt')ctx.filter='brightness(1.5) sepia(1) saturate(8) hue-rotate(310deg)';
+  drawLit(image,x,y,w,h,-ax,-ay,w,h,lit && actor.st!=='hurt'?1.8:1);ctx.restore();return true;
 }
 // Shared stable framing for ordinary and boss-challenge selection previews.
 function drawBarelIdlePreview(canvas,elapsedMs){

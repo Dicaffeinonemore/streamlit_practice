@@ -1,0 +1,1 @@
+const VARGUL_MELEE_SOURCES = {"slash":"assets/runtime/a92c3ed4dfcc4f28df72fda5.png","thrust":"assets/runtime/d5ebf4df441d29d61b049b9d.png"};

@@ -1,6 +1,8 @@
 """Streamlit 번들: 실제 HTML 연결, 누락 파일, 실행 디렉터리 검사."""
 import importlib.util
 import base64
+import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -16,6 +18,17 @@ spec.loader.exec_module(server)
 
 
 class StreamlitBundleTests(unittest.TestCase):
+    def test_external_art_is_intact_and_included_in_component(self):
+        assets = json.loads((ROOT / "data/runtime-assets.json").read_text(encoding="utf-8"))
+        output = server.prepare_streamlit_component()
+        for name in assets:
+            original = (ROOT / name).read_bytes()
+            self.assertEqual(hashlib.sha256(original).hexdigest()[:24], Path(name).stem)
+            self.assertEqual((output / name).read_bytes(), original)
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        scripts = re.findall(r'<script\s+src="([^"]+)"', html)
+        self.assertLess(sum((ROOT / name).stat().st_size for name in scripts), 10 * 1024 * 1024)
+
     def test_component_embeds_mp3_bytes_before_audio_engine(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

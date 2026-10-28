@@ -88,8 +88,7 @@ function paintNamedFrame(frame, actor, shadow=false) {
   ctx.translate(actor.x-camX+hurt,actor.y-actor.z);ctx.scale(actor.face,1);
   ctx.globalAlpha=actor.st==='dead'?(actor.boss?clamp(1-(actor.t-65)/55,0,1):clamp(1-(actor.t-40)/25,0,1)):actor.alpha??1;
   smoothFor(k);
-  if(actor.flash>0 && UX.options.flash)ctx.filter='brightness(2)';
-  ctx.drawImage(NAMED_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);
+  drawLit(NAMED_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k,actor.flash>0 && UX.options.flash?2:1);
   ctx.restore();return true;
 }
 function drawNamedPlayer() {

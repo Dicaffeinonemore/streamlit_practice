@@ -1,5 +1,6 @@
 'use strict';
-const GORATH_ATLAS=new Image();GORATH_ATLAS.src=GORATH_ART.atlas;
+const GORATH_GROUP=GameAssets.group(0,[GORATH_ART.atlas]);
+const GORATH_ATLAS=GORATH_GROUP.images[0];
 function gorathFrame(name,u=0,loop=false) {
   const fs=GORATH_ART.clips[name];
   return fs?.[Math.max(0,Math.min(fs.length-1,Math.floor((loop?u%1:Math.min(.99999,u))*fs.length)))];
@@ -43,16 +44,16 @@ function paintGorath(f,x,y,face=1,alpha=1,scale=1) {
   if(!f||!GORATH_ATLAS.naturalWidth)return false;
   const [sx,sy,w,h]=f.atlas,[ax,ay]=f.anchor,k=scale*GORATH_ART.scale;   // atlas keeps source pixels
   ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha*=alpha;smoothFor(k);
-  ctx.drawImage(GORATH_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
+  drawLit(GORATH_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
 }
 function drawGorath(e) {
   if(e.type!=='boss1'||!GORATH_ATLAS.naturalWidth)return false;
   drawShadow(e.x-camX,e.y,SPRITES.boss1.sh,e.z);
   ctx.save();
-  if(e.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
+  if(e.flash>0&&UX.options.flash)flashGain=1.8;
   else if(e.st==='pat'&&e.pat==='hook'&&e.pt<500&&Math.floor(e.pt/90)%2)ctx.filter='sepia(1) saturate(5) hue-rotate(320deg)';
   paintGorath(gorathEnemyFrame(e),e.x,e.y-e.z,e.face,e.st==='dead'?clamp(1-(e.t-65)/55,0,1):1,BOSS_VISUAL_SCALE);
-  ctx.restore();
+  ctx.restore();flashGain=1;
   if(e.st==='pat') {
     const t=e.pt;
     if(e.pat==='sweep'&&t>=450&&t<730)paintGorath(gorathFrame('slash_arc',(t-450)/280),e.x+e.face*70,e.y-65,e.face);

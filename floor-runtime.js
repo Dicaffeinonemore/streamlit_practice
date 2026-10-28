@@ -7,6 +7,7 @@ function drawStageFloor() {
   const [sx, sy, sw, sh] = art.crop;
   const height = Math.ceil(OY + VH - FL_TOP) + 1;
   const width = sw / sh * height;
+  const tile = GameAssets.tile(im, sx, sy, sw, sh, width, height);
   const first = Math.floor(camX / width);
   ctx.save();
   ctx.imageSmoothingEnabled = false;
@@ -17,7 +18,7 @@ function drawStageFloor() {
     ctx.save();
     ctx.translate(k % 2 ? right : left, FL_TOP);
     if (k % 2) ctx.scale(-1, 1);
-    ctx.drawImage(im, sx, sy, sw, sh, 0, 0, right - left, height);
+    ctx.drawImage(tile, 0, 0, right - left, height);
     ctx.restore();
   }
   const shade = ctx.createLinearGradient(0, FL_TOP, 0, FL_TOP + 14);

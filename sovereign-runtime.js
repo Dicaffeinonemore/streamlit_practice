@@ -1,6 +1,6 @@
 'use strict';
-const SOV_SHEETS=SOVEREIGN_ART.sheets.map(src=>{const im=new Image();im.src=src;return im;});
-Promise.all(SOV_SHEETS.map(im=>im.decode())).catch(()=>{});
+const SOV_GROUP=GameAssets.group(4,SOVEREIGN_ART.sheets);
+const SOV_SHEETS=SOV_GROUP.images;
 const SOV_R=SOVEREIGN_RULES,SOV_A=SOVEREIGN_ART;
 // Fist body box: half extents of the gauntlet drawing in world px.
 const SOV_FIST={len:SOV_A.fistLength,h:SOV_A.fistHeight,hw:SOV_A.fistLength*.45,hh:SOV_A.fistHeight*.45};
@@ -675,7 +675,7 @@ function sovPaint(frame,x,y,o={}){
   const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=(o.scale??1)/SOV_A.ppw;
   ctx.save();ctx.translate(x-camX,y);ctx.scale(o.face??1,1);if(o.angle)ctx.rotate(o.angle);ctx.globalAlpha*=o.alpha??1;smoothFor(k);
   if(o.add)ctx.globalCompositeOperation='lighter';if(o.filter)ctx.filter=o.filter;
-  ctx.drawImage(im,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
+  drawLit(im,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k,o.gain??1);ctx.restore();return true;
 }
 // Effect drawings are additive RGB on black; drawn stretched to w x h around their anchor.
 function sovFxDraw(id,u,x,y,w,h,o={}){
@@ -720,7 +720,7 @@ function drawSovereign(e){
   if(!SOV_SHEETS[frame?.sheet]?.naturalWidth)return false;
   drawShadow(e.x-camX,e.y,22,e.z);
   sovDrawAfterimages(e,s);
-  sovPaint(frame,e.x,e.y-e.z,{face:e.face,filter:e.flash>0&&UX.options.flash?'brightness(1.8)':null});
+  sovPaint(frame,e.x,e.y-e.z,{face:e.face,gain:e.flash>0&&UX.options.flash?1.8:1});
   // Phase-2: moon in the empty helm and the magenta cracks breathe (~90 ticks).
   const mask=SOV_A.clips[SOV_A.maskPrefix+pose.clip]?.[pose.drawing-1];
   if(mask&&(e.p2shown||pose.clip==='awaken')){
@@ -766,9 +766,9 @@ function drawSovFist(e,s,f){
   }
   if(f.trail)sovFxDraw('punch_trail',(tick%16)/16,f.x-f.face*SOV_FIST.len*.7,f.y-f.h,74,30,{face:f.face,alpha:.9});
   const back=f.i===1&&['home','return','rise'].includes(f.st),blink=f.glow&&Math.floor(tick/5)%2===0&&UX.options.flash;
-  const filter=f.flash>0?'brightness(2)':blink?'brightness(1.5)':back?'brightness(.75)':null;
+  const gain=f.flash>0?2:blink?1.5:1,filter=gain===1&&back?'brightness(.75)':null;
   const alpha=f.st==='rise'?Math.min(1,(f.wake-.5)*2+.3):1;
-  sovPaint(fr,f.x,f.y-f.h,{face:f.face,angle:f.angle,filter,alpha});
+  sovPaint(fr,f.x,f.y-f.h,{face:f.face,angle:f.angle,filter,gain,alpha});
   if(stage===2&&f.pose!==1&&Math.floor(tick/8)%2===0)
     sovPaint(fr,f.x,f.y-f.h,{face:f.face,angle:f.angle,alpha:.45,filter:'sepia(1) saturate(8) hue-rotate(-45deg)'});
   if(f.glow&&fr.core){
@@ -784,7 +784,7 @@ function drawSovGiant(e,s){
   const g=s.giant,fr=SOV_A.clips.giant[g.frame];
   sovDrawAfterimages(g,s);
   if(g.trail)sovFxDraw('punch_trail',(tick%16)/16,g.x-g.face*SOV_FIST.len*1.3,g.y-g.h,150,56,{face:g.face});
-  sovPaint(fr,g.x,g.y-g.h,{face:g.face,filter:g.glow&&Math.floor(tick/5)%2===0&&UX.options.flash?'brightness(1.5)':null});
+  sovPaint(fr,g.x,g.y-g.h,{face:g.face,gain:g.glow&&Math.floor(tick/5)%2===0&&UX.options.flash?1.5:1});
   if(g.glow&&fr.core)sovGlow(g.x-camX+g.face*fr.core[0]/SOV_A.ppw,g.y-g.h+fr.core[1]/SOV_A.ppw,g.glow,20);
 }
 // Fists are separate objects in the depth-sorted list; the back fist goes behind the body.

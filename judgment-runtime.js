@@ -1,10 +1,9 @@
 'use strict';
 // Both supplied sheets contain 24 frames, six columns by four rows.
-const JUDGMENT_IMAGES=Object.fromEntries(Object.entries(JUDGMENT_ART).filter(([,src])=>typeof src==='string').map(([id,src])=>{
-  const image=new Image();image.src=src;return [id,image];
-}));
-const JUDGMENT_READY=Promise.all(Object.values(JUDGMENT_IMAGES).map(image=>image.decode()));
-JUDGMENT_READY.catch(()=>{});
+const judgmentSources=Object.entries(JUDGMENT_ART).filter(([,src])=>typeof src==='string');
+const JUDGMENT_GROUP=GameAssets.group(2,judgmentSources.map(([,src])=>src));
+const JUDGMENT_IMAGES=Object.fromEntries(judgmentSources.map(([id],i)=>[id,JUDGMENT_GROUP.images[i]]));
+const JUDGMENT_READY=JUDGMENT_GROUP.ready;
 function judgmentSprite(id,frame,x,y,width,height,alpha=1){
   const image=JUDGMENT_IMAGES[id];if(!image?.naturalWidth)return false;
   const cw=image.naturalWidth/6,ch=image.naturalHeight/4,index=clamp(Math.floor(frame),0,23);

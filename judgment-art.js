@@ -1,0 +1,1 @@
+const JUDGMENT_ART = {"fieldDurations":[80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80],"moon":"assets/runtime/3b289e830fe1f3ab66823cf2.png","field":"assets/runtime/8336a7acfe4e8099ac7d4f80.png"};

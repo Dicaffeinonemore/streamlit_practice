@@ -32,6 +32,7 @@ const UX = (() => {
   const saved = read('settings') || {};
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const options = { music: number(saved.music, 0, 1) ? saved.music : .7, sfx: number(saved.sfx, 0, 1) ? saved.sfx : .8,
+    quality: saved.quality === 'high' ? 'high' : 'balanced', perf: saved.perf === true,
     lowFx: typeof saved.lowFx === 'boolean' ? saved.lowFx : reduced,
     shake: typeof saved.shake === 'boolean' ? saved.shake : !reduced,
     flash: typeof saved.flash === 'boolean' ? saved.flash : !reduced,
@@ -82,6 +83,8 @@ const UX = (() => {
     document.getElementById('saveStatus').textContent = available ? '' : '이 브라우저에서는 저장할 수 없습니다. 현재 게임은 계속할 수 있습니다.';
   }
   function applySettings() {
+    fitCanvas();
+    document.getElementById('performanceStats').hidden = !options.perf;
     AUDIO.setVolumes(options.music, options.sfx);
     document.body.classList.toggle('reduce-motion', !options.shake);
     const titleImage = document.getElementById('namedTitleImage');
@@ -216,6 +219,10 @@ const UX = (() => {
   }
   function clearTouch() { touches.clear(); resetStick(false); document.querySelectorAll('[data-control]').forEach(b => b.classList.remove('active')); }
   function mount() {
+    const quality = document.getElementById('renderQuality'); quality.value = options.quality;
+    quality.onchange = () => { options.quality = quality.value; applySettings(); write('settings', options); };
+    const perf = document.getElementById('showPerformance'); perf.checked = options.perf;
+    perf.onchange = () => { options.perf = perf.checked; applySettings(); write('settings', options); };
     for (const [id, key] of [['musicVolume', 'music'], ['sfxVolume', 'sfx']]) {
       const el = document.getElementById(id); el.value = options[key] * 100;
       el.oninput = () => { options[key] = Number(el.value) / 100; applySettings(); write('settings', options); };

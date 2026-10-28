@@ -59,8 +59,8 @@ function paintViesa(frame,actor,alpha=1){
   const im=frame&&VIESA_SHEETS[frame.sheet];if(!im?.naturalWidth)return false;
   const [x,y,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=VIESA_ART.scale;
   ctx.save();ctx.translate(actor.x-camX,actor.y-(actor.z||0));ctx.scale(actor.face||1,1);ctx.globalAlpha*=alpha;
-  smoothFor(k);if(actor.flash>0&&UX.options.flash)ctx.filter='brightness(1.8)';
-  ctx.drawImage(im,x,y,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
+  smoothFor(k);
+  drawLit(im,x,y,w,h,-ax*k,-ay*k,w*k,h*k,actor.flash>0&&UX.options.flash?1.8:1);ctx.restore();return true;
 }
 function drawViesaFx(name,frame,x,y,h,width,height,face=1,alpha=1){
   const f=viesaFrame('fx_'+name,frame),im=f&&VIESA_SHEETS[f.sheet];if(!im?.naturalWidth)return;

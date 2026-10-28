@@ -8,13 +8,17 @@ const { spawn } = require('node:child_process');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
-const scripts = JSON.parse(fs.readFileSync(path.join(root, 'server.py'), 'utf8').match(/SCRIPTS = (\[.*?\])/)[1]);
+const scripts = [...fs.readFileSync(path.join(root, 'index.html'), 'utf8').matchAll(/<script\s+src="([^"]+)"/g)].map(m=>m[1]);
 for (const name of scripts) new vm.Script(fs.readFileSync(path.join(root, name), 'utf8'), { filename: name });
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('<head>', '<head>'+ (process.env.VARGUL_SUITE?'<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>':''));
 const bgmPath=path.join(root,'assets/bgm/boss.mp3');
 const embeddedSource=fs.existsSync(bgmPath)?html.replace('<script src="audio.js">','<script>window.BOSS_BGM_URL="data:audio/mpeg;base64,'+fs.readFileSync(bgmPath).toString('base64')+'";</script>\n<script src="audio.js">'):html;
-const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => `<script>\n${fs.readFileSync(path.join(root, name), 'utf8')}\n</script>`), embeddedSource);
+const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></script>`, () => {
+  const source=fs.readFileSync(path.join(root,name),'utf8').replace(/assets\/runtime\/[a-f0-9]+\.(png|webp|gif|jpg)/g,(asset,ext)=>'data:image/'+(ext==='jpg'?'jpeg':ext)+';base64,'+fs.readFileSync(path.join(root,asset)).toString('base64'));
+  return `<script>\n${source}\n</script>`;
+}), embeddedSource);
 const allowed = new Set(['index.html', ...scripts]);
+for (const name of JSON.parse(fs.readFileSync(path.join(root, 'data/runtime-assets.json'), 'utf8'))) allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-grabbed-10/barel-grabbed-10.animation.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.png'])allowed.add(name);
@@ -306,7 +310,7 @@ function combatChecks() {
   check('Jump just before landing is buffered', player.z > 0 && player.vz > 0);
   reset(); startDash(1); inputDown('KeyJ');
   for (let i = 0; i < 9; i++) loop(last + MS * 1.1);
-  check('Early attack connects after dash recovery', player.st === 'atk');
+  check('Attack during dash enters the existing dash thrust', player.st === 'dash_attack');
   reset(); player.st = 'hurt'; updateSkillButtons();
   check('Skill button matches actual availability', !canStartSkill('thrust') && document.querySelector('[data-skill=thrust]').disabled && !document.querySelector('[data-skill=thrust]').classList.contains('ready'));
   for (const original of ['play', 'intro', 'bossintro']) {
@@ -456,7 +460,9 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
           if(FLOOR_ART[n].filename!==(n+1)+'스테이지 바닥.png')return false;
           for(const x of [-1,0,639.5,1280.25,stage.len-VW]) {
             camX=x;let calls=0;
-            ctx.drawImage=function(im,...args){if(im!==FLOOR_IMAGES[n])throw Error('Wrong stage floor');calls++;return original.call(this,im,...args)};
+            const source=FLOOR_IMAGES[n],a=FLOOR_ART[n].crop,height=Math.ceil(OY+VH-FL_TOP)+1;
+            const expected=GameAssets.tile(source,...a,a[2]/a[3]*height,height);
+            ctx.drawImage=function(im,...args){if(im!==expected)throw Error('Wrong cached stage floor');calls++;return original.call(this,im,...args)};
             if(!drawStageFloor()||calls<1)return false;
           }
           const saved=FLOOR_IMAGES[n];FLOOR_IMAGES[n]=null;
@@ -510,8 +516,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       await screenshot('emperor-phase-'+(p2?2:1));
     }
     await evaluate('toTutorial()');
-    await evaluate('Promise.all(Object.values(RELEASE_IMAGES).map(im=>im.decode()))');
-    assert.equal(await evaluate('Object.values(RELEASE_IMAGES).every(im=>im.naturalWidth>0)'), true);
+    assert.equal(await evaluate('Promise.all(Object.values(RELEASE_IMAGES).map(async im=>{await im.decode();return im.naturalWidth>0})).then(values=>values.every(Boolean))'), true);
     console.log('PASS All release images decode, including opening and phase arenas');
     await evaluate(`beginGame(true); openingTime=5000; drawOpening(); onKeyOnce('Space')`);
     assert.equal(await evaluate('scene'), 'intro');
@@ -539,6 +544,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     for (const [stage, boss, name] of [[0, false, 'stage-march'], [2, true, 'boss-aurelion'], ["'victory'", false, 'victory'], ["'ending'", false, 'ending']]) {
       fs.writeFileSync(path.join(profile, name + '.wav'), Buffer.from(await evaluate('(' + scorePreviewWav.toString() + ')(' + stage + ',' + boss + ')'), 'base64'));
     }
+    await evaluate('GameAssets.prepareStage(0)');
     const results = await evaluate('(' + combatChecks.toString() + ')()');
     results.forEach(name => console.log('PASS ' + name));
     await ready(base); assert.deepEqual(await evaluate('({stage:UX.checkpoint().stage,score:UX.checkpoint().score})'), { stage: 1, score: 2345 });
@@ -645,6 +651,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await ready(base + '/embedded.html');
     assert.equal(await evaluate('scene'), 'title');
     await evaluate('window.requestAnimationFrame=()=>0;beginGame();scene="play";render()');
+    await evaluate('GameAssets.stageReady');
     console.log('PASS Single HTML bundle initializes and renders');
     assert.equal(await evaluate(`(()=>{
       player=newPlayer();startStage(0);scene='play';player.buff=0;
@@ -653,7 +660,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       player.spX=e.x;player.spY=e.y;
       for(let k=0;k<4;k++){e.inv=0;e.st='chase';specialHit(false,k);}
       e.inv=0;e.st='chase';specialHit(true,4);
-      if(e.hp!==874)return false;
+      if(e.hp!==770)return false; // Existing balance: four 20-damage cuts + 150 finisher.
       const b=mkEnemy('boss2',400,420);b.p2shown=true;b.hp=b.max=1200;
       if(pickMorgraPattern(b,250,0)!=='moon')return false;
       b.pat='moon';initMorgraPattern(b);
