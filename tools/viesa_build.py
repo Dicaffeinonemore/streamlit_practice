@@ -328,4 +328,7 @@ for i,name in enumerate(raw):
     f=clips[name][0];sx,sy,w,h=f['atlas'];im=pages[f['sheet']].crop((sx,sy,sx+w,sy+h));im.thumbnail((190,185))
     x=(i%6)*200;y=(i//6)*220;preview.paste(im,(x+(200-im.width)//2,y),im);d.text((x+8,y+190),name,fill='white')
 preview.save(OUT/'preview.jpg',quality=95)
+if (ROOT/'assets_src/viesa/lightning-scroll/source.png').is_file():
+    import runpy
+    runpy.run_path(str(ROOT/'tools/build_viesa_scroll.py'), run_name='__main__')
 print(json.dumps({'frames':{k:len(v) for k,v in clips.items()},'scales':report['sheets'],'pages':len(pages)},ensure_ascii=True))

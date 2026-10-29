@@ -41,7 +41,13 @@ function viesaPose(p=player){
   if(p.st==='down')return p.t<32?viesaFrame('knockdown',Math.floor(p.t/5)):viesaFrame('getup',Math.floor((p.t-32)/4));
   if(p.st==='hurt'||p.st==='grabbed')return viesaFrame('hurt',Math.floor(p.t/4));
   if(p.st==='atk')return viesaFrame(p.viesaClip,Math.floor(p.t/4));
-  if(p.st==='cast')return viesaFrame('snipe_draw',Math.min(5,Math.floor(p.t/5)));
+  if(p.st==='cast'){
+    const ms=p.t*MS;
+    // The release frame starts on the same tick as the shared lightning hit.
+    const frame=ms<MAGIC.fire?Math.min(6,Math.floor(ms/MAGIC.fire*7)):
+      7+Math.min(2,Math.floor((ms-MAGIC.fire)/(MAGIC.dur-MAGIC.fire)*3));
+    return viesaFrame('scroll_cast',frame);
+  }
   if(p.st==='special'&&action)return viesaFrame(action.phase,action.phase==='ult_barrage'?Math.floor(p.t/3)%7:Math.floor(p.t/4));
   if(p.st==='skill'&&action){
     if(action.phase==='snipe_draw')return viesaFrame('snipe_draw',p.t<18?Math.floor(p.t/3):4+Math.floor((p.t-18)/5)%2);
