@@ -64,6 +64,14 @@ module.exports=async({evaluate,call,errors,root})=>{
     player.inv=0;player.buff=0;player.mg=1;player.viesaAction=null;clearInput();
     let e=target();pressed.KeyI=true;updPlayer();
     check(player.st==='cast'&&player.mg===0,'I starts Viesa lightning and consumes one scroll');
+    check(VIESA_ART.clips.scroll_cast.length===10,'Lightning has ten dedicated scroll poses');
+    const castTick=player.t,poses=new Set();
+    for(let t=0;t*MS<MAGIC.dur;t++){
+      player.t=t;const pose=viesaPose();poses.add(pose);
+      check(VIESA_ART.clips.scroll_cast.includes(pose),'Cast always uses the scroll clip');
+      if(t*MS>=MAGIC.fire&&t*MS<MAGIC.fire+MS)check(pose===VIESA_ART.clips.scroll_cast[7],'Release pose matches lightning damage tick');
+    }
+    check(poses.size===10,'All scroll animation frames are reachable');player.t=castTick;
     for(let i=0;i<50;i++)updPlayer();
     check(e.hp===920&&player.st==='free','Lightning deals 80 exactly once');
     pressed.KeyI=true;updPlayer();check(player.st==='free'&&player.mg===0,'Empty inventory cannot cast');clearInput();
@@ -125,6 +133,19 @@ module.exports=async({evaluate,call,errors,root})=>{
     });
   })()`);
   fs.writeFileSync(path.join(out,'hurt-death-size.png'),Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
+  const scrollPreview=await evaluate(`(()=>{
+    const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=480;
+    const c=canvas.getContext('2d');c.fillStyle='#17151d';c.fillRect(0,0,1200,480);
+    VIESA_ART.clips.scroll_cast.forEach((frame,i)=>{
+      const x=110+(i%5)*240,y=200+Math.floor(i/5)*240,k=VIESA_ART.scale*1.5;
+      const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor;
+      c.fillStyle='#777';c.fillRect(x-85,y,170,1);c.imageSmoothingEnabled=false;
+      c.drawImage(VIESA_SHEETS[frame.sheet],sx,sy,w,h,x-ax*k,y-ay*k,w*k,h*k);
+      c.fillStyle='white';c.font='14px sans-serif';c.fillText('scroll '+(i+1),x-30,y+25);
+    });
+    return canvas.toDataURL('image/png').split(',')[1];
+  })()`);
+  fs.writeFileSync(path.join(out,'lightning-scroll.png'),Buffer.from(scrollPreview,'base64'));
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({selection,...result,errors},null,2));
   console.log('PASS Viesa combat fixes, hurt/death size, ultimate size and phases, full-body selection');
 };
