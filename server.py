@@ -207,6 +207,9 @@ def prepare_streamlit_component(review: bool = False) -> Path:
         files.update(name for name in animation_files if (ROOT / name).is_file())
     if "src/animation/barel-walk.js" in files:
         animation_files = (
+            "assets/aseprite/barel-walk-revised-10/barel-walk-revised-10.animation.json",
+            "assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.json",
+            "assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.png",
             "assets/aseprite/barel-walk-10/barel-walk-10.animation.json",
             "assets/aseprite/exports/barel-walk-10/barel-walk-10.json",
             "assets/aseprite/exports/barel-walk-10/barel-walk-10.png",
@@ -263,6 +266,9 @@ def prepare_streamlit_component(review: bool = False) -> Path:
         files.update(name for name in animation_files if (ROOT / name).is_file())
     if "src/animation/barel-idle.js" in files:
         animation_files = (
+            "assets/aseprite/barel-idle-stationary-10/barel-idle-stationary-10.animation.json",
+            "assets/aseprite/exports/barel-idle-stationary-10/barel-idle-stationary-10.json",
+            "assets/aseprite/exports/barel-idle-stationary-10/barel-idle-stationary-10.png",
             "assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json",
             "assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.json",
             "assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.png",

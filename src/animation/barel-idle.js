@@ -4,7 +4,7 @@
   let mode=new URLSearchParams(root.location?.search||'').get('barelIdle')||config.mode||'aseprite10';
   if(!['legacy','aseprite10'].includes(mode))mode='aseprite10';
   let animation=null,error=null;
-  const url=config.metadataUrl||'assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json';
+  const url=config.metadataUrl||'assets/aseprite/barel-idle-stationary-10/barel-idle-stationary-10.animation.json';
   function validate(asset){
     const m=asset.metadata,clip=asset.clips[m.clip];
     if(m.character!=='barel'||m.animationId!=='idle'||m.animationType!=='loop'||m.loop!==true||m.combat!=null||

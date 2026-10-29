@@ -36,7 +36,7 @@ function barelPlayerFrame() {
   if(walk)return walk;
   const idle=globalThis.BarelIdle?.frameFor(p,tick*MS);
   if(idle)return idle;
-  return p.walk?barelFrame('walk',(p.walkTime||0)/900,true):barelFrame('idle',tick*MS/1300,true);
+  return p.walk?barelFrame('walk',(p.walkTime||0)/900,true):barelFrame('idle',0);
 }
 function paintBarel(frame,actor,alpha=1) {
   const image=frame?.image || BAREL_ATLAS;
@@ -57,7 +57,7 @@ function drawBarelIdlePreview(canvas,elapsedMs){
   if(!view){
     if(!BAREL_ATLAS.complete||!BAREL_ATLAS.naturalWidth)return false;
     const frames=BAREL_ART.clips.idle;
-    view={image:BAREL_ATLAS,frame:barelFrame('idle',elapsedMs/1300,true),bounds:[
+    view={image:BAREL_ATLAS,frame:barelFrame('idle',0),bounds:[
       Math.min(...frames.map(f=>-f.anchor[0])),Math.min(...frames.map(f=>-f.anchor[1])),
       Math.max(...frames.map(f=>f.atlas[2]-f.anchor[0])),Math.max(...frames.map(f=>f.atlas[3]-f.anchor[1]))]};
   }

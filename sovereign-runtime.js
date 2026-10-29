@@ -1,17 +1,19 @@
 'use strict';
 const SOV_GROUP=GameAssets.group(4,SOVEREIGN_ART.sheets);
 const SOV_SHEETS=SOV_GROUP.images;
+const SOV_CANNON_GROUP=GameAssets.group(4,['assets/runtime/2d766e59244fb5309e870ce7.png','assets/runtime/cb05d55301793a95df46dce9.png']);
+const SOV_CANNON_IMAGES=SOV_CANNON_GROUP.images;
 const SOV_R=SOVEREIGN_RULES,SOV_A=SOVEREIGN_ART;
 // Fist body box: half extents of the gauntlet drawing in world px.
 const SOV_FIST={len:SOV_A.fistLength,h:SOV_A.fistHeight,hw:SOV_A.fistLength*.45,hh:SOV_A.fistHeight*.45};
 const SOV_FIRST_STAGE={direct:'wind',slam:'rise',hammer:'rise',grab:'wind',clap:'move',wave:'rise',wall:'move',whirl:'warn',
-  backhand:'warn',meteor:'rise',ultimate:'merge',beam:'charge'};
+  backhand:'warn',meteor:'rise',ultimate:'channel',beam:'charge'};
 let sovereignRemains=[];
 function isSovereign(e){return e?.type==='boss5';}
 function sovP2(e){return e.p2shown?1:0;}
 function sovData(e){
   return e.sov||={now:0,jobs:[],cooldowns:{},marks:[],waves:[],fx:[],pressure:0,pressureT:0,forceBackhand:false,
-    lastMove:null,repeats:0,lastDangerEnd:-999,dangerWas:false,pending:null,grounded:false,giant:null,body:null,downAt:0,transAge:0,
+    lastMove:null,repeats:0,lastDangerEnd:-999,dangerWas:false,pending:null,grounded:false,body:null,downAt:0,transAge:0,
     fists:[0,1].map(i=>({i,x:e.x,y:e.y,h:420,face:e.face,st:'intro',hp:SOV_R.fistHp[0],max:SOV_R.fistHp[0],pose:1,angle:0,
       glow:null,trail:false,timer:0,wake:1,flash:0,vh:0,broken:false,job:null}))};
 }
@@ -199,11 +201,15 @@ function sovStartJob(e,s,id){
   const job={id,t:0,st:0,stage:SOV_FIRST_STAGE[id],fists,hits:new Set(),danger:false,dangerDone:id==='wall',warn:false,done:false,p2:sovP2(e)};
   for(const f of fists){f.st='job';f.job=job;}
   if(id==='backhand'){s.forceBackhand=false;s.pressure=0;}
-  if(id==='ultimate')s.ultimateUsed=true;
+  if(id==='ultimate'){
+    s.ultimateUsed=true;job.hands=[];job.remaining=Math.floor(rand(SOV_R.ultimate.count[0],SOV_R.ultimate.count[1]+1));
+    job.elapsedMs=0;job.lastY=null;job.spawned=0;
+    for(const f of fists)f.st='reserve';
+  }
   s.jobs.push(job);
   e.face=p.x>=e.x?1:-1;
   // command 1-8 pushes the fists forward, 9-16 raises and brings them down.
-  const push=['direct','grab','clap','whirl','backhand','wall'].includes(id),own=id==='beam'||id==='ultimate';
+  const push=['direct','grab','clap','whirl','backhand','wall'].includes(id),own=id==='beam';
   s.body={job,clip:sovClip(e,own?id:'command'),from:own?1:push?1:9,to:own?16:push?8:16,ticks:SOV_R.command,t:0,
     bound:SOV_R.bodyBound.includes(id),drawing:null,idle:false};
   resetBossFx(e);e.st='pat';e.pat=id;e.pt=0;e.walk=false;e.atkCd=sovGap(e);
@@ -212,11 +218,6 @@ function sovStartJob(e,s,id){
 function sovEndJob(e,s,job){
   if(job.done)return;
   job.done=true;job.danger=false;job.dangerDone=true;
-  if(job.id==='ultimate'&&s.giant){
-    const g=s.giant;
-    job.fists.forEach((f,i)=>{Object.assign(f,{x:g.x+(i?-18:18),y:g.y,h:g.h,st:'dropped',vh:0,glow:null,trail:false,job:null,wake:0});});
-    s.giant=null;
-  }
   for(const f of job.fists)if(f.job===job)sovFinishFist(f);
   if(job.helper?.job===job)sovFinishFist(job.helper);
   for(const m of [...s.marks])if(m.job===job)sovRemoveMark(s,m);
@@ -251,6 +252,70 @@ function chaseSovereign(e){
   const tx=p.x-e.face*95;
   e.x+=clamp(tx-e.x,-sx,sx);e.y+=clamp(dy,-sy,sy);
   e.walk=Math.abs(tx-e.x)>2||Math.abs(dy)>2;
+}
+
+// ---------------------------------------------------------------- 적월마광포
+// Coordinates are in the same camera-space world pixels used by render().
+function sovCannonPosition(job){
+  const C=SOV_R.ultimate,p=player,k=C.handScale,[ox,oy]=C.handOrigin;
+  const top=OY+C.margin+oy*k,bottom=OY+VH-C.margin-(217.2-oy)*k;
+  const target=p.y-p.z-playerBodyHeight()*.5;
+  let best=null,bestScore=-Infinity;
+  for(let i=0;i<150;i++){
+    const dir=Math.random()<.5?1:-1;
+    const lo=dir===1?C.margin+ox*k:C.margin+(362-ox)*k;
+    const hi=dir===1?VW-C.margin-(362-ox)*k:VW-C.margin-ox*k;
+    const x=camX+(dir===1?rand(lo,VW/2):rand(VW/2,hi));
+    const y=i<24?clamp(job.spawned%2===0?target+rand(-18,18):target+(Math.random()<.5?-1:1)*rand(70,140),top,bottom):rand(top,bottom);
+    const left=x+(dir===1?-ox*k:-(362-ox)*k),right=x+(dir===1?(362-ox)*k:ox*k);
+    const handTop=y-oy*k,handBottom=y+(217.2-oy)*k;
+    const overlaps=right>p.x-playerBodyHalfWidth()-12&&left<p.x+playerBodyHalfWidth()+12&&
+      handBottom>p.y-p.z-playerBodyHeight()-12&&handTop<p.y-p.z+12;
+    const gap=job.lastY==null?Infinity:Math.abs(y-job.lastY);
+    if(!overlaps&&gap>=C.minYGap)return {x,y,dir};
+    const score=(overlaps?-10000:0)+Math.min(gap,200)+Math.abs(x-p.x)*.05;
+    if(score>bestScore){bestScore=score;best={x,y,dir};}
+  }
+  // Deterministic fallback handles unlucky random samples while preserving both constraints.
+  for(let y=top;y<=bottom;y+=4)for(const dir of [1,-1]){
+    const x=camX+(dir===1?C.margin+ox*k:VW-C.margin-ox*k);
+    const left=x+(dir===1?-ox*k:-(362-ox)*k),right=x+(dir===1?(362-ox)*k:ox*k);
+    const overlaps=right>p.x-playerBodyHalfWidth()-12&&left<p.x+playerBodyHalfWidth()+12&&
+      y+(217.2-oy)*k>p.y-p.z-playerBodyHeight()-12&&y-oy*k<p.y-p.z+12;
+    if(!overlaps&&(job.lastY==null||Math.abs(y-job.lastY)>=C.minYGap))return {x,y,dir};
+  }
+  return best;
+}
+function sovCannonSpawn(job){
+  const position=sovCannonPosition(job);
+  job.lastY=position.y;job.spawned++;job.remaining--;
+  job.hands.push({...position,ageMs:0,fired:false,hit:false});
+}
+function sovCannonTick(e,s,job,dt){
+  const C=SOV_R.ultimate,fireAt=C.fadeMs+C.telegraphMs+C.chargedMs,laserMs=20000/C.laserFps;
+  if(!job.spawned)sovCannonSpawn(job);
+  job.elapsedMs+=dt;job.warn=false;job.danger=false;
+  for(const h of [...job.hands]){
+    const previous=h.ageMs;h.ageMs+=dt;
+    if(!h.fired&&h.ageMs>=fireAt){
+      h.fired=true;sfx('bolt');shake=Math.max(shake,5);
+      if(job.remaining>0)sovCannonSpawn(job);
+    }
+    if(h.ageMs>=C.fadeMs&&h.ageMs<fireAt)job.warn=true;
+    const beamStart=fireAt+8000/C.laserFps,beamEnd=fireAt+16000/C.laserFps;
+    // Interval overlap preserves the active window even if dt spans a frame boundary.
+    if(h.ageMs>=beamStart&&previous<beamEnd){
+      job.danger=true;
+      const p=player,half=C.laserThickness/2;
+      const withinX=h.dir>0?p.x+playerBodyHalfWidth()>=h.x&&p.x-playerBodyHalfWidth()<=camX+VW:
+        p.x-playerBodyHalfWidth()<=h.x&&p.x+playerBodyHalfWidth()>=camX;
+      const playerBottom=p.y-p.z,playerTop=playerBottom-playerBodyHeight();
+      if(!h.hit&&withinX&&playerBottom>=h.y-half&&playerTop<=h.y+half&&
+         hurtPlayer(C.damage,h.dir,false,e,{hitHeight:Math.max(0,p.y-h.y)}))h.hit=true;
+    }
+  }
+  job.hands=job.hands.filter(h=>h.ageMs<fireAt+laserMs+C.fadeMs);
+  if(!job.remaining&&!job.hands.length){job.dangerDone=true;sovEndJob(e,s,job);}
 }
 
 // ---------------------------------------------------------------- patterns
@@ -472,41 +537,7 @@ function sovJobTick(e,s,job){
       }
       break;
     }
-    case 'ultimate':{
-      const U=R.ultimate,body=s.body,g=s.giant;
-      if(job.stage==='merge'){
-        job.warn=true;if(body)body.drawing=1+Math.min(7,Math.floor(st/U.merge*8));
-        if(!g){
-          [a,b].forEach((f,i)=>{f.glow='white';f.pose=1;f.face=e.face;sovMove(f,e.x+(i?-14:14),e.y,150,6);});
-          if(st>=20){a.st=b.st='merged';s.giant={x:e.x,y:e.y,h:150,frame:0,face:e.face,glow:'white',trail:false};}
-        }else g.frame=Math.min(2,Math.floor((st-20)/(U.merge-20)*3));
-        if(st>=U.merge-1&&s.giant){
-          // Start on the far side of Barel and sweep toward and past him.
-          job.dir=p.x<camX+VW/2?-1:1;job.startX=job.dir<0?camX+VW+40:camX-40;job.endX=job.dir<0?camX-40:camX+VW+40;go('warn');
-        }
-      }else if(job.stage==='warn'||job.stage==='turn'){
-        job.warn=true;g.frame=2;g.face=job.dir;g.glow='white';if(body)body.drawing=9+Math.floor(st/6)%4;
-        if(job.stage==='warn'){const left=Math.max(1,U.warn-st);g.x+=(job.startX-g.x)/left;g.y+=((GTOP+GBOT)/2-g.y)/left;g.h+=(25-g.h)/left;}
-        if(st>=(job.stage==='warn'?U.warn:U.turn)-1){job.pass=(job.pass??-1)+1;go('sweep');}
-      }else if(job.stage==='sweep'){
-        job.danger=true;g.glow=null;g.trail=true;if(body)body.drawing=9+Math.floor(st/6)%4;
-        const old=g.x;g.x+=job.dir*U.speed;
-        if(p.x>=Math.min(old,g.x)-U.half-playerBodyHalfWidth()&&p.x<=Math.max(old,g.x)+U.half+playerBodyHalfWidth()&&p.z<=U.top)sovHurt(e,job,'u'+job.pass,U.damage,true,g);
-        if((g.x-job.endX)*job.dir>=0){
-          g.trail=false;
-          if(job.pass===0){job.dir*=-1;[job.startX,job.endX]=[job.endX,job.startX];go('turn');}
-          else{job.dangerDone=true;go('back');}
-        }
-      }else if(job.stage==='back'){
-        const left=Math.max(1,U.back-st);g.face=e.face;g.frame=2;
-        g.x+=(e.x+e.face*60-g.x)/left;g.y+=(e.y-g.y)/left;g.h+=(40-g.h)/left;if(body)body.drawing=13;
-        if(st>=U.back-1)go('split');
-      }else if(job.stage==='split'){
-        g.frame=5;if(body)body.drawing=14+Math.min(2,Math.floor(st/U.split*3));
-        if(st>=U.split-1){sovFx(e,'eruption',g.x,g.y,0,120,110,28,{ground:true});sovEndJob(e,s,job);sovStun(e,R.ultimateKneel);}
-      }
-      break;
-    }
+    case 'ultimate': sovCannonTick(e,s,job,MS);break;
     case 'beam':{
       const B=R.beam,fire=B.fire[job.p2],body=s.body;
       if(job.stage==='charge'){
@@ -593,7 +624,7 @@ function sovTransition(e,s){
 }
 function sovDeath(e,s){
   if(!s.dead){
-    s.dead=true;for(const j of [...s.jobs])sovEndJob(e,s,j);s.marks=[];s.waves=[];s.giant=null;
+    s.dead=true;for(const j of [...s.jobs])sovEndJob(e,s,j);s.marks=[];s.waves=[];
     if(player.grab?.sovereign)sovReleaseGrab('cancel');
     for(const f of s.fists)Object.assign(f,{st:'dead',broken:true,vh:0,glow:null,trail:false,wake:0,job:null});
   }
@@ -651,7 +682,6 @@ function sovCaptureAfterimages(e,s){
     const stage=f.hp/f.max>.66?0:f.hp/f.max>.33?1:2;
     subjects.push([f,SOV_A.clips[e.p2shown?'fist_p2':'fist_p1'][(f.pose===1?[5,6,7][stage]:f.pose)-1],f.y-f.h,active&&sovActive(f)]);
   }
-  if(s.giant)subjects.push([s.giant,SOV_A.clips.giant[s.giant.frame],s.giant.y-s.giant.h,active]);
   for(const [o,frame,y,visible] of subjects){
     o.afterimages=(o.afterimages||[]).filter(g=>s.now-g.at<R.life);
     if(!visible){o.afterimages=[];o.trailSample=null;continue;}
@@ -780,24 +810,16 @@ function drawSovFist(e,s,f){
     ctx.fillStyle='#1d1220';ctx.fillRect(x-16,y,32,4);ctx.fillStyle=stage===2?'#ff4d6d':'#ff9bd0';ctx.fillRect(x-15,y+1,30*clamp(ratio,0,1),2);
   }
 }
-function drawSovGiant(e,s){
-  const g=s.giant,fr=SOV_A.clips.giant[g.frame];
-  sovDrawAfterimages(g,s);
-  if(g.trail)sovFxDraw('punch_trail',(tick%16)/16,g.x-g.face*SOV_FIST.len*1.3,g.y-g.h,150,56,{face:g.face});
-  sovPaint(fr,g.x,g.y-g.h,{face:g.face,gain:g.glow&&Math.floor(tick/5)%2===0&&UX.options.flash?1.5:1});
-  if(g.glow&&fr.core)sovGlow(g.x-camX+g.face*fr.core[0]/SOV_A.ppw,g.y-g.h+fr.core[1]/SOV_A.ppw,g.glow,20);
-}
 // Fists are separate objects in the depth-sorted list; the back fist goes behind the body.
 function sovereignDrawList(list){
   for(const e of enemies){
     if(!isSovereign(e)||!e.sov)continue;
     const s=e.sov;
     for(const f of s.fists){
-      if(f.st==='merged')continue;
+      if(f.st==='reserve')continue;
       const behind=f.i===1&&['home','return','rise','intro'].includes(f.st);
       list.push({y:f.y+(behind?-.5:.5),f:()=>drawSovFist(e,s,f)});
     }
-    if(s.giant)list.push({y:s.giant.y+.6,f:()=>drawSovGiant(e,s)});
   }
 }
 function drawSovereignGround(){
@@ -823,10 +845,51 @@ function drawSovereignGround(){
     }
   }
 }
+function sovDrawCannon(job){
+  const C=SOV_R.ultimate,fireAt=C.fadeMs+C.telegraphMs+C.chargedMs,laserMs=20000/C.laserFps;
+  const [hand,laser]=SOV_CANNON_IMAGES;
+  for(const h of job.hands){
+    const age=h.ageMs,shot=age-fireAt,sx=h.x-camX,len=h.dir>0?VW-sx:sx;
+    const fade=age<C.fadeMs?age/C.fadeMs:shot>laserMs?Math.max(0,1-(shot-laserMs)/C.fadeMs):1;
+    if(age>=C.fadeMs&&shot<0){
+      const blink=age>=C.fadeMs+C.telegraphMs&&Math.floor(age/100)%2===0;
+      ctx.save();ctx.globalAlpha=blink?.65:.32;ctx.fillStyle='#ff245e';
+      ctx.fillRect(Math.min(sx,sx+h.dir*len),h.y-1,Math.abs(len),2);ctx.restore();
+    }
+    const frame=age<C.fadeMs?0:age<C.fadeMs+C.telegraphMs?
+      Math.min(7,Math.floor((age-C.fadeMs)/C.telegraphMs*8)):shot<0?
+      8+Math.min(3,Math.floor((age-C.fadeMs-C.telegraphMs)/C.chargedMs*4)):
+      12+Math.min(7,Math.floor(Math.max(0,shot)/laserMs*8));
+    ctx.save();ctx.translate(sx,h.y);ctx.scale(h.dir,1);
+    if(hand.naturalWidth){
+      const row=Math.floor(frame/4),y0=Math.floor(row*hand.naturalHeight/5),y1=Math.floor((row+1)*hand.naturalHeight/5),w=hand.naturalWidth/4;
+      ctx.globalAlpha=fade;ctx.imageSmoothingEnabled=true;
+      ctx.drawImage(hand,frame%4*w,y0,w,y1-y0,-C.handOrigin[0]*C.handScale,-C.handOrigin[1]*C.handScale,w*C.handScale,(y1-y0)*C.handScale);
+    }
+    if(shot>=0&&shot<laserMs&&laser.naturalWidth){
+      const n=Math.min(19,Math.floor(shot*C.laserFps/1000)),row=Math.floor(n/4),w=laser.naturalWidth/4;
+      const y0=Math.floor(row*laser.naturalHeight/5),y1=Math.floor((row+1)*laser.naturalHeight/5),height=y1-y0;
+      const [originX,originY]=C.laserOrigins[n],scale=C.laserHeight/height,split=Math.min(w-1,originX+28),end=Math.min(w,C.laserEnds[n]);
+      ctx.globalAlpha=UX.options.lowFx?.65:1;ctx.globalCompositeOperation='screen';
+      // Keep the ring at native aspect; stretch only the beam beyond the ring.
+      ctx.drawImage(laser,n%4*w,y0,split,height,-originX*scale,-originY*scale,split*scale,C.laserHeight);
+      ctx.drawImage(laser,n%4*w+split,y0,end-split,height,(split-originX)*scale,-originY*scale,
+        Math.max(.01,len-(split-originX)*scale),C.laserHeight);
+    }
+    ctx.restore();
+    if(C.debug){
+      ctx.save();ctx.fillStyle='#00ffff';ctx.beginPath();ctx.arc(sx,h.y,3,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle=shot>=8000/C.laserFps&&shot<16000/C.laserFps?'#ffff00':'#55ffff';
+      ctx.strokeRect(Math.min(sx,sx+h.dir*len),h.y-C.laserThickness/2,len,C.laserThickness);
+      ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.fillText(`H${frame+1} L${shot>=0&&shot<laserMs?1+Math.floor(shot*C.laserFps/1000):'-'}`,sx+5,h.y-10);ctx.restore();
+    }
+  }
+}
 function drawSovereignTop(){
   for(const e of enemies){
     if(!isSovereign(e)||!e.sov)continue;
     const s=e.sov,beam=s.jobs.find(j=>j.id==='beam'&&j.stage==='fire');
+    for(const job of s.jobs)if(job.id==='ultimate')sovDrawCannon(job);
     if(beam){
       // helm_beam: drawings 1-3 open, 4-8 loop, 9-10 close.
       const fire=SOV_R.beam.fire[beam.p2],st=beam.st,index=st<6?Math.floor(st/2):fire-st<=4?8+Math.min(1,Math.floor((4-(fire-st))/2)):3+Math.floor(st/3)%5;

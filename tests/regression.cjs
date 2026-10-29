@@ -20,8 +20,10 @@ const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></
 const allowed = new Set(['index.html', ...scripts]);
 for (const name of JSON.parse(fs.readFileSync(path.join(root, 'data/runtime-assets.json'), 'utf8'))) allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-walk-revised-10/barel-walk-revised-10.animation.json','assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.json','assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-grabbed-10/barel-grabbed-10.animation.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.json','assets/aseprite/exports/barel-grabbed-10/barel-grabbed-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-idle-dot-10/barel-idle-dot-10.animation.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.json','assets/aseprite/exports/barel-idle-dot-10/barel-idle-dot-10.png'])allowed.add(name);
+for(const name of ['assets/aseprite/barel-idle-stationary-10/barel-idle-stationary-10.animation.json','assets/aseprite/exports/barel-idle-stationary-10/barel-idle-stationary-10.json','assets/aseprite/exports/barel-idle-stationary-10/barel-idle-stationary-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-air-attack-10/barel-air-attack-10.animation.json','assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.json','assets/aseprite/exports/barel-air-attack-10/barel-air-attack-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-jump-10/barel-jump-10.animation.json','assets/aseprite/exports/barel-jump-10/barel-jump-10.json','assets/aseprite/exports/barel-jump-10/barel-jump-10.png'])allowed.add(name);
 for(let i=0;i<3;i++){const name=`barel-combo${i}-dot-10`;for(const file of [`assets/aseprite/${name}/${name}.animation.json`,`assets/aseprite/exports/${name}/${name}.json`,`assets/aseprite/exports/${name}/${name}.png`])allowed.add(file);}
@@ -409,6 +411,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     const base = 'http://127.0.0.1:' + server.address().port;
     if(process.env.L_SKILL_HIT_SUITE){await ready(base+'/index.html');await require('./l-skill-hit.cjs')({evaluate,errors});return;}
     if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_REVISED_SUITE){await ready(base+'/index.html');await require('./barel-revised.cjs')({evaluate,errors});return;}
     if(process.env.BAREL_AIR_ATTACK_SUITE){await ready(base+'/index.html');await require('./barel-air-attack-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_JUMP_SUITE){await ready(base+'/index.html');await require('./barel-jump-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_DASH_SUITE){await ready(base+'/index.html');await require('./barel-dash-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
@@ -426,6 +429,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.CHARACTER_SELECT_SUITE){await ready(base+'/embedded.html');await require('./character-select.cjs')({evaluate,call,errors,root});return;}
     if(process.env.FRAME_DATA_SUITE){await ready(base+'/index.html');await require('./frame-data.cjs')({evaluate,call,errors,root});return;}
     if(process.env.COMBAT_UPDATE_SUITE){await ready(base+'/embedded.html');await require('./combat-update.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.SOVEREIGN_CANNON_SUITE){await ready(base+'/index.html');await require('./sovereign-cannon.cjs')({evaluate,call,errors,root});return;}
     if(process.env.SOVEREIGN_MOTION_SUITE){await ready(base+'/embedded.html');await require('./sovereign-motion.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_INTRO_HUD_SUITE){await ready(base+'/embedded.html');await require('./boss-intro-hud.cjs')({evaluate,call,errors,root});return;}
     if(process.env.ENEMY_UI_SUITE){await ready(base+'/embedded.html');await require('./enemy-ui.cjs')({evaluate,call,errors,root});return;}

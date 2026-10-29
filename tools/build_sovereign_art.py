@@ -44,17 +44,15 @@ BODY = [
     ('beam_p2', '04_Phase2_Body_16f/Beam_BodyOnly.png', [4, 4, 4, 4], 'p2', 'feet'),
     ('hurt_p2', '04_Phase2_Body_16f/Hurt.png', [4, 4, 4, 4], 'p2', 'feet'),
     ('kneel_p2', '04_Phase2_Body_16f/Kneel.png', [4, 4, 4, 4], 'p2', 'center'),
-    ('ultimate', '04_Phase2_Body_16f/Ultimate.png', [4, 4, 4, 4], 'p2', 'feet'),
     ('death', '04_Phase2_Body_16f/Death.png', [4, 4, 4, 4], 'p2', 'center'),
 ]
 # Phase-2 drawings that receive the pulsing magenta mask.
-MASKED = {'awaken', 'idle_p2', 'walk_p2', 'command_p2', 'beam_p2', 'hurt_p2', 'kneel_p2', 'ultimate', 'death'}
+MASKED = {'awaken', 'idle_p2', 'walk_p2', 'command_p2', 'beam_p2', 'hurt_p2', 'kneel_p2', 'death'}
 
 FISTS = [
     ('fist_p1', '05_Gauntlets/Phase1_Parts_12.png', [4, 4, 4], 'center'),
     ('fist_p2', '05_Gauntlets/Phase2_Parts_12.png', [4, 4, 4], 'center'),
     ('fallen_p2', '05_Gauntlets/Fallen_4.png', [4], 'bottom'),
-    ('giant', '05_Gauntlets/Merged_Giant_Fist_6.png', [3, 3], 'center'),
 ]
 # sheet, 1-based source row, id, expected drawings
 FX = [
@@ -304,9 +302,7 @@ def build_fists():
         tiles, audit = split_sheet(key_green(Image.open(SRC / file)), rows)
         audits[id] = audit
         ref = tiles[0][0]
-        target = fist_len * (2 if id == 'giant' else 1)
-        if id == 'giant':
-            ref = tiles[2][0]
+        target = fist_len
         k = target * PPW / max(ref.width, ref.height)
         scales[id] = round(k, 4)
         clips[id] = []

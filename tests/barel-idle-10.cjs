@@ -39,7 +39,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
         window.BAREL_IDLE_CONFIG={};
         window.fetch=async(url,...args)=>{
           const name=String(url);
-          if(name.endsWith('barel-idle-dot-10.animation.json')){
+          if(name.endsWith('barel-idle-stationary-10.animation.json')){
             if(failure==='http')return {ok:false,status:503};
             if(failure==='parse')return {ok:true,json:async()=>{throw SyntaxError('Malformed idle JSON')}};
             if(['metadata','offset','scale','period','clock','loop','preview'].includes(failure)){
@@ -55,7 +55,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
             }
           }
           const response=await nativeFetch(url,...args);
-          if(name.endsWith('/barel-idle-dot-10.json')){
+          if(name.endsWith('/barel-idle-stationary-10.json')){
             const data=await response.json();
             if(failure==='timing')data.frames[0].duration=131;
             if(failure==='image')data.meta.image='missing-idle-test.png';
@@ -81,7 +81,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
 };
 function trial(){
   const check=(v,m)=>{if(!v)throw Error(m);};
-  window.idleIsNew=()=>!!barelPlayerFrame()?.image?.src.includes('/barel-idle-dot-10.png');
+  window.idleIsNew=()=>!!barelPlayerFrame()?.image?.src.includes('/barel-idle-stationary-10.png');
   window.idleSetup=mode=>{
     clearInput();selectedCharacterId='barel';player=newPlayer(0,'barel');startStage(0);
     scene='play';showScreen(null);practice=false;camX=0;camLock=true;lockAt=0;waveIdx=0;

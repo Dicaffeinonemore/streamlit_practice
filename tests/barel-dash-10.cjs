@@ -80,7 +80,7 @@ function trial(){
  for(const key of [null,'KeyD','KeyA']){
   dashSetup('aseprite10');if(key)inputDown(key);startDash(1);for(let i=0;i<13;i++)update();
   check(player.st==='free','Exit free');check(!!player.walk===!!key,'Exit follows held movement');
-  check(barelPlayerFrame().image?.src.includes(key?'barel-walk-dot-10.png':'barel-idle-dot-10.png'),'Exit correct clip');transitions.push({key,st:player.st,walk:player.walk});
+  check(barelPlayerFrame().image?.src.includes(key?'barel-walk-revised-10.png':'barel-idle-stationary-10.png'),'Exit correct clip');transitions.push({key,st:player.st,walk:player.walk});
  }
  dashSetup('aseprite10');inputDown('ShiftLeft');update();inputUp('ShiftLeft');check(player.st==='dash','Existing dash key');
  dashSetup('aseprite10');inputDown('KeyD');update();inputUp('KeyD');update();inputDown('KeyD');update();check(player.st==='dash','Existing double tap');

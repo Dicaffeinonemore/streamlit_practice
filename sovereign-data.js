@@ -4,7 +4,7 @@
 const SOVEREIGN_RULES = {
   hp:[2400,3000], hw:24, walk:[[.75,.45],[1.05,.6]], gaps:[[30,50],[14,28]], attackDelay:90, bands:{near:110,mid:260},
   names:{direct:'직격',slam:'추적 내려찍기',hammer:'망치질',grab:'붙잡기',clap:'협공',wave:'지면 파동',wall:'철벽',
-    whirl:'회오리',backhand:'손등 치기',meteor:'유성 낙하',ultimate:'흑월 강림',beam:'투구 광선'},
+    whirl:'회오리',backhand:'손등 치기',meteor:'유성 낙하',ultimate:'적월마광포',beam:'투구 광선'},
   cooldowns:{direct:120,slam:180,hammer:360,grab:300,clap:300,wave:360,wall:600,whirl:420,beam:300,meteor:900,ultimate:900,backhand:0},
   weights:[{
     near:{clap:20,grab:20,whirl:15,wall:15,direct:15,beam:15},
@@ -28,7 +28,7 @@ const SOVEREIGN_RULES = {
   fistHp:[140,180], kdFistMul:1.5, fistGroggy:40, fallen:[480,360], rise:30, pressure:[3,2], pressureDecay:120,
   fistDrops:{potion:.25,scroll:.15},
   intro:200, introFistDrawing:13, introFistDrop:40, kneelDown:40, awaken:210, awakenShakeDrawing:7, death:110, deathHold:60,
-  command:24, ultimateKneel:120,
+  command:24,
   direct:{wind:24,lock:16,speed:9,range:420,back:7,damage:14,backDamage:8},
   slam:{rise:20,height:200,track:[60,50],dx:2.5,dy:1.5,lock:[24,20],fall:6,active:6,rx:45,ry:18,stuck:50,damage:16},
   hammer:{rise:12,height:150,count:3,delay:30,fall:6,active:4,rx:45,ry:18,stuck:40,damage:[12,12,14]},
@@ -39,7 +39,11 @@ const SOVEREIGN_RULES = {
   whirl:{warn:24,spin:120,turns:2,rx:130,ry:30,height:70,low:30,high:160,dazed:50,damage:12,push:7},
   backhand:{warn:10,swing:12,damage:10,push:9},
   meteor:{rise:30,height:420,interval:20,count:4,delay:36,fall:8,active:4,rx:45,ry:20,stuck:60,damage:16},
-  ultimate:{merge:60,warn:30,speed:10,turn:24,top:50,half:34,back:20,split:16,damage:23},
+  ultimate:{count:[3,5],fadeMs:200,telegraphMs:900,chargedMs:400,laserFps:16,
+    handScale:.45,laserHeight:94,laserThickness:22,margin:20,minYGap:65,damage:23,debug:false,
+    handOrigin:[220,120],laserOrigins:[[88,110],[80,110],[77,110],[75,110],[68,110],[59,110],[47,110],[42,110],
+      [55,112],[53,112],[48,112],[43,112],[53,112],[50,112],[48,112],[44,112],[50,112],[48,112],[45,112],[42,112]],
+    laserEnds:[252,287,291,297,351,373,384,365,383,379,384,366,383,379,384,357,369,368,384,335]},
   beam:{charge:30,lock:20,fire:[40,50],recovery:36,depth:14,low:40,high:120,damage:14,neckLength:20,neckHalfHeight:3}
 };
 const SOVEREIGN_ATTACKS = Object.keys(SOVEREIGN_RULES.names);
@@ -49,6 +53,7 @@ function sovereignFirstHit(id, p2) {
   const R = SOVEREIGN_RULES, s = R.slam;
   return { direct:R.direct.wind, slam:s.rise+s.track[p2?1:0]+s.lock[p2?1:0], hammer:R.hammer.rise+R.hammer.delay,
     grab:R.grab.wind, clap:R.clap.move+R.clap.warn, wave:R.wave.rise, wall:Infinity, whirl:R.whirl.warn,
-    backhand:R.backhand.warn, meteor:R.meteor.rise+R.meteor.delay-R.meteor.fall, ultimate:R.ultimate.merge+R.ultimate.warn,
+    backhand:R.backhand.warn, meteor:R.meteor.rise+R.meteor.delay-R.meteor.fall,
+    ultimate:Math.ceil((R.ultimate.fadeMs+R.ultimate.telegraphMs+R.ultimate.chargedMs+8000/R.ultimate.laserFps)/(1000/60)),
     beam:R.beam.charge }[id];
 }

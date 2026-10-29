@@ -7,8 +7,18 @@
   });
   function frameFor(actor,tickMs){
     if(!actor||actor.st!=='atk'||actor.characterId&&actor.characterId!=='barel'||
-       !['c1','c2','c3'].includes(actor.atk)||!Number.isFinite(actor.t)||actor.t<0||
+       !['c1','c2','c3','air'].includes(actor.atk)||!Number.isFinite(actor.t)||actor.t<0||
        !Number.isFinite(tickMs)||tickMs<=0)return null;
+    if(actor.atk==='air'){
+      if(!(actor.z>0))return null;
+      const elapsed=actor.t*tickMs, duration=240;
+      if(elapsed>=duration)return null;
+      const row=0,index=Math.min(5,Math.floor(elapsed/duration*6));
+      return {row,index,atlas:[art.columns[index],art.rows[row],
+        art.columns[index+1]-art.columns[index],art.rows[row+1]-art.rows[row]],
+        anchor:[art.centers[index]-art.columns[index],art.anchorY[row]],
+        scale:.42,dx:48,height:55};
+    }
     const row=Number(actor.atk.slice(1))-1,a=ATK[actor.atk],elapsed=actor.t*tickMs;
     // The brightest (third) cel begins at the blade's damage window.
     const start=a.wind,peak=a.wind+a.act*.35,end=a.wind+a.act+70;
