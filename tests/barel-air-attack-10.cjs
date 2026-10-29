@@ -16,7 +16,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
   return new Promise((resolve,reject)=>{function sample(now){try{
    loop(now);const f=barelPlayerFrame(),isAir=f.image?.src.includes('barel-air-attack-10.png');if(isAir)seen[f.index]=true;
    trace.push({wallMs:now-started,frame:isAir?f.index:null,t:player.t,z:player.z,vz:player.vz,x:player.x,st:player.st,atk:player.atk});
-   if(now-started<850)airRAF(sample);else resolve({seen:Object.keys(seen).map(Number),trace,idle:f.image?.src.includes('barel-idle-dot-10.png')});
+   if(now-started<850)airRAF(sample);else resolve({seen:Object.keys(seen).map(Number),trace,idle:f.image?.src.includes('barel-idle-stationary-10.png')});
   }catch(error){reject(error);}}airRAF(sample);});})()`);
  assert.equal(realtime.seen.length,10);assert(realtime.idle);
  const loader=fs.readFileSync(path.join(root,'src/animation/barel-air-attack.js'),'utf8');
@@ -97,8 +97,10 @@ function trial(){
  inputDown('ShiftLeft');airStep();inputUp('ShiftLeft');check(player.st==='atk'&&isNew(),'Air dash remains blocked');check(!startSkill('thrust'),'Air skill policy retained');
  check(hurtPlayer(5,-1,false),'Air hit accepted');check(player.st==='down'&&!isNew(),'Air hit cancels into down');
  for(let i=0;i<110&&player.st!=='free';i++)airStep();check(player.st==='free'&&!isNew(),'Down recovery');
- airSetup('aseprite10');inputDown('KeyD');airLaunch(1);while(player.st==='atk')airStep();airStep();check(player.walk&&barelPlayerFrame().image?.src.includes('barel-walk-dot-10.png'),'Landing to walk');
- inputUp('KeyD');airStep();check(barelPlayerFrame().image?.src.includes('barel-idle-dot-10.png'),'Stop to idle');
+ airSetup('aseprite10');inputDown('KeyD');airLaunch(1);while(player.st==='atk')airStep();
+ for(let i=0;i<30&&!barelPlayerFrame().image?.src.includes('barel-walk-revised-10.png');i++)airStep();
+ check(player.walk&&barelPlayerFrame().image?.src.includes('barel-walk-revised-10.png'),'Landing to walk after landing animation');
+ inputUp('KeyD');airStep();check(barelPlayerFrame().image?.src.includes('barel-idle-stationary-10.png'),'Stop to idle');
  for(const combo of [0,1,2]){airSetup('aseprite10');startAtk(combo);check(!isNew(),'Ground combo unaffected '+combo);}
  check(BarelAirAttack.frameFor({characterId:'viesa',st:'atk',atk:'air',t:1,z:20,vz:1},MS)===null,'Other character excluded');
  window.airSheet=face=>{

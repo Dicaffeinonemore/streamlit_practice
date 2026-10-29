@@ -10,7 +10,7 @@ module.exports=async({evaluate,call,root,out})=>{
    const canvas=$(scene==='challenge'?'barelChallengePreview':'barelSelectPreview'),c=canvas.getContext('2d');
    const native=c.drawImage,seen={},sources=[];let prev=-1,wraps=0;
    c.drawImage=function(image,...args){
-    if(image.src?.includes('barel-idle-dot-10.png')){const index=Math.floor(args[0]/448);seen[index]=true;if(prev===9&&index===0)wraps++;prev=index;}
+    if(image.src?.includes('barel-idle-stationary-10.png')){const index=Math.floor(args[0]/448);seen[index]=true;if(prev===9&&index===0)wraps++;prev=index;}
     sources.push(image===BAREL_ATLAS?'legacy':image.src);return native.call(this,image,...args);
    };
    const start=performance.now();last=start;acc=0;
@@ -24,7 +24,7 @@ module.exports=async({evaluate,call,root,out})=>{
    BarelIdle.setMode('legacy');let legacy=false;c.drawImage=function(image,...args){legacy=image===BAREL_ATLAS;return native.call(this,image,...args);};
    try{drawBarelIdlePreview(canvas,tick*MS);}finally{c.drawImage=native;BarelIdle.setMode('aseprite10');}
    drawBarelIdlePreview(canvas,tick*MS);
-   return {kind:${JSON.stringify(kind)},frames:Object.keys(seen).map(Number),wraps,bounds:[minX,minY,maxX,maxY],canvasSize:[canvas.width,canvas.height],legacy,locked,sourceCorrect:sources.every(s=>s.includes('barel-idle-dot-10.png'))};
+   return {kind:${JSON.stringify(kind)},frames:Object.keys(seen).map(Number),wraps,bounds:[minX,minY,maxX,maxY],canvasSize:[canvas.width,canvas.height],legacy,locked,sourceCorrect:sources.every(s=>s.includes('barel-idle-stationary-10.png'))};
   })()`);
   assert.equal(result.frames.length,10);assert(result.wraps>=1);assert(result.legacy);assert(result.sourceCorrect);
   const shot=await call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(out,`boss-${kind}.png`),Buffer.from(shot.data,'base64'));results.push(result);

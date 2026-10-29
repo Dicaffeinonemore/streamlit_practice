@@ -21,7 +21,7 @@ module.exports=async({evaluate,call,errors,root,environment})=>{
    loop(now);const f=barelPlayerFrame(),isJump=f.image?.src.includes('barel-jump-10.png');
    if(isJump)seen[f.index]=true;
    trace.push({wallMs:now-started,frame:isJump?f.index:null,jumpTime:player.jumpTime,z:player.z,vz:player.vz,t:player.t,st:player.st,x:player.x,y:player.y});
-   if(now-started<900)jumpRAF(sample);else resolve({seen:Object.keys(seen).map(Number),trace,endedInIdle:f.image?.src.includes('barel-idle-dot-10.png')});
+   if(now-started<900)jumpRAF(sample);else resolve({seen:Object.keys(seen).map(Number),trace,endedInIdle:f.image?.src.includes('barel-idle-stationary-10.png')});
   }catch(error){reject(error);}}jumpRAF(sample);});})()`);
  assert.equal(realtime.seen.length,10,'All ten jump frames in actual RAF');assert(realtime.endedInIdle);
  assert(realtime.trace.some(s=>s.z>88&&s.vz<0),'Real apex');
@@ -84,7 +84,7 @@ function trial(){
     check(trace.every(s=>s.x===300&&s.y===420&&s.st==='free'),'Jump does not invent world/state movement');
     if(mode==='aseprite10'){check(frames.size===10,'Ten frames at actual game steps');normal=trace;}
    }
-   check(!isNew(),'Landing visual ends');check(barelPlayerFrame().image?.src.includes(movement==='idle'?'barel-idle-dot-10.png':'barel-walk-dot-10.png'),'Return to idle/walk');
+   check(!isNew(),'Landing visual ends');check(barelPlayerFrame().image?.src.includes(movement==='idle'?'barel-idle-stationary-10.png':'barel-walk-revised-10.png'),'Return to idle/walk');
    traces[mode].push({movement,trace});
   }
  }

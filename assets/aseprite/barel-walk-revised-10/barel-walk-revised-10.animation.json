@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "walk",
+  "animationType": "loop",
+  "loop": true,
+  "clip": "walk",
+  "sprite": "../exports/barel-walk-revised-10/barel-walk-revised-10.json",
+  "anchor": [
+    224,
+    416
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "renderScale": 0.41040462427745666,
+  "durationMs": 900,
+  "expectedDurationsMs": [
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90
+  ],
+  "source": {
+    "file": "source.png",
+    "sha256": "619dad4d5ec010c245b15fa5b6c377e5a2ada936135102fa66f74ff156107f66",
+    "blackMatteRemoved": true
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 346,
+    "canvasGround": 416,
+    "worldOffsetsApplied": false
+  },
+  "clock": {
+    "source": "player.walkTime",
+    "legacyPeriodMs": 900,
+    "resetOnStart": true,
+    "continueOnFacingChange": true
+  }
+}
