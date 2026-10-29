@@ -46,7 +46,6 @@ const COMBAT_FRAME_DATA = {
               sprite: 'assets/aseprite/barel-combo1-dot-10/barel-combo1-dot-10.animation.json' },
         c3: { name: '참격',   windMs: 200, actMs: 140, recMs: 340, damage: 16, reachPx: 98, knockdown: true,  stepPx: 16, hitstopTicks: 7, fx: 2,
               hitstunTicks: null, // 넉다운: 적은 'down' 상태가 된다
-              waveRatio: 0.6,     // 휘두름의 60% 지점에서 푸른 검기 발사
               smashRatio: 0.85,   // 85% 지점에서 대검이 땅에 박힘
               sprite: 'assets/aseprite/barel-combo2-dot-10/barel-combo2-dot-10.animation.json' },
       },
