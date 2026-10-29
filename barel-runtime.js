@@ -74,7 +74,7 @@ function drawBarelIdlePreview(canvas,elapsedMs){
 function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alpha=1) {
   const f=barelFrame(name,progress);if(!f || !BAREL_ATLAS.naturalWidth)return;
   const [sx,sy,w,h]=f.atlas;
-  ctx.save();ctx.translate(x-camX,y);ctx.scale(face,1);ctx.globalAlpha=alpha*(UX.options.lowFx?.65:1);
+  ctx.save();ctx.translate(x-camX,y);ctx.scale(name==='moon'?-face:face,1);ctx.globalAlpha=alpha*(UX.options.lowFx?.65:1);
   ctx.globalCompositeOperation='lighter';ctx.drawImage(BAREL_ATLAS,sx,sy,w,h,-width/2,-height,width,height);ctx.restore();
 }
 function drawBarelPlayer() {

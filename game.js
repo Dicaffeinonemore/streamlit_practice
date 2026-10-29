@@ -205,7 +205,7 @@ const barelAttack = (id, m) => ({ id, dmg: m.damage, reach: m.reachPx, kd: m.kno
 const ATK = {
   c1:  { ...HATK[0], ...barelAttack('c1', COMBO_RULES.moves.c1) },   // 일섬: 어깨 위에서 대각선으로 내려 벤다
   c2:  { ...HATK[1], ...barelAttack('c2', COMBO_RULES.moves.c2) },   // 역일섬: 낮은 곳에서 위로 올려 벤다
-  c3:  { ...HATK[2], ...barelAttack('c3', COMBO_RULES.moves.c3) },   // 참격: 머리 위로 들어 땅까지 내려찍고 검기 발사
+  c3:  { ...HATK[2], ...barelAttack('c3', COMBO_RULES.moves.c3) },   // 참격: 머리 위로 들어 땅까지 내려찍기
   air: barelAttack('air', BAREL_COMBAT.air),
 };
 const LINK_MS = COMBAT_FRAME_DATA.input.linkMs, BUF_MS = COMBAT_FRAME_DATA.input.bufferMs;
@@ -639,13 +639,6 @@ function groundSmash(x, y) {
   burst(x, y, 10, ['#ff5a6a', '#a01a24', '#5a0a12']);
   impact(x, y, 8, 1, player.face);
 }
-// 참격 마무리에서 날아가는 푸른 검기
-function launchWave() {
-  const p = player;
-  hazards.push({ type: 'pwave', x: p.x + p.face * 44, y: p.y, h: p.z + 44, dir: p.face, age: 0 });
-  sfx('pwave');
-}
-
 const DASH_DATA = BAREL_COMBAT.dash;
 const DASH = { dist: DASH_DATA.distPx, dur: DASH_DATA.durMs, inv: DASH_DATA.invulnerableTicks, cd: DASH_DATA.cooldownTicks };   // 이동 거리(px), 길이(ms), 무적·쿨타임(틱)
 function startDash(d) {
@@ -981,7 +974,6 @@ function updPlayer() {
       if (t >= A.wind && t < hitAt + MS) p.x = p.x0 + A.step * p.face * ease((t - A.wind) / A.act);   // 휘두르며 한 걸음
       if (t >= A.wind + A.act * COMBO_RULES.activeStartRatio && t < hitAt + COMBO_RULES.activeTailMs) playerStrike(A);
       if (hit('KeyJ', 'KeyZ')) p.buf = BUF_MS;
-      if (p.combo === 2 && !p.wave && t >= A.wind + A.act * COMBO_RULES.moves.c3.waveRatio) { p.wave = true; launchWave(); }
       if (p.combo === 2 && !p.smash && t >= A.wind + A.act * COMBO_RULES.moves.c3.smashRatio) { p.smash = true; groundSmash(p.tipX || p.x + p.face * 90, p.y); }
       if (p.buf > 0 && p.combo < 2 && t >= hitAt + A.rec * COMBO_RULES.cancelRatio) { startAtk(p.combo + 1); break; }
       if (t >= hitAt + A.rec) {
