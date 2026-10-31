@@ -39,7 +39,8 @@ const SOVEREIGN_RULES = {
   whirl:{warn:24,spin:120,turns:2,rx:130,ry:30,height:70,low:30,high:160,dazed:50,damage:12,push:7},
   backhand:{warn:10,swing:12,damage:10,push:9},
   meteor:{rise:30,height:420,interval:20,count:4,delay:36,fall:8,active:4,rx:45,ry:20,stuck:60,damage:16},
-  ultimate:{count:[3,5],fadeMs:200,telegraphMs:900,chargedMs:400,laserFps:16,
+  // 1.0s hand charge + 0.5s laser startup = 1.5s until the active beam.
+  ultimate:{count:[10,13],fadeMs:200,telegraphMs:600,chargedMs:200,laserFps:16,
     handScale:.45,laserHeight:94,laserThickness:22,margin:20,minYGap:65,damage:23,debug:false,
     handOrigin:[220,120],laserOrigins:[[88,110],[80,110],[77,110],[75,110],[68,110],[59,110],[47,110],[42,110],
       [55,112],[53,112],[48,112],[43,112],[53,112],[50,112],[48,112],[44,112],[50,112],[48,112],[45,112],[42,112]],

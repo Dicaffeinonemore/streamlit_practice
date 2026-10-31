@@ -5,12 +5,15 @@ module.exports=async({evaluate,call,errors,root})=>{
   const result=await evaluate(`(${trial.toString()})()`);
   assert.equal(result.name,'적월마광포');assert.equal(result.cooldown,900);
   assert.equal(result.selected,'ultimate');assert.equal(result.phase1Available,false);
-  assert(result.count>=3&&result.count<=5);assert(result.maxHands<=2);
+  assert(result.count>=10&&result.count<=13);assert(result.maxHands<=3);
+  assert(result.firstDangerMs>=1500&&result.firstDangerMs<=2000);
+  assert.equal(result.observedCount,result.count);
   assert(result.allInside&&result.gaps&&result.noOverlap);
   assert.equal(result.initialNoHit,0);assert.equal(result.activeHit,1);assert.equal(result.onceOnly,1);assert.equal(result.afterActive,1);
   assert.equal(result.wrongSide,0);assert.equal(result.ended,true);assert.equal(result.cancelled,true);
   assert.equal(result.realDamage,30);assert.equal(result.positionsValid,true);
-  assert(result.elapsed>=result.expectedElapsed-35&&result.elapsed<=result.expectedElapsed+35);
+  // Each sequential hand can round its millisecond threshold up by one 60Hz tick.
+  assert(result.elapsed>=result.expectedElapsed-35&&result.elapsed<=result.expectedElapsed+result.count*1000/60+35);
   assert.deepEqual(errors,[]);
   await evaluate(`cannonSetup();sovStartJob(enemies[0],enemies[0].sov,'ultimate');
     const j=enemies[0].sov.jobs[0];j.spawned=1;j.remaining=0;j.hands=[{x:camX+195,y:360,dir:1,ageMs:SOV_R.ultimate.fadeMs+SOV_R.ultimate.telegraphMs+SOV_R.ultimate.chargedMs+700,fired:true,hit:false}];
@@ -30,9 +33,10 @@ function trial(){
   };
   const e=cannonSetup(),s=e.sov,C=SOV_R.ultimate,fire=C.fadeMs+C.telegraphMs+C.chargedMs;
   const selected=sovPick(e,s,100),phase1Available=(()=>{e.p2shown=false;const x=sovAvailable(e,s,'ultimate');e.p2shown=true;return x})();
-  sovStartJob(e,s,'ultimate');const job=s.jobs[0],count=job.remaining;let maxHands=0,allInside=true,gaps=true,noOverlap=true,last=null,observed=new Set();
-  while(!job.done&&job.t<1500){
+  sovStartJob(e,s,'ultimate');const job=s.jobs[0],count=job.remaining;let maxHands=0,allInside=true,gaps=true,noOverlap=true,last=null,observed=new Set(),firstDangerMs=null;
+  while(!job.done&&job.t<2400){
     sovJobTick(e,s,job);job.t++;job.st++;maxHands=Math.max(maxHands,job.hands.length);
+    if(job.danger&&firstDangerMs===null)firstDangerMs=job.elapsedMs;
     for(const h of job.hands)if(!observed.has(h)){
       observed.add(h);if(last!==null&&Math.abs(h.y-last)<C.minYGap)gaps=false;last=h.y;
       const left=h.x+(h.dir===1?-C.handOrigin[0]*C.handScale:-(362-C.handOrigin[0])*C.handScale);
@@ -70,5 +74,5 @@ function trial(){
   const e2=cannonSetup(),s2=e2.sov;sovStartJob(e2,s2,'ultimate');sovJobTick(e2,s2,s2.jobs[0]);sovGround(e2,s2);
   const cancelled=s2.jobs.length===0&&s2.fists.every(f=>f.st==='dropped');
   return {name:SOV_R.names.ultimate,cooldown:SOV_R.cooldowns.ultimate,selected,phase1Available,count,maxHands,allInside,gaps,noOverlap,
-    initialNoHit,activeHit,onceOnly,afterActive,wrongSide,realDamage,positionsValid,ended,cancelled,elapsed,expectedElapsed};
+    initialNoHit,activeHit,onceOnly,afterActive,wrongSide,realDamage,positionsValid,ended,cancelled,elapsed,expectedElapsed,firstDangerMs,observedCount:observed.size};
 }
