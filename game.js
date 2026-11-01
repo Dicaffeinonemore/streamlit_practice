@@ -131,12 +131,14 @@ const ET = {
 };
 // 패턴 시작 후 이 시간(ms) 동안 머리 위에 ! 경고 표시
 ET.boss2.pats=Object.fromEntries(['staff_swing','magic_bolt','teleport','summon','curtain','cackle','aerial_slash','crow_rush','moon','p2_bolt','p2_summon','p2_curtain','p2_teleport'].map(id=>[id,morgraMoves[id].name]));
+Object.assign(ET, STAGE1_ET);   // 1스테이지 새 적 5종 (stage1-runtime.js)
 const TELE = { slam: 650, sweep: 450, rage: 550, hook: 500, meat: 500, orbs: 500, ravens: 450, feather: 450,
   staff: 500, soul: 700, pillars: 700, charge: 450, cleave: 820, whirl: 900, slash3: 260, frost: 1050, eclipse: 1400 };
 
 const STAGES = [
-  { name: 'STAGE 1', title: '붉은 처형자의 성채', theme: 'stage1', len: 3200, boss: 'boss1',
-    barrels: [520, 1100, 1650, 2100],
+  // 1스테이지는 구간(stage1-runtime.js 의 STAGE1_SECTIONS) 으로 진행한다. len·통은 구간마다 바뀌고 waves 는 쓰지 않는다
+  { name: 'STAGE 1', title: '도살자들의 거리', theme: 'stage1', len: 3200, boss: 'boss1', sections: true,
+    barrels: [],
     waves: [
       { at: 400,  e: [['grunt', 1], ['grunt', 1]] },
       { at: 900,  e: [['grunt', 1], ['grunt', -1], ['rogue', 1]] },
@@ -403,6 +405,7 @@ function beginBossChallenge(i) {
   bossChallenge = true; practice = false; AUDIO.pause(false);
   player = newPlayer(); player.sp = 100; player.mg = 3;
   startStage(i, true);
+  if (stage.sections) { barrels = []; bannerT = 0; return; }   // 구간 진행: 투기장 구간에서 시작하고 보스는 그 구간이 부른다
   // Use the original boss arena and phases, skipping the approach waves.
   const wave = stage.waves.find(w => w.boss);
   camX = wave.at; lockAt = camX; camLock = true; waveIdx = stage.waves.length;
@@ -486,6 +489,7 @@ function startStage(i, restored = false) {
   p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.dashGrace=0; p.spTg = null;
   p.hurtKind='hurt_high';p.hurtDuration=PLAYER_DATA.hurt.defaultHitstunTicks;p.hurtFrameEnds=null;
   p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
+  startStage1Sections();
   stageStartScore = p.score;
   if (!practice && !bossChallenge) { stageEntry = entrySnapshot(); UX.saveCheckpoint(stageEntry); }
   scene = 'intro'; bannerT = 160;
@@ -589,7 +593,8 @@ function hurtPlayer(dmg, dir, kd, source=null, contact=null) {
   dmg = Math.round(dmg * (source?.damageScale ?? (source?.boss && source.p2shown ? (source.type==='boss2'?1.5:1.3) : 1)));
   const p = player;
   if (practice) return false;
-  if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special' || p.st === 'grabbed') return false;
+  if (p.inv > 0 || p.st === 'down' || p.st === 'dead' || p.st === 'special' || (p.st === 'grabbed' && !p.grab?.bite)) return false;
+  if (p.st === 'grabbed') releaseStage1Grab('hit');   // 사냥개에게 물린 채로는 다른 적의 공격이 정상적으로 맞는다 (물기는 풀린다)
   if(!isViesa()){
     const height=contact?.hitHeight??source?.hitHeight??source?.h??(p.z+56);
     const base=PLAYER_DATA.hurt.defaultHitstunTicks;
@@ -912,7 +917,7 @@ function updPlayer() {
   if (p.dashCd > 0) p.dashCd--;
   if(p.dashGrace>0)p.dashGrace--;
   for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
-  if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else updateGorathGrab(); return; }
+  if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else if(p.grab?.stage1)updateStage1Grab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
   p.walk = false;
   if(isViesa()){if(viesaInput())return;}
@@ -1037,7 +1042,7 @@ function updPlayer() {
   }
   // 이동 제한
   p.x = clamp(p.x, camX + 20, Math.min(camX + VW - 20, stage.len - 20));
-  p.y = clamp(p.y, GTOP + 10, GBOT);
+  p.y = clamp(p.y, walkTop() + 10, GBOT);
 
   // 아이템 획득
   for (const it of items) {
@@ -1120,6 +1125,7 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null,
     } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken') || (isVargul(e)&&e.st==='pat'&&!vargulArmored(e))) { if(isAurelion(e)||isVargul(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
+  if (stage1Armor(e, kd, fixedDamage, attackId)) return;             // 1스테이지 중갑병·곤봉잡이 슈퍼아머
   if (COMBAT_FRAME_DATA.enemies[e.type]?.armorWhileWind && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
   if (kd) { e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 4; }
   else { e.st = 'hurt'; e.t = 0; e.hurtT = enemyHitstun(e, attackId); e.vx = dir * e.d.kb * 0.6; }
@@ -1134,6 +1140,7 @@ function spawnAdds(types) {
 }
 
 function startAttack(e, pat) {
+  if (e.s1 && startStage1Attack(e)) return;        // 1스테이지 새 적: 프레임 데이터 동작
   e.pat = pat; e.st = 'wind'; e.t = 0; e.hitSet = new Set();
   e.face = player.x >= e.x ? 1 : -1;
   e.form = e.d.sprite === 'knight' && Math.random() < 0.4 ? 'heavy' : 'atk';   // 중기사: 내려베기 / 찌르며 베기
@@ -1315,7 +1322,7 @@ function updEnemy(e) {
   }
   const dx = p.x - e.x, dy = p.y - e.y;
 
-  switch (e.st) {
+  if (!(e.s1 && stage1EnemyState(e))) switch (e.st) {   // 1스테이지 새 적: 등장·발코니·화염병 투척자
     case 'down': case 'dead':
       e.x += e.vx; e.z += e.vz; e.vz -= 0.5; e.vx *= 0.97;
       if (e.z <= 0) { e.z = 0; e.vz = 0; e.vx *= 0.7; }
@@ -1386,7 +1393,7 @@ function updEnemy(e) {
     }
   }
   e.x = clamp(e.x, camX - 70, camX + VW + 70);
-  e.y = clamp(e.y, GTOP + 10, GBOT);
+  if (e.st !== 'enter') e.y = clamp(e.y, walkTop() + 10, GBOT);
 }
 
 // 궁병: 플레이어와 200~320px 거리를 두고 같은 줄로 맞춘 뒤 쏜다. 너무 가까우면 물러난다
@@ -1422,7 +1429,7 @@ function updHazards() {
   for (const z of hazards) {
     z.age += MS;
     if(updateViesaProjectile(z))continue;
-    if(updateVargulHazard(z)||updateAurelionHazard(z)||updateMorgraHazard(z))continue;
+    if(updateVargulHazard(z)||updateAurelionHazard(z)||updateMorgraHazard(z)||updateStage1Hazard(z))continue;
     if (z.owner && ['dead', 'down', 'stun'].includes(z.owner.st) && ['rift', 'eclipse'].includes(z.type)) { z.dead = true; continue; }
     switch (z.type) {
       case 'rift': {
@@ -1587,6 +1594,7 @@ function update() {
   if (hitStop > 0) { hitStop--; return; }
   if (chain.t > 0) { chain.t -= MS; if (chain.t <= 0) chain.n = 0; }
   if (shake > 0) shake *= 0.85;
+  if (stage.sections && !practice && stage1Fading()) return true;   // 구간 전환 중에는 전투가 멈춘다
 
   updPlayer();
   globalThis.BarelJump?.observe(player);
@@ -1599,17 +1607,20 @@ function update() {
 
   // 카메라와 웨이브(화면 고정 전투)
   const waves = stage.waves;
-  const limit = camLock ? lockAt : (waveIdx < waves.length ? waves[waveIdx].at : stage.len - VW);
-  const camGoal = player.x - VW * 0.4;
-  if (camGoal > camX) camX = Math.min(camGoal, limit);
-  if (!camLock && waveIdx < waves.length && camX >= waves[waveIdx].at - 0.5) {
-    camLock = true; lockAt = waves[waveIdx].at;
-    spawnWave(waves[waveIdx]); waveIdx++;
-  }
-  if (camLock && enemies.every(e => e.st === 'dead')) {
-    camLock = false;
-    arena = null; hazards = hazards.filter(z => !z.arena);
-    if (waveIdx < waves.length) goT = 300;
+  if (stage.sections) updStage1();
+  else {
+    const limit = camLock ? lockAt : (waveIdx < waves.length ? waves[waveIdx].at : stage.len - VW);
+    const camGoal = player.x - VW * 0.4;
+    if (camGoal > camX) camX = Math.min(camGoal, limit);
+    if (!camLock && waveIdx < waves.length && camX >= waves[waveIdx].at - 0.5) {
+      camLock = true; lockAt = waves[waveIdx].at;
+      spawnWave(waves[waveIdx]); waveIdx++;
+    }
+    if (camLock && enemies.every(e => e.st === 'dead')) {
+      camLock = false;
+      arena = null; hazards = hazards.filter(z => !z.arena);
+      if (waveIdx < waves.length) goT = 300;
+    }
   }
 
   enemies.forEach(updEnemy);
@@ -1618,7 +1629,8 @@ function update() {
   updHazards();
 
   // 스테이지 클리어 판정 (보스 사망)
-  if (clearT === 0 && waveIdx >= waves.length && !camLock && enemies.length === 0) { clearT = 1; AUDIO.victoryMusic(stageIdx, stageIdx + 1 >= STAGES.length); }   // 승리 BGM: 팡파르 → 개선 행진 (마지막은 엔딩곡)
+  const allWaves = stage.sections ? stage1Finished() : waveIdx >= waves.length;
+  if (clearT === 0 && allWaves && !camLock && enemies.length === 0) { clearT = 1; AUDIO.victoryMusic(stageIdx, stageIdx + 1 >= STAGES.length); }   // 승리 BGM: 팡파르 → 개선 행진 (마지막은 엔딩곡)
   if (clearT > 0 && ++clearT > 200) finishStage();
 
   // 통 / 아이템
@@ -1644,6 +1656,7 @@ function update() {
 
 function updFx() {
   updateViesaEffects();
+  updStage1Fx();
   globalThis.BarelDashFx?.update(player,MS);
   for (const a of impacts) a.age += MS;
   impacts = impacts.filter(a => a.age < 450);
@@ -2094,6 +2107,7 @@ function drawPlayer() {
 }
 
 function drawEnemy(e) {
+  if(drawStage1Enemy(e))return;
   if(!e.boss||e.st!=='stun'){drawEnemyBody(e);return;}
   // Render-only sway around the feet; physics and groggy duration stay fixed.
   const x=e.x-camX,y=e.y-e.z;
@@ -2549,6 +2563,7 @@ function drawGroundFx(L) {
     }
   }
   for (const e of enemies) if (e.st === 'pat' && e.pat === 'slam' && e.pt < 650) warn(L, fxX(e.x), 70, e.pt, fxY(e.y));
+  drawStage1Ground(L);
 }
 function drawTopFx(L) {
   for (const z of hazards) {
@@ -2623,6 +2638,7 @@ function drawTopFx(L) {
     L.arc(fxX(p.x), fxY(p.y) - 1, Math.round(6 + u * 12), 0, 6.283, '#9cc3ff', 1, 0.5 * (1 - u * 0.5));
   }
   for (const b of bolts) drawBolt(L, b);
+  drawStage1Top(L);
   for (const e of enemies) {                       // 보스 격파: 겹겹이 퍼지는 빛 고리
     if (!e.boss || e.st !== 'dead') continue;
     const t = e.t * MS;
@@ -2844,7 +2860,7 @@ function drawHUD() {
   const boss = enemies.find(e => e.boss && (e.st !== 'dead' || e.t < 60));
   if (boss) {
     drawBossBar(boss);
-  } else if (target && target.t > 0 && enemies.includes(target.e)) {
+  } else if (!drawStage1MidBoss() && target && target.t > 0 && enemies.includes(target.e)) {   // 중갑병 체력바가 있으면 그것만
     const e = target.e, a = Math.min(1, target.t / 20);
     ctx.globalAlpha = a;
     if (!drawPixelEnemyBar(e)) {
@@ -2936,9 +2952,10 @@ function render() {
   flashGain = 1;
   ctx.save();
   if (UX.options.shake && shake > 0.5 && scene !== 'pause' && scene !== 'settings') ctx.translate(rand(-shake, shake) * 0.6, rand(-shake, shake) * 0.6);
-  drawBackdrop(theme, camX * Z);
+  const sectionBG = stage1BackdropReady();         // 1스테이지 구간 배경은 바닥까지 한 장이다
+  if (sectionBG) { ctx.fillStyle = '#08060b'; rect(-20, -20, W + 40, H + 40); } else drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY);         // ↓ 월드 좌표 (1.5배 줌)
-  drawFloor(theme);
+  if (sectionBG) drawStage1Back(); else drawFloor(theme);
   if(isViesa()&&player.st==='special'){
     // Dim only scenery; draw actors and their effects at their original brightness.
     ctx.fillStyle='rgba(0,0,0,.3)';rect(-40,OY-40,VW+80,VH+80);
@@ -2947,6 +2964,7 @@ function render() {
   drawMorgraHazards(true);
   if (stage) {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
+    drawStage1GroundSprites();                    // 1스테이지 바닥 불·파편·먼지 스프라이트 (캐릭터 뒤)
     const sp = player.st === 'special' && !isViesa() ? player.t * MS : -1;
     // y 순서로 정렬해서 그린다 (필살기 중에는 흑기사와 그 잔상만 어둠 위에 따로 그림)
     const list = [];
@@ -2964,12 +2982,14 @@ function render() {
       ghosts.forEach(g => { if (g.id === 'player') drawGhost(g); });
       drawPlayer();
     }
+    if (sectionBG) drawStage1Front();             // 투기장 울타리 전경: 캐릭터보다 나중
 
     if (player.st === 'cast' && !player.castFired) {   // 뇌격 직전: 화면이 푸르게 어두워진다
       ctx.fillStyle = `rgba(10,16,48,${(0.32 * Math.min(1, player.t * MS / 300)).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
     }
     for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
     fxTop.L.clear(); drawTopFx(fxTop.L); presentFx(fxTop);
+    drawStage1TopSprites();                       // 날아가는 화염병
     for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
     enemies.forEach(drawEnemyOverlay);
     drawGorathHazards();
@@ -2979,6 +2999,7 @@ function render() {
     drawSovereignTop();
     drawViesaProjectiles();
     drawGorathGrab();
+    drawStage1Grab();
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
   }
   ctx.restore();
@@ -2987,6 +3008,7 @@ function render() {
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
   if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / bossIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
+  if (stage && player) drawStage1Overlay();
 
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
     const a = clamp(Math.min(bannerT, 160 - bannerT) / 25, 0, 1);
