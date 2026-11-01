@@ -21,12 +21,12 @@ function barelPlayerFrame() {
     const a=ATK[p.atk] || ATK.c1, duration=p.atk==='air'?400:a.wind+a.act+a.rec;
     return barelFrame(p.atk==='air'?'air':'combo'+p.combo,t/duration);
   }
-  if(p.st==='skill') return SKILLS[p.skill] ? barelFrame(p.skill==='redwave'?'cast':p.skill,t/SKILLS[p.skill].dur) : barelFrame('idle');
-  if(p.st==='special') return t<1260?barelFrame('super1',t/1260):barelFrame('super2',(t-1260)/740);
+  if(p.st==='skill') return globalThis.BarelNamedMotion?.frameFor(p,MS) || (SKILLS[p.skill] ? barelFrame(p.skill==='redwave'?'cast':p.skill,t/SKILLS[p.skill].dur) : barelFrame('idle'));
+  if(p.st==='special') return globalThis.BarelNamedMotion?.frameFor(p,MS) || (t<1260?barelFrame('super1',t/1260):barelFrame('super2',(t-1260)/740));
   if(p.st==='cast') return barelFrame('cast',t/MAGIC.dur);
   if(p.st==='dash') return globalThis.BarelDash?.frameFor(p,MS,DASH.dur) || barelFrame('dash',t/DASH.dur);
   if(p.st==='hurt') return globalThis.BarelHurt?.frameFor(p)||barelFrame('hurt_old',t/280);
-  if(p.st==='down') return globalThis.BarelDown?.frameFor(p)||barelFrame('down',t/930);
+  if(p.st==='down') return globalThis.BarelNamedMotion?.frameFor(p,MS)||globalThis.BarelDown?.frameFor(p)||barelFrame('down',t/930);
   if(p.st==='dead') return barelFrame('death',t/1000);
   const jump=globalThis.BarelJump?.frameFor(p,MS,scene!=='clear'&&scene!=='ending');
   if(jump)return jump;

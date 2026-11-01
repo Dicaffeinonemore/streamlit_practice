@@ -1,7 +1,7 @@
 'use strict';
 // Both supplied sheets contain 24 frames, six columns by four rows.
 const judgmentSources=Object.entries(JUDGMENT_ART).filter(([,src])=>typeof src==='string');
-const JUDGMENT_GROUP=GameAssets.group(2,judgmentSources.map(([,src])=>src));
+const JUDGMENT_GROUP=GameAssets.group(1,judgmentSources.map(([,src])=>src));
 const JUDGMENT_IMAGES=Object.fromEntries(judgmentSources.map(([id],i)=>[id,JUDGMENT_GROUP.images[i]]));
 const JUDGMENT_READY=JUDGMENT_GROUP.ready;
 function judgmentSprite(id,frame,x,y,width,height,alpha=1){
@@ -69,6 +69,10 @@ function drawJudgmentField(z){
     ctx.drawImage(image,frame%6*1280+159,Math.floor(frame/6)*360+80,390,210,
       s.x-camX-195*44/180,s.y-105*24/80,390*44/180,210*24/80);
   }
+  ctx.restore();
+  // Keep the safe area legible even while its texture is loading.
+  ctx.save();ctx.globalAlpha=fade;ctx.strokeStyle='#f1e5ff';ctx.lineWidth=2;
+  for(const s of z.safe){ctx.beginPath();ctx.ellipse(s.x-camX,s.y,42,22,0,0,Math.PI*2);ctx.stroke();}
   ctx.restore();
   // Beams rise above the floor boundary. Only the floor uses the GTOP crop.
   if(active){

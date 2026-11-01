@@ -188,7 +188,9 @@ async function scoreChecks() {
   }
   check(wins.size === 2, 'Victory and ending are distinct');
   for (const s of [0, 4]) {
-    startStage(s); waveIdx = stage.waves.length; camLock = false; enemies = []; clearT = 0; scene = 'play'; update();
+    startStage(s); waveIdx = stage.waves.length; camLock = false; enemies = []; clearT = 0; scene = 'play';
+    if (stage.sections) { enterSection(STAGE1_SECTIONS.length - 1); S1.ev = S1.sec.events.length; camLock = false; }   // 1스테이지: 마지막 구간의 보스까지 끝난 상태
+    update();
     const m = AUDIO.currentMusic();
     check(clearT > 0 && m?.victory === (s === 4 ? 'ending' : 'victory'), 'Clearing a stage starts the victory score');
     const name = m.name; AUDIO.enable(true); AUDIO.enable(false); AUDIO.enable(true);
@@ -362,7 +364,20 @@ function combatChecks() {
   hdFrame = originalFrame; check('All ' + patterns + ' boss pattern/phase cases render', missing.size === 0);
   for (let s = 0; s < 5; s++) {
     reset(); startStage(s); scene = 'play'; hitStop = 0;
-    for (let w = 0; w < stage.waves.length; w++) {
+    if (stage.sections) {                          // 1스테이지: 구간마다 잠금 위치로 가서 적을 쓰러뜨리고 다음 구간으로
+      for (let si = 0; si < STAGE1_SECTIONS.length; si++) {
+        enterSection(si); scene = 'play';
+        for (let k = 0; k < 6000 && S1.ev < S1.sec.events.length; k++) {
+          player.inv = 99; player.hp = player.max;
+          if (!camLock) { camX = s1LockCam(S1.sec.events[S1.ev].at); player.x = camX + 256; }
+          update();
+          if (scene === 'bossintro') for (let i = 0; i < Math.ceil(bossIntroDuration(introBoss)/MS)+1; i++) update();
+          for (const e of [...enemies]) if (e.st !== 'dead' && !e.invuln) damageEnemy(e, 1e6, true);
+        }
+      }
+      for (let i = 0; i < 400 && scene === 'play'; i++) update();
+    }
+    for (let w = 0; w < (stage.sections ? 0 : stage.waves.length); w++) {
       camX = stage.waves[w].at; player.x = camX + 256; camLock = false; waveIdx = w; enemies = []; update();
       if (scene === 'bossintro') for (let i = 0; i < Math.ceil(bossIntroDuration(introBoss)/MS)+1; i++) update();
       for (const e of [...enemies]) if (e.st !== 'dead') damageEnemy(e, 1e6, true);
@@ -409,6 +424,51 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.VARGUL_SUITE||process.env.VARGUL_STAGE3||process.env.VARGUL_STAGE4||process.env.BOSS_GROGGY_SUITE||process.env.VARGUL_CAPTURE_CONSOLE||process.env.VARGUL_ORB_AI||process.env.VARGUL_VISUAL_SUITE||process.env.VARGUL_ULTIMATE_SUITE)await call('Log.enable');
     await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
     const base = 'http://127.0.0.1:' + server.address().port;
+    if(process.env.STAGE1_BLADE_REPAIR_SUITE){
+      for(const page of ['index.html','embedded.html']){
+        await ready(base+'/'+page);
+        const result=await evaluate(`(async()=>{
+          const art=STAGE1_ENEMY_ART.blade, im=new Image();im.src=art.atlas;await im.decode();
+          const samples=[5,6].map(i=>{
+            const f=art.frames[art.clips.atk2[i]], [x,y,w,h]=f.atlas;
+            const clean=cleanStage1Frame('blade-test',im,x,y,w,h);
+            const rgba=clean.getContext('2d').getImageData(0,0,w,h).data;
+            let right=0;
+            for(let yy=0;yy<h;yy++)for(let xx=Math.floor(w*.8);xx<w;xx++)if(rgba[(yy*w+xx)*4+3]>32)right++;
+            return {w,h,right,tip:f.tip};
+          });
+          return {counts:['atk1','atk2','atk3'].map(k=>art.clips[k].length),samples};
+        })()`);
+        assert.deepEqual(result.counts,[10,10,10]);
+        assert.ok(result.samples[0].w>220 && result.samples[1].w>200);
+        assert.ok(result.samples.every(f=>f.right>15),'sword tips survive renderer cleanup');
+        assert.deepEqual(result.samples.map(f=>f.tip),[[47.8,56.1],[46.1,49.9]]);
+      }
+      assert.deepEqual(errors,[]);console.log('PASS stage 1 sword frames in local and embedded game');return;
+    }
+    if(process.env.BAREL_NAMED_MOTION_SUITE){
+      for(const page of ['index.html','embedded.html']){
+        await ready(base+'/'+page);
+        const result=await evaluate(`(async()=>{
+          await Promise.all(Object.values(BarelNamedMotion.clips).map(c=>c.image.decode()));
+          requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();
+          const p=player, old={st:p.st,skill:p.skill,t:p.t,z:p.z,characterId:p.characterId};
+          try{
+            p.characterId='barel';p.z=0;
+            return [["skill","whirl",380],["skill","leap",560],["down",null,500],
+                    ["special",null,621],["special",null,781],["special",null,941],
+                    ["special",null,1101],["special",null,1581]].map(([st,skill,t])=>{
+              p.st=st;p.skill=skill;p.t=t/MS;
+              const f=barelPlayerFrame();
+              if(!f?.image?.naturalWidth)throw Error('Named motion failed: '+st+' '+t);
+              return Object.entries(BarelNamedMotion.clips).find(([,c])=>c.image===f.image)?.[0];
+            });
+          }finally{Object.assign(p,old)}
+        })()`);
+        assert.deepEqual(result,['whirl','leap','getup','special1','special2','special3','special4','special5']);
+      }
+      assert.deepEqual(errors,[]);console.log('PASS named motion loads in local and embedded game');return;
+    }
     if(process.env.L_SKILL_HIT_SUITE){await ready(base+'/index.html');await require('./l-skill-hit.cjs')({evaluate,errors});return;}
     if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.BAREL_REVISED_SUITE){await ready(base+'/index.html');await require('./barel-revised.cjs')({evaluate,errors});return;}
