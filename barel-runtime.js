@@ -1,6 +1,6 @@
 'use strict';
 const BAREL_ATLAS = new Image(); BAREL_ATLAS.src = BAREL_ART.atlas;
-const BAREL_PORTRAIT = new Image(); BAREL_PORTRAIT.src = BAREL_ART.portrait; BAREL_PORTRAIT.hd = true;
+const BAREL_PORTRAIT = new Image(); BAREL_PORTRAIT.src = globalThis.BAREL_REMAKE_PORTRAIT || BAREL_ART.portrait; BAREL_PORTRAIT.hd = true;
 // Match the ordinary soldiers' display scale and pixel sampling.
 const BAREL_PLAYER_SCALE = .72;
 // Keep the original seven-frame atlas clip accessible under its backup name.
@@ -23,15 +23,15 @@ function barelPlayerFrame() {
   }
   if(p.st==='skill') return globalThis.BarelNamedMotion?.frameFor(p,MS) || (SKILLS[p.skill] ? barelFrame(p.skill==='redwave'?'cast':p.skill,t/SKILLS[p.skill].dur) : barelFrame('idle'));
   if(p.st==='special') return globalThis.BarelNamedMotion?.frameFor(p,MS) || (t<1260?barelFrame('super1',t/1260):barelFrame('super2',(t-1260)/740));
-  if(p.st==='cast') return barelFrame('cast',t/MAGIC.dur);
+  if(p.st==='cast') return globalThis.BarelNamedMotion?.frameFor(p,MS) || barelFrame('cast',t/MAGIC.dur);
   if(p.st==='dash') return globalThis.BarelDash?.frameFor(p,MS,DASH.dur) || barelFrame('dash',t/DASH.dur);
   if(p.st==='hurt') return globalThis.BarelHurt?.frameFor(p)||barelFrame('hurt_old',t/280);
   if(p.st==='down') return globalThis.BarelNamedMotion?.frameFor(p,MS)||globalThis.BarelDown?.frameFor(p)||barelFrame('down',t/930);
-  if(p.st==='dead') return barelFrame('death',t/1000);
+  if(p.st==='dead') return globalThis.BarelNamedMotion?.frameFor(p,MS) || barelFrame('death',t/1000);
   const jump=globalThis.BarelJump?.frameFor(p,MS,scene!=='clear'&&scene!=='ending');
   if(jump)return jump;
   if(p.z>0) return barelFrame('jump',p.vz>0?.25:.65);
-  if(scene==='clear'||scene==='ending') return barelFrame('victory',tick*MS/1500,true);
+  if(scene==='clear'||scene==='ending') return globalThis.BarelNamedMotion?.victoryFrame?.(tick*MS) || barelFrame('victory',tick*MS/1500,true);
   const walk=globalThis.BarelWalk?.frameFor(p);
   if(walk)return walk;
   const idle=globalThis.BarelIdle?.frameFor(p,tick*MS);

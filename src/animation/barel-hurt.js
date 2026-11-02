@@ -3,7 +3,8 @@
   let animation=null,error=null;
   const sequences={hurt_high:{frames:[2,3,4,5,6,12],ticks:[3,5,5,5,6,6]},
                    hurt_low:{frames:[7,8,9,10,11,12],ticks:[3,5,5,6,6,5]}};
-  const ready=Promise.resolve().then(()=>root.AsepriteAnimation.loadMetadata('assets/aseprite/barel-hurt-12/barel-hurt-12.animation.json'))
+  const url=root.BAREL_HURT_CONFIG?.metadataUrl||'assets/aseprite/barel-hurt-12/barel-hurt-12.animation.json';
+  const ready=Promise.resolve().then(()=>root.AsepriteAnimation.loadMetadata(url))
     .then(asset=>{
       if(asset.frames.length!==12||asset.metadata.animationId!=='hurt')throw Error('Barel hurt: invalid twelve-frame asset');
       for(const f of asset.frames){f.image=asset.image;f.renderScale=asset.metadata.renderScale;}

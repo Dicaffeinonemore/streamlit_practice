@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "grabbed",
+  "animationType": "loop",
+  "loop": true,
+  "clip": "grabbed",
+  "sprite": "../exports/barel-remake-grabbed-10/barel-remake-grabbed-10.json",
+  "anchor": [
+    224,
+    416
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    65,
+    65,
+    65,
+    65,
+    65,
+    65,
+    65,
+    65,
+    65,
+    65
+  ],
+  "durationMs": 650,
+  "loopFromFrame": 2,
+  "loopDurationMs": 520,
+  "renderScale": 0.7553191489361702,
+  "clock": {
+    "source": "player.t * MS",
+    "legacyPeriodMs": 650
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 188,
+    "canvasGround": 416,
+    "worldOffsetsApplied": false,
+    "method": "Rig ground point (128,240) on the anchor; airborne frames drawn in place (actor.z lifts them)"
+  },
+  "source": {
+    "generator": "tools/barel-remake/build.py",
+    "motion": "grabbed",
+    "sourceFrames": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "replaces": "barel-grabbed-10",
+    "redrawn": true,
+    "effectsBaked": false
+  }
+}

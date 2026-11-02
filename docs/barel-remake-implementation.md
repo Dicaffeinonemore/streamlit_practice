@@ -8,8 +8,9 @@
 - 게임 URL에 `?barelRemake=0`을 붙이면 이전 아트를 쓴다. 개별 로더의 `?barelIdle=legacy` 같은 기존 선택도 유지된다.
 - `src/animation/barel-remake-data.js`(생성 파일)는 스킬 시트 경로를 담는다. `barel-named-motion.js`는 이 시트로 같은 이름의 클립을 덮어쓴다.
 - 코드 변경은 이 두 파일과 다음뿐이다.
-  - `barel-dash-attack.js`: 다른 로더처럼 `BAREL_DASH_ATTACK_CONFIG.metadataUrl`을 받는다.
-  - `barel-named-motion.js`: 내려찍기(slam, 820ms)와 붉은 파동(redwave, 720ms) 시트를 고른다. 시트가 없으면 null을 돌려주므로 기존 아틀라스 클립이 재생된다.
+  - `barel-dash-attack.js`, `barel-hurt.js`, `barel-down.js`: 다른 로더처럼 `BAREL_*_CONFIG.metadataUrl`을 받는다.
+  - `barel-named-motion.js`: 리메이크에만 있는 시트를 고른다. 내려찍기(slam, 820ms), 붉은 파동(redwave, 720ms), 돌진 베기(thrust, 700ms), 뇌격 시전(cast, 640ms), 사망(dead, 1000ms, 마지막 장 유지), 필살기 시작(special 0–620ms)이다. 승리 루프용 `victoryFrame(ms)`도 추가했다. 시트가 없으면 null을 돌려주므로 기존 아틀라스 클립이 재생된다.
+  - `barel-runtime.js`: 시전·사망·승리 프레임을 고를 때 이름 있는 모션을 먼저 확인한다. 초상화는 `BAREL_REMAKE_PORTRAIT`가 있으면 그것을 쓴다.
   - `index.html`: 스크립트 2개를 `aseprite.js` 앞에 등록했다.
   - `server.py`: Streamlit 묶음에 `barel-remake-*` 자산을 추가했다.
   - `tests/regression.cjs`: 테스트 서버 허용 목록에 `barel-remake-*` 자산을 추가했다.
@@ -27,7 +28,17 @@
 | c3 참격 | barel-remake-combo2-10 | barel-combo2-dot-10 | 384 / 200,352 | attack_combo 13–20 |
 | jump | barel-remake-jump-10 | barel-jump-revised-10 | 640 / 320,576 | jump 3,4,6,8,10,11,14,16,17,19 |
 | air | barel-remake-air-attack-10 | barel-air-attack-10 | 448 / 224,384 | jump_attack 1,3,4,5,6,7,8,10,13,16 |
+| hurt | barel-remake-hurt-12 | barel-hurt-12 | 640 / 320,576 | 새 포즈 12장 (1 중립, 2–6 상단, 7–11 하단, 12 회복) |
+| down | barel-remake-down-10 | barel-knockdown-getup-design-10 | 640 / 320,576 | 새 포즈 10장 (피격 → 날아감 → 등으로 낙하 → 무릎 → 일어섬) |
+| grabbed | barel-remake-grabbed-10 | barel-grabbed-10 | 448 / 224,416 | 새 포즈 10장 (F1 끌려감, F2–10 몸부림 루프) |
 | whirl / leap / slam / redwave | `assets/runtime/<sha24>.png` | 이름 있는 시트 / 아틀라스 클립 | 640 / 320,580 | 각 스킬 8~10장 |
+| thrust (U 돌진 베기) | 〃 | 아틀라스 `thrust` | 〃 | dash_thrust 10장, 700ms |
+| getup | 〃 | 이름 있는 `getup` | 〃 | 새 포즈 6장 (누움 → 웅크림 → 무릎 → 검 짚고 일어섬) |
+| death | 〃 | 아틀라스 `death` | 〃 | 새 포즈 10장, 1000ms (비틀 → 검 짚고 무릎 → 엎어짐) |
+| victory | 〃 | 아틀라스 `victory` | 〃 | 새 포즈 10장, 1500ms 루프 (검을 꽂고 양손으로 손잡이) |
+| cast (뇌격) | 〃 | 아틀라스 `cast` | 〃 | 새 포즈 10장, 640ms (검을 하늘로, 380ms 발동) |
+| special0–5 (필살기) | 〃 | 아틀라스 `super1` + 이름 있는 `special1`~`5` | 〃 | 0: 기 모으기·돌진(새 포즈), 1–4: 콤보·찌르기 재사용, 5: 도약 강하 재사용 |
+| 초상화 | `assets/runtime/<sha24>.png` | `BAREL_ART.portrait` | 158×180 | 대기 F1의 투구~벨트를 2배 확대 |
 
 - 각 폴더에 `F01.png`~`F10.png`, `review-strip.png`, `.aseprite`, `.animation.json`이 있다. 런타임 시트는 `exports/<폴더>/`에 있다(잘라내지 않은 가로 시트).
 - 메타데이터는 대체 대상의 것을 복사했다. 프레임 시간, `combat`, `clock`, `poseMap`, `selection`, `physicsReference`, `combatReference`, 대시 찌르기의 `hitbox`·`bodyHeight`·`bladeTip`은 그대로 두었다. 그림 관련 값만 바꿨다: `renderScale`, `alignment`, `frameOffsets`(모두 0), `source`, 대기의 `previewBounds`.
@@ -43,7 +54,14 @@ python tools/barel-remake/build.py      # numpy, Pillow
 node tests/barel-remake.cjs
 ```
 
-`tools/barel-remake/`에는 리그(`rig.py`), 20프레임 모션 정의(`motion.py`), 검 렌더러(`swordlib.py`), 승인된 base 파츠(`parts/`)가 있다. `build.py`의 `CLIPS`/`NAMED` 표에서 원본 프레임 선택을 바꾼 뒤 다시 실행한다. 스킬 시트는 내용 해시 이름으로 다시 쓰이고, `data/runtime-assets.json`과 `barel-remake-data.js`가 갱신되며, 이전에 생성한 시트는 지워진다.
+`tools/barel-remake/`에는 다음이 있다.
+- 리그(`rig.py`): 몸 전체 회전(`body`)과 바닥 맞춤을 포함한다.
+- 20프레임 모션 정의(`motion.py`)
+- 원본 20프레임이 없는 상태들의 포즈(`motion_states.py`): 피격, 넉다운·기상, 붙잡힘, 사망, 승리, 시전, 필살기 시작
+- 검 렌더러(`swordlib.py`)
+- 승인된 base 파츠(`parts/`)
+
+눕기·엎어지기는 서 있는 포즈를 엉덩이 기준으로 ±90° 돌린 뒤 바닥에 내려놓는다. 망토는 미리 몸 방향으로 접어 두어 회전 후 몸을 따라 깔린다. `build.py`의 `CLIPS`/`NAMED` 표에서 원본 프레임 선택을 바꾼 뒤 다시 실행한다. 스킬 시트는 내용 해시 이름으로 다시 쓰이고, `data/runtime-assets.json`과 `barel-remake-data.js`가 갱신되며, 이전에 생성한 시트는 지워진다.
 
 ## 검증
 
@@ -57,6 +75,7 @@ node tests/barel-remake.cjs
 
 ## 남은 제한
 
-- 리메이크하지 않은 상태는 이전 아트를 그대로 쓴다: 피격, 넉다운·기상, 붙잡힘, 사망, 등장, 승리, 돌진 베기(thrust 스킬), 필살기(special), 초상화. 이전 아트는 벨트가 갈색 가죽이라, 이 상태들에서는 붉은 벨트의 리메이크와 디자인이 섞여 보인다.
+- 바렐 플레이어가 쓰는 상태는 모두 리메이크했다. 쓰이지 않는 아틀라스 클립(`intro`, `back`, `hook`, `hurt_old`)과 각 로더의 legacy 폴백은 이전 아트로 남아 있다.
+- 눕기·엎어지기는 포즈 전체를 회전해서 만들었다. 손으로 그린 쓰러짐보다 뻣뻣해 보일 수 있다.
 - 걷기의 발 미끄러짐은 이전 자산과 같은 수준이다. 이동 3.1px/틱에 비해 900ms 주기의 보폭이 짧다.
 - 회전베기의 앞모습·뒷모습은 몸을 좁혔다 뒤집는 방식으로 표현했다.

@@ -21,9 +21,13 @@
       if(actor.st === 'skill' && actor.skill === 'leap') {
         return pick('leap',t<560 ? t/560*6 : 6+(t-560)/400*4);
       }
-      // Only the remade art has slam/redwave sheets; without them pick() returns null and the atlas clip plays.
+      // Only the remade art has these sheets; without them pick() returns null and the atlas clip plays.
       if(actor.st === 'skill' && actor.skill === 'slam') return pick('slam',t/820*10);
       if(actor.st === 'skill' && actor.skill === 'redwave') return pick('redwave',t/720*10);
+      if(actor.st === 'skill' && actor.skill === 'thrust') return pick('thrust',t/700*10);
+      if(actor.st === 'cast') return pick('cast',t/640*10);
+      if(actor.st === 'dead') return pick('death',t/1000*10);
+      if(actor.st === 'special' && t < 620) return pick('special0',t/620*10);
       // Keep the original fall and prone animation; the supplied six frames
       // start with the lying pose and describe the subsequent recovery.
       if(actor.st === 'down' && actor.z <= 0 && actor.t >= 20)
@@ -36,6 +40,10 @@
         return pick('special5',t<1580 ? (t-1260)/320*6 : 6+(t-1580)/520*4);
       }
       return null;
+    },
+    // Stage-clear pose, on the scene clock like the atlas 'victory' loop.
+    victoryFrame(elapsedMs) {
+      return Number.isFinite(elapsedMs) && elapsedMs >= 0 ? pick('victory',(elapsedMs%1500)/1500*10) : null;
     }
   };
 })(globalThis);

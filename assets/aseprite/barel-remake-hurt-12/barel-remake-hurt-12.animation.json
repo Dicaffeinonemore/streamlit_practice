@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "hurt",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "hurt",
+  "sprite": "../exports/barel-remake-hurt-12/barel-remake-hurt-12.json",
+  "anchor": [
+    320,
+    576
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50
+  ],
+  "durationMs": 600,
+  "renderScale": 0.7553191489361702,
+  "sequences": {
+    "hurt_high": {
+      "frames": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        12
+      ],
+      "ticks": [
+        3,
+        5,
+        5,
+        5,
+        6,
+        6
+      ]
+    },
+    "hurt_low": {
+      "frames": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "ticks": [
+        3,
+        5,
+        5,
+        6,
+        6,
+        5
+      ]
+    }
+  },
+  "recoveryTicks": 6,
+  "defaultHitstunTicks": 17,
+  "highThreshold": 0.55,
+  "lowHurtboxHeight": 84.919114,
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 188,
+    "canvasGround": 576,
+    "worldOffsetsApplied": false,
+    "method": "Rig ground point (128,240) on the anchor; airborne frames drawn in place (actor.z lifts them)"
+  },
+  "source": {
+    "generator": "tools/barel-remake/build.py",
+    "motion": "hurt",
+    "sourceFrames": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "replaces": "barel-hurt-12",
+    "redrawn": true,
+    "effectsBaked": false
+  }
+}

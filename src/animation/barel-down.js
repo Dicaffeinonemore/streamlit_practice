@@ -1,7 +1,8 @@
 (function(root){
   'use strict';
   let animation=null,error=null;
-  const ready=Promise.resolve().then(()=>root.AsepriteAnimation.loadMetadata('assets/aseprite/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.animation.json'))
+  const url=root.BAREL_DOWN_CONFIG?.metadataUrl||'assets/aseprite/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.animation.json';
+  const ready=Promise.resolve().then(()=>root.AsepriteAnimation.loadMetadata(url))
     .then(asset=>{
       if(asset.metadata.animationId!=='down'||asset.frames.length!==10)throw Error('Barel down: invalid ten-frame clip');
       for(const f of asset.frames){f.image=asset.image;f.renderScale=asset.metadata.renderScale;}

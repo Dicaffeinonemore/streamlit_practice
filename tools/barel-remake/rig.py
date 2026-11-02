@@ -347,8 +347,8 @@ class Rig:
             if lay == "arm_front":
                 hand_f = hnd
         # sword
+        sa = q.get("sword_ang", BASE_ANGLE + lean)
         if not q.get("no_sword"):
-            sa = q.get("sword_ang", BASE_ANGLE + lean)
             sw = render_sword(hand_f[0], hand_f[1], sa, glow=q.get("glow"))
             clip = int(q.get("sword_clip", GROUND_F + 1))   # the blade never goes through the floor
             if sw[clip:, :, 3].any():
@@ -365,6 +365,29 @@ class Rig:
         L["scarf_front"] = warp(self.R["scarf_front"], SCARF_A, T(SCARF_A), reach=30, k=0.2, **sc)
         for n in ("cape_back", "tabard", "scarf_front", "leg_front", "leg_back", "arm_front", "arm_back"):
             L[n] = drop_specks(L[n], 24 if n in ("cape_back", "tabard", "scarf_front") else 30)
+        # whole-body rotation (falling, lying on the back or face down); "ground" rests the body on the floor
+        body = q.get("body")
+        if body:
+            ba = body.get("angle", 0.0)
+            piv = np.array(body.get("pivot", tuple(hip_w)), float)
+            for n in L:
+                if L[n][..., 3].any():
+                    L[n] = Piece(L[n], piv).place(piv, ba)
+            hand_f = piv + rot(hand_f - piv, ba)
+            dy = body.get("dy", 0.0)
+            if body.get("ground"):
+                a = np.zeros((N, N), bool)
+                for n in ("torso", "head", "leg_front", "leg_back", "arm_front", "arm_back"):
+                    a |= L[n][..., 3] > 0
+                dy += GROUND_F - np.where(a.any(1))[0].max()
+            dy = int(round(dy))
+            if dy:
+                for n in L:
+                    L[n] = shift_y(L[n], dy)
+                hand_f = hand_f + np.array([0, dy])
+            for n in L:
+                L[n][GROUND_F + 1:] = 0
+        self.sword_world = sa + (body.get("angle", 0.0) if body else 0.0)
         # facing / turn squash
         if q.get("flip") or q.get("sx", 1.0) != 1.0:
             sx = q.get("sx", 1.0) * (-1 if q.get("flip") else 1)
@@ -400,6 +423,15 @@ def drop_specks(img, minpx):
     if len(small):
         img = img.copy(); img[np.isin(lab, small)] = 0
     return img
+
+
+def shift_y(img, dy):
+    out = np.zeros_like(img)
+    if dy > 0:
+        out[dy:] = img[:-dy]
+    else:
+        out[:dy] = img[-dy:]
+    return out
 
 
 def squash_x(img, sx, cx=128.0):
