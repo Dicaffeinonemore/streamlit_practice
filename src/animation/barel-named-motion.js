@@ -1,7 +1,8 @@
 (function(root){
   'use strict';
   const clips = {};
-  for(const [name, data] of Object.entries(root.BAREL_NAMED_MOTION_DATA || {})) {
+  // Remade sheets (barel-remake-config.js) replace or add clips by name.
+  for(const [name, data] of Object.entries({ ...(root.BAREL_NAMED_MOTION_DATA || {}), ...(root.BAREL_REMAKE_NAMED || {}) })) {
     const image = new Image(); image.src = data.path;
     clips[name] = { ...data, image };
   }
@@ -20,6 +21,9 @@
       if(actor.st === 'skill' && actor.skill === 'leap') {
         return pick('leap',t<560 ? t/560*6 : 6+(t-560)/400*4);
       }
+      // Only the remade art has slam/redwave sheets; without them pick() returns null and the atlas clip plays.
+      if(actor.st === 'skill' && actor.skill === 'slam') return pick('slam',t/820*10);
+      if(actor.st === 'skill' && actor.skill === 'redwave') return pick('redwave',t/720*10);
       // Keep the original fall and prone animation; the supplied six frames
       // start with the lying pose and describe the subsequent recovery.
       if(actor.st === 'down' && actor.z <= 0 && actor.t >= 20)

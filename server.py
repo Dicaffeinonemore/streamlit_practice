@@ -288,6 +288,13 @@ def prepare_streamlit_component(review: bool = False) -> Path:
             "assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png",
         )
         files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-remake-config.js" in files:
+        # Remade Barel motions: every ten-frame export the config points the loaders at.
+        for metadata in sorted((ROOT / "assets/aseprite").glob("barel-remake-*/barel-remake-*.animation.json")):
+            name = metadata.parent.name
+            files.update((f"assets/aseprite/{name}/{name}.animation.json",
+                          f"assets/aseprite/exports/{name}/{name}.json",
+                          f"assets/aseprite/exports/{name}/{name}.png"))
     for name in sorted(files):
         _copy_component_file(name, destination)
     html = html.replace("<head>", '<head>\n<script src="streamlit-bridge.js"></script>', 1)

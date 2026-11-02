@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "jump",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "jump",
+  "sprite": "../exports/barel-remake-jump-10/barel-remake-jump-10.json",
+  "anchor": [
+    320,
+    576
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50
+  ],
+  "durationMs": 500,
+  "renderScale": 0.7553191489361702,
+  "poseMap": {
+    "prejump": 1,
+    "riseFast": [
+      2,
+      3
+    ],
+    "riseSlow": 4,
+    "apex": [
+      5,
+      6
+    ],
+    "fall": [
+      7,
+      8
+    ],
+    "landing": [
+      9,
+      10
+    ]
+  },
+  "selection": {
+    "fastRiseAbove": 4,
+    "fastRiseFirstTicks": 4,
+    "apexLow": -2,
+    "apexHigh": 1,
+    "apexFirstTicks": 5,
+    "fastFallBelow": -5,
+    "landingFirstTicks": 4,
+    "landingVisualTicks": 6
+  },
+  "physicsReference": {
+    "initialVz": 9.6,
+    "gravityPerTick": 0.55,
+    "prejumpDelayTicks": 0,
+    "landingLockTicks": 0
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 188,
+    "canvasGround": 576,
+    "worldOffsetsApplied": false,
+    "method": "Rig ground point (128,240) on the anchor; airborne frames drawn in place (actor.z lifts them)"
+  },
+  "source": {
+    "generator": "tools/barel-remake/build.py",
+    "motion": "jump",
+    "sourceFrames": [
+      3,
+      4,
+      6,
+      8,
+      10,
+      11,
+      14,
+      16,
+      17,
+      19
+    ],
+    "replaces": "barel-jump-revised-10",
+    "redrawn": true,
+    "effectsBaked": false
+  }
+}

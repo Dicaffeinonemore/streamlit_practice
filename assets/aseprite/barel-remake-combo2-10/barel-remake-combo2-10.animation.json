@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "attackId": "combo2",
+  "terminalAttack": true,
+  "clip": "basic-attack-3",
+  "sprite": "../exports/barel-remake-combo2-10/barel-remake-combo2-10.json",
+  "anchor": [
+    200,
+    352
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "renderScale": 0.7553191489361702,
+  "expectedDurationsMs": [
+    70,
+    60,
+    70,
+    20,
+    29,
+    91,
+    30,
+    90,
+    90,
+    130
+  ],
+  "combat": {
+    "durationMs": 680,
+    "activeStartMs": 249,
+    "activeEndMs": 370,
+    "comboLinkMs": null,
+    "waveMs": 284,
+    "groundSmashMs": 319
+  },
+  "source": {
+    "generator": "tools/barel-remake/build.py",
+    "motion": "attack_combo",
+    "sourceFrames": [
+      13,
+      13.5,
+      14,
+      14.5,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "replaces": "barel-combo2-dot-10",
+    "redrawn": true,
+    "effectsBaked": false
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newNeutralHeight": 188,
+    "canvasGround": 352,
+    "worldOffsetsApplied": false,
+    "method": "Rig ground point (128,240) on the anchor; airborne frames drawn in place (actor.z lifts them)"
+  },
+  "phases": {
+    "windupFrames": [
+      1,
+      3
+    ],
+    "downswingFrames": [
+      4,
+      5
+    ],
+    "impactFrame": 6,
+    "activeFollowThroughFrame": 7,
+    "recoveryFrames": [
+      8,
+      10
+    ]
+  }
+}

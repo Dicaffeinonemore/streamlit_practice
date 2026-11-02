@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "dash_attack",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "dash_attack",
+  "sprite": "../exports/barel-remake-dash-attack-10/barel-remake-dash-attack-10.json",
+  "anchor": [
+    320,
+    576
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    50.0,
+    66.66666666666667,
+    66.66666666666667,
+    50.0,
+    50.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "durationMs": 783.3333333333334,
+  "renderScale": 0.7553191489361702,
+  "bodyHeight": 93.53872340425532,
+  "hitbox": {
+    "front": 8,
+    "reach": 103.84,
+    "bottom": 44.041,
+    "top": 68.041,
+    "depth": 38
+  },
+  "bladeTip": [
+    103.84034492454775,
+    56.04082107039085
+  ],
+  "source": {
+    "generator": "tools/barel-remake/build.py",
+    "motion": "dash_thrust",
+    "sourceFrames": [
+      3,
+      5,
+      6,
+      8,
+      9,
+      10,
+      13,
+      15,
+      17,
+      20
+    ],
+    "replaces": "barel-dash-attack-10",
+    "redrawn": true,
+    "effectsBaked": false
+  },
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 188,
+    "canvasGround": 576,
+    "worldOffsetsApplied": false,
+    "method": "Rig ground point (128,240) on the anchor; airborne frames drawn in place (actor.z lifts them)"
+  }
+}

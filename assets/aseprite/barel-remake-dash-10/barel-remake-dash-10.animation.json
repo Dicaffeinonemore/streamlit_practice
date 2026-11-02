@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "dash",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "dash",
+  "sprite": "../exports/barel-remake-dash-10/barel-remake-dash-10.json",
+  "anchor": [
+    200,
+    352
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    19
+  ],
+  "durationMs": 190,
+  "renderScale": 0.7553191489361702,
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 188,
+    "canvasGround": 352,
+    "worldOffsetsApplied": false,
+    "method": "Rig ground point (128,240) on the anchor; airborne frames drawn in place (actor.z lifts them)"
+  },
+  "clock": {
+    "source": "player.t * MS",
+    "legacyDurationMs": 190
+  },
+  "source": {
+    "generator": "tools/barel-remake/build.py",
+    "motion": "dash",
+    "sourceFrames": [
+      2,
+      3,
+      4,
+      6,
+      9,
+      12,
+      15,
+      16,
+      18,
+      20
+    ],
+    "replaces": "barel-dash-10",
+    "redrawn": true,
+    "effectsBaked": true
+  },
+  "effects": {
+    "bakedSpeedLines": true,
+    "bakedDust": true,
+    "extraSpeedLines": false,
+    "afterimageIntervalMs": 33.333333333333336,
+    "afterimageLifeMs": 150,
+    "afterimageMax": 4,
+    "exitFadeMs": 50,
+    "color": "#9E1A1F",
+    "peakAlpha": 0.18
+  }
+}

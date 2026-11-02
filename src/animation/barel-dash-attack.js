@@ -1,7 +1,8 @@
 (function(root){
   'use strict';
   let animation=null,error=null;
-  const ready=Promise.resolve().then(()=>root.AsepriteAnimation.loadMetadata('assets/aseprite/barel-dash-attack-10/barel-dash-attack-10.animation.json'))
+  const url=root.BAREL_DASH_ATTACK_CONFIG?.metadataUrl||'assets/aseprite/barel-dash-attack-10/barel-dash-attack-10.animation.json';
+  const ready=Promise.resolve().then(()=>root.AsepriteAnimation.loadMetadata(url))
     .then(asset=>{
       if(asset.frames.length!==10||asset.metadata.animationId!=='dash_attack')throw Error('Barel dash attack: invalid asset');
       for(const f of asset.frames){f.image=asset.image;f.renderScale=asset.metadata.renderScale;}
