@@ -74,7 +74,7 @@ const STAGE1_SECTIONS = [
 const S1 = { on: false, idx: 0, sec: null, bg: null, len: 0, maxCam: 0, ev: 0, lock: null, lockN: 0, fade: null, banner: 0, secT: 0,
   wall: null, hole: null, gate: null, scaffolds: [], fx: [], piles: [] };
 // 배경 그림·기믹 이펙트(stage1-fx-art.js)·새 적(stage1-enemy-art.js)은 1스테이지 로딩 때 함께 불러온다
-const S1_CLUB_ATTACK = 'assets/runtime/club-attack-expanded.png';
+const S1_CLUB_ATTACK = 'assets/runtime/c11c4227b07bc0df9167a6c1.png';
 const S1_FILES = [...new Set([S1_CLUB_ATTACK, ...Object.values(STAGE1_BG).flatMap(b => [b.base, b.fg, ...b.anims.map(a => a.file)]),
   ...Object.values(STAGE1_FX).map(f => f.file), ...Object.values(STAGE1_ENEMY_ART).map(a => a.atlas)].filter(Boolean))];
 const S1_GROUP = GameAssets.group(0, S1_FILES);
@@ -197,7 +197,6 @@ function spawnStage1Enemy(q, lockId) {
   if (q.id === 'heavy') e.grabCd = 60;
   if (q.id === 'hound') { e.diveCd = Math.round(rand(40, 120)); e.ang = (e.id * 2.39) % (Math.PI * 2); e.rad = rand(HOUND.ring[0], HOUND.ring[1]); }
   if (q.id === 'molotov') { e.molotov = true; e.atkCd = rand(30, 70); e.kickCd = 0; e.laneY = y; }
-  if (path === 'wallbreak') e.midBoss = true;
   if (path === 'door' || path === 'cage' || path === 'wallbreak') {   // 뒤쪽 깊이에서 앞으로 걸어 나온다 (등장 중 무적·공격 안 함)
     e.st = 'enter'; e.y = GTOP + 3; e.enterTo = Math.max(wt + 30, GTOP + 40); e.invuln = true;
     e.enterSpd = path === 'cage' ? 1.6 : path === 'wallbreak' ? .7 : 1; e.alpha = path === 'wallbreak' ? 1 : 0;
@@ -942,16 +941,6 @@ function drawStage1Top(L) {
     const x = Math.round(fxX(e.x - e.face * 12)), y = Math.round(fxY(e.y, e.z + 76)), fl = tick % 4 < 2 ? 1 : 2;
     L.disc(x, y, fl + 1, '#ff7a1a', .55); L.put(x, y, '#fff0a0');
   }
-}
-// 화면 좌표: 중갑병 체력바(보스 체력바를 작게, 화면 위) — 그렸으면 true
-function drawStage1MidBoss() {
-  if (!stage1On()) return false;
-  const e = enemies.find(o => o.midBoss && o.st !== 'enter' && (o.st !== 'dead' || o.t < 60));
-  if (!e) return false;
-  ctx.save(); ctx.translate(W / 2, 112); ctx.scale(.55, .55); ctx.translate(-W / 2, -452);
-  drawBossBar(e);
-  ctx.restore();
-  return true;
 }
 // 화면 좌표: 구간 이름(전환 때), 전환 어둠
 function drawStage1Overlay() {
