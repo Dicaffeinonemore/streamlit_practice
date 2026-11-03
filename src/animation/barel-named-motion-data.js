@@ -21,30 +21,30 @@ globalThis.BAREL_NAMED_MOTION_DATA = {
     "path": "assets/runtime/354d48cbeb5cd98753a0fddf.png",
     "columns": 5,
     "frames": 10,
-    "scale": 0.62
+    "scale": 0.5220588235294118
   },
   "special2": {
     "path": "assets/runtime/f4a735988c9e22f2fb2a06ca.png",
     "columns": 5,
     "frames": 10,
-    "scale": 0.62
+    "scale": 0.5220588235294118
   },
   "special3": {
     "path": "assets/runtime/863955463d2771b8094ebe7e.png",
     "columns": 5,
     "frames": 10,
-    "scale": 0.62
+    "scale": 0.5220588235294118
   },
   "special4": {
     "path": "assets/runtime/e7483fb857b35ef3d825a177.png",
     "columns": 5,
     "frames": 10,
-    "scale": 0.62
+    "scale": 0.5220588235294118
   },
   "special5": {
     "path": "assets/runtime/894b7bce99e436128a219f7a.png",
     "columns": 5,
     "frames": 10,
-    "scale": 0.62
+    "scale": 0.5220588235294118
   }
 };
