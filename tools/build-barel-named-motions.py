@@ -10,7 +10,7 @@ OUT = ROOT / 'assets/runtime'
 SPECS = [('whirl', '바렐 o스킬.png', 4, 430, .35),
          ('leap', '바렐 p스킬.png', 5, 430, .40),
          ('getup', '바렐 기상.png', 3, 475, .34)] + [
-         (f'special{i}', f'바렐 흑월참 {i}타.png', 5, 310, .62) for i in range(1, 6)]
+         (f'special{i}', f'바렐 흑월참 {i}타.png', 5, 310, 142/272) for i in range(1, 6)]
 CELL = 640
 
 def keep_main_shape(frame):
