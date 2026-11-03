@@ -76,6 +76,20 @@ const BOSS_UI_LAYOUT = { x: 140, y: 350, width: 680, scale: 600 / 2172 };
 const ENEMY_UI_LAYOUT = { right: 8, top: 56, width: 290, crop: [185, 28, 1815, 660] };
 const enemyPortraitCache = new Map();
 function enemyHUDPortrait(e) {
+  if (e.s1 && STAGE1_ENEMY_ART[e.s1]) {
+    const key = 'stage1:' + e.s1;
+    if (enemyPortraitCache.has(key)) return enemyPortraitCache.get(key);
+    const art = STAGE1_ENEMY_ART[e.s1], im = S1_ENEMY_IMG[e.s1];
+    if (!im?.naturalWidth) return null;
+    const frame = art.frames[art.clips.idle[0]], [sx, sy, w, h] = frame.atlas;
+    const size = Math.min(w, h * .65);
+    const left = clamp(frame.anchor[0] - size / 2, 0, w - size);
+    const portrait = document.createElement('canvas'); portrait.width = portrait.height = 128;
+    const c = portrait.getContext('2d'); c.imageSmoothingEnabled = false;
+    c.drawImage(im, sx + left, sy, size, size, 0, 0, 128, 128);
+    enemyPortraitCache.set(key, portrait);
+    return portrait;
+  }
   const role = namedEnemyRole(e);
   if (enemyPortraitCache.has(role)) return enemyPortraitCache.get(role);
   const frame = role && namedClip(role, 'idle');
@@ -91,7 +105,6 @@ function enemyHUDPortrait(e) {
   return portrait;
 }
 function drawPixelEnemyBar(e) {
-  if(isViesa()&&drawViesaEnemyBar(e))return true;
   if (!ENEMY_UI.complete || !ENEMY_UI.naturalWidth) return false;
   const portrait = enemyHUDPortrait(e);
   if (!portrait) return false;

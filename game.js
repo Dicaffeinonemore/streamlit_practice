@@ -2860,7 +2860,7 @@ function drawHUD() {
   const boss = enemies.find(e => e.boss && (e.st !== 'dead' || e.t < 60));
   if (boss) {
     drawBossBar(boss);
-  } else if (!drawStage1MidBoss() && target && target.t > 0 && enemies.includes(target.e)) {   // 중갑병 체력바가 있으면 그것만
+  } else if (target && target.t > 0 && enemies.includes(target.e)) {
     const e = target.e, a = Math.min(1, target.t / 20);
     ctx.globalAlpha = a;
     if (!drawPixelEnemyBar(e)) {

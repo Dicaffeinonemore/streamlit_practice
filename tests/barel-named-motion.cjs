@@ -30,6 +30,9 @@ for(let i=0;i<4;i++){
   check({st:'special'},620+i*160,`special${i+1}`,0);
   check({st:'special'},620+i*160+159,`special${i+1}`,9);
 }
+// The standing pose in the special sheet is 272 px tall, versus 142 px
+// for the original idle; normalize all five attacks to the same body size.
+for(let i=1;i<=5;i++) assert.ok(Math.abs(data[`special${i}`].scale*272-142)<1e-9);
 check({st:'special'},1260,'special5',0);
 check({st:'special'},1580,'special5',6);
 check({st:'special'},2099,'special5',9);
