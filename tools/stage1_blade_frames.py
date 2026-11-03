@@ -50,6 +50,14 @@ def split(image, clip):
         xs = np.arange(w)[None,:]
         col = sum((xs >= b[:,None]).astype(np.int8) for b in boundaries)
         owner[rows==row] = (row*5+col)[rows==row]
+    if clip == 'club_attack':
+        # The swing arc lies past the nominal boundary, but belongs entirely
+        # to the sixth pose. The next pose begins to its right.
+        owner[400:800, 540:780] = 6
+        # The follow-through club also crosses into the next cell.
+        m = Image.new('1', (w, h))
+        ImageDraw.Draw(m).polygon([(975, 675), (1112, 716), (1118, 754), (1080, 759), (970, 704)], fill=1)
+        owner[np.asarray(m, dtype=bool) & fg] = 7
     for frame, polygon in SWORDS.get(clip,[]):
         m=Image.new('1',(w,h)); ImageDraw.Draw(m).polygon(polygon,fill=1)
         rgb=a[:,:,:3].astype(np.int16)

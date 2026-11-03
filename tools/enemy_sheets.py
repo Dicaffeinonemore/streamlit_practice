@@ -196,6 +196,12 @@ def main():
         ratios = sheet_ratios(spec, sheets)
         repaired = ({cid: [rescale(c, ratios[cid]) for c in split_blade_attack(Image.open(SRC / f'{spec["clips"][cid]}.png'),cid)]
                      for cid in ('atk1','atk2','atk3')} if eid == 'blade' else {})
+        if eid == 'club':
+            repaired['attack'] = [rescale(c, ratios['attack']) for c in
+                                  split_blade_attack(Image.open(SRC / f'{spec["clips"]["attack"]}.png'), 'club_attack')]
+            # The follow-through club covers the next pose's foot in the source.
+            # Use the almost identical final recovery pose instead of a torn leg.
+            repaired['attack'][8] = repaired['attack'][9].copy()
         sheets = {cid: [rescale(c, ratios[cid]) for c in cells] for cid, cells in sheets.items()}
         idle_box, idle_foot, idle_cx = measure(sheets['idle'][0])
         body = idle_box[3] - idle_box[1]
@@ -223,7 +229,7 @@ def main():
                 fwd, back, hand = tips(cell, px, foot, k, tall)
                 # Lower-row poses of 1/3 overlap a neighbouring leg. Keep
                 # their existing extraction until an unoccluded source exists.
-                if cid in repaired and (cid == 'atk2' or n < 5):
+                if cid in repaired and (eid == 'club' or cid == 'atk2' or n < 5):
                     # Animation pixels are repaired, while hitboxes and their
                     # original pivot remain exactly as before this art fix.
                     cell = repaired[cid][n]
