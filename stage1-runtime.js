@@ -74,7 +74,8 @@ const STAGE1_SECTIONS = [
 const S1 = { on: false, idx: 0, sec: null, bg: null, len: 0, maxCam: 0, ev: 0, lock: null, lockN: 0, fade: null, banner: 0, secT: 0,
   wall: null, hole: null, gate: null, scaffolds: [], fx: [], piles: [] };
 // 배경 그림·기믹 이펙트(stage1-fx-art.js)·새 적(stage1-enemy-art.js)은 1스테이지 로딩 때 함께 불러온다
-const S1_FILES = [...new Set([...Object.values(STAGE1_BG).flatMap(b => [b.base, b.fg, ...b.anims.map(a => a.file)]),
+const S1_CLUB_ATTACK = 'assets/runtime/c11c4227b07bc0df9167a6c1.png';
+const S1_FILES = [...new Set([S1_CLUB_ATTACK, ...Object.values(STAGE1_BG).flatMap(b => [b.base, b.fg, ...b.anims.map(a => a.file)]),
   ...Object.values(STAGE1_FX).map(f => f.file), ...Object.values(STAGE1_ENEMY_ART).map(a => a.atlas)].filter(Boolean))];
 const S1_GROUP = GameAssets.group(0, S1_FILES);
 const S1_IMG = Object.fromEntries(S1_FILES.map((f, i) => [f, S1_GROUP.images[i]]));
@@ -196,7 +197,6 @@ function spawnStage1Enemy(q, lockId) {
   if (q.id === 'heavy') e.grabCd = 60;
   if (q.id === 'hound') { e.diveCd = Math.round(rand(40, 120)); e.ang = (e.id * 2.39) % (Math.PI * 2); e.rad = rand(HOUND.ring[0], HOUND.ring[1]); }
   if (q.id === 'molotov') { e.molotov = true; e.atkCd = rand(30, 70); e.kickCd = 0; e.laneY = y; }
-  if (path === 'wallbreak') e.midBoss = true;
   if (path === 'door' || path === 'cage' || path === 'wallbreak') {   // 뒤쪽 깊이에서 앞으로 걸어 나온다 (등장 중 무적·공격 안 함)
     e.st = 'enter'; e.y = GTOP + 3; e.enterTo = Math.max(wt + 30, GTOP + 40); e.invuln = true;
     e.enterSpd = path === 'cage' ? 1.6 : path === 'wallbreak' ? .7 : 1; e.alpha = path === 'wallbreak' ? 1 : 0;
@@ -764,10 +764,10 @@ function stage1SoldierFrame(e) {
   return e.walk ? loop('walk', 5) : loop('idle', 8);
 }
 const S1_TINT = {}, S1_TINT_FILTER = { dark: 'brightness(.62)', red: 'sepia(1) saturate(6) hue-rotate(-45deg) brightness(1.15)' };
-function tintedAtlas(id, kind) {
-  const key = id + kind;
+function tintedAtlas(id, kind, source = S1_ENEMY_IMG[id], variant = '') {
+  const key = id + kind + variant;
   if (S1_TINT[key]) return S1_TINT[key];
-  const im = S1_ENEMY_IMG[id], c = document.createElement('canvas');
+  const im = source, c = document.createElement('canvas');
   c.width = im.naturalWidth; c.height = im.naturalHeight;
   const g = c.getContext('2d'); g.filter = S1_TINT_FILTER[kind]; g.drawImage(im, 0, 0);
   c.naturalWidth = c.width; c.naturalHeight = c.height;   // drawLit 이 이미지처럼 크기를 읽는다
@@ -807,7 +807,13 @@ function drawStage1Soldier(e) {
   const art = STAGE1_ENEMY_ART[e.s1], im = S1_ENEMY_IMG[e.s1];
   if (!art || !im?.naturalWidth) return false;
   if (e.st === 'dead' && e.t > 25 && Math.floor(tick / 4) % 2) return true;   // 끝 프레임에서 40틱 깜빡이다 사라진다
-  const [clip, i] = stage1SoldierFrame(e), fr = art.frames[art.clips[clip][i]], k = art.scale * (e.s1 === 'heavy' && clip === 'spin' ? 1.6 : 1);
+  const [clip, i] = stage1SoldierFrame(e);
+  const clubAttack = e.s1 === 'club' && clip === 'attack';
+  const clubAnchors = [[190,338],[192,338],[180,338],[235,338],[240,338],
+    [215,332],[190,332],[230,332],[225,332],[240,332]];
+  const col = i % 5, row = Math.floor(i / 5);
+  const fr = clubAttack ? { atlas: [col * 411, row * 382, col === 4 ? 412 : 411, row === 0 ? 382 : 383], anchor: clubAnchors[i] } : art.frames[art.clips[clip][i]];
+  const k = clubAttack ? .38 : art.scale * (e.s1 === 'heavy' && clip === 'spin' ? 1.6 : 1);
   const [sx, sy, w, h] = fr.atlas, [ax, ay] = fr.anchor, x = e.x - camX + (e.bite && e.st === 'grabbing' ? (tick % 4 < 2 ? 2 : -2) : 0);
   if (!e.balcony) drawShadow(x, e.y, e.s1 === 'heavy' ? 22 : e.s1 === 'hound' ? 18 : 15, e.z);
   ctx.save();
@@ -816,9 +822,12 @@ function drawStage1Soldier(e) {
   ctx.globalAlpha = e.alpha ?? 1;
   // 발코니 위는 어둡게(뒤쪽), 경직 내성은 붉은 점멸 — 매 프레임 ctx.filter 대신 미리 칠해 둔 아틀라스를 쓴다
   const red = e.redFlash > 0 && Math.floor(e.redFlash / 2) % 2 === 0;
-  const src = red ? tintedAtlas(e.s1, 'red') : e.balcony ? tintedAtlas(e.s1, 'dark') : im;
+  const base = clubAttack ? S1_IMG[S1_CLUB_ATTACK] : im;
+  if (!base?.naturalWidth) { ctx.restore(); return false; }
+  const variant = clubAttack ? ':attack' : '';
+  const src = red ? tintedAtlas(e.s1, 'red', base, variant) : e.balcony ? tintedAtlas(e.s1, 'dark', base, variant) : base;
   smoothFor(k);
-  const frame = cleanStage1Frame(e.s1 + (red ? 'red' : e.balcony ? 'dark' : 'normal'), src, sx, sy, w, h);
+  const frame = cleanStage1Frame(e.s1 + variant + (red ? 'red' : e.balcony ? 'dark' : 'normal'), src, sx, sy, w, h);
   drawLit(frame, 0, 0, w, h, -ax * k, -ay * k, w * k, h * k, e.flash > 0 && UX.options.flash ? 2 : 1);
   ctx.restore();
   return true;
@@ -932,16 +941,6 @@ function drawStage1Top(L) {
     const x = Math.round(fxX(e.x - e.face * 12)), y = Math.round(fxY(e.y, e.z + 76)), fl = tick % 4 < 2 ? 1 : 2;
     L.disc(x, y, fl + 1, '#ff7a1a', .55); L.put(x, y, '#fff0a0');
   }
-}
-// 화면 좌표: 중갑병 체력바(보스 체력바를 작게, 화면 위) — 그렸으면 true
-function drawStage1MidBoss() {
-  if (!stage1On()) return false;
-  const e = enemies.find(o => o.midBoss && o.st !== 'enter' && (o.st !== 'dead' || o.t < 60));
-  if (!e) return false;
-  ctx.save(); ctx.translate(W / 2, 112); ctx.scale(.55, .55); ctx.translate(-W / 2, -452);
-  drawBossBar(e);
-  ctx.restore();
-  return true;
 }
 // 화면 좌표: 구간 이름(전환 때), 전환 어둠
 function drawStage1Overlay() {

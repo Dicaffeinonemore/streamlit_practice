@@ -17,6 +17,15 @@ module.exports = async ({ evaluate, call, errors, root }) => {
     const full=sample(1),empty=sample(0),half=sample(.5);ctx.restore();e.hp=e.hpLag=e.max*.6;
     return full>150&&empty<70&&half<70;
   })()`),true,'Health fill follows full, half and empty values');
+  assert.equal(await evaluate(`(async()=>{
+    startStage(0); await Promise.all(Object.values(S1_ENEMY_IMG).map(im => im.decode()));
+    const heavy=spawnStage1Enemy({id:'heavy',from:'wallbreak@crackedWall'}, 1);
+    const basic=spawnStage1Enemy({id:'axe',from:'right'}, 1);
+    const valid=!heavy.boss && !heavy.midBoss && heavy.hp===Math.round(STAGE1_ET.heavy.hp*1.3) && heavy.max===Math.round(STAGE1_ET.heavy.hp*1.3) &&
+      !!enemyHUDPortrait(heavy) && !!enemyHUDPortrait(basic) && drawPixelEnemyBar(heavy) && drawPixelEnemyBar(basic);
+    stageIdx=4; enemies=[mkEnemy('grunt',430,420)]; target={e:enemies[0],t:150};
+    return valid;
+  })()`), true, 'Stage 1 heavy and soldiers use the normal enemy HUD');
   await call('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false});
   await evaluate('new Promise(r=>setTimeout(r,150))');
   await evaluate("fitCanvas();ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);$('playPause').hidden=false;render()");
