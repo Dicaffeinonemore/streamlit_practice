@@ -706,19 +706,34 @@ function drawChainPile(x, y) {
   for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.ellipse(x - 14 + i * 5.5, y - 5 - (i % 2) * 5, 3, 2, i * .7, 0, Math.PI); ctx.stroke(); }
   ctx.restore();
 }
-// 발코니 발판: 뒤쪽 바닥선에서 세운 나무 기둥 위의 판자. front=true 면 판자 앞 난간만
+// 픽셀 나무 발코니. 캐릭터 뒤의 지지대와 캐릭터 앞의 난간을 나눠 그린다.
 function drawScaffold(wx, front) {
-  const x = wx - camX, fy = GTOP + 10 - BALCONY_H, w = 66;
+  const x = Math.round(wx - camX), fy = Math.round(GTOP + 10 - BALCONY_H), w = 82;
   if (x < -w || x > VW + w) return;
   if (front) {
-    ctx.fillStyle = '#3a2214'; rect(x - w / 2, fy - 14, w, 4); rect(x - w / 2, fy - 14, 4, 14); rect(x + w / 2 - 4, fy - 14, 4, 14);
-    ctx.fillStyle = '#7a4c28'; rect(x - w / 2, fy - 14, w, 1);
+    ctx.fillStyle = '#211611'; rect(x - 41, fy - 20, 82, 5);
+    for (const dx of [-39, -21, -3, 15, 35]) rect(x + dx, fy - 17, 4, 18);
+    ctx.fillStyle = '#745037'; rect(x - 40, fy - 20, 80, 2);
+    ctx.fillStyle = '#ac7950'; rect(x - 37, fy - 20, 24, 1); rect(x + 4, fy - 20, 25, 1);
+    ctx.fillStyle = '#5b3b29';
+    for (const dx of [-38, -20, -2, 16, 36]) rect(x + dx, fy - 15, 1, 13);
     return;
   }
-  ctx.fillStyle = '#2a180e'; rect(x - w / 2 + 4, fy, 6, GTOP + 6 - fy); rect(x + w / 2 - 10, fy, 6, GTOP + 6 - fy);
-  ctx.fillStyle = '#3a2214'; ctx.save(); ctx.translate(x, (fy + GTOP) / 2); ctx.rotate(.5); rect(-2, -BALCONY_H * .45, 4, BALCONY_H * .9); ctx.restore();
-  ctx.fillStyle = '#5a3418'; rect(x - w / 2 - 4, fy, w + 8, 7);
-  ctx.fillStyle = '#8a5a2e'; rect(x - w / 2 - 4, fy, w + 8, 2);
+  const base = Math.round(GTOP + 6), height = base - fy;
+  ctx.fillStyle = '#211611'; rect(x - 35, fy, 9, height); rect(x + 26, fy, 9, height);
+  ctx.fillStyle = '#523623'; rect(x - 33, fy + 5, 5, height - 5); rect(x + 28, fy + 5, 5, height - 5);
+  ctx.fillStyle = '#795136'; rect(x - 32, fy + 12, 1, height - 18); rect(x + 29, fy + 17, 1, height - 25);
+  // 계단식 대각 버팀목으로 픽셀 격자를 유지한다.
+  ctx.fillStyle = '#392519';
+  for (let i = 0; i < 9; i++) rect(x - 27 + i * 6, fy + 13 + i * 6, 8, 6);
+  ctx.fillStyle = '#6c482e';
+  for (let i = 0; i < 9; i++) rect(x - 27 + i * 6, fy + 13 + i * 6, 6, 2);
+  ctx.fillStyle = '#211611'; rect(x - 44, fy, 88, 11); rect(x - 39, fy + 11, 78, 3);
+  ctx.fillStyle = '#674329'; rect(x - 42, fy + 2, 84, 7);
+  ctx.fillStyle = '#a17149'; rect(x - 42, fy + 1, 84, 2);
+  ctx.fillStyle = '#3c291d';
+  for (const dx of [-27, -6, 15, 35]) rect(x + dx, fy + 3, 2, 5);
+  ctx.fillStyle = '#c09162'; rect(x - 37, fy + 3, 9, 1); rect(x - 1, fy + 4, 11, 1); rect(x + 23, fy + 3, 8, 1);
 }
 // 화염병 투척자는 그을린 주황빛, 발코니 적은 어둡게. 발코니에서는 그림자를 그리지 않는다
 function drawStage1Enemy(e) {
