@@ -1,5 +1,7 @@
 # 흑월의 기사 — BLACK MOON KNIGHT
 
+> 원본 아트(약 560MiB)는 저장소에서 제외하고 각자 백업합니다. 게임 실행과 회귀 테스트에는 필요 없습니다. [원본 아트 관리](docs/source-assets.md)
+
 ## v1.64 — 바렐 모든 모션 Rika AI 시트로 교체, U키 견제 찌르기 (2026-11-05)
 
 바렐의 대기·걷기·대시·점프·공중 베기·피격·넉다운·3연타·U/O/P/I 기술·흑월참을 Rika AI 시트(`assets/barel/rika-source/`, 파일 이름 그대로)로 바꿨습니다. U키는 제자리에서 사거리 125px로 찌르는 **견제 찌르기**가 되었고, 흑월참은 3연 베기 + 초승달 마무리로 바뀌었습니다. 시트는 `python tools/build-barel-rika.py`로 다시 만들고(`--preview DIR`로 확인용 시트), 주소에 `?barelRika=off`를 붙이면 이전 모션으로 그립니다. 검증: `node tests/barel-rika.cjs`. [v1.64 패치노트](patch_note/patch_1.64.txt).
