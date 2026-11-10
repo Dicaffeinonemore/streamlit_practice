@@ -6,6 +6,8 @@ const SOV_CANNON_IMAGES=SOV_CANNON_GROUP.images;
 const SOV_R=SOVEREIGN_RULES,SOV_A=SOVEREIGN_ART;
 // Fist body box: half extents of the gauntlet drawing in world px.
 const SOV_FIST={len:SOV_A.fistLength,h:SOV_A.fistHeight,hw:SOV_A.fistLength*.45,hh:SOV_A.fistHeight*.45};
+// Height band (above Barel's feet) that Barel's strikes cover when they hit a fist.
+const SOV_SWORD_LOW=25,SOV_SWORD_HIGH=90;
 const SOV_FIRST_STAGE={direct:'wind',slam:'rise',hammer:'rise',grab:'wind',clap:'move',wave:'rise',wall:'move',whirl:'warn',
   backhand:'warn',meteor:'rise',ultimate:'channel',beam:'charge'};
 let sovereignRemains=[];
@@ -64,10 +66,12 @@ function strikeSovereignFists(reach,behind=8,hitSet=player.hitSet,o={}){
     const s=e.sov;
     for(const f of s.fists){
       if(!sovActive(f))continue;
+      // Sword line h+25..h+90: the back fist idles at height 100 (bottom edge ~82), so a top of 75 never reached it.
       const dx=(f.x-x)*face,over=o.global||dx>=-behind-SOV_FIST.hw&&dx<=reach+SOV_FIST.hw&&Math.abs(f.y-y)<depth+6&&
-        f.h+SOV_FIST.hh>=h+25&&f.h-SOV_FIST.hh<=h+75;
+        f.h+SOV_FIST.hh>=h+SOV_SWORD_LOW&&f.h-SOV_FIST.hh<=h+SOV_SWORD_HIGH;
       if(!over)continue;
-      if(!o.global)blocked=true;
+      // A fist on the far side of the body is hit too, but only a fist in front of the body shields it.
+      if(!o.global&&dx<=(e.x-x)*face)blocked=true;
       if(hitSet.has(f))continue;
       hitSet.add(f);
       if(sovWalling(f)){sparks(f.x,f.y,f.h,8,'#ffd2ec');playerHitSfx(0,o.hitSound);continue;}

@@ -596,6 +596,18 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('beginGame(true); openingTime=17999; update()');
     assert.equal(await evaluate('scene'), 'intro');
     console.log('PASS Opening skip and automatic completion start stage one');
+    // 1.65: the back fist idles at height 100; Barel's strikes must reach it, and from the front it must not shield the body.
+    assert.deepEqual(await evaluate(`(()=>{
+      clearInput();practice=false;player=newPlayer();startStage(4);scene='play';
+      const e=mkEnemy(STAGES[4].boss,640,420);e.face=1;e.st='chase';e.atkCd=99999;enemies=[e];
+      const s=sovData(e),setup=()=>{for(const f of s.fists){const [x,y,h]=sovHome(e,f,s);Object.assign(f,{x,y,h,st:'home',hp:180,max:180,job:null});}};
+      const p=player,back=s.fists[1],front=s.fists[0],swing=(x,face,reach)=>{p.x=x;p.y=420;p.z=0;p.face=face;p.hitSet=new Set();playerStrike({...ATK.c1,reach});};
+      setup();const hp0=e.hp;swing(e.x-130,1,ATK.c1.reach);
+      const behind={fist:back.hp<180,body:e.hp<hp0};
+      setup();front.st='fallen';const hp1=e.hp;swing(e.x+60,-1,125);
+      return {behind,front:{fist:back.hp<180,body:e.hp<hp1}};
+    })()`),{behind:{fist:true,body:false},front:{fist:true,body:true}},'Sovereign back fist takes damage');
+    console.log('PASS Sovereign back fist is hittable and only shields the body from its own side');
     for (const n of [0,2,3,4]) {
       assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];const v=isVargul(b),sv=isSovereign(b);b.hp=b.type==='boss3'||v||sv?b.max*.05:b.max*.51;damageEnemy(b,b.max*.1,false);const duration=v?288:sv?SOVEREIGN_RULES.kneelDown+SOVEREIGN_RULES.awaken:isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);if(b.hp!==hp)return false;for(let t=0;t<duration;t++)updEnemy(b);return b.hp===(v?2500:sv?SOVEREIGN_RULES.hp[1]:hp)&&!b.invuln&&b.st===(v||sv?'chase':'rec')&&b.z===0})()`),true,'Safe phase transition');
       const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
