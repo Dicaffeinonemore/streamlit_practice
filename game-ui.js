@@ -4,7 +4,7 @@ const UX = (() => {
   const defaults = { KeyA: 'KeyA', KeyD: 'KeyD', KeyW: 'KeyW', KeyS: 'KeyS', Space: 'Space',
     KeyJ: 'KeyJ', ShiftLeft: 'ShiftLeft', KeyK: 'KeyK', KeyI: 'KeyI', KeyU: 'KeyU', KeyH: 'KeyH', KeyO: 'KeyO', KeyP: 'KeyP', KeyL: 'KeyL' };
   const labels = { KeyA: '왼쪽', KeyD: '오른쪽', KeyW: '위', KeyS: '아래', Space: '점프', KeyJ: '공격',
-    ShiftLeft: '대시', KeyK: '필살기', KeyI: '뇌격', KeyU: '돌진 베기', KeyH: '내려찍기', KeyO: '회전 베기', KeyP: '점프 강하', KeyL: '붉은 파동' };
+    ShiftLeft: '대시', KeyK: '필살기', KeyI: '뇌격', KeyU: '견제 찌르기', KeyH: '내려찍기', KeyO: '회전 베기', KeyP: '점프 강하', KeyL: '붉은 파동' };
   const reserved = new Set(['KeyM', 'KeyZ', 'KeyX', 'KeyV']);
   const validKey = k => typeof k === 'string' && (/^Key[A-Z]$/.test(k) || /^Digit[0-9]$/.test(k) || ['Space', 'ShiftLeft', 'ShiftRight'].includes(k)) && !reserved.has(k);
   const number = (v, a, b) => typeof v === 'number' && Number.isFinite(v) && v >= a && v <= b;

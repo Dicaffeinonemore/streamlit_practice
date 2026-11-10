@@ -27,7 +27,7 @@ const VARGUL_RULES = {
     driftPeriod:180,interval:[200,150],flash:20,inv:10,groggy:20,drops:{potion:.25,scroll:.15}},
   shard:{speed:7*.5112,damage:8,depth:14},
   ultimate:{rx:110*.5112,ry:34,outerX:200*.5112,outerY:200*34/110,outerHeight:20*.5112,damage:23,outerDamage:10,
-    riseHeight:240,impactTicks:8,waveDelay:8,waveTicks:36,waveHalfWidth:6,waveCount:3,waveInterval:24},
+    riseHeight:240,impactTicks:8,waveDelay:8,waveTicks:36,waveHalfWidth:6,waveCount:1,waveInterval:24},
   intro:192,down:100,awaken:180,crossfade:8,death:96,deathHold:50,
   // The source design leaves these connecting/active lengths unspecified.
   defaults:{cast:32,comboHit:5,comboConnect:12,comboThirdConnect:6,comboThirdHit:8,sweepFront:9,sweepBack:9,turn:6,recall:18}

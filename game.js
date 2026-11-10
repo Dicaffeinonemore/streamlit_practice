@@ -212,8 +212,10 @@ const ATK = {
 };
 const LINK_MS = COMBAT_FRAME_DATA.input.linkMs, BUF_MS = COMBAT_FRAME_DATA.input.bufferMs;
 const PLAYER_DATA = COMBAT_FRAME_DATA.player, DASH_ATTACK = BAREL_COMBAT.dashAttack;   // 이동·점프·피격·넉다운 / 대시 찌르기   // 다음 타 연결 허용 시간 / 선입력 유지 시간
-// 필살기 "흑월참": 기 모으기 → 돌진 → 4연 베기 → 도약 내려찍기. 시전 중 무적
-const SPECIAL = { dur: 2100, slash: 20, fin: 150 };
+// 필살기 "흑월참": 기 모으기 → 돌진 → 3연 베기 → 초승달 마무리. 시전 중 무적
+// 베기는 slashFromMs 부터 slashMs 간격, 각 베기 시작 + slashHitMs[k] 에 적중 (Rika 흑월참 2~4타 시트와 맞물림)
+const SPECIAL = { dur: 2100, slash: 27, fin: 150, slashFromMs: 620, slashMs: 640 / 3, slashHitMs: [80, 80, 160], finMs: 1580 };
+globalThis.SPECIAL_TIMING = SPECIAL;
 // 마법 "뇌격": 두루마리 1개로 화면 안의 모든 적에게 번개. 잡몹은 쓰러지고 보스는 최대 체력의 12% 피해
 const MAGIC = { max: 3, dur: 640, fire: 380, damage: 80 };
 // 첨부 보스전의 전투 기술. 일반 공격보다 강하지만 각각 독립 쿨다운이 있다.
@@ -270,7 +272,7 @@ function selectCharacter(id, focus = false) {
   $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
   $('characterSelectionKeys').textContent = id === 'viesa'
     ? 'J 화살 · H 근접 · U 연사 · L 저격 · O 지상 백플립 · P 공중 백플립 · K 흑월 난사'
-    : 'J 3연타 · 대시 중 공격: 대시 찌르기 · U 돌진 베기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격';
+    : 'J 3연타 · 대시 중 공격: 대시 찌르기 · U 견제 찌르기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격';
   $('btnCharacterConfirm').disabled = !hero.available;
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
@@ -743,12 +745,12 @@ function updSpecial() {
     const u = ease((t - 450) / 150);
     p.x = lerp(p.spX0, p.spX0 + f * Math.max(0, (p.spX - p.spX0) * f - 52), u); p.y = lerp(p.spY0, p.spY, u);
   }
-  for (let k = 0; k < 4; k++) {                                  // 4연 베기: 각 베기의 스윙 중간에 적중
-    const st = 620 + k * 160;
-    if (t >= st + 40 && t < st + 120) p.x += f * 3 * SC * MS / 80;
-    if (t >= st + 80 && p.spHits <= k) { p.spHits = k + 1; specialHit(false, k); }
-  }
-  if (t >= 1580 && !p.spFin) { p.spFin = true; specialHit(true, 4); }   // 도약 내려찍기
+  SPECIAL.slashHitMs.forEach((hitMs, k) => {                     // 3연 베기: 칼이 지나가는 장에서 적중
+    const st = SPECIAL.slashFromMs + k * SPECIAL.slashMs;
+    if (t >= st + hitMs - 40 && t < st + hitMs + 40) p.x += f * 3 * SC * MS / 80;
+    if (t >= st + hitMs && p.spHits <= k) { p.spHits = k + 1; specialHit(false, k); }
+  });
+  if (t >= SPECIAL.finMs && !p.spFin) { p.spFin = true; specialHit(true, 4); }   // 초승달 마무리
   if (t >= SPECIAL.dur) { p.st = 'free'; p.inv = 24; p.comboT = 0; p.combo = 0; p.spTg = null; }
 }
 function specialHit(last, k) {
@@ -828,7 +830,7 @@ function startSkill(id) {
   p.skillDest = clamp(p.x + p.face * distance,
     camX + 24, Math.min(camX + VW - 24, stage.len - 24));
   reactAurelionAttack();
-  if (id === 'thrust' || id === 'leap') sfx('spdash');
+  if (id === 'leap') sfx('spdash');
   else sfx('swing', id === 'slam' ? 2 : 1);
   return true;
 }
@@ -863,17 +865,12 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
 function updSkill() {
   if(isViesa()){updateViesaAction();return;}
   const p = player, id = p.skill, t = p.t * MS, prev = (p.t - 1) * MS, S = BAREL_COMBAT.skills[id];
-  if (id === 'thrust') {
-    const [from, to] = S.travelMs;
-    if (t >= from && t <= to + MS) {
-      const u = ease((t - from) / (to - from));
-      p.x = lerp(p.x0, p.skillDest, u); if (S.invulnerableWhileTravel) p.inv = Math.max(p.inv, 4);
-      if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#ff6b78', 210);
-      if (t >= S.strikeFromMs) skillStrike(0, S.damage, S.reachPx, S.behindPx, S.knockdown, S.fx);
-      if (prev < S.strikeFromMs && t >= S.strikeFromMs) {
-        impact(p.x + p.face * 42, p.y, 55, 1, p.face);
-        burst(p.x + p.face * 42, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); playerHitSfx(2);
-      }
+  if (id === 'thrust') {                                         // 견제 찌르기: 제자리에서 길게 찌른다
+    const [from, to] = S.strikeMs;
+    if (t >= from && t < to) skillStrike(0, S.damage, S.reachPx, S.behindPx, S.knockdown, S.fx);
+    if (prev < from && t >= from) {
+      const tip = p.x + p.face * S.reachPx * 0.85;
+      impact(tip, p.y, 55, 1, p.face); burst(tip, p.y, 55, ['#ffffff', '#ff9aa6', '#ff3a4a']); sfx('swing', 1);
     }
   } else if (id === 'slam') {
     if (prev < S.strikeMs && t >= S.strikeMs) {

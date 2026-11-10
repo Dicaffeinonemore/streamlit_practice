@@ -85,9 +85,9 @@ const COMBAT_FRAME_DATA = {
     // behindPx: 등 뒤로 닿는 거리. 스킬 판정 깊이는 38px, 높이 85px 로 공통이다.
     skillEndInvulnerableTicks: 10,      // 스킬이 끝난 뒤 잠깐 무적
     skills: {
-      thrust:  { name: '돌진 베기', key: 'U', cooldownMs: 4600, durMs: 700,
-                 travelMs: [180, 360], invulnerableWhileTravel: true, strikeFromMs: 240,
-                 damage: 28, reachPx: 68, behindPx: 8, knockdown: false, fx: 1 },
+      // 견제 찌르기 (1.64): 제자리에서 길게 찌른다. 이동·무적 없음, 판정은 strikeMs 구간
+      thrust:  { name: '견제 찌르기', key: 'U', cooldownMs: 3200, durMs: 520,
+                 strikeMs: [220, 320], damage: 20, reachPx: 125, behindPx: 0, knockdown: false, fx: 1 },
       slam:    { name: '내려찍기', key: 'H', cooldownMs: 6000, durMs: 820,
                  strikeMs: 330, damage: 24, reachPx: 130, behindPx: 10, knockdown: true, fx: 2 },
       whirl:   { name: '회전 베기', key: 'O', cooldownMs: 7000, durMs: 760,

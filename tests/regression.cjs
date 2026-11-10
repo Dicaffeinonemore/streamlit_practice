@@ -68,6 +68,8 @@ async function screenshot(name) {
   const r = await call('Page.captureScreenshot', { format: 'png' });
   fs.writeFileSync(path.join(profile, name + '.png'), Buffer.from(r.data, 'base64'));
 }
+// 1.64: 이전 바렐 모션 모듈 검사 묶음은 Rika 모션을 끄고 실행한다 (이전 모듈은 대체 그림으로 남아 있음)
+const LEGACY_BAREL = "BarelRika.setMode('off')";
 async function ready(url) {
   await call('Page.navigate', { url });
   for (let i = 0; i < 50; i++) {
@@ -243,12 +245,18 @@ function combatChecks() {
   clearInput();updPlayer();inputDown('KeyW');updPlayer();
   check('Depth movement also uses walking animation',namedPlayerFrame().source==='player_walk');
   clearInput();
-  for (const distance of [40, 100, 160, 260, 310, -100, -260]) {
+  // 1.64 견제 찌르기: 제자리에서 사거리 125px 안만 한 번 찌른다
+  for (const [distance, hits] of [[40, true], [100, true], [-100, true], [160, false], [260, false]]) {
     reset(); player.x = distance < 0 ? 400 : 200; player.face = Math.sign(distance);
+    const startX = player.x;
     enemies = [mkEnemy('grunt', player.x + distance, 420)]; startSkill('thrust');
     for (let i = 0; i < 50; i++) updPlayer();
-    check('Thrust reaches target once at distance ' + distance, enemies[0].hp === enemies[0].max-28 && player.st === 'free');
+    check('Poke thrust stays in place and hits only in reach at distance ' + distance,
+      enemies[0].hp === enemies[0].max - (hits ? 20 : 0) && player.x === startX && player.st === 'free');
   }
+  reset(); player.x = 200; player.face = 1; enemies = [mkEnemy('grunt', 170, 420)]; startSkill('thrust');
+  for (let i = 0; i < 50; i++) updPlayer();
+  check('Poke thrust does not reach behind', enemies[0].hp === enemies[0].max);
   reset(); player.x = 200; enemies = [mkEnemy('grunt', 300, 485)]; startSkill('thrust');
   for (let i = 0; i < 50; i++) updPlayer();
   check('Thrust respects lane', enemies[0].hp === enemies[0].max);
@@ -470,17 +478,17 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       assert.deepEqual(errors,[]);console.log('PASS named motion loads in local and embedded game');return;
     }
     if(process.env.L_SKILL_HIT_SUITE){await ready(base+'/index.html');await require('./l-skill-hit.cjs')({evaluate,errors});return;}
-    if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_REVISED_SUITE){await ready(base+'/index.html');await require('./barel-revised.cjs')({evaluate,errors});return;}
-    if(process.env.BAREL_AIR_ATTACK_SUITE){await ready(base+'/index.html');await require('./barel-air-attack-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_JUMP_SUITE){await ready(base+'/index.html');await require('./barel-jump-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_DASH_SUITE){await ready(base+'/index.html');await require('./barel-dash-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_WALK_SUITE){await ready(base+'/index.html');await require('./barel-walk-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_IDLE_SUITE){await ready(base+'/index.html');await require('./barel-idle-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_COMBO2_SUITE){await ready(base+'/index.html');await require('./barel-combo2-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
-    if(process.env.BAREL_COMBO1_SUITE){await ready(base+'/index.html');await require('./barel-combo1-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_GRABBED_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-grabbed-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_REVISED_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-revised.cjs')({evaluate,errors});return;}
+    if(process.env.BAREL_AIR_ATTACK_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-air-attack-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_JUMP_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-jump-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_DASH_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-dash-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_WALK_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-walk-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_IDLE_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-idle-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO2_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-combo2-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO1_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-combo1-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.STAGE_WIPE_SUITE){await ready(base+'/index.html');await require('./stage-wipe.cjs')({evaluate,call,errors,root});return;}
-    if(process.env.BAREL_COMBO0_SUITE){await ready(base+'/index.html');await require('./barel-combo0-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
+    if(process.env.BAREL_COMBO0_SUITE){await ready(base+'/index.html');await evaluate(LEGACY_BAREL);await require('./barel-combo0-10.cjs')({evaluate,call,errors,root,environment:'local'});return;}
     if(process.env.JUDGMENT_SUITE){await ready(base+'/embedded.html');await require('./judgment.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_UI_SUITE){await ready(base+'/embedded.html');await require('./viesa-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.MORGRA_DEATH_SUITE){await ready(base+'/embedded.html');await require('./morgra-death.cjs')({evaluate,call,errors,root});return;}
@@ -722,9 +730,9 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       if(mkEnemy('boss1',350,420).max!==700 || mkEnemy('boss2',350,420).max!==850)return false;
       const e=mkEnemy('brute',350,420);enemies=[e];barrels=[];e.hp=1000;e.max=1000;
       player.spX=e.x;player.spY=e.y;
-      for(let k=0;k<4;k++){e.inv=0;e.st='chase';specialHit(false,k);}
+      for(let k=0;k<SPECIAL.slashHitMs.length;k++){e.inv=0;e.st='chase';specialHit(false,k);}
       e.inv=0;e.st='chase';specialHit(true,4);
-      if(e.hp!==770)return false; // Existing balance: four 20-damage cuts + 150 finisher.
+      if(e.hp!==769)return false; // 1.64 balance: three 27-damage cuts + 150 finisher (was 4 × 20 + 150).
       const b=mkEnemy('boss2',400,420);b.p2shown=true;b.hp=b.max=1200;
       if(pickMorgraPattern(b,250,0)!=='moon')return false;
       b.pat='moon';initMorgraPattern(b);

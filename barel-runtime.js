@@ -11,6 +11,9 @@ function barelFrame(name, progress = 0, loop = false) {
 }
 function barelPlayerFrame() {
   const p=player,t=p.t*MS;
+  // 1.64: Rika AI 모션이 모든 상태를 먼저 맡고, 이미지가 아직 없을 때만 이전 모션으로 그린다
+  const rika=globalThis.BarelRika?.frameFor(p,MS,tick*MS,scene!=='clear'&&scene!=='ending');
+  if(rika)return rika;
   if(p.st==='dash_attack')return globalThis.BarelDashAttack?.frameFor(p,MS)||barelFrame('thrust',p.t/DASH_ATTACK.frameEndTicks.at(-1));
   if(p.st==='grabbed')return globalThis.BarelGrabbed?.frameFor(p,MS) || barelFrame('hook',t/650,true);
   if(p.st==='atk') {
@@ -45,15 +48,22 @@ function paintBarel(frame,actor,alpha=1) {
   ctx.save();ctx.translate(actor.x-camX,actor.y-(actor.z||0));ctx.scale(actor.face||1,1);
   const scale=BAREL_PLAYER_SCALE*(frame.renderScale || 1);
   ctx.scale(scale,scale);
-  ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
+  ctx.globalAlpha=alpha;
+  // Rika 모션은 고해상도 그림을 줄여 그리므로 부드럽게, 이전 도트 모션은 또렷하게
+  if(frame.smooth)smoothFor(1);else ctx.imageSmoothingEnabled=false;
   const lit=actor.flash>0 && UX.options.flash;
   if(lit && actor.st==='hurt')ctx.filter='brightness(1.5) sepia(1) saturate(8) hue-rotate(310deg)';
+  // 내려찍기 그림에 포함된 충격 기둥을 가리고 기존 충격 효과로 대체한다.
+  if(frame.clip==='slam' && frame.index>=7){
+    const width=frame.index===7?220:190;
+    ctx.beginPath();ctx.rect(-ax,-ay,width,h);ctx.clip();
+  }
   drawLit(image,x,y,w,h,-ax,-ay,w,h,lit && actor.st!=='hurt'?1.8:1);ctx.restore();return true;
 }
 // Shared stable framing for ordinary and boss-challenge selection previews.
 function drawBarelIdlePreview(canvas,elapsedMs){
   if(!canvas)return false;
-  let view=globalThis.BarelIdle?.preview(elapsedMs);
+  let view=globalThis.BarelRika?.preview(elapsedMs)||globalThis.BarelIdle?.preview(elapsedMs);
   if(!view){
     if(!BAREL_ATLAS.complete||!BAREL_ATLAS.naturalWidth)return false;
     const frames=BAREL_ART.clips.idle;
@@ -67,7 +77,7 @@ function drawBarelIdlePreview(canvas,elapsedMs){
   const [sx,sy,w,h]=view.frame.atlas,[ax,ay]=view.frame.anchor;
   const x=(canvas.width-(left+right)*scale)/2,y=canvas.height-8-bottom*scale;
   c.save();
-  try{c.globalAlpha=1;c.imageSmoothingEnabled=false;c.drawImage(view.image,sx,sy,w,h,x-ax*scale,y-ay*scale,w*scale,h*scale);}
+  try{c.globalAlpha=1;c.imageSmoothingEnabled=!!view.frame.smooth;c.imageSmoothingQuality='high';c.drawImage(view.image,sx,sy,w,h,x-ax*scale,y-ay*scale,w*scale,h*scale);}
   finally{c.restore();}
   return true;
 }
@@ -80,7 +90,8 @@ function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alp
 function drawBarelPlayer() {
   const p=player,t=p.t*MS;
   globalThis.BarelDashFx?.draw();
-  if(!paintBarel(barelPlayerFrame(),p,p.st==='dead'?clamp(1-(p.t-65)/35,0,1):1))return false;
+  const playerFrame=barelPlayerFrame();
+  if(!paintBarel(playerFrame,p,p.st==='dead'?clamp(1-(p.t-65)/35,0,1):1))return false;
   p.tipX=p.x+p.face*72;p.tipH=p.z+68;
   const fx=(name,u,dx=60,w=200,h=160)=>barelEffect(name,u,p.x+p.face*dx,p.y-p.z,w,h);
   globalThis.BarelComboFx?.draw(p,MS);
@@ -89,9 +100,10 @@ function drawBarelPlayer() {
   for(const dust of globalThis.BarelJump?.dustFor(p)||[])
     barelEffect('dust',dust.age/8,dust.x,dust.y,58,16,dust.face,.65);
   if(p.st==='skill' && SKILLS[p.skill]) {
-    const start={thrust:180,slam:330,whirl:150,leap:560,redwave:220}[p.skill];
+    const start={thrust:220,slam:330,whirl:150,leap:560,redwave:220}[p.skill];
     const u=(t-start)/(SKILLS[p.skill].dur-start);
-    if(u>=0&&u<1)fx({thrust:'slash',slam:'impact',whirl:'moon',leap:'impact',redwave:'wave'}[p.skill],u,p.skill==='whirl'?0:65,p.skill==='whirl'?270:240,190);
+    // 견제 찌르기는 칼끝 앞쪽(사거리 끝)에 찌르기 빛을 그린다
+    if(u>=0&&u<1)fx({thrust:'slash',slam:'impact',whirl:'moon',leap:'impact',redwave:'wave'}[p.skill],u,p.skill==='whirl'?0:p.skill==='thrust'?100:65,p.skill==='whirl'?270:240,190);
   }
   if(p.st==='cast' && t>180)fx('lightning',(t-180)/(MAGIC.dur-180),0,210,270);
   if(p.st==='special') {
@@ -99,7 +111,8 @@ function drawBarelPlayer() {
     // the floor and keep the effect grounded even during the finishing leap.
     const groundFx=(name,u,dx,w,h)=>barelEffect(name,u,p.x+p.face*dx,p.y+h*.3,w,h);
     if(t<620)groundFx('moon',t/620,0,270,240);
-    else if(t<1260)groundFx('slash',((t-620)%160)/160,80,300,220);
+    else if(t<SPECIAL.slashFromMs+SPECIAL.slashMs*SPECIAL.slashHitMs.length)
+      groundFx('slash',((t-SPECIAL.slashFromMs)%SPECIAL.slashMs)/SPECIAL.slashMs,80,300,220);
     else groundFx('impact',(t-1260)/740,50,330,270);
   }
   return true;

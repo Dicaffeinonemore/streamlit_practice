@@ -10,7 +10,7 @@ module.exports=async({evaluate,call,errors,root})=>{
   }
   assert.deepEqual(errors,[],'No console errors / browser exceptions');result.consoleErrors=errors;
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(result,null,2));
-  console.log('PASS Vargul spear impact / planted pose / three expanding waves / jump /90-tick recovery');
+  console.log('PASS Vargul spear impact / planted pose / single expanding wave / jump /90-tick recovery');
 };
 function trial(){
   const check=(v,m)=>{if(!v)throw Error(m);},u=VARGUL_RULES.ultimate,result={trace:[],radii:[],hits:[],jump:[]};let e;
@@ -52,7 +52,7 @@ function trial(){
     check(rows.length===rows[0].life&&rows.every((r,i)=>i===0||r.radius>rows[i-1].radius),'Each wave travels until the arena edge');
     check(rows[0].elapsed===149+pulse*24&&rows.at(-1).radius>=rows[0].reach,'Staggered wave start/full arena radius');
   }
-  check(result.trace.filter(r=>r.wave.length===2).length>0,'Concentric waves overlap visually');
+  check(result.trace.every(r=>r.wave.length<=1),'Only a single wave is emitted');
   check(!result.trace.at(-1).wave.length,'Last wave expires after reaching arena edges');
   function waveTrial(distance,{height=0,jumpOffset=null}={}){
     setup({px:300+distance});player.inv=0;player.hp=player.max=1000000;
@@ -96,7 +96,7 @@ function trial(){
     step();maxJump=Math.max(maxJump,player.z);
   }
   keys.ArrowRight=false;result.fullDodge={damage:1000000-player.hp,maxJump,jumps,player:[player.x,player.y],boss:[e.x,e.y]};
-  check(result.fullDodge.damage===0&&maxJump>u.outerHeight&&jumps>=2,'Full slam dodge '+JSON.stringify(result.fullDodge));
+  check(result.fullDodge.damage===0&&maxJump>u.outerHeight&&jumps>=1,'Full slam dodge '+JSON.stringify(result.fullDodge));
   setup();e.training=false;startPat(e,'ultimate');for(let i=0;i<=160;i++)step();
   const hp=e.hp;damageEnemy(e,1,false,0,true);check(e.hp===hp-1,'Actual damage allowed during recovery');
   window.ultimateSlamShot=age=>{setup();e.training=false;startPat(e,'ultimate');for(let i=0;i<=age;i++)step();shake=flashT=hitStop=0;render();};

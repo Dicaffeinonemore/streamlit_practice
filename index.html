@@ -268,7 +268,7 @@
   <button id="playPause" class="btn small-btn secondary" hidden aria-label="일시정지">Ⅱ</button>
   <div id="practiceGuide" hidden><p id="practiceText" aria-live="polite"></p><div class="actions"><button id="btnPracticeGo" class="btn small-btn">실전 시작</button><button id="btnPracticeHelp" class="btn small-btn secondary">조작 안내</button></div></div>
   <div id="skillbar" aria-label="전투 기술" hidden>
-    <button class="skillbtn" data-skill="thrust"><span class="key">U</span><span class="name">돌진 베기</span><span class="cool"></span></button>
+    <button class="skillbtn" data-skill="thrust"><span class="key">U</span><span class="name">견제 찌르기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="slam"><span class="key">H</span><span class="name">내려찍기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="whirl"><span class="key">O</span><span class="name">회전 베기</span><span class="cool"></span></button>
     <button class="skillbtn" data-skill="leap"><span class="key">P</span><span class="name">점프 강하</span><span class="cool"></span></button>
@@ -318,7 +318,7 @@
       </button>
     </div>
     <p id="characterSelectionStatus" role="status" aria-live="polite">바렐 · 흑기사 선택됨</p>
-    <p id="characterSelectionKeys" style="margin:0;font-size:clamp(10px,1.2cqw,13px);color:#c9b5df;text-align:center">J 3연타 · U 돌진 베기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격</p>
+    <p id="characterSelectionKeys" style="margin:0;font-size:clamp(10px,1.2cqw,13px);color:#c9b5df;text-align:center">J 3연타 · U 견제 찌르기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격</p>
     <div class="actions"><button class="btn secondary" id="btnCharacterBack">타이틀로</button><button class="btn" id="btnCharacterConfirm">바렐로 시작</button></div>
     <p class="selection-help">← → 선택 · Enter 확인 · Esc 돌아가기</p>
   </section>
@@ -359,13 +359,13 @@
       <div class="desc"><b>공격</b> — 연타하면 3연 콤보! 3타 참격은 검기를 날린다 · 공중에서는 내려찍기</div>
 
       <div class="keys"><span class="cap" data-k="KeyK">K</span><span class="or">또는</span><span class="cap" data-k="KeyX">X</span></div>
-      <div class="desc"><b>필살기 흑월참</b> — SP 게이지가 차면 사용! 돌진 4연 베기 + 도약 내려찍기 (무적)</div>
+      <div class="desc"><b>필살기 흑월참</b> — SP 게이지가 차면 사용! 돌진 3연 베기 + 초승달 마무리 (무적)</div>
 
       <div class="keys"><span class="cap" data-k="KeyI">I</span><span class="or">또는</span><span class="cap" data-k="KeyV">V</span></div>
       <div class="desc"><b>마법 뇌격</b> — 두루마리 1개로 화면 안의 모든 적에게 번개! (최대 3개)</div>
 
       <div class="keys"><span class="cap" data-k="KeyU">U</span><span class="cap" data-k="KeyH">H</span><span class="cap" data-k="KeyO">O</span><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="KeyL">L</span></div>
-      <div class="desc"><b>전투 기술</b> — 돌진 베기 · 내려찍기 · 회전 베기 · 점프 강하 · 붉은 파동(장거리 관통, 재사용 6.5초)</div>
+      <div class="desc"><b>전투 기술</b> — 견제 찌르기 · 내려찍기 · 회전 베기 · 점프 강하 · 붉은 파동(장거리 관통, 재사용 6.5초)</div>
 
       <div class="keys"><span class="cap" data-k="Escape">ESC</span><span class="cap" data-k="KeyM">M</span></div>
       <div class="desc"><b>일시정지</b> · <b>M</b> 소리 켜기/끄기</div>
@@ -439,7 +439,7 @@
     <button data-control="ShiftLeft" class="t-dash" style="--x:2.68;--y:1.89" aria-label="대시"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6l6 6-6 6M13 6l6 6-6 6"/></svg><span class="cool"></span></button>
     <button data-control="KeyI" class="t-magic" style="--x:1.95;--y:2.65" aria-label="뇌격"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#9cc3ff" stroke="#e8f3ff" stroke-width=".8" stroke-linejoin="round" d="M13.5 2 4.5 13.5h6l-2 8.5 9-11.5h-6z"/></svg><span class="cool"></span></button>
     <button data-control="KeyK" class="t-special" style="--x:0.93;--y:2.90" aria-label="필살기 흑월참"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffd23f" d="M15.5 2.5A9.5 9.5 0 1 0 21.5 17 7.5 7.5 0 0 1 15.5 2.5z"/><path fill="#b0101e" d="M8 7l9 9-1.5 1.5-9-9z"/></svg><span class="cool"></span></button>
-    <button data-control="KeyU" class="touch-skill" data-skill="thrust" style="--x:1.42;--y:4.02" aria-label="돌진 베기"><span class="cool"></span></button>
+    <button data-control="KeyU" class="touch-skill" data-skill="thrust" style="--x:1.42;--y:4.02" aria-label="견제 찌르기"><span class="cool"></span></button>
     <button data-control="KeyH" class="touch-skill" data-skill="slam" style="--x:2.57;--y:3.61" aria-label="내려찍기"><span class="cool"></span></button>
     <button data-control="KeyO" class="touch-skill" data-skill="whirl" style="--x:3.47;--y:2.79" aria-label="회전 베기"><span class="cool"></span></button>
     <button data-control="KeyP" class="touch-skill" data-skill="leap" style="--x:3.97;--y:1.69" aria-label="점프 강하"><span class="cool"></span></button>
@@ -485,6 +485,8 @@
 <script src="src/animation/barel-grabbed.js"></script>
 <script src="src/animation/barel-named-motion-data.js"></script>
 <script src="src/animation/barel-named-motion.js"></script>
+<script src="src/animation/barel-rika-data.js"></script>
+<script src="src/animation/barel-rika.js"></script>
 <script src="barel-runtime.js"></script>
 <script src="barel-combo-fx-art.js"></script>
 <script src="src/animation/barel-combo-fx.js"></script>
