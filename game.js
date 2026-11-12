@@ -120,7 +120,10 @@ const ET = {
   // 궁병: 거리를 두고 같은 줄(깊이)에 서서 활을 당긴 뒤(예고) 화살을 쏜다. 줄을 바꾸거나 점프하면 피할 수 있다
   archer: { name: '망령 궁수', sprite: 'archer', ...enemyCombatStats('archer'), score: 200,
            h: 96, s: 1, hw: 18 },
-  boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 700, spd: 1.05, range: 62, score: 2000, kd: true,
+  // 도살자 고라스 리메이크: 체력(페이즈별)·패턴·그림은 gorath-remake-runtime.js. 이전 고라스는 boss1_old 로 남겨 둔다(?boss1=old)
+  boss1: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: G2.hp[0], spd: G2.spd[0], range: 62, score: 2000, kd: true,
+           h: 128, s: 1, hw: 34, pats: G2_NAMES },
+  boss1_old: { name: '도살자 고라스', en: 'GORATH', sprite: 'boss1', boss: true, hp: 700, spd: 1.05, range: 62, score: 2000, kd: true,
            h: 128, s: 1, hw: 34, pats: { slam: '지축 내려찍기', sweep: '식칼 휩쓸기', rage: '도살 돌진', hook: '갈고리 끌어오기', meat: '고기 덩어리 투척' } },
   boss2: { name: '까마귀 마녀 모르그라', en: 'MORGRA', sprite: 'boss2', boss: true, hp: 850, spd: 1.2, range: 64, score: 3500, kd: true,
            h: 126, s: 1, hw: 28, keepAway: true, pats: { teleport: '까마귀 이동', orbs: '녹염 탄막', ravens: '까마귀 떼', feather: '깃털 투척', staff: '지팡이 강타', soul: '영혼 추수' } },
@@ -475,7 +478,7 @@ function startStage(i, restored = false) {
   globalThis.BarelJump?.reset();
   globalThis.BarelDashFx?.clear();
   resetViesaEffects();syncPlayerCharacterUI(player.characterId);
-  vargulRemains=[];sovereignRemains=[];
+  vargulRemains=[];sovereignRemains=[];resetGorath2();
   clearInput(); hitStop = 0; shake = 0; flashCol = '255,255,255';
   stageIdx = i; stage = STAGES[i]; releaseBG.key = ''; releaseBG.previous = ''; releaseBG.blend = 1;
   GameAssets.prepareStage(i);
@@ -544,7 +547,7 @@ function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life:
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
 function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
-function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'?aurelionGhostFrame():null, gorath: id==='boss1'?gorathEnemyFrame(enemies.find(e=>e.type==='boss1')||{st:'chase'}):null, viesa:id==='player'&&isViesa()?viesaPose():null, barel: id==='player'&&!isViesa()?barelPlayerFrame():null, named: id==='player'&&!isViesa()?namedPlayerFrame():null }); }
+function ghost(x, y, z, id, face, wash, life) { ghosts.push({ x, y, z, id, face, wash, life, age: 0, aurelion: id==='boss3'?aurelionGhostFrame():null, gorath: id==='boss1'&&enemies.some(e=>e.type==='boss1_old')?gorathEnemyFrame(enemies.find(e=>e.type==='boss1_old')):null, viesa:id==='player'&&isViesa()?viesaPose():null, barel: id==='player'&&!isViesa()?barelPlayerFrame():null, named: id==='player'&&!isViesa()?namedPlayerFrame():null }); }
 function cutIn() { const c = $('cutin'); c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); }
 
 function dropItem(type, x, y) {
@@ -914,7 +917,7 @@ function updPlayer() {
   if (p.dashCd > 0) p.dashCd--;
   if(p.dashGrace>0)p.dashGrace--;
   for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
-  if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else if(p.grab?.stage1)updateStage1Grab();else updateGorathGrab(); return; }
+  if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else if(p.grab?.stage1)updateStage1Grab();else if(p.grab?.gorath2)updateGorath2Grab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
   p.walk = false;
   if(isViesa()){if(viesaInput())return;}
@@ -1070,12 +1073,15 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null,
   if(isVargul(e)&&interceptVargulDamage(e))return;
   if(isSovereign(e)&&interceptSovereignDamage(e))return;
   if(isAurelion(e)&&interceptAurelionDamage(e,kd,fixedDamage))return;
+  if(interceptGorath2Damage(e))return;             // 고라스 궁극기 중: 피해 없이 막힘 불꽃만
   if (e.phaseT > 0 || e.st === 'reviving' || e.st === 'dead' || e.invuln) return;
   const p = player;
   if (practice) practiceDone.add(p.st === 'skill' ? 'skill' : 'attack');
   const stunned = e.st === 'stun';
   if (stunned && !fixedDamage) dmg = Math.round(dmg * 1.5);           // 기절 중에는 추가 피해
   if (e.boss && !fixedDamage) dmg = Math.round(dmg * (1 + Math.min(0.5, 0.05 * chain.n)));   // 연속 히트가 이어질수록 보스에게 최대 +50%
+  const gorathUlt = gorath2UltThreshold(e, dmg);
+  if (gorathUlt) dmg = Math.max(0, e.hp - gorathUlt.hp);  // 발동 체력 아래로 피해가 넘어가지 않는다
   chain.n++; chain.t = CHAIN_MS; chain.max = Math.max(chain.max, chain.n);
   e.hp -= dmg; e.flash = 6;
   if (dmg > 0) sfx('hurt');
@@ -1083,12 +1089,16 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null,
   playerHitSfx(kind, hitSound);
   const dir = p.x <= e.x ? 1 : -1, hz = e.z + SPRITES[e.d.sprite].gy * SC * 0.55;
   e.hr = 0; e.hdir = dir; e.hheavy = kind >= 2;
+  if (isGorath2(e)) e.hitLow = !(p.z > 20 || p.st === 'special') && (attackId === 'c2' || p.st === 'dash' || (p.st === 'skill' && p.skill === 'thrust'));   // 2페이즈 피격 그림(상단·하단)
   impact(e.x - dir * e.hw * 0.6, e.y, hz, kind, dir);
   burst(e.x - dir * e.hw * 0.5, e.y, hz, kind === 2 ? ['#ffffff', '#9cc3ff', '#6a7cc0'] : undefined);
   floatText(e.x, e.y - e.z - e.d.h * e.d.s - 14, dmg, '#ffe27a');
   if (!e.boss) target = { e, t: 150 };
 
+  if (gorathUlt) { gorath2TriggerThreshold(e, gorathUlt); return; }
+
   if (e.hp <= 0) {
+    if(isGorath2(e)&&g2Data(e).phase===1){beginGorath2Transition(e);return;}   // 고라스: 1페이즈 체력 0 → 죽지 않고 변신
     if(isVargul(e)&&!e.p2shown){beginVargulTransition(e);return;}
     if(isSovereign(e)&&!e.p2shown){beginSovereignTransition(e);return;}
     if(e.type==='boss2'&&!e.p2shown){beginMorgraRevival(e);return;}
@@ -1096,14 +1106,15 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null,
     e.hp = 0; e.st = 'dead'; e.t = 0; e.pat = null;
     if (practice) return;
     p.score += e.d.score; dropFrom(e);
-    if (e.boss) {                                  // 보스는 그 자리에서 무너지고, 잠깐 슬로 모션
+    if (isGorath2(e)) gorath2Death(e);
+    else if (e.boss) {                             // 보스는 그 자리에서 무너지고, 잠깐 슬로 모션
       resetBossFx(e); e.vx = 0; e.vz = 0; shake = 20; hitStop = 16; flashT = 220; flashCol = '255,255,255'; slowT = 1100;
       hazards = hazards.filter(z => z.type === 'pwave'); sfx('bossdie');
     } else { e.vz = 6; e.vx = dir * 5; sfx('mobdie'); }
     return;
   }
   if (e.boss) {                                   // 보스: 슈퍼아머, 그로기 게이지 + 체력 25% 단위로 다운
-    if (e.type==='boss1' && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
+    if (e.type==='boss1_old' && !e.p2shown && e.hp <= e.max*.5) { beginBossPhase2(e,false); return; }
     if (stunned) return;                           // 기절 중에는 맞아도 상태가 바뀌지 않는다
     e.gr = Math.min(e.grMax, e.gr + dmg * 0.9); e.grT = 150;
     if (e.gr >= e.grMax) {
@@ -1288,6 +1299,7 @@ function slamImpact(e) {
 }
 
 function updEnemy(e) {
+  if(updateGorath2State(e))return;
   if(updateVargulState(e))return;
   if(updateSovereignState(e))return;
   if(updateAurelionState(e))return;
@@ -1672,8 +1684,9 @@ function updIntro() {
   if(isVargul(b))updateVargulIntro(b);
   if(isSovereign(b))updateSovereignIntro(b);
   if(isAurelion(b))updateAurelionIntro(b);
-  b.z = b.type === 'boss1' ? 360 * (1 - ease(Math.min(1, u / 0.25))) : 0;   // 고라스만 하늘에서 떨어지고, 나머지는 각자의 등장 연출로 나타난다
-  if (!introLand && u >= 0.25 && b.type === 'boss1') {
+  if(isGorath2(b))updateGorath2Intro(b);
+  b.z = b.type === 'boss1_old' ? 360 * (1 - ease(Math.min(1, u / 0.25))) : 0;   // 이전 고라스만 하늘에서 떨어지고, 나머지는 각자의 등장 연출로 나타난다
+  if (!introLand && u >= 0.25 && b.type === 'boss1_old') {
     introLand = true; b.z = 0; shake = 22; sfx('land');
     for (let k = 0; k < 7; k++) burst(b.x + (k - 3) * 10, b.y, 4, ['#fff0c0', '#c8b890', '#8a7a5a']);
     impact(b.x, b.y, 10, 2, 1);
@@ -2105,18 +2118,14 @@ function drawPlayer() {
 
 function drawEnemy(e) {
   if(drawStage1Enemy(e))return;
-  if(!e.boss||e.st!=='stun'){drawEnemyBody(e);return;}
-  // Render-only sway around the feet; physics and groggy duration stay fixed.
-  const x=e.x-camX,y=e.y-e.z;
-  ctx.save();ctx.translate(x,y);ctx.rotate(bossGroggySway(e));ctx.translate(-x,-y);
-  try{drawEnemyBody(e);}finally{ctx.restore();}
+  drawEnemyBody(e);
 }
-function bossGroggySway(e){return e.face*(.018+Math.sin(e.t*.11)*.035);}
 function drawEnemyBody(e) {
   if(drawVargul(e))return;
   if(drawSovereign(e))return;
   if(drawAurelion(e))return;
   if(drawMorgra(e))return;
+  if (drawGorath2(e)) return;
   if (drawGorath(e)) return;
   if (drawNamedEnemy(e)) return;
   if (HD[e.d.sprite] && !e.boss) { drawLegion(e); return; }
@@ -2125,10 +2134,10 @@ function drawEnemyBody(e) {
   drawShadow(sx, e.y, S.sh, e.z);
   if (e.st === 'dead' && !e.boss && e.t > 35 && Math.floor(tick / 4) % 2) return;
   const lying = !(e.boss && e.st === 'dead') && (e.st === 'down' || e.st === 'dead') && e.z === 0;
-  const o = { f: idleFrame(e.walk), dx: 0 };
+  const o = { f: e.boss && e.st === 'stun' ? 0 : idleFrame(e.walk), dx: 0 };
   let pose = null, alpha = 1;
   // 피격 반동: 맞은 쪽 반대로 꺾였다가 흔들리며 돌아오고, 잠깐 무릎이 굽는다
-  if (e.hr < 600 && e.st !== 'dead') {
+  if (e.hr < 600 && e.st !== 'dead' && !(e.boss && e.st === 'stun')) {
     const osc = Math.cos(e.hr * 0.03) * Math.exp(-e.hr / 200);
     o.leanW = e.hdir * (e.hheavy ? 8 : 4.5) * osc; o.dx = e.hdir * (e.hheavy ? 3 : 1.5) * Math.exp(-e.hr / 160);
     if (e.hr < 130) o.crouch = e.hheavy ? 2 : 1;
@@ -2143,7 +2152,7 @@ function drawEnemyBody(e) {
       o.dx += e.bdx * e.face; o.dy = e.bdy; alpha = e.alpha;
       if (e.wash && !o.wash) { o.wash = e.wash; o.washA = 0.5; }
       if (alpha < 0.6) o.noWeapon = true;
-    } else if (e.st === 'stun') {                  // 기절: 무기를 떨군 채 비틀거림
+    } else if (e.st === 'stun') {                  // 기절: 무기를 떨군 자세로 정지
       o.leanW = (o.leanW || 0) - e.face * 2; o.crouch = Math.max(o.crouch || 0, 1);
       pose = mixP(BR[id], { ang: -25, hx: 3, hy: 11, lean: -2 }, 1);
     } else if (e.st === 'dead') {                  // 쓰러짐: 하얗게 깜빡이며 무너지고 사라진다
@@ -2176,6 +2185,7 @@ function drawEnemyBody(e) {
   present(F, sx, e.y - e.z + bob, alpha, lying, e.face, S.gy, SC * (e.boss ? BOSS_VISUAL_SCALE : 1));
 }
 function drawGhost(g) {
+  if(drawGorath2Ghost(g))return;
   if(g.aurelion&&paintAurelion(g.aurelion,g.x,g.y-g.z,g.face,.3*(1-g.age/g.life)))return;
   if(g.gorath && paintGorath(g.gorath,g.x,g.y-g.z,g.face,.3*(1-g.age/g.life),BOSS_VISUAL_SCALE))return;
   if(g.viesa && paintViesa(g.viesa,g,.3*(1-g.age/g.life)))return;
@@ -2578,13 +2588,13 @@ function drawTopFx(L) {
       for (let k = 1; k <= 3; k++) L.put(x - d * (9 + k * 2), y, '#ffffff', 0.3 / k);
     }
     else if (z.type === 'hook') {
-      if(z.owner?.type==='boss1' && GORATH_ATLAS.naturalWidth)continue;
+      if(z.owner?.type==='boss1_old' && GORATH_ATLAS.naturalWidth)continue;
       const o = z.owner, y = fxY(z.y, z.h), ox = o ? fxX(o.x + o.face * 28) : x;
       L.line(ox, fxY(z.y, 58), x, y, '#4a3a32', 2); L.line(ox, fxY(z.y, 58) - 1, x, y - 1, '#b8a080', 1);
       L.arc(x, y, 5, -.6, Math.PI + .6, '#d8d0c0', 2);
     }
     else if (z.type === 'meat') {
-      if(z.owner?.type==='boss1' && GORATH_ATLAS.naturalWidth)continue;
+      if(z.owner?.type==='boss1_old' && GORATH_ATLAS.naturalWidth)continue;
       const y = fxY(z.y, z.h); L.disc(x, y, 7, '#8a1a2a'); L.disc(x - 2, y - 2, 3, '#d85862'); L.put(x + 3, y + 2, '#f0b0a0');
     }
     else if (z.type === 'feather') {
@@ -2930,7 +2940,7 @@ function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별,
     }
   }
   const tele=e.type==='boss2'?(morgraMoves[e.morgraMove]?.phases?.startup?.[1]+1||0)*MS:(TELE[e.pat]||0);
-  const warnNow = isSovereign(e)?(sovereignWarning(e)&&Math.floor(tick*MS/110)%2===0):isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
+  const warnNow = isGorath2(e)?(gorath2Warning(e)&&Math.floor(tick/7)%2===0):isSovereign(e)?(sovereignWarning(e)&&Math.floor(tick*MS/110)%2===0):isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
   if (warnNow) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
 }
 
@@ -2953,6 +2963,7 @@ function render() {
   if (sectionBG) { ctx.fillStyle = '#08060b'; rect(-20, -20, W + 40, H + 40); } else drawBackdrop(theme, camX * Z);
   ctx.save(); ctx.scale(Z, Z); ctx.translate(0, -OY);         // ↓ 월드 좌표 (1.5배 줌)
   if (sectionBG) drawStage1Back(); else drawFloor(theme);
+  drawGorath2Scenery();                            // 고라스 2페이즈 붉은 조명 · 궁극기 어둠
   if(isViesa()&&player.st==='special'){
     // Dim only scenery; draw actors and their effects at their original brightness.
     ctx.fillStyle='rgba(0,0,0,.3)';rect(-40,OY-40,VW+80,VH+80);
@@ -2962,6 +2973,7 @@ function render() {
   if (stage) {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
     drawStage1GroundSprites();                    // 1스테이지 바닥 불·파편·먼지 스프라이트 (캐릭터 뒤)
+    drawGorath2Ground();                          // 고라스: 쓰러진 몸, 고기 낙하 경고·잔해 (캐릭터 뒤)
     const sp = player.st === 'special' && !isViesa() ? player.t * MS : -1;
     // y 순서로 정렬해서 그린다 (필살기 중에는 흑기사와 그 잔상만 어둠 위에 따로 그림)
     const list = [];
@@ -2990,6 +3002,7 @@ function render() {
     for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
     enemies.forEach(drawEnemyOverlay);
     drawGorathHazards();
+    drawGorath2Top();                             // 고라스: 떨어지는 고기, 사슬·갈고리
     drawMorgraHazards();
     drawAurelionHazards();
     drawVargulHazards(false);
@@ -3002,8 +3015,9 @@ function render() {
   ctx.restore();
   drawVignette();
   ctx.restore();
+  drawGorath2Overlay();                            // 고라스: 이름 카드 · 기술 이름 · 섬광
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
-  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { drawIntroCard(introT / bossIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
+  if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { if (!drawGorath2IntroBars()) drawIntroCard(introT / bossIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
   if (stage && player) drawStage1Overlay();
 

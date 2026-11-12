@@ -150,9 +150,10 @@ function drawPixelBossBar(boss, hud) {
   ctx.fillStyle = '#a75236'; ctx.fillRect(342, 342, barWidth * clamp(hud.lag / boss.max, 0, 1), 58);
   const fill = barWidth * clamp(hud.value / boss.max, 0, 1);
   if (fill > 0) ctx.drawImage(BOSS_UI, 400, 342, 1000, 58, 342, 342, fill, 58);
+  if (fill > 0 && boss.barTint) { ctx.fillStyle = boss.barTint; ctx.fillRect(342, 342, fill, 58); }   // 2페이즈: 체력바를 붉게
   ctx.restore();
   krText(boss.d.name, x + (1136 + extra / 2) * scale, y + 320 * scale, '#ffe5dd', 13, 'center');
-  pxText(boss.p2shown ? 'II' : 'I', x + 370 * scale, y + 320 * scale, '#e1b99b', 9);
+  if (boss.barLabel) krText(boss.barLabel, x + 370 * scale, y + 322 * scale, '#ff8a80', 11); else pxText(boss.p2shown ? 'II' : 'I', x + 370 * scale, y + 320 * scale, '#e1b99b', 9);
   const groggy = boss.st === 'stun' ? 1 - boss.t / GROGGY_TICKS : boss.gr / boss.grMax;
   ctx.fillStyle = '#cfab70'; rect(x + 380 * scale, y + 416 * scale, (1500 + extra) * scale * clamp(groggy, 0, 1), 2);
   return true;

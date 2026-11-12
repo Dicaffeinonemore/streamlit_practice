@@ -67,8 +67,9 @@ const STAGE1_SECTIONS = [
     events: [
       { at: .45, max: 3, spawns: [['heavy', 'wallbreak@crackedWall'], ['axe', 'right'], ['blade', 'left']] },
     ] },
+  // 보스: 도살자 고라스 리메이크(gorath-remake-runtime.js). ?boss1=old 면 이전 고라스
   { bg: 'arena', name: '피의 투기장', fixedCam: true,
-    events: [{ at: .5, boss: 'boss1' }] },
+    events: [{ at: .5, boss: G2_DEBUG.old ? 'boss1_old' : 'boss1' }] },
 ];
 
 const S1 = { on: false, idx: 0, sec: null, bg: null, len: 0, maxCam: 0, ev: 0, lock: null, lockN: 0, fade: null, banner: 0, secT: 0,
@@ -109,6 +110,7 @@ function enterSection(i) {
   enemies = []; items = []; hazards = []; parts = []; texts = []; target = null; impacts = []; bursts = []; ghosts = []; bolts = [];
   barrels = (sec.barrels || []).map(bx => ({ kind: 'barrel', x: bx, y: rand(walkTop() + 30, GBOT - 10), z: 0, hw: 16, hp: 2, flash: 0, dead: false, t: 0 }));
   p.x = camX + 80; p.y = clamp(430, walkTop() + 10, GBOT); p.z = 0; p.vz = 0; p.vx = 0; p.face = 1; p.inv = Math.max(p.inv, 60);
+  if (sec.events[0]?.boss === 'boss1') gorath2Prepare();   // 고라스는 탁자 앞에서 고기를 썰고 있고, 플레이어는 오른쪽 문에서 걸어 들어온다
 }
 function stage1Finished() { return S1.idx === STAGE1_SECTIONS.length - 1 && S1.ev >= S1.sec.events.length && !S1.lock; }
 
@@ -146,7 +148,7 @@ function updStage1() {
   const goal = player.x - VW * 0.4;
   if (sec.fixedCam) camX = limit;                  // 한 화면: 가운데 고정
   else if (goal > camX) camX = Math.min(goal, limit);
-  if (!camLock && ev && !S1.fade && camX >= limit - 0.5 && (!ev.boss || S1.secT > 40)) beginEvent(ev);
+  if (!camLock && ev && !S1.fade && camX >= limit - 0.5 && (!ev.boss || ev.boss === 'boss1' || S1.secT > 40)) beginEvent(ev);
   // 구간 끝: 다음 구간으로. 광장은 철문이 열린 뒤 철문으로 걸어 들어가야 한다
   if (!camLock && !ev && !S1.fade && S1.idx < STAGE1_SECTIONS.length - 1 && player.st !== 'dead') {
     if (sec.gate) { if (S1.gate?.t >= 40 && player.x >= s1Mark('gateLeft') + 24) startSectionFade(true); }
@@ -155,7 +157,11 @@ function updStage1() {
 }
 function beginEvent(ev) {
   camLock = true; lockAt = camX;
-  if (ev.boss) { S1.lock = { id: ++S1.lockN, max: 1, queue: [], delay: 0, boss: true }; spawnWave({ e: [[ev.boss, 1]] }); return; }
+  if (ev.boss) {
+    S1.lock = { id: ++S1.lockN, max: 1, queue: [], delay: 0, boss: true };
+    if (ev.boss === 'boss1') gorath2BeginIntro(); else spawnWave({ e: [[ev.boss, 1]] });
+    return;
+  }
   const queue = ev.spawns.map(([id, from, gap = 0]) => ({ id, from, gap }));
   S1.lock = { id: ++S1.lockN, max: ev.max, queue, delay: 0 };
   const wb = queue.find(q => q.from.startsWith('wallbreak@'));

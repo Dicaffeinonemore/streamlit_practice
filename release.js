@@ -40,7 +40,8 @@ function drawReleaseBackdrop(theme, scroll) {
 }
 function drawBossBar(boss) {
   // The intro state persists through pause/settings; reveal HP only on combat entry.
-  if (boss.st === 'intro' || scene === 'bossintro') return;
+  const g2Card = boss.g2?.cardT > 0;               // 고라스 인트로: 포효와 함께 체력바가 들어온다
+  if ((boss.st === 'intro' || scene === 'bossintro') && !g2Card) return;
   const x = 120, y = 416, w = 720;
   const frozen = scene === 'pause' || scene === 'settings';
   const now = tick;
@@ -52,13 +53,14 @@ function drawBossBar(boss) {
     if (h.hold > 0) h.hold--; else h.lag = Math.max(boss.hp, h.lag - boss.max * .008);
   }
   ctx.save();
-  ctx.globalAlpha = boss.st === 'dead' ? clamp(1 - boss.t / 60, 0, 1) : boss.st === 'intro' ? clamp(introT / 600, 0, 1) : 1;
+  ctx.globalAlpha = boss.st === 'dead' ? clamp(1 - boss.t / 60, 0, 1) : g2Card ? clamp(boss.g2.cardT / 20, 0, 1) : boss.st === 'intro' ? clamp(introT / 600, 0, 1) : 1;
+  if (boss.g2?.barBlink > 0 && Math.floor(boss.g2.barBlink / 3) % 2) ctx.globalAlpha *= .3;   // 1페이즈 체력 0: 빈 체력바가 깜빡인다
   const color = boss.p2shown ? '#ecd5ff' : BOSS_COLORS[stageIdx];
   if (!drawPixelBossBar(boss, h)) {
   panel(x, y, w, 38);
   krText(boss.d.name, W / 2, y + 14, color, 13, 'center');
-  pxText(boss.p2shown ? 'II' : 'I', x + 10, y + 14, color, 10);
-  lifeBar(x + 10, y + 21, w - 20, 10, clamp(h.value / boss.max, 0, 1), clamp(h.lag / boss.max, 0, 1), [color, BOSS_COLORS[stageIdx]]);
+  if (boss.barLabel) krText(boss.barLabel, x + 10, y + 15, '#ff8a80', 11); else pxText(boss.p2shown ? 'II' : 'I', x + 10, y + 14, color, 10);
+  lifeBar(x + 10, y + 21, w - 20, 10, clamp(h.value / boss.max, 0, 1), clamp(h.lag / boss.max, 0, 1), boss.barTint ? ['#ff6a5a', '#a01018'] : [color, BOSS_COLORS[stageIdx]]);
   const r = boss.st === 'stun' ? 1 - boss.t / GROGGY_TICKS : boss.gr / boss.grMax;
   ctx.fillStyle = '#cfab70'; rect(x + 10, y + 34, (w - 20) * clamp(r, 0, 1), 2);
   }

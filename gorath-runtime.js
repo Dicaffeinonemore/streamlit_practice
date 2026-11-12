@@ -1,5 +1,7 @@
 'use strict';
-const GORATH_GROUP=GameAssets.group(0,[GORATH_ART.atlas]);
+// 이전 고라스(boss1_old). 리메이크(gorath-remake-runtime.js)가 boss1 을 맡으면서 그림은 ?boss1=old 일 때만 불러온다.
+// 잡힘 규칙(GORATH_GRAB · GORATH_ESCAPE_KEYS)은 리메이크·소버린·1스테이지 적이 함께 쓴다.
+const GORATH_GROUP=GameAssets.group(new URLSearchParams(location.search).get('boss1')==='old'?0:'boss1_old',[GORATH_ART.atlas]);
 const GORATH_ATLAS=GORATH_GROUP.images[0];
 function gorathFrame(name,u=0,loop=false) {
   const fs=GORATH_ART.clips[name];
@@ -47,7 +49,7 @@ function paintGorath(f,x,y,face=1,alpha=1,scale=1) {
   drawLit(GORATH_ATLAS,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k);ctx.restore();return true;
 }
 function drawGorath(e) {
-  if(e.type!=='boss1'||!GORATH_ATLAS.naturalWidth)return false;
+  if(e.type!=='boss1_old'||!GORATH_ATLAS.naturalWidth)return false;
   drawShadow(e.x-camX,e.y,SPRITES.boss1.sh,e.z);
   ctx.save();
   if(e.flash>0&&UX.options.flash)flashGain=1.8;
@@ -71,7 +73,7 @@ function drawGorath(e) {
 function drawGorathHazards() {
   if(!GORATH_ATLAS.naturalWidth)return;
   for(const z of hazards) {
-    if(z.dead||z.owner?.type!=='boss1')continue;
+    if(z.dead||z.owner?.type!=='boss1_old')continue;
     if(z.type==='hook') {
       const o=z.owner,x=o.x+o.face*28,y=o.y-62,dx=z.x-x,dy=z.y-z.h-y;
       const f=gorathFrame('chain_tile'),[sx,sy,sw,sh]=f.atlas,k=GORATH_ART.scale,w=sw*k,h=sh*k,len=Math.hypot(dx,dy);
@@ -98,7 +100,7 @@ const GORATH_GRAB = { depth: 14, reach: 236, pullSpeed: 6, offset: 54, hold: 50,
 const GORATH_ESCAPE_KEYS = ['KeyJ','KeyZ','KeyA','KeyD','KeyW','KeyS','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
 function catchGorathHook(hook) {
   const p=player,o=hook.owner;
-  if(practice || !o || o.type!=='boss1' || o.st!=='pat' || o.pat!=='hook' || p.inv>0 ||
+  if(practice || !o || o.type!=='boss1_old' || o.st!=='pat' || o.pat!=='hook' || p.inv>0 ||
       ['dead','down','special','grabbed'].includes(p.st) || p.z>=32)return false;
   p.st='grabbed';p.t=0;p.grab={owner:o,hook,presses:0,hold:0,pull:0};
   p.vx=p.vz=p.z=0;p.skill=null;p.combo=p.comboT=p.buf=0;p.walk=false;p.wave=false;

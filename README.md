@@ -2,6 +2,10 @@
 
 > 원본 아트(약 560MiB)는 저장소에서 제외하고 각자 백업합니다. 게임 실행과 회귀 테스트에는 필요 없습니다. [원본 아트 관리](docs/source-assets.md)
 
+## v1.66 — 1스테이지 보스 고라스 리메이크 (2026-11-12)
+
+1스테이지 보스 고라스 리메이크(새 도트 스프라이트, 탁자 인트로, 2페이즈 변신, 궁극기 도살장의 비). 투기장 왼쪽 탁자에서 고기를 썰던 고라스가 탁자를 박살 내며 전투가 시작되고, 1페이즈 체력(385)을 다 깎으면 갑옷을 뜯어내고 체력·그로기를 가득 채운 2페이즈(420)로 변신합니다. 2페이즈 체력 35%·15%에서 무적 궁극기 "도살장의 비"로 천장의 고기를 떨어뜨립니다(바닥 경고 1.2초 뒤 착지). 그림은 `python tools/gorath_remake.py`로 다시 만들고(원본 `assets_src/gorath_remake/gorath/`, 확인용 `tools/out/scale_check.png`), 수치는 `gorath-remake-runtime.js` 맨 위에 모여 있습니다. 주소 옵션: `?section=5`(투기장에서 시작) · `?boss_phase=2` · `?boss_ult=1` · `?boss1=old`(이전 고라스). [v1.66 패치노트](patch_note/patch_1.66.txt).
+
 ## v1.65 — 소버린 뒷주먹 피격 버그 수정 (2026-11-10)
 
 소버린 보스전에서 몸 뒤에 떠 있는 주먹을 공격해도 피해가 들어가지 않던 문제를 고쳤습니다. 주먹 판정 높이를 25~75에서 25~90으로 넓혀 높이 100에 떠 있는 뒷주먹도 맞고, 몸 너머에 있는 주먹은 같이 맞되 몸을 가리지는 않습니다. [v1.65 패치노트](patch_note/patch_1.65.txt).
@@ -69,7 +73,7 @@
 `python server.py`로 로컬 실행하거나 `streamlit run server.py`로 실행합니다.
 Streamlit에서는 로컬 컴포넌트가 HTML·JavaScript·BGM을 파일별로 제공합니다. 같은 서버에서 불러오며 외부 CDN은 사용하지 않습니다. 배포 의존성은 `requirements.txt`로 고정했습니다.
 
-- 1스테이지: 도살자 고라스 — HP 700, `gorath-art.js` / `gorath-runtime.js`
+- 1스테이지: 도살자 고라스 — HP 385 → 변신 후 420, `gorath-remake-art.js` / `gorath-remake-runtime.js` (이전 고라스 HP 700: `gorath-art.js` / `gorath-runtime.js`, `?boss1=old`)
 - 2스테이지: 모르그라 — HP 850 → 부활 후 1,200, `morgra-art.js` / `morgra-runtime.js`
 - 3스테이지: 황금왕 아우렐리온 — HP 1,800 → 소진 후 2페이즈 HP 2,200으로 회복, `aurelion-art.js` / `aurelion-runtime.js`
 - 4스테이지: 바르굴, 얼어붙은 묘지왕 — HP 2,000 → 변신 후 2,500, `vargul-art.js` / `vargul-data.js` / `vargul-runtime.js`

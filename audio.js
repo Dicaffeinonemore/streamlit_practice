@@ -36,6 +36,7 @@
     setVolumes(musicVolume, sfxVolume);
     prepareBoss();
     prepareEnemyDeath();
+    prepareGorathHook();
     prepareViesaSkills();
     prepareBarelSamples();
   }
@@ -113,6 +114,13 @@
     victory() { [72, 76, 79, 84].forEach((n, i) => tone(mtof(n), 0.28, 'square', 0.12, { lp: 3200, d: i * 0.14 })); [72, 76, 79, 84].forEach(n => tone(mtof(n), 1.1, 'triangle', 0.12, { d: 0.62 })); tone(mtof(60), 1.2, 'sawtooth', 0.1, { lp: 900, d: 0.62 }); },
     defeat() { [67, 63, 60, 55].forEach((n, i) => tone(mtof(n), 0.4, 'sawtooth', 0.14, { lp: 1400, d: i * 0.28 })); tone(mtof(43), 1.4, 'sine', 0.3, { d: 1.0, f2: mtof(40) }); },
     click() { tone(900, 0.05, 'square', 0.06, { lp: 3000 }); },
+    // 도살자 고라스 리메이크: 탁자 칼질 / 포효 / 갑옷 삐걱임 / 무적 막힘 / 고기 착지 / 관중 함성
+    g2chop() { tone(190, 0.09, 'square', 0.3, { f2: 70, lp: 1300 }); nz(0.06, 0.4, 'bandpass', 1000, 320, { q: 1.1 }); },
+    g2roar() { tone(98, 1.0, 'sawtooth', 0.32, { f2: 52, lp: 720, a: 0.06 }); tone(146, 0.9, 'sawtooth', 0.18, { f2: 70, lp: 950, d: 0.04, a: 0.08 }); nz(1.0, 0.26, 'bandpass', 420, 170, { q: 0.8, a: 0.1 }); },
+    g2creak() { tone(520, 0.26, 'sawtooth', 0.09, { f2: 330, lp: 2400 }); tone(790, 0.2, 'square', 0.04, { f2: 600, lp: 3000, d: 0.05 }); nz(0.2, 0.08, 'bandpass', 2600, 1500, { q: 3 }); },
+    g2block() { tone(1900, 0.1, 'square', 0.07, { f2: 1500, lp: 5200 }); tone(2850, 0.13, 'triangle', 0.06, { f2: 2300 }); nz(0.045, 0.2, 'highpass', 5200, 3000); },
+    g2thud() { tone(88, 0.26, 'sine', 0.6, { f2: 36 }); nz(0.16, 0.36, 'lowpass', 620, 120); },
+    g2crowd() { nz(1.7, 0.3, 'bandpass', 900, 1500, { q: 0.5, a: 0.3 }); nz(1.5, 0.2, 'bandpass', 1900, 2600, { q: 0.7, a: 0.4, d: 0.1 }); nz(1.2, 0.12, 'bandpass', 500, 700, { q: 0.6, a: 0.3, d: 0.2 }); },
     mobdie() { nz(0.22, 0.4, 'lowpass', 2600, 200); tone(260, 0.28, 'square', 0.1, { f2: 60, lp: 1800 }); },
     barrel() { nz(0.18, 0.4, 'lowpass', 1600, 200); tone(180, 0.14, 'triangle', 0.2, { f2: 90 }); },
     pickup() { tone(mtof(79), 0.09, 'square', 0.1, { lp: 3200 }); tone(mtof(86), 0.16, 'square', 0.1, { lp: 3200, d: 0.07 }); },
@@ -131,6 +139,10 @@
       return;
     }
     if (name === 'mobdie' && playEnemyDeath()) return;
+    if (name === 'g2hook') {
+      if (playGorathHook()) return;
+      name = 'bwave';
+    }
     const f = SFX[name]; if (!f) return;
     AU.gm = GAIN[name] || 1; try { f(a); } catch (e) { /* 무시 */ } AU.gm = 1;
   }
@@ -180,6 +192,20 @@
   const decode = raw => new Promise((ok, fail) => {         // 콜백(구형 Safari)과 Promise 양쪽을 모두 받는다
     const p = AU.ctx.decodeAudioData(raw.slice(0), ok, fail); if (p && p.catch) p.catch(() => {});
   });
+  let gorathHookBuffer = null;
+  function prepareGorathHook() {
+    if (!global.GORATH_HOOK_SFX_URL) return;
+    fetch(global.GORATH_HOOK_SFX_URL).then(r => {
+      if (!r.ok) throw new Error('Gorath hook sample unavailable');
+      return r.arrayBuffer();
+    }).then(decode).then(buffer => { gorathHookBuffer = buffer; }).catch(() => {});
+  }
+  function playGorathHook() {
+    if (!gorathHookBuffer) return false;
+    const src = AU.ctx.createBufferSource(); src.buffer = gorathHookBuffer;
+    src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();
+    return true;
+  }
   // Embedded with the scripts so local, Streamlit and single-HTML builds use
   // the same sample. One buffer, independent sources for simultaneous kills.
   let enemyDeathBuffer = null, enemyDeathReady = null, enemyDeathOffset = 0;

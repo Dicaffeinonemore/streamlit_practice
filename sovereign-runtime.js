@@ -22,7 +22,7 @@ function sovData(e){
 function sovClip(e,name){return e.p2shown&&SOV_A.clips[name+'_p2']?name+'_p2':name;}
 function sovGap(e){const [a,b]=SOV_R.gaps[sovP2(e)];return SOV_R.attackDelay+Math.round(rand(a,b));}
 function sovereignIntroDuration(){return SOV_R.intro*MS;}
-function bossIntroDuration(e){return isSovereign(e)?sovereignIntroDuration(e):vargulIntroDuration(e);}
+function bossIntroDuration(e){return isGorath2(e)?gorath2IntroDuration():isSovereign(e)?sovereignIntroDuration(e):vargulIntroDuration(e);}
 function sovStanding(e){return !['stun','down','dead'].includes(e.st)&&!e.phaseT;}
 function sovActive(f){return ['home','job','return'].includes(f.st);}
 function sovWalling(f){return f.job?.id==='wall'&&f.job.stage!=='open';}
@@ -728,9 +728,10 @@ function sovPose(e){
   if(e.phaseT>0){const t=s.transAge;return t<R.kneelDown?range('kneel',1,6,t/R.kneelDown):seq('awaken',Math.min(.999,(t-R.kneelDown)/R.awaken));}
   if(e.st==='intro')return seq('intro',Math.min(.999,introT/MS/R.intro));
   if(e.st==='dead')return seq('death',Math.min(.999,e.t/R.death));
-  if(e.st==='stun'||e.st==='down'){
-    // kneel 1-6 going down, 7-10 groggy loop, 11-16 standing up.
-    const c=clip('kneel'),elapsed=e.t-s.downAt,left=(e.st==='stun'?GROGGY_TICKS:61)-e.t;
+  if(e.st==='stun')return {clip:clip('kneel'),drawing:7}; // 그로기 동안 같은 자세 유지
+  if(e.st==='down'){
+    // kneel 1-6 going down, 7-10 down loop, 11-16 standing up.
+    const c=clip('kneel'),elapsed=e.t-s.downAt,left=61-e.t;
     if(elapsed<24)return range(c,1,6,elapsed/24);
     if(left<24)return range(c,11,16,1-left/24);
     return loop(c,7,10,9);

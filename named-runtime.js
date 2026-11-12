@@ -39,7 +39,8 @@ function namedPlayerFrame() {
 function namedEnemyRole(e) {
   if(['grunt','rogue','archer','brute'].includes(e.type))return 'stage'+(stageIdx+1)+'_'+e.type;
   if(e.type==='boss2')return e.p2shown ? 'boss2p2' : null;
-  return ['boss1','boss3','boss4','boss5'].includes(e.type) ? e.type : null;
+  if(e.type==='boss1_old')return 'boss1';   // 이전 고라스. 리메이크(boss1)는 gorath-remake-runtime.js 가 그린다
+  return ['boss3','boss4','boss5'].includes(e.type) ? e.type : null;
 }
 function namedEnemyFrame(e) {
   const actor=namedEnemyRole(e); if(!actor)return null;

@@ -10,7 +10,7 @@ module.exports=async({evaluate,call,errors,root})=>{
   }
   assert.deepEqual(errors,[],'No console errors / browser exceptions');result.consoleErrors=errors;
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(result,null,2));
-  console.log('PASS All five bosses / both phases: standing groggy, foot-anchored sway,300ticks, damage x1.5, threshold down preserved');
+  console.log('PASS All five bosses / both phases: still groggy, 300 ticks, damage x1.5, threshold down preserved');
 };
 function trial(){
   const check=(v,m)=>{if(!v)throw Error(m);},result={cases:[],thresholds:[]};let e;
@@ -35,18 +35,20 @@ function trial(){
   for(const type of ['boss1','boss2','boss3','boss4','boss5'])for(const p2 of [false,true]){
     setup(type,p2);damageEnemy(e,10,false,0,true);
     check(e.st==='stun'&&e.t===0&&e.z===0,'Real groggy threshold enters standing stun');assertPose(type,p2);
-    const angle0=bossGroggySway(e),x=e.x,y=e.y,face=e.face;
-    const nativeRotate=ctx.rotate,nativeSave=ctx.save,nativeRestore=ctx.restore;let angles=[],balance=0;
-    ctx.rotate=function(a){angles.push(a);return nativeRotate.call(this,a);};
+    const x=e.x,y=e.y,face=e.face;
+    const nativeDraw=drawEnemyBody;let transforms=[];
+    drawEnemyBody=function(){const m=ctx.getTransform();transforms.push([m.a,m.b,m.c,m.d,m.e,m.f]);};
+    try{drawEnemy(e);e.t=12;drawEnemy(e);}finally{drawEnemyBody=nativeDraw;}
+    check(JSON.stringify(transforms[0])===JSON.stringify(transforms[1]),'Groggy wrapper leaves the canvas transform unchanged');
+    const nativeSave=ctx.save,nativeRestore=ctx.restore;let balance=0;
     ctx.save=function(){balance++;return nativeSave.call(this);};ctx.restore=function(){balance--;return nativeRestore.call(this);};
-    try{drawEnemy(e);e.t=12;drawEnemy(e);}finally{ctx.rotate=nativeRotate;ctx.save=nativeSave;ctx.restore=nativeRestore;}
-    check(angles.some(a=>Math.abs(a-angle0)<1e-10)&&angles.some(a=>Math.abs(a-angle0)>.01),'Sway is animated for every renderer');
+    try{drawEnemy(e);}finally{ctx.save=nativeSave;ctx.restore=nativeRestore;}
     check(balance===0&&e.x===x&&e.y===y&&e.z===0&&e.face===face,'Rendering preserves world position and canvas stack');
     e.t=0;chain.n=0;const hp=e.hp;damageEnemy(e,10,false);check(hp-e.hp===15&&e.st==='stun','Groggy x1.5 and state preserved');
     let ticks=0;
     while(e.st==='stun'&&ticks<350){updEnemy(e);ticks++;check(!e.invuln,'Groggy always vulnerable');}
     check(ticks===GROGGY_TICKS&&ticks===300&&e.st==='rec'&&e.gr===0,'Existing300-tick groggy recovery');
-    result.cases.push({type,phase:p2?2:1,duration:ticks,damage:15,swayAngles:angles,standing:true});
+    result.cases.push({type,phase:p2?2:1,duration:ticks,damage:15,standing:true});
     // Actual health threshold still uses down rather than the groggy animation.
     setup(type,p2);e.gr=0;e.nextKd=e.max*.75;e.hp=e.nextKd+1;damageEnemy(e,2,false,0,true);
     check(e.st==='down','Health threshold down unchanged');result.thresholds.push({type,phase:p2?2:1,state:e.st});
