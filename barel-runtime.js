@@ -117,13 +117,27 @@ function drawBarelPlayer() {
   }
   return true;
 }
+const BAREL_SKILL_ICONS = new Image();
+function drawBarelSkillSymbol(c,id) {
+  if(!BAREL_SKILL_ICONS.naturalWidth)return;
+  const g=c.getContext('2d'), w=BAREL_SKILL_ICONS.naturalWidth/2, h=BAREL_SKILL_ICONS.naturalHeight;
+  g.clearRect(0,0,c.width,c.height);
+  g.drawImage(BAREL_SKILL_ICONS,id==='thrust'?0:w,0,w,h,0,0,c.width,c.height);
+}
+BAREL_SKILL_ICONS.addEventListener('load',()=>{
+  document.querySelectorAll('.skillbtn[data-skill="thrust"] .skill-icon,.skillbtn[data-skill="redwave"] .skill-icon,.touch-skill[data-skill="thrust"] .skill-icon,.touch-skill[data-skill="redwave"] .skill-icon')
+    .forEach(c=>drawBarelSkillSymbol(c,c.parentElement.dataset.skill));
+});
+BAREL_SKILL_ICONS.src='assets/runtime/barel-skill-icons-blue.png';
 function setupBarelSkills() {
   const names={thrust:'slash',slam:'impact',whirl:'moon',leap:'lightning',redwave:'wave'};
   document.querySelectorAll('.skillbtn,.touch-skill').forEach(b=>{
     if(b.querySelector('.skill-icon'))return;
     const f=barelFrame(names[b.dataset.skill],.4),[x,y,w,h]=f.atlas;
     const c=document.createElement('canvas');c.width=c.height=96;c.className='skill-icon';c.setAttribute('aria-hidden','true');
-    c.getContext('2d').drawImage(BAREL_ATLAS,x,y,w,h,0,0,96,96);b.prepend(c);
+    c.getContext('2d').drawImage(BAREL_ATLAS,x,y,w,h,0,0,96,96);
+    if(b.dataset.skill==='thrust'||b.dataset.skill==='redwave') drawBarelSkillSymbol(c,b.dataset.skill);
+    b.prepend(c);
     const name=b.querySelector('.name');if(name)b.setAttribute('aria-label',name.textContent);
   });
 }

@@ -220,6 +220,7 @@
   #skillbar { left: 25.5%; top: 25.5%; bottom: auto; transform: none; padding: 0; gap: 0; border: 0; background: none; border-radius: 0; }
   #skillbar .skillbtn { width: 3cqw; height: auto; aspect-ratio: 140 / 243; min-width: 0; min-height: 0; max-width: none; max-height: none; margin: 0 -.17cqw 0 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background-color: transparent; background-size: 100% 100%; image-rendering: pixelated; overflow: visible; }
   #skillbar .skillbtn .skill-icon { display: none; }
+  body:not(.viesa-player) #skillbar .skillbtn:is([data-skill="thrust"], [data-skill="redwave"]) .skill-icon { display: block; inset: 26% 15% 23% 16%; width: 69%; height: 51%; }
   #skillbar .skillbtn .key { top: 29%; left: 22%; padding: 0; background: none; color: #ffda43; font-size: clamp(5px,.65cqw,10px); text-shadow: 2px 2px #000; }
   #skillbar .skillbtn .cool { inset: 25% 14% 22% 16%; }
   #skillbar .skillbtn::after { font-size: clamp(6px,1cqw,14px); inset: 25% 14% 22% 16%; }
