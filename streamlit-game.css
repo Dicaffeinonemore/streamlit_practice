@@ -1,0 +1,24 @@
+/* Scope game sizing to its keyed container; keep the asset-review screen usable. */
+.st-key-game_host iframe {
+  display: block; margin: 0 auto; border: 0;
+  width: min(100%, calc((100vh - 130px) * 16 / 9)) !important;
+  height: auto !important; aspect-ratio: 16 / 9;
+}
+@media (max-width: 1024px) and (pointer: coarse) {
+  .st-key-game_host {
+    position: fixed !important; inset: 0 !important; z-index: 1000;
+    width: 100vw !important; max-width: none !important;
+    height: 100vh !important; height: 100dvh !important;
+    margin: 0 !important; padding: 0 !important; background: #0b0b14;
+  }
+  .st-key-game_host iframe {
+    position: fixed !important; inset: 0 !important;
+    width: 100vw !important; height: 100vh !important; height: 100dvh !important;
+    max-width: none !important; margin: 0 !important; aspect-ratio: auto !important;
+  }
+  body:has(.st-key-game_host) { overflow: hidden; }
+  body:has(.st-key-game_host) [data-testid="stHeader"],
+  body:has(.st-key-game_host) .st-key-game_navigation,
+  body:has(.st-key-game_host) .st-key-game_help,
+  body:has(.st-key-game_host) .st-key-game_footer { display: none !important; }
+}

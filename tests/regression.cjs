@@ -523,6 +523,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       }
       assert.deepEqual(errors,[]);console.log('PASS updated mobile skill icons in local and embedded builds');return;
     }
+    if(process.env.STREAMLIT_MOBILE_SUITE){await require('./streamlit-mobile.cjs')({evaluate,call,root});return;}
     if(process.env.MINI_DISPLAY_SUITE){await require('./mini-display.cjs')({evaluate,call,errors,root,base,ready});return;}
     if(process.env.TOUCH_SETTINGS_SUITE){
       for(const page of ['index.html','embedded.html']){

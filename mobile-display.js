@@ -28,7 +28,13 @@ const MOBILE_DISPLAY = (() => {
     return Math.abs(sides[0]-profile.height)<=1 && Math.abs(sides[1]-profile.width)<=1;
   }
   function apply() {
-    const active = matches() && innerWidth > innerHeight;
+    // A 16:9 embedded game can be landscape while the phone itself is portrait.
+    let landscape = innerWidth > innerHeight;
+    if (window.top !== window) {
+      try { landscape = window.top.innerWidth > window.top.innerHeight; }
+      catch { landscape = screen.orientation?.type?.startsWith('landscape') ?? Math.abs(window.orientation || 0) === 90; }
+    }
+    const active = matches() && landscape;
     document.documentElement.classList.toggle('mini-landscape', active);
     for (const [side,value] of Object.entries(profile.insets)) {
       const key='--game-safe-'+side;

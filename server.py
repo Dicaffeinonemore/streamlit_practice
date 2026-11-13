@@ -309,24 +309,24 @@ def run_streamlit():
         "<style>.block-container,.stMainBlockContainer{padding:1rem .5rem .5rem;max-width:100%}</style>",
         unsafe_allow_html=True,
     )
-    review = st.radio("화면", ["게임", "원본 스프라이트 검수"], horizontal=True) == "원본 스프라이트 검수"
+    with st.container(key="game_navigation"):
+        review = st.radio("화면", ["게임", "원본 스프라이트 검수"], horizontal=True) == "원본 스프라이트 검수"
     if not review:
-        st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
-        # iframe 을 브라우저 크기에 맞춰 16:9 로 확대한다. 너비는 가로폭과 (화면 높이 - 상단 UI) 중 작은 쪽.
-        # 캔버스 내부 해상도(960x540)는 그대로이고, index.html 의 #wrap 이 CSS 로만 늘어나므로 판정 좌표는 변하지 않는다.
-        st.markdown(
-            "<style>.block-container iframe,.stMainBlockContainer iframe{display:block;margin:0 auto;"
-            "width:min(100%,calc((100vh - 130px)*16/9))!important;height:auto!important;aspect-ratio:16/9}</style>",
-            unsafe_allow_html=True,
-        )
+        with st.container(key="game_help"):
+            st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
+        # The parent iframe must fill the mobile browser, not just the game canvas.
+        css = (ROOT / "streamlit-game.css").read_text(encoding="utf-8")
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     # Component files are streamed via HTTP, rather than serializing ~177 MB of HTML.
     import streamlit.components.v1 as components
 
     directory = prepare_streamlit_component(review)
     height = 1000 if review else 680
     component = components.declare_component("black_moon_reference" if review else "black_moon_game", path=str(directory))
-    component(height=height, key="reference" if review else "game", default=None)
-    st.caption("v1.66 · 1스테이지 보스 고라스 리메이크")
+    with st.container(key="reference_host" if review else "game_host"):
+        component(height=height, key="reference" if review else "game", default=None)
+    with st.container(key="game_footer"):
+        st.caption("v1.66 · 1스테이지 보스 고라스 리메이크")
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
