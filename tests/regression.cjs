@@ -501,6 +501,27 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.SOVEREIGN_MOTION_SUITE){await ready(base+'/embedded.html');await require('./sovereign-motion.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_INTRO_HUD_SUITE){await ready(base+'/embedded.html');await require('./boss-intro-hud.cjs')({evaluate,call,errors,root});return;}
     if(process.env.ENEMY_UI_SUITE){await ready(base+'/embedded.html');await require('./enemy-ui.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.MOBILE_SKILL_ICONS_SUITE){
+      for(const page of ['index.html','embedded.html']){
+        await ready(base+'/'+page);
+        await evaluate(`(async()=>{
+          await Promise.all([BAREL_ATLAS.decode(),BAREL_SKILL_ICONS.decode()]);
+          setupBarelSkills();syncPlayerCharacterUI('barel');
+          UX.options.touch=true;document.body.classList.add('touch');
+        })()`);
+        assert.equal(await evaluate(`(()=>{
+          return ['thrust','redwave'].every(id=>{
+            const mobile=document.querySelector('#touchPad [data-skill="'+id+'"] .skill-icon');
+            const desktop=document.querySelector('#skillbar [data-skill="'+id+'"] .skill-icon');
+            const expected=document.createElement('canvas');expected.width=expected.height=96;
+            const w=BAREL_SKILL_ICONS.naturalWidth/2,h=BAREL_SKILL_ICONS.naturalHeight;
+            expected.getContext('2d').drawImage(BAREL_SKILL_ICONS,id==='thrust'?0:w,0,w,h,0,0,96,96);
+            return getComputedStyle(mobile).display!=='none'&&mobile.toDataURL()===expected.toDataURL()&&desktop.toDataURL()===expected.toDataURL();
+          });
+        })()`),true,page+': mobile and desktop use the updated icon pixels');
+      }
+      assert.deepEqual(errors,[]);console.log('PASS updated mobile skill icons in local and embedded builds');return;
+    }
     if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./pixel-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}

@@ -128,7 +128,7 @@ BAREL_SKILL_ICONS.addEventListener('load',()=>{
   document.querySelectorAll('.skillbtn[data-skill="thrust"] .skill-icon,.skillbtn[data-skill="redwave"] .skill-icon,.touch-skill[data-skill="thrust"] .skill-icon,.touch-skill[data-skill="redwave"] .skill-icon')
     .forEach(c=>drawBarelSkillSymbol(c,c.parentElement.dataset.skill));
 });
-BAREL_SKILL_ICONS.src='assets/runtime/barel-skill-icons-blue.png';
+BAREL_SKILL_ICONS.src='assets/runtime/d878bfe05a598bfba82323c9.png';
 function setupBarelSkills() {
   const names={thrust:'slash',slam:'impact',whirl:'moon',leap:'lightning',redwave:'wave'};
   document.querySelectorAll('.skillbtn,.touch-skill').forEach(b=>{
