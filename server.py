@@ -54,6 +54,8 @@ def embed_boss_bgm(html: str) -> str:
 def build_single_html() -> str:
     """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
     html = embed_boss_bgm((ROOT / "index.html").read_text(encoding="utf-8"))
+    # The developer lab needs its sibling files and a same-origin game iframe.
+    html = re.sub(r'<a id="mobileLabLink"[^>]*>.*?</a>', '', html)
     # 실제 HTML의 연결 순서가 기준이다. 오래된 목록에만 남은 파일을 읽지 않는다.
     def inline_script(match: re.Match) -> str:
         name = match.group(2)
@@ -187,6 +189,7 @@ def prepare_streamlit_component(review: bool = False) -> Path:
         html = embed_boss_bgm(html)
         html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
     if not review:
+        files.update({"mobile-lab.html", "mobile-lab.css", "mobile-lab.js"})
         manifest = ROOT / "data/runtime-assets.json"
         if manifest.is_file():
             files.update(json.loads(manifest.read_text(encoding="utf-8")))

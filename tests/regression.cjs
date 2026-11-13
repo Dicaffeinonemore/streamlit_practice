@@ -17,7 +17,7 @@ const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></
   const source=fs.readFileSync(path.join(root,name),'utf8').replace(/assets\/runtime\/[a-f0-9]+\.(png|webp|gif|jpg)/g,(asset,ext)=>'data:image/'+(ext==='jpg'?'jpeg':ext)+';base64,'+fs.readFileSync(path.join(root,asset)).toString('base64'));
   return `<script>\n${source}\n</script>`;
 }), embeddedSource);
-const allowed = new Set(['index.html', ...scripts]);
+const allowed = new Set(['index.html', 'mobile-lab.html', 'mobile-lab.css', 'mobile-lab.js', ...scripts]);
 for (const name of JSON.parse(fs.readFileSync(path.join(root, 'data/runtime-assets.json'), 'utf8'))) allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-revised-10/barel-walk-revised-10.animation.json','assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.json','assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.png'])allowed.add(name);
@@ -36,12 +36,13 @@ for(const name of ['assets/aseprite/barel-combo0-10/barel-combo0-10.animation.js
 // v1.42~v1.51 바렐 모션(대시 찌르기·피격·넉다운·새 점프): 없으면 테스트 안에서만 옛 모션·판정 없음으로 떨어진다
 for(const name of ['barel-dash-attack-10','barel-hurt-12','barel-knockdown-getup-design-10','barel-jump-revised-10'])for(const file of [`assets/aseprite/${name}/${name}.animation.json`,`assets/aseprite/exports/${name}/${name}.json`,`assets/aseprite/exports/${name}/${name}.png`])allowed.add(file);
 const server = http.createServer((req, res) => {
-  const name = req.url === '/' ? 'index.html' : req.url.slice(1);
+  const pathname = req.url.split('?')[0];
+  const name = pathname === '/' ? 'index.html' : pathname.slice(1);
   if(name==='favicon.ico'){res.writeHead(204).end();return;}
   if(name==='assets/bgm/boss.mp3'&&fs.existsSync(bgmPath)){res.setHeader('Content-Type','audio/mpeg');res.end(fs.readFileSync(bgmPath));return;}
   if(name==='production.html'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(embedded.replace('<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>',''));return;}
   if (name !== 'embedded.html' && !allowed.has(name)) { res.writeHead(404).end(); return; }
-  res.setHeader('Content-Type', name.endsWith('.js') ? 'text/javascript; charset=utf-8' : name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8');
+  res.setHeader('Content-Type', name.endsWith('.css') ? 'text/css' : name.endsWith('.js') ? 'text/javascript; charset=utf-8' : name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8');
   res.end(name === 'embedded.html' ? embedded : (name==='index.html'?html:fs.readFileSync(path.join(root, name))));
 });
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-test-'));
@@ -522,6 +523,30 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       }
       assert.deepEqual(errors,[]);console.log('PASS updated mobile skill icons in local and embedded builds');return;
     }
+    if(process.env.MINI_DISPLAY_SUITE){await require('./mini-display.cjs')({evaluate,call,errors,root,base,ready});return;}
+    if(process.env.TOUCH_SETTINGS_SUITE){
+      for(const page of ['index.html','embedded.html']){
+        await ready(base+'/'+page);
+        assert.equal(await evaluate(`(()=>{
+          requestAnimationFrame=()=>0;AUDIO.enable(false);beginGame();scene='play';UX.options.touch=true;showScreen(null);
+          if($('touchControls').hidden)return false;
+          inputDown('KeyJ');openSettings('play');
+          if(!$('touchControls').hidden||keys.KeyJ)return false;
+          const attack=document.querySelector('#touchPad [data-control="KeyJ"]');
+          attack.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:23}));
+          if(keys.KeyJ)return false;
+          for(const enabled of [false,true]){$('touchEnabled').checked=enabled;$('touchEnabled').onchange();if(!$('touchControls').hidden)return false;}
+          $('btnTouchEdit').click();
+          if($('touchControls').hidden||!UX.touchEditing||$('settings').classList.contains('show'))return false;
+          UX.endTouchEdit();
+          if(!$('touchControls').hidden||!$('settings').classList.contains('show'))return false;
+          closeSettings();syncTouchControls();
+          return !$('touchControls').hidden&&scene==='play';
+        })()`),true,page+': settings hides and disables touch controls except layout editing');
+      }
+      assert.deepEqual(errors,[]);console.log('PASS touch settings visibility, cleared inputs, editing exception and gameplay restoration');return;
+    }
+    if(process.env.MOBILE_LAB_SUITE){await require('./mobile-lab.cjs')({evaluate,call,errors,root,base});return;}
     if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./pixel-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}
@@ -689,9 +714,10 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('openSettings("pause");$("touchEnabled").checked=false;$("touchEnabled").onchange()');
     assert.equal(await evaluate('$("touchControls").hidden'), true);
     await evaluate('$("touchEnabled").checked=true;$("touchEnabled").onchange()');
-    assert.equal(await evaluate('!$("touchControls").hidden && $("touchControls").classList.contains("preview")'), true);
+    assert.equal(await evaluate('$("touchControls").hidden'), true);
     await evaluate('closeSettings();scene="play";showScreen(null)');
-    console.log('PASS Mobile keys appear immediately when enabled in settings');
+    assert.equal(await evaluate('$("touchControls").hidden'), false);
+    console.log('PASS Mobile keys remain hidden in settings and return during gameplay');
     await evaluate('openSettings("pause");$("btnTouchEdit").click()');
     assert.equal(await evaluate('$("touchControls").classList.contains("editing") && !$("settings").classList.contains("show") && !$("touchEditBar").hidden'), true);
     const atk0 = await evaluate('(()=>{const r=document.querySelector("[data-control=KeyJ]").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,w:r.width};})()');
@@ -706,7 +732,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await screenshot('touch-edit');
     await evaluate('openSettings("pause")');
     await evaluate('const b=document.querySelector("[data-control=KeyO]");b.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,pointerId:9}));document.querySelector("[data-edit=hide]").click();document.querySelector("[data-edit=done]").click()');
-    assert.equal(await evaluate('!$("touchControls").classList.contains("editing") && $("settings").classList.contains("show")'), true);
+    assert.equal(await evaluate('$("touchControls").hidden && !$("touchControls").classList.contains("editing") && $("settings").classList.contains("show")'), true);
     const savedLayout = await evaluate('JSON.parse(localStorage.getItem("bmk_settings")).touchLayout');
     assert(savedLayout.items.KeyJ.k === 1.2 && savedLayout.items.KeyO.hide === true, JSON.stringify(savedLayout));
     {

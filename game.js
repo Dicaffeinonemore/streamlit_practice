@@ -328,13 +328,13 @@ function showScreen(id) {
   screens.forEach(s => $(s).classList.toggle('show', s === id));
   $('skillbar').hidden = !!id; $('playPause').hidden = !!id;
   $('practiceGuide').hidden = !!id || !practice;
-  syncTouchControls(id === 'settings' || (!id && scene === 'play'), id === 'settings');
+  syncTouchControls(!id && scene === 'play');
 }
-// 모바일 키: 플레이 중에 표시하고, 설정 화면에서는 켜자마자 미리보기로 보여준다.
-function syncTouchControls(show = scene === 'play' || scene === 'settings', preview = scene === 'settings') {
+// 설정 메뉴를 가리지 않도록 플레이 또는 명시적인 키 배치 편집 중에만 표시한다.
+function syncTouchControls(show = scene === 'play') {
   const editing = UX.touchEditing;              // 배치 편집 중에는 끈 상태여도 보여 준다
   $('touchControls').hidden = !editing && (!UX.options.touch || !show);
-  $('touchControls').classList.toggle('preview', preview && !editing);
+  $('touchControls').classList.remove('preview');
   $('touchControls').classList.toggle('editing', editing);
 }
 

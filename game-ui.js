@@ -9,15 +9,18 @@ const UX = (() => {
   const validKey = k => typeof k === 'string' && (/^Key[A-Z]$/.test(k) || /^Digit[0-9]$/.test(k) || ['Space', 'ShiftLeft', 'ShiftRight'].includes(k)) && !reserved.has(k);
   const number = (v, a, b) => typeof v === 'number' && Number.isFinite(v) && v >= a && v <= b;
   let available = true, capture = null;
-  function read(key) { try { return JSON.parse(localStorage.getItem('bmk_' + key)); } catch { return null; } }
+  const storagePrefix = new URLSearchParams(location.search).get('mobile_lab') === '1' ? 'bmk_lab_' : 'bmk_';
+  function read(key) { try { return JSON.parse(localStorage.getItem(storagePrefix + key)); } catch { return null; } }
   function write(key, value) {
-    try { if (value === null) localStorage.removeItem('bmk_' + key); else localStorage.setItem('bmk_' + key, JSON.stringify(value)); }
+    try { if (value === null) localStorage.removeItem(storagePrefix + key); else localStorage.setItem(storagePrefix + key, JSON.stringify(value)); }
     catch { available = false; }
     refreshTitle();
   }
   // 모바일 키 배치: 투명도·전체 크기, 키별 위치(--u 단위 오프셋)·크기·숨김. 화면 회전에도 비율이 유지된다.
   const TOUCH_IDS = ['stick', 'KeyJ', 'Space', 'ShiftLeft', 'KeyI', 'KeyK', 'KeyU', 'KeyH', 'KeyO', 'KeyP', 'KeyL'];
-  const layoutDefaults = () => ({ alpha: .55, scale: 1, items: {} });
+  const layoutDefaults = () => typeof MOBILE_DISPLAY !== 'undefined' && MOBILE_DISPLAY.matches()
+    ? JSON.parse(JSON.stringify(MOBILE_DISPLAY.profile.layout))
+    : { alpha: .55, scale: 1, items: {} };
   function validLayout(l) {
     const out = layoutDefaults();
     if (!l || typeof l !== 'object') return out;
@@ -278,7 +281,8 @@ const UX = (() => {
     AUDIO.onBossInfo(() => showBgm()); showBgm();
     applySettings(); bindingButtons(); refreshTitle();
   }
-  return { options, keyName, mapKey, checkpoint, records, record, mount, refreshTitle, clearTouch, endTouchEdit, refreshBindings:bindingButtons,
+  return { options, keyName, mapKey, checkpoint, records, record, mount, refreshTitle, clearTouch, startTouchEdit, endTouchEdit, refreshBindings:bindingButtons,
+    setTouchLayout: layout => { options.touchLayout = validLayout(layout); applyTouchLayout(); },
     get touchEditing() { return editing; },
     saveCheckpoint: c => write('checkpoint', c && { ...c, version: 1 }), cancelCapture: () => { capture = null; } };
 })();
