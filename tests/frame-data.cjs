@@ -12,9 +12,9 @@ module.exports=async({evaluate,errors,root})=>{
     assert.equal(r.hits.length,3,`${r.enemy}/${r.input}: 3타가 모두 맞아야 함`);
     for(const g of r.links)assert.ok(g.margin>=0,`${r.enemy}/${r.input}: ${g.from}→${g.to} 사이에 경직이 풀림 (${JSON.stringify(g)})`);
   }
-  for(const r of result.untouched)assert.equal(r.measured,r.expected,`${r.case}: 표에 없는 공격의 경직은 기존 값 유지`);
+  for(const r of result.untouched)assert.equal(r.measured,r.expected,`${r.case}: 표에 없는 공격의 경직 = 기본 26 + light 등급 8 (1.67)`);
   const fast=result.chains.filter(r=>r.input==='fast').flatMap(r=>r.links.map(g=>g.margin));
-  console.log(`PASS Barel 3-hit chain stays in hitstun on ${[...new Set(result.chains.map(r=>r.enemy))].join(', ')} (fast-input margins ${[...new Set(fast)].join('/')} ticks, late input included); other attacks keep 18-tick hurt`);
+  console.log(`PASS Barel 3-hit chain stays in hitstun on ${[...new Set(result.chains.map(r=>r.enemy))].join(', ')} (fast-input margins ${[...new Set(fast)].join('/')} ticks, late input included); other attacks get 26+8=34-tick hurt (1.67)`);
 };
 function trial(){
   const ceil=v=>Math.ceil(v-1e-9);
@@ -25,7 +25,7 @@ function trial(){
     table[id]={name:A.name,windMs:A.wind,actMs:A.act,recMs:A.rec,totalMs:hitAt+A.rec,
       firstHitTick:ceil((A.wind+A.act*.35)/MS),lastHitTick:ceil((hitAt+30)/MS)-1,
       linkTick:ceil((hitAt+A.rec*.45)/MS),endTick:ceil((hitAt+A.rec)/MS),
-      damage:A.dmg,hitstop:Math.max(A.stop,A.kd?6:3),knockdown:!!A.kd,hitstun:A.kd?null:enemyHitstun({type:'grunt'},id)};
+      damage:A.dmg,hitstop:Math.max(A.stop,hitTier(id,A.kd,0).hitstop),knockdown:!!A.kd,hitstun:A.kd?null:enemyHitstun({type:'grunt'},id)};
   }
   function setup(type){
     clearInput();practice=false;player=newPlayer();startStage(0);scene='play';showScreen(null);
@@ -56,10 +56,10 @@ function trial(){
   }
   const chains=[];
   for(const type of ['grunt','rogue','brute'])for(const input of ['fast','late'])chains.push(chain(type,input));
-  // 표에 없는 공격(비에사·스킬 등)은 기존 18틱 그대로인지
+  // 표에 없는 공격(비에사·스킬 등): 기본 26틱 + light 등급 보너스 8틱 (1.67, 옛 값 18)
   const untouched=[];
   for(const [name,args] of [['id 없는 공격',[undefined]],['스킬/투사체',[null]]]){
-    const e=setup('grunt');damageEnemy(e,1,false,0,false,...args);untouched.push({case:name,measured:e.hurtT,expected:18});
+    const e=setup('grunt');damageEnemy(e,1,false,0,false,...args);untouched.push({case:name,measured:e.hurtT,expected:34});
   }
   return {table,chains,untouched,data:COMBAT_FRAME_DATA};
 }

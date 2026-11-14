@@ -495,6 +495,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.MORGRA_DEATH_SUITE){await ready(base+'/embedded.html');await require('./morgra-death.cjs')({evaluate,call,errors,root});return;}
     if(process.env.DEATH_FADE_SUITE){await ready(base+'/embedded.html');await require('./death-fade.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_FIXES_SUITE){await ready(base+'/embedded.html');await require('./viesa-fixes.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.CONTROLS_DEMO_SUITE){await ready(base+'/embedded.html');await require('./controls-demo.cjs')({evaluate,call,errors,root,base,ready});return;}
     if(process.env.CHARACTER_SELECT_SUITE){await ready(base+'/embedded.html');await require('./character-select.cjs')({evaluate,call,errors,root});return;}
     if(process.env.FRAME_DATA_SUITE){await ready(base+'/index.html');await require('./frame-data.cjs')({evaluate,call,errors,root});return;}
     if(process.env.COMBAT_UPDATE_SUITE){await ready(base+'/embedded.html');await require('./combat-update.cjs')({evaluate,call,errors,root});return;}

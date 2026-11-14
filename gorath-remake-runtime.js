@@ -53,7 +53,7 @@ const G2_MOVES = {
             hits: [{ dmg: G2_BASE.slam * .6, slam: 7, link: .4 }, { dmg: G2_BASE.slam, kd: true, slam: 12, link: .6 }] },
   punch:  { clip: 'p2_punch', name: '갈고리 주먹', range: 96, len: [4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5], warnTo: 6,
             hits: [{ dmg: G2_BASE.slam * .7 }] },
-  charge: { clip: 'p2_charge', name: '황소 돌진', range: 300, len: [6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8], warnTo: 5, step: { f: [6, 12], px: G2_BASE.rushPx * 1.3 }, dust: true, ghost: true,
+  charge: { clip: 'p2_charge', name: '황소 돌진', range: 300, len: [6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8], warnTo: 5, step: { f: [6, 12], px: G2_BASE.rushPx * 1.3 }, dust: true, ghost: true, sound: 'g2charge',
             hits: [{ dmg: G2_BASE.rush * 1.2, kd: true }] },
   hook2:  { clip: 'p2_hook', name: '갈고리 던지기', range: 330, len: [4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3], warnTo: 8, hook: true, pull: 'p2_hook_pull', pullTpf: 6, link: 'dchop' },
 };
@@ -286,7 +286,7 @@ function g2RunMove(e, g, a) {
   if (fn <= m.warnTo && !a.linked) e.y += clamp(p.y - e.y, -1.3, 1.3);   // 예고 중 깊이 맞추기
   if (m.step && fn >= m.step.f[0] && fn <= m.step.f[1]) {
     const ticks = m.len.slice(m.step.f[0] - 1, m.step.f[1]).reduce((s, v) => s + v, 0);
-    if (first && fn === m.step.f[0]) sfx(m.dust ? 'bcharge' : 'bswing');
+    if (first && fn === m.step.f[0]) sfx(m.sound || (m.dust ? 'bcharge' : 'bswing'));   // 돌진 시작음 (황소 돌진은 전용 MP3)
     e.x += f * m.step.px / ticks;
     if (m.dust && a.t % 5 === 0) g2Dust(e.x - f * 30, e.y, 2);
     if (m.ghost && a.t % 3 === 0) ghosts.push({ x: e.x, y: e.y, z: 0, id: 'boss1', face: f, life: 240, age: 0, g2: [g.clip, g.fi] });

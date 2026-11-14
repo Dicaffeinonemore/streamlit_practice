@@ -9,7 +9,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 folder = root / 'assets/sfx/barel'
 folder.mkdir(parents=True, exist_ok=True)
-names = {'swordHit': ('sword-hit.mp3', '바렐 검 타격.mp3'),
+names = {'swordHit': ('sword-hit.mp3', '피격음.mp3'),
          'barelWave': ('wave.mp3', '바렐 장풍 공격.mp3'),
          'barelFinalHit': ('special-final-hit.mp3', '흑월참 마지막 일격.mp3'),
          'hurt': ('hurt.mp3', '피격 사운드.mp3'),

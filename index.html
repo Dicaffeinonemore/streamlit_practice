@@ -110,6 +110,69 @@
   .setting-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 10px 0; border-bottom: 1px solid #393045; }
   .setting-row input[type=range] { width: 160px; }
   #bindings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 24px; }
+  #bindings.locked .btn:disabled { opacity: 1; cursor: default; color: #e9dfe6; }
+  #bindings .btn.capturing { background: #6a4a10 !important; border-color: #ffd23f !important; }
+  .kb-row { border-left: 4px solid var(--kc, transparent); padding-left: 8px; }
+  .keys-title { margin: 18px 0 6px; color: #e6d6d0; font-size: 18px; }
+  .preset-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .preset { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 10px 8px; cursor: pointer; text-align: left;
+    border: 1px solid #5a4a62; border-radius: 6px; background: #1a1322; color: #e9dfe6; font: inherit; }
+  .preset small { color: #a998b4; font-size: 12px; }
+  .preset em { position: absolute; top: -8px; right: 6px; padding: 0 6px; font: bold 11px sans-serif; font-style: normal; color: #221; background: #ffd23f; border-radius: 3px; }
+  .preset.on { border-color: #ffd23f; background: #3a2a14; box-shadow: inset 0 0 0 1px #ffd23f; }
+  #customTools { justify-content: flex-start; align-items: center; font-size: 14px; padding: 6px 0; }
+  /* 키보드 그림: 키마다 실제 키 이름 + 맡은 동작. 동작 종류별 색 */
+  .kbd { position: relative; width: 100%; aspect-ratio: 15.75 / 5; margin: 8px auto; container-type: inline-size; user-select: none; }
+  .kb-key { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: .5cqi .6cqi;
+    border: 1px solid #4a4256; border-bottom-width: .6cqi; border-radius: .9cqi; background: #1b1722; color: #8f8699; transition: transform .08s; overflow: hidden; }
+  .kb-cap { font: bold 1.5cqi sans-serif; line-height: 1; }
+  .kb-act { font: bold 1.35cqi sans-serif; line-height: 1.05; color: #fff; text-align: center; word-break: keep-all; letter-spacing: -.04em; }
+  .kb-move, .kb-row.kb-move { --kc: #3a74d8; } .kb-jump, .kb-row.kb-jump { --kc: #2f9e5b; } .kb-attack, .kb-row.kb-attack { --kc: #c8323c; }
+  .kb-dash, .kb-row.kb-dash { --kc: #1d9fa6; } .kb-special, .kb-row.kb-special { --kc: #d9a514; } .kb-magic, .kb-row.kb-magic { --kc: #8352d8; }
+  .kb-skill, .kb-row.kb-skill { --kc: #d9661c; } .kb-system { --kc: #5d5668; }
+  .kb-key.kb-k { background: color-mix(in srgb, var(--kc) 55%, #120e16); border-color: var(--kc); color: #f1ecf4; }
+  .kb-key.kb-alias { background: #1b1722; border-style: dashed; }
+  .kb-key.kb-alias .kb-act { color: color-mix(in srgb, var(--kc) 70%, #fff); }
+  .kb-key.kb-dim { opacity: .28; }
+  .kb-key.kb-on { transform: translateY(.4cqi); border-bottom-width: .2cqi; background: #ffd23f; color: #221; }
+  .kb-key.kb-on .kb-act { color: #221; }
+  #settingsKeyboard .kb-key { cursor: pointer; }
+  .kb-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; font-size: 12px; color: #cfc4d6; }
+  .kb-legend i { font-style: normal; display: inline-flex; align-items: center; gap: 4px; }
+  .kb-legend i::before { content: ''; width: 12px; height: 12px; border-radius: 2px; background: var(--kc); }
+  .kb-legend i.kb-alias::before { background: none; border: 1px dashed #b9a9c4; }
+  /* 조작 안내: 시범 플레이 화면(왼쪽) + 설명·키보드(오른쪽), 아래에 동작 목록 */
+  /* 크기는 게임 화면(#wrap) 비율 단위(cqw)로 잡아 큰 모니터에서도 화면을 꽉 채운다 */
+  #tutorial { padding: 1.4cqw 2cqw; gap: 1cqw; }
+  #tutorial h2 { font-size: clamp(22px, 2.6cqw, 80px); }
+  #tutorial h2 small { margin-left: .6em; font: bold clamp(12px, 1cqw, 30px) sans-serif; color: #b9a9c4; vertical-align: middle; }
+  #tutorial .dialog-body > * { max-width: 94cqw; margin-left: auto; margin-right: auto; }
+  #tutorial .tips { font-size: clamp(13px, 1.05cqw, 30px); }
+  #tutorial .actions .btn { font-size: clamp(13px, 1.5cqw, 44px); padding: .7cqw 2.2cqw; }
+  .demo-wrap { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.4cqw; align-items: start; }
+  .demo-view { position: relative; border: 1px solid #62505e; background: #000; line-height: 0; }
+  #demoView { width: 100%; height: auto; aspect-ratio: 16 / 9; image-rendering: pixelated; }
+  .demo-caption { position: absolute; left: 0; right: 0; bottom: .4cqw; display: flex; align-items: center; gap: .8cqw; padding: .6cqw 1cqw; line-height: 1.2;
+    background: linear-gradient(transparent, #000c 40%); }
+  #demoStep { font: bold clamp(11px, 1.1cqw, 32px) sans-serif; color: #b9a9c4; }
+  #demoTitle { font-size: clamp(14px, 2.2cqw, 64px); color: #ffe27a; }
+  .demo-keys { display: inline-flex; align-items: center; gap: .4cqw; margin-left: auto; }
+  .demo-progress { position: absolute; left: 0; right: 0; bottom: 0; height: max(4px, .35cqw); background: #ffffff22; }
+  .demo-progress i { display: block; width: 0; height: 100%; background: #ffd23f; }
+  .demo-side p { margin: 0 0 1cqw; line-height: 1.6; color: #e9dfe6; min-height: 4.8em; font-size: clamp(14px, 1.45cqw, 42px); }
+  .demo-side .kbd { margin: .4cqw 0 1cqw; }
+  .demo-nav { display: flex; gap: .6cqw; justify-content: center; }
+  .demo-nav .btn { padding: .5cqw 1.2cqw; font-size: clamp(13px, 1.3cqw, 38px); }
+  .demo-list { display: flex; flex-wrap: wrap; gap: .5cqw; padding: 1cqw 0 .4cqw; }
+  .demo-chip { display: inline-flex; align-items: center; gap: .35cqw; padding: .3cqw .7cqw; cursor: pointer; border: 1px solid #4a4256; border-radius: 4px;
+    background: #17121e; color: #d9cfe0; font-family: inherit; font-size: clamp(13px, 1.15cqw, 34px); }
+  .demo-chip b { font-weight: normal; margin-right: .15em; }
+  .demo-chip.on { border-color: #ffd23f; background: #3a2a14; color: #fff; }
+  .demo-chip .cap, .demo-keys .cap { min-width: clamp(20px, 1.9cqw, 56px); height: clamp(22px, 2cqw, 58px); line-height: clamp(22px, 2cqw, 58px);
+    font-size: clamp(12px, 1.05cqw, 30px); padding: 0 .45cqw; box-sizing: border-box; }
+  .demo-keys .cap { min-width: clamp(24px, 2.6cqw, 76px); height: clamp(26px, 2.6cqw, 76px); line-height: clamp(26px, 2.6cqw, 76px); font-size: clamp(13px, 1.3cqw, 38px); }
+  .demo-tips summary { cursor: pointer; color: #ffe27a; }
+  .demo-chip .cap, .demo-keys .cap { display: inline-flex; align-items: center; justify-content: center; line-height: 1 !important; border-bottom-width: max(2px, .25cqw); }
   #practiceGuide { position: absolute; left: 1%; right: 1%; top: 32%; z-index: 5; text-align: center; pointer-events: none; }
   #practiceGuide p { display: inline-block; margin: 0; padding: 8px 12px; background: #100b20e8; color: #ffe27a; font-size: clamp(12px, 1.5cqw, 18px); }
   #practiceGuide .actions { margin-top: 6px; pointer-events: auto; }
@@ -176,6 +239,8 @@
     .screen > .btn { font-size: 17px; padding: 12px 24px; }
     .dialog .grid { grid-template-columns: 90px 1fr; gap: 14px 12px; }
     #bindings { grid-template-columns: 1fr; }
+    .preset-tabs { grid-template-columns: 1fr; }
+    .demo-wrap { grid-template-columns: 1fr; }
     #practiceGuide { top: 34%; }
     #practiceGuide .btn { padding: 5px 10px; font-size: 12px; }
   }
@@ -337,61 +402,32 @@
     <p class="selection-help">← → 선택 · Enter 확인 · Esc 돌아가기</p>
   </section>
 
-  <!-- 키 튜토리얼 -->
+  <!-- 조작 안내: 시범 플레이 (demo-runtime.js 가 실제 게임 엔진으로 동작을 보여 준다) -->
   <div class="screen dialog" id="tutorial">
-    <h2>조작 방법</h2>
+    <h2>조작 안내 <small id="demoPreset"></small></h2>
     <div class="dialog-body" tabindex="0" aria-label="조작 안내 내용">
-    <div id="viesaControlGuide" hidden>
-      <h3>비에사 · 궁수</h3><p>흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.</p>
-      <p>이동: WASD / 방향키 · 점프: Space / Ctrl · 대시: Shift / 방향키 두 번</p>
-      <p>바렐 — 대시 중 공격: 대시 찌르기</p>
-      <p><span class="cap" data-k="KeyJ">J</span> 화살 (8 피해). 공중에서는 아래 30°로 쏘며 천천히 내려옵니다. 사격 도중 다시 누르면 연속 사격하며, 땅에 닿으면 착지합니다.</p>
-      <p><span class="cap" data-k="KeyH">H</span> 근접 3연타 · <span class="cap" data-k="KeyU">U</span> 6발 연사 (발당 10 피해, 위/아래로 사격 레인 조절)</p>
-      <p><span class="cap" data-k="KeyI">I</span> 뇌격 두루마리 (보유 시 사용, 화면 내 적에게 80 피해)</p>
-      <p><span class="cap" data-k="KeyL">L</span> 장거리 저격. 누르고 있으면 조준, 놓으면 관통 사격. 최소 30틱 조준하며, 일찍 놓아도 30틱에 발사합니다. 2초 유지 시 자동 발사.</p>
-      <p><span class="cap" data-k="KeyO">O</span> 돌진 → 지상 백플립 · <span class="cap" data-k="KeyP">P</span> 돌진 → 높은 백플립 → 최대 40틱 체공. P는 공중에서도 착지 전 한 번 사용할 수 있으며, 체공 중 J로 사격을 이어갑니다.</p>
-      <p><span class="cap" data-k="KeyK">K</span> 필살기 ‘흑월 난사’ (SP100). 공중 도약 → 마법진 소환 → 환영 화살 200발 (발당 4 피해) → 거대 화살 폭발 (160 피해). 시전 전체 무적.</p>
-      <p>U/L/O/P는 기존 기술과 같은 쿨타임을 사용합니다. O/P 돌진은 이동 중 무적이며 적마다 20 추가 피해를 줍니다. Shift 대시는 이동 중 무적입니다. 백플립 회전 중에도 무적이며, 이후 체공 중에는 피격될 수 있습니다. 화살은 무제한입니다.</p>
-    </div>
-    <p>이동 · 공격 · 점프부터 익혀보세요. 연습장에서는 피해를 받지 않습니다.</p>
-    <div class="grid">
-      <div class="keys"><span class="cap" data-k="ArrowLeft KeyA">←</span><span class="cap" data-k="ArrowRight KeyD">→</span>
-        <span class="or">또는</span><span class="cap" data-k="KeyA">A</span><span class="cap" data-k="KeyD">D</span></div>
-      <div class="desc"><b>좌우 이동</b> — 오른쪽(→)으로 진행하세요</div>
-
-      <div class="keys"><span class="cap" data-k="ArrowUp KeyW">↑</span><span class="cap" data-k="ArrowDown KeyS">↓</span>
-        <span class="or">또는</span><span class="cap" data-k="KeyW">W</span><span class="cap" data-k="KeyS">S</span></div>
-      <div class="desc"><b>위/아래 이동</b> — 적과 줄(깊이)을 맞추세요</div>
-
-      <div class="keys"><span class="cap" data-k="Space" style="min-width:9cqw">SPACE</span><span class="or">또는</span><span class="cap" data-k="ControlLeft ControlRight">CTRL</span></div>
-      <div class="desc"><b>점프</b></div>
-
-      <div class="keys"><span class="cap" data-k="ArrowRight KeyD">→</span><span class="cap" data-k="ArrowRight KeyD">→</span></div>
-      <div class="desc"><b>대시</b> — 같은 방향키를 빠르게 두 번 (잠깐 무적). 바렐 — 대시 중 공격: 대시 찌르기</div>
-
-      <div class="keys"><span class="cap" data-k="KeyJ">J</span><span class="or">또는</span><span class="cap" data-k="KeyZ">Z</span></div>
-      <div class="desc"><b>공격</b> — 연타하면 3연 콤보! 3타 참격은 검기를 날린다 · 공중에서는 내려찍기</div>
-
-      <div class="keys"><span class="cap" data-k="KeyK">K</span><span class="or">또는</span><span class="cap" data-k="KeyX">X</span></div>
-      <div class="desc"><b>필살기 흑월참</b> — SP 게이지가 차면 사용! 돌진 3연 베기 + 초승달 마무리 (무적)</div>
-
-      <div class="keys"><span class="cap" data-k="KeyI">I</span><span class="or">또는</span><span class="cap" data-k="KeyV">V</span></div>
-      <div class="desc"><b>마법 뇌격</b> — 두루마리 1개로 화면 안의 모든 적에게 번개! (최대 3개)</div>
-
-      <div class="keys"><span class="cap" data-k="KeyU">U</span><span class="cap" data-k="KeyH">H</span><span class="cap" data-k="KeyO">O</span><span class="cap" data-k="KeyP">P</span><span class="cap" data-k="KeyL">L</span></div>
-      <div class="desc"><b>전투 기술</b> — 견제 찌르기 · 내려찍기 · 회전 베기 · 점프 강하 · 붉은 파동(장거리 관통, 재사용 6.5초)</div>
-
-      <div class="keys"><span class="cap" data-k="Escape">ESC</span><span class="cap" data-k="KeyM">M</span></div>
-      <div class="desc"><b>일시정지</b> · <b>M</b> 소리 켜기/끄기</div>
-    </div>
-    <div class="tips">
-      🏹 <b style="color:#9cc3ff">궁수</b>는 같은 줄에서 활을 당긴 뒤 화살을 쏩니다 — 위아래로 줄을 바꾸거나 점프해서 피하세요<br>
-      🐟 생선 = HP +30 · 🍖 고기 = HP +60 &nbsp;·&nbsp; 📜 두루마리 = 뇌격 +1 &nbsp;·&nbsp; 🧪 엘릭서 = SP +25 &nbsp;·&nbsp; ⭐ 파워업 = 공격력 UP &nbsp;·&nbsp; 📦 상자를 부수면 아이템<br>
-      🪙 동전 = 500점 · 동전 주머니 = 1,000점 · 금괴 = 2,000점<br>
-      연속으로 때리면 <b style="color:#ffe27a">HIT</b> 가 쌓이고, 이어질수록 보스에게 주는 피해가 커집니다<br>
-      보스는 맞을수록 <b style="color:#ffb300">그로기 게이지</b>가 차고, 가득 차면 5초간 기절 &nbsp;·&nbsp; 적 머리 위 <b style="color:#ff5252">!</b> · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기) &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진
-    </div>
-    <p class="tips">설정에서 키를 바꿀 수 있습니다. Shift로도 대시할 수 있습니다. 랭크는 누적 피해·사망·시간·최대 콤보로 결정됩니다.</p>
+      <div class="demo-wrap">
+        <div class="demo-view">
+          <canvas id="demoView" width="640" height="360" aria-hidden="true"></canvas>
+          <div class="demo-caption"><span id="demoStep"></span><b id="demoTitle"></b><span id="demoKeys" class="demo-keys"></span></div>
+          <div class="demo-progress"><i id="demoBar"></i></div>
+        </div>
+        <div class="demo-side">
+          <p id="demoDesc" aria-live="polite"></p>
+          <div id="demoKeyboard"></div>
+          <div class="demo-nav"><button type="button" id="btnDemoPrev" class="btn small-btn secondary" aria-label="이전 동작">◀ 이전</button><button type="button" id="btnDemoPlay" class="btn small-btn secondary">❚❚ 멈춤</button><button type="button" id="btnDemoNext" class="btn small-btn secondary" aria-label="다음 동작">다음 ▶</button></div>
+        </div>
+      </div>
+      <div id="demoList" class="demo-list" role="tablist" aria-label="동작 목록"></div>
+      <details class="tips demo-tips"><summary>아이템 · 전투 팁</summary>
+        🏹 <b style="color:#9cc3ff">궁수</b>는 같은 줄에서 활을 당긴 뒤 화살을 쏩니다 — 위아래로 줄을 바꾸거나 점프해서 피하세요<br>
+        🐟 생선 = HP +30 · 🍖 고기 = HP +60 &nbsp;·&nbsp; 📜 두루마리 = 뇌격 +1 &nbsp;·&nbsp; 🧪 엘릭서 = SP +25 &nbsp;·&nbsp; ⭐ 파워업 = 공격력 UP &nbsp;·&nbsp; 📦 상자를 부수면 아이템<br>
+        🪙 동전 = 500점 · 동전 주머니 = 1,000점 · 금괴 = 2,000점<br>
+        연속으로 때리면 <b style="color:#ffe27a">HIT</b> 가 쌓이고, 이어질수록 보스에게 주는 피해가 커집니다<br>
+        보스는 맞을수록 <b style="color:#ffb300">그로기 게이지</b>가 차고, 가득 차면 5초간 기절 &nbsp;·&nbsp; 적 머리 위 <b style="color:#ff5252">!</b> · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기) &nbsp;·&nbsp; 화면의 <b style="color:#ffd23f">GO →</b> 가 뜨면 오른쪽으로 전진<br>
+        랭크는 누적 피해·사망·시간·최대 콤보로 결정됩니다.
+      </details>
+      <p class="tips">키 배치는 설정에서 1 오락실 / 2 WASD / 3 사용자 설정 중에 고를 수 있습니다 · <b>ESC</b> 일시정지 · <b>M</b> 소리 켜기/끄기 · 연습장에서는 피해를 받지 않습니다.</p>
     </div>
     <div class="actions"><button class="btn" id="btnPractice">직접 연습</button><button class="btn secondary" id="btnGo">게임 시작</button><button class="btn secondary" id="btnHelpBack" hidden>돌아가기</button></div>
   </div>
@@ -410,11 +446,21 @@
     <div class="setting-row"><span>보스전 BGM <small id="bossBgmStatus" role="status"></small></span><span><button class="btn small-btn secondary" id="btnBossBgm">mp3 선택</button> <button class="btn small-btn secondary" id="btnBossBgmClear">내 파일 해제</button><input id="bossBgmFile" type="file" accept=".mp3,audio/mpeg,audio/*" hidden></span></div>
     <label class="setting-row">화면 흔들림 <input id="screenShake" type="checkbox"></label>
     <label class="setting-row">화면 섬광 <input id="screenFlash" type="checkbox"></label>
+    <label class="setting-row">적 공격 범위 표시 <input id="dangerZones" type="checkbox"></label>
     <label class="setting-row">모바일 조작 키 <input id="touchEnabled" type="checkbox"></label>
     <label class="setting-row">모바일 키 투명도 <input id="touchAlpha" aria-label="모바일 키 투명도" type="range" min="0" max="90"></label>
     <label class="setting-row">모바일 키 크기 <input id="touchScale" aria-label="모바일 키 크기" type="range" min="60" max="160"></label>
     <div class="setting-row"><span>모바일 키 배치</span><span><button class="btn small-btn secondary" id="btnTouchEdit">배치 편집</button> <button class="btn small-btn secondary" id="btnTouchReset">초기화</button></span></div>
-    <p class="tips">키 버튼을 선택한 뒤 새 키를 누르세요. ESC는 변경 취소. 방향키·Z/X/V·Ctrl은 보조 조작입니다.</p>
+    <h3 class="keys-title">키 설정</h3>
+    <div class="preset-tabs" role="group" aria-label="키 배치 프리셋">
+      <button type="button" class="preset" data-preset="arcade"><b>1 · 오락실 아케이드</b><small>방향키 + Z X C · A S D</small><em>추천</em></button>
+      <button type="button" class="preset" data-preset="wasd"><b>2 · PC 액션 (WASD)</b><small>WASD + J K L</small></button>
+      <button type="button" class="preset" data-preset="custom"><b>3 · 사용자 설정</b><small>원하는 대로</small></button>
+    </div>
+    <p id="presetDesc" class="tips"></p>
+    <div id="settingsKeyboard"></div>
+    <div class="kb-legend" aria-hidden="true"><i class="kb-move">이동</i><i class="kb-attack">공격</i><i class="kb-jump">점프</i><i class="kb-dash">대시</i><i class="kb-special">필살기</i><i class="kb-magic">뇌격</i><i class="kb-skill">전투 기술</i><i class="kb-alias">보조</i></div>
+    <div id="customTools" class="actions" hidden><span>복사해서 시작:</span><button type="button" class="btn small-btn secondary" data-copy="arcade">1번 배치</button><button type="button" class="btn small-btn secondary" data-copy="wasd">2번 배치</button></div>
     <div id="bindings"></div><p id="bindingStatus" role="status"></p>
   </div><div class="actions"><button class="btn" id="btnSettingsBack">돌아가기</button><button class="btn secondary" id="btnResetKeys">기본 키 복원</button></div></div>
 
@@ -472,6 +518,7 @@
 <script src="viesa-sfx.js"></script>
 <script src="barel-sfx.js"></script>
 <script src="gorath-hook-sfx.js"></script>
+<script src="gorath-charge-sfx.js"></script>
 <script src="audio.js"></script>
 <script src="hd_sprites.js"></script>
 <script src="legion_sprites.js"></script>
@@ -537,6 +584,8 @@
 <script src="stage1-fx-art.js"></script>
 <script src="stage1-enemy-art.js"></script>
 <script src="stage1-runtime.js"></script>
+<script src="feel-runtime.js"></script>
+<script src="demo-runtime.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

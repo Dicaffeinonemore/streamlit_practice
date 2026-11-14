@@ -36,7 +36,7 @@
     setVolumes(musicVolume, sfxVolume);
     prepareBoss();
     prepareEnemyDeath();
-    prepareGorathHook();
+    prepareGorathSamples();
     prepareViesaSkills();
     prepareBarelSamples();
   }
@@ -114,6 +114,8 @@
     victory() { [72, 76, 79, 84].forEach((n, i) => tone(mtof(n), 0.28, 'square', 0.12, { lp: 3200, d: i * 0.14 })); [72, 76, 79, 84].forEach(n => tone(mtof(n), 1.1, 'triangle', 0.12, { d: 0.62 })); tone(mtof(60), 1.2, 'sawtooth', 0.1, { lp: 900, d: 0.62 }); },
     defeat() { [67, 63, 60, 55].forEach((n, i) => tone(mtof(n), 0.4, 'sawtooth', 0.14, { lp: 1400, d: i * 0.28 })); tone(mtof(43), 1.4, 'sine', 0.3, { d: 1.0, f2: mtof(40) }); },
     click() { tone(900, 0.05, 'square', 0.06, { lp: 3000 }); },
+    // 1.67: SP 가득 "치잉" — 맑은 금속음 두 겹
+    spready() { tone(1760, 0.32, 'triangle', 0.09, { f2: 2640, a: 0.004 }); tone(2640, 0.42, 'sine', 0.06, { f2: 3520, d: 0.05 }); nz(0.08, 0.06, 'highpass', 6000, 9000, { d: 0.02 }); },
     // 도살자 고라스 리메이크: 탁자 칼질 / 포효 / 갑옷 삐걱임 / 무적 막힘 / 고기 착지 / 관중 함성
     g2chop() { tone(190, 0.09, 'square', 0.3, { f2: 70, lp: 1300 }); nz(0.06, 0.4, 'bandpass', 1000, 320, { q: 1.1 }); },
     g2roar() { tone(98, 1.0, 'sawtooth', 0.32, { f2: 52, lp: 720, a: 0.06 }); tone(146, 0.9, 'sawtooth', 0.18, { f2: 70, lp: 950, d: 0.04, a: 0.08 }); nz(1.0, 0.26, 'bandpass', 420, 170, { q: 0.8, a: 0.1 }); },
@@ -139,9 +141,9 @@
       return;
     }
     if (name === 'mobdie' && playEnemyDeath()) return;
-    if (name === 'g2hook') {
-      if (playGorathHook()) return;
-      name = 'bwave';
+    if (Object.hasOwn(GORATH_SAMPLE_FALLBACK, name)) {
+      if (playGorathSample(name)) return;
+      name = GORATH_SAMPLE_FALLBACK[name];
     }
     const f = SFX[name]; if (!f) return;
     AU.gm = GAIN[name] || 1; try { f(a); } catch (e) { /* 무시 */ } AU.gm = 1;
@@ -192,17 +194,23 @@
   const decode = raw => new Promise((ok, fail) => {         // 콜백(구형 Safari)과 Promise 양쪽을 모두 받는다
     const p = AU.ctx.decodeAudioData(raw.slice(0), ok, fail); if (p && p.catch) p.catch(() => {});
   });
-  let gorathHookBuffer = null;
-  function prepareGorathHook() {
-    if (!global.GORATH_HOOK_SFX_URL) return;
-    fetch(global.GORATH_HOOK_SFX_URL).then(r => {
-      if (!r.ok) throw new Error('Gorath hook sample unavailable');
-      return r.arrayBuffer();
-    }).then(decode).then(buffer => { gorathHookBuffer = buffer; }).catch(() => {});
+  // 고라스 MP3 효과음: 갈고리 던지기, 황소 돌진. 불러오기 전·실패 시에는 합성음으로 대신한다.
+  const GORATH_SAMPLE_FALLBACK = { g2hook: 'bwave', g2charge: 'bcharge' };
+  const gorathSamples = new Map();
+  function prepareGorathSamples() {
+    const urls = { g2hook: global.GORATH_HOOK_SFX_URL, g2charge: global.GORATH_CHARGE_SFX_URL };
+    for (const [name, url] of Object.entries(urls)) {
+      if (!url || gorathSamples.has(name)) continue;
+      fetch(url).then(r => {
+        if (!r.ok) throw new Error('Gorath sample unavailable');
+        return r.arrayBuffer();
+      }).then(decode).then(buffer => { gorathSamples.set(name, buffer); }).catch(() => {});
+    }
   }
-  function playGorathHook() {
-    if (!gorathHookBuffer) return false;
-    const src = AU.ctx.createBufferSource(); src.buffer = gorathHookBuffer;
+  function playGorathSample(name) {
+    const buffer = gorathSamples.get(name);
+    if (!buffer) return false;
+    const src = AU.ctx.createBufferSource(); src.buffer = buffer;
     src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();
     return true;
   }

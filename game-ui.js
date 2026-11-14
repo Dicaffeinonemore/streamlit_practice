@@ -5,8 +5,24 @@ const UX = (() => {
     KeyJ: 'KeyJ', ShiftLeft: 'ShiftLeft', KeyK: 'KeyK', KeyI: 'KeyI', KeyU: 'KeyU', KeyH: 'KeyH', KeyO: 'KeyO', KeyP: 'KeyP', KeyL: 'KeyL' };
   const labels = { KeyA: '왼쪽', KeyD: '오른쪽', KeyW: '위', KeyS: '아래', Space: '점프', KeyJ: '공격',
     ShiftLeft: '대시', KeyK: '필살기', KeyI: '뇌격', KeyU: '견제 찌르기', KeyH: '내려찍기', KeyO: '회전 베기', KeyP: '점프 강하', KeyL: '붉은 파동' };
-  const reserved = new Set(['KeyM', 'KeyZ', 'KeyX', 'KeyV']);
-  const validKey = k => typeof k === 'string' && (/^Key[A-Z]$/.test(k) || /^Digit[0-9]$/.test(k) || ['Space', 'ShiftLeft', 'ShiftRight'].includes(k)) && !reserved.has(k);
+  // 키 배치 프리셋. 값 = 동작 → 실제 키. 동작 이름(KeyJ=공격 등)은 게임 내부 식별자일 뿐 실제 키와 무관하다.
+  const PRESETS = {
+    arcade: { KeyA: 'ArrowLeft', KeyD: 'ArrowRight', KeyW: 'ArrowUp', KeyS: 'ArrowDown', Space: 'KeyX', KeyJ: 'KeyZ',
+      ShiftLeft: 'ShiftLeft', KeyK: 'KeyC', KeyI: 'KeyA', KeyU: 'KeyS', KeyH: 'KeyD', KeyO: 'KeyQ', KeyP: 'KeyW', KeyL: 'KeyE' },
+    wasd: { KeyA: 'KeyA', KeyD: 'KeyD', KeyW: 'KeyW', KeyS: 'KeyS', Space: 'KeyK', KeyJ: 'KeyJ',
+      ShiftLeft: 'ShiftLeft', KeyK: 'Space', KeyI: 'KeyL', KeyU: 'KeyU', KeyH: 'KeyI', KeyO: 'KeyO', KeyP: 'KeyP', KeyL: 'KeyH' },
+  };
+  const PRESET_INFO = {
+    arcade: { name: '1 · 오락실 아케이드', short: '방향키 + Z X C · A S D', desc: '오른손 방향키로 이동, 왼손으로 Z 공격 · X 점프 · C 필살기. A S D / Q W E에 뇌격과 전투 기술, Shift 대시. 고전 벨트스크롤에 익숙하다면 추천.' },
+    wasd: { name: '2 · PC 액션 (WASD)', short: 'WASD + J K L', desc: '왼손 WASD로 이동, 오른손 J 공격 · K 점프 · L 뇌격. U I O P H에 전투 기술, Space 필살기 · Shift 대시. 방향키·Z/X/V·Ctrl도 보조로 쓸 수 있습니다.' },
+    custom: { name: '3 · 사용자 설정', short: '원하는 대로', desc: '모든 동작의 키를 직접 정합니다. 동작을 고른 뒤 새 키를 누르거나 키보드 그림의 키를 클릭하세요. 비어 있는 방향키·Z/X/V·Ctrl은 보조 조작으로 동작합니다.' },
+  };
+  const DEFAULT_PRESET = 'arcade';
+  // 보조 조작: WASD·사용자 설정에서 다른 동작에 쓰이지 않는 키만 해당 동작으로 바뀐다.
+  const ALIAS = { ArrowLeft: 'KeyA', ArrowRight: 'KeyD', ArrowUp: 'KeyW', ArrowDown: 'KeyS', ControlLeft: 'Space', ControlRight: 'Space', KeyZ: 'KeyJ', KeyX: 'KeyK', KeyV: 'KeyI' };
+  const reserved = new Set(['KeyM']);
+  const validKey = k => typeof k === 'string' && (/^Key[A-Z]$/.test(k) || /^Digit[0-9]$/.test(k) || /^Arrow(Left|Right|Up|Down)$/.test(k) || ['Space', 'ShiftLeft', 'ShiftRight'].includes(k)) && !reserved.has(k);
+  const validMap = m => !!m && typeof m === 'object' && Object.keys(defaults).every(k => validKey(m[k])) && new Set(Object.keys(defaults).map(k => m[k])).size === Object.keys(defaults).length;
   const number = (v, a, b) => typeof v === 'number' && Number.isFinite(v) && v >= a && v <= b;
   let available = true, capture = null;
   const storagePrefix = new URLSearchParams(location.search).get('mobile_lab') === '1' ? 'bmk_lab_' : 'bmk_';
@@ -39,23 +55,93 @@ const UX = (() => {
     lowFx: typeof saved.lowFx === 'boolean' ? saved.lowFx : reduced,
     shake: typeof saved.shake === 'boolean' ? saved.shake : !reduced,
     flash: typeof saved.flash === 'boolean' ? saved.flash : !reduced,
+    dangerZones: typeof saved.dangerZones === 'boolean' ? saved.dangerZones : true,   // 1.67: 적 공격 범위 바닥 표시
     touch: typeof saved.touch === 'boolean' ? saved.touch : matchMedia('(pointer: coarse)').matches,
-    touchLayout: validLayout(saved.touchLayout), bindings: { ...defaults } };
-  if (saved.bindings) {
+    touchLayout: validLayout(saved.touchLayout), keyPreset: DEFAULT_PRESET, customBindings: null, bindings: { ...PRESETS[DEFAULT_PRESET] } };
+  // 이전 저장(프리셋 없이 키 목록만 있음)은 그 키 그대로 '사용자 설정'으로 옮긴다.
+  function legacyBindings(b) {
+    if (!b || typeof b !== 'object') return null;
     const actions = Object.keys(defaults).filter(k => k !== 'KeyL');
-    if (actions.every(k => validKey(saved.bindings[k])) && new Set(actions.map(k => saved.bindings[k])).size === actions.length) {
-      const bindings = Object.fromEntries(actions.map(k => [k, saved.bindings[k]]));
-      const used = new Set(Object.values(bindings));
-      // Older saves may already use L for another action. Preserve those bindings.
-      bindings.KeyL = [saved.bindings.KeyL, 'KeyL', 'KeyB', 'KeyC', 'KeyN',
-        ...Array.from({length: 10}, (_, i) => 'Digit' + i)].find(k => validKey(k) && !used.has(k));
-      options.bindings = bindings;
-    }
+    if (!actions.every(k => validKey(b[k])) || new Set(actions.map(k => b[k])).size !== actions.length) return null;
+    const bindings = Object.fromEntries(actions.map(k => [k, b[k]]));
+    const used = new Set(Object.values(bindings));
+    // Older saves may already use L for another action. Preserve those bindings.
+    bindings.KeyL = [b.KeyL, 'KeyL', 'KeyB', 'KeyC', 'KeyN',
+      ...Array.from({length: 10}, (_, i) => 'Digit' + i)].find(k => validKey(k) && !used.has(k));
+    return bindings;
   }
-  function keyName(k) { return k.replace(/^Key|^Digit/, '').replace('Space', 'SPACE').replace('ShiftLeft', 'L SHIFT').replace('ShiftRight', 'R SHIFT'); }
+  if (validMap(saved.customBindings)) options.customBindings = { ...saved.customBindings };
+  if (Object.hasOwn(PRESETS, saved.keyPreset)) options.keyPreset = saved.keyPreset;
+  else if (saved.keyPreset === 'custom' && options.customBindings) options.keyPreset = 'custom';
+  else if (saved.keyPreset === undefined && legacyBindings(saved.bindings)) {
+    options.keyPreset = 'custom'; options.customBindings = legacyBindings(saved.bindings);
+  }
+  options.bindings = { ...(options.keyPreset === 'custom' ? options.customBindings : PRESETS[options.keyPreset]) };
+  const ARROW_NAMES = { ArrowLeft: '←', ArrowRight: '→', ArrowUp: '↑', ArrowDown: '↓' };
+  function keyName(k) { return ARROW_NAMES[k] || k.replace(/^Key|^Digit/, '').replace('Space', 'SPACE').replace('ShiftLeft', 'L SHIFT').replace('ShiftRight', 'R SHIFT'); }
+  const aliasesOn = () => options.keyPreset !== 'arcade';
+  // 보조 조작 키 → 동작. 다른 동작에 이미 쓰인 키는 제외한다.
+  function aliasFor(code) {
+    if (!aliasesOn() || !Object.hasOwn(ALIAS, code)) return '';
+    return Object.values(options.bindings).includes(code) ? '' : ALIAS[code];
+  }
   function mapKey(code) {
     const action = Object.keys(defaults).find(k => options.bindings[k] === code);
-    return action || (Object.hasOwn(defaults, code) ? '' : code);
+    if (action) return action;
+    if (Object.hasOwn(ALIAS, code)) return aliasFor(code);
+    return Object.hasOwn(defaults, code) ? '' : code;
+  }
+  function setPreset(id) {
+    if (id === 'custom') {
+      if (!options.customBindings) options.customBindings = { ...options.bindings };   // 지금 쓰던 배치에서 시작
+    } else if (!Object.hasOwn(PRESETS, id)) return;
+    capture = null; options.keyPreset = id;
+    options.bindings = { ...(id === 'custom' ? options.customBindings : PRESETS[id]) };
+    write('settings', options); bindingButtons();
+  }
+  // ---------------------------------------------------------------- 키보드 그림
+  // [코드, 표시, x, y, 너비] (단위: 키 1칸). 게임에 쓸 수 있는 키 + 시스템 키만 그린다.
+  const KB_W = 15.75, KB_H = 5;
+  const KB_KEYS = [['Escape', 'ESC', 0, 0, 1], ...'1234567890'.split('').map((d, i) => ['Digit' + d, d, 1.1 + i, 0, 1]),
+    ['Tab', 'TAB', 0, 1, 1.5], ...'QWERTYUIOP'.split('').map((c, i) => ['Key' + c, c, 1.5 + i, 1, 1]),
+    ['CapsLock', 'CAPS', 0, 2, 1.75], ...'ASDFGHJKL'.split('').map((c, i) => ['Key' + c, c, 1.75 + i, 2, 1]), ['Enter', 'ENTER', 10.75, 2, 1.75],
+    ['ShiftLeft', 'SHIFT', 0, 3, 2.25], ...'ZXCVBNM'.split('').map((c, i) => ['Key' + c, c, 2.25 + i, 3, 1]), ['ShiftRight', 'SHIFT', 9.25, 3, 2.5],
+    ['ControlLeft', 'CTRL', 0, 4, 1.5], ['Space', 'SPACE', 3, 4, 6], ['ControlRight', 'CTRL', 9.75, 4, 1.5],
+    ['ArrowUp', '↑', 13.75, 3, 1], ['ArrowLeft', '←', 12.75, 4, 1], ['ArrowDown', '↓', 13.75, 4, 1], ['ArrowRight', '→', 14.75, 4, 1]];
+  const KIND = { KeyA: 'move', KeyD: 'move', KeyW: 'move', KeyS: 'move', Space: 'jump', KeyJ: 'attack', ShiftLeft: 'dash', KeyK: 'special', KeyI: 'magic',
+    KeyU: 'skill', KeyH: 'skill', KeyO: 'skill', KeyP: 'skill', KeyL: 'skill' };
+  // 키보드 그림용 짧은 이름. 띄어쓰기 자리에서 두 줄로 나뉜다
+  const SHORT = { KeyA: '◀이동', KeyD: '▶이동', KeyW: '▲이동', KeyS: '▼이동', Space: '점프', KeyJ: '공격', ShiftLeft: '대시', KeyK: '필살기', KeyI: '뇌격',
+    KeyU: '찌르기', KeyH: '내려 찍기', KeyO: '회전 베기', KeyP: '점프 강하', KeyL: '붉은 파동' };
+  const SHORT_VIESA = { KeyJ: '화살', KeyH: '근접', KeyU: '연사', KeyL: '저격', KeyO: '지상 플립', KeyP: '공중 플립', KeyK: '흑월 난사' };
+  const SYSTEM = { Escape: '일시 정지', Enter: '확인', KeyM: '소리' };
+  const shortName = a => (typeof playerControlCharacter !== 'undefined' && playerControlCharacter === 'viesa' && SHORT_VIESA[a]) || SHORT[a];
+  // box 안에 키보드를 그린다. opts.focus: 강조할 동작 목록, opts.onKey: 키 클릭 콜백
+  function drawKeyboard(box, opts = {}) {
+    if (!box) return;
+    if (!box.firstChild) {
+      box.classList.add('kbd'); box.setAttribute('role', 'img');
+      for (const [code, cap, x, y, w] of KB_KEYS) {
+        const k = document.createElement('div'); k.className = 'kb-key'; k.dataset.code = code;
+        k.style.cssText = `left:${x / KB_W * 100}%;top:${y / KB_H * 100}%;width:${(w - .12) / KB_W * 100}%;height:${.88 / KB_H * 100}%`;
+        k.innerHTML = '<span class="kb-cap"></span><span class="kb-act"></span>';
+        k.firstChild.textContent = cap; box.append(k);
+      }
+      box.addEventListener('click', e => { const k = e.target.closest('.kb-key'); if (k && box._onKey) box._onKey(k.dataset.code); });
+    }
+    box._onKey = opts.onKey || null;
+    const focus = opts.focus ? new Set(opts.focus) : null, pressed = new Set(opts.pressed || []), parts = [];
+    for (const k of box.children) {
+      const code = k.dataset.code, action = Object.keys(defaults).find(a => options.bindings[a] === code);
+      const alias = !action && aliasFor(code), act = action || alias;
+      let kind = act ? KIND[act] : SYSTEM[code] ? 'system' : '', text = act ? shortName(act) : SYSTEM[code] || '';
+      k.className = 'kb-key' + (kind ? ' kb-k kb-' + kind : '') + (alias ? ' kb-alias' : '') +
+        (focus && !(act && focus.has(act)) ? ' kb-dim' : '') + (act && pressed.has(act) ? ' kb-on' : '');
+      k.lastChild.textContent = text;
+      k.title = text ? `${k.firstChild.textContent}: ${text}${alias ? ' (보조)' : ''}` : '';
+      if (action && (!focus || focus.has(action))) parts.push(`${keyName(code)} ${shortName(action)}`);
+    }
+    box.setAttribute('aria-label', '키보드 배치: ' + parts.join(', '));
   }
   function checkpoint() {
     const c = read('checkpoint');
@@ -94,17 +180,40 @@ const UX = (() => {
     if (titleImage) { const src = options.shake ? NAMED_ART.title : NAMED_ART.titleStill; if (titleImage.src !== src) titleImage.src = src; }
     document.body.classList.toggle('touch', options.touch);
   }
+  function assignKey(code) {
+    const status = document.getElementById('bindingStatus');
+    if (!validKey(code)) { status.textContent = '영문·숫자·방향키·Space·Shift 키를 사용하세요. M은 소리 켜기/끄기에 사용됩니다.'; return; }
+    const other = Object.keys(defaults).find(k => k !== capture && options.bindings[k] === code);
+    if (other) { status.textContent = playerActionLabel(other, labels[other]) + '에 사용 중인 키입니다.'; return; }
+    options.bindings[capture] = code; options.customBindings = { ...options.bindings };
+    capture = null; write('settings', options); bindingButtons(); status.textContent = '저장했습니다.';
+  }
   function bindingButtons() {
     const box = document.getElementById('bindings'); box.replaceChildren();
+    const custom = options.keyPreset === 'custom';
+    document.querySelectorAll('[data-preset]').forEach(b => {
+      const on = b.dataset.preset === options.keyPreset;
+      b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    });
+    const desc = document.getElementById('presetDesc'); if (desc) desc.textContent = PRESET_INFO[options.keyPreset].desc;
+    const tools = document.getElementById('customTools'); if (tools) tools.hidden = !custom;
+    box.classList.toggle('locked', !custom);
+    const keyboard = document.getElementById('settingsKeyboard');
+    const paint = (focus = null) => drawKeyboard(keyboard, { focus: capture ? [capture] : focus, onKey: code => { if (capture) assignKey(code); } });
     for (const action of Object.keys(defaults)) {
-      const row = document.createElement('div'); row.className = 'setting-row';
+      const row = document.createElement('div'); row.className = 'setting-row kb-row kb-' + KIND[action];
       const actionName=playerActionLabel(action,labels[action]);
       const label = document.createElement('span'); label.textContent = actionName;
       const button = document.createElement('button'); button.className = 'btn small-btn secondary';
       button.textContent = keyName(options.bindings[action]); button.setAttribute('aria-label', actionName + ' 키 변경');
-      button.onclick = () => { capture = action; document.getElementById('bindingStatus').textContent = actionName + ': 새 키를 누르세요 (ESC 취소)'; };
+      button.disabled = !custom; button.classList.toggle('capturing', capture === action);
+      if (!custom) button.title = '3 · 사용자 설정에서 바꿀 수 있습니다';
+      button.onclick = () => { capture = action; bindingButtons(); document.getElementById('bindingStatus').textContent = actionName + ': 새 키를 누르거나 키보드 그림에서 고르세요 (ESC 취소)'; };
+      row.onmouseenter = () => { if (!capture) paint([action]); };
+      row.onmouseleave = () => { if (!capture) paint(); };
       row.append(label, button); box.append(row);
     }
+    paint();
     document.querySelectorAll('.cap[data-k]').forEach(el => {
       const codes = el.dataset.k.split(' '), k = codes.find(c => Object.hasOwn(defaults, c));
       if (k && !codes[0].startsWith('Arrow')) el.textContent = keyName(options.bindings[k]);
@@ -118,11 +227,9 @@ const UX = (() => {
     if (!capture) return;
     e.preventDefault(); e.stopImmediatePropagation();
     const status = document.getElementById('bindingStatus');
-    if (e.code === 'Escape') { capture = null; status.textContent = '변경을 취소했습니다.'; return; }
-    if (!validKey(e.code) || e.ctrlKey || e.altKey || e.metaKey) { status.textContent = '영문·숫자·Space·Shift 키를 사용하세요. M/Z/X/V는 보조 조작에 사용됩니다.'; return; }
-    const other = Object.keys(defaults).find(k => k !== capture && options.bindings[k] === e.code);
-    if (other) { status.textContent = labels[other] + '에 사용 중인 키입니다.'; return; }
-    options.bindings[capture] = e.code; capture = null; write('settings', options); bindingButtons(); status.textContent = '저장했습니다.';
+    if (e.code === 'Escape') { capture = null; bindingButtons(); status.textContent = '변경을 취소했습니다.'; return; }
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    assignKey(e.code);
   }, true);
   const touches = new Map();
   // 이동 레버: 손가락 위치를 8방향 키(A/D/W/S)로 바꾼다. 레버를 좌우로 빠르게 두 번 튕기면 키보드처럼 대시.
@@ -230,11 +337,16 @@ const UX = (() => {
       const el = document.getElementById(id); el.value = options[key] * 100;
       el.oninput = () => { options[key] = Number(el.value) / 100; applySettings(); write('settings', options); };
     }
-    for (const [id, key] of [['lowFx', 'lowFx'], ['screenShake', 'shake'], ['screenFlash', 'flash'], ['touchEnabled', 'touch']]) {
+    for (const [id, key] of [['lowFx', 'lowFx'], ['screenShake', 'shake'], ['screenFlash', 'flash'], ['dangerZones', 'dangerZones'], ['touchEnabled', 'touch']]) {
       const el = document.getElementById(id); el.checked = options[key];
       el.onchange = () => { options[key] = el.checked; clearInput(); applySettings(); write('settings', options); if (key === 'touch') syncTouchControls(); };
     }
-    document.getElementById('btnResetKeys').onclick = () => { capture = null; options.bindings = { ...defaults }; write('settings', options); bindingButtons(); };
+    document.getElementById('btnResetKeys').onclick = () => setPreset(DEFAULT_PRESET);
+    document.querySelectorAll('[data-preset]').forEach(b => { b.onclick = () => setPreset(b.dataset.preset); });
+    document.querySelectorAll('[data-copy]').forEach(b => {
+      b.onclick = () => { capture = null; options.customBindings = { ...PRESETS[b.dataset.copy] }; setPreset('custom');
+        document.getElementById('bindingStatus').textContent = PRESET_INFO[b.dataset.copy].name + ' 배치를 복사했습니다.'; };
+    });
     document.querySelectorAll('[data-control]').forEach(b => {
       b.onpointerdown = e => {
         e.preventDefault(); if (scene !== 'play') return;
@@ -281,7 +393,7 @@ const UX = (() => {
     AUDIO.onBossInfo(() => showBgm()); showBgm();
     applySettings(); bindingButtons(); refreshTitle();
   }
-  return { options, keyName, mapKey, checkpoint, records, record, mount, refreshTitle, clearTouch, startTouchEdit, endTouchEdit, refreshBindings:bindingButtons,
+  return { options, keyName, mapKey, drawKeyboard, shortName, setPreset, presets: PRESET_INFO, checkpoint, records, record, mount, refreshTitle, clearTouch, startTouchEdit, endTouchEdit, refreshBindings:bindingButtons,
     setTouchLayout: layout => { options.touchLayout = validLayout(layout); applyTouchLayout(); },
     get touchEditing() { return editing; },
     saveCheckpoint: c => write('checkpoint', c && { ...c, version: 1 }), cancelCapture: () => { capture = null; } };

@@ -39,10 +39,10 @@ const COMBAT_FRAME_DATA = {
       cancelRatio: 0.45,
       moves: {
         c1: { name: '일섬',   windMs: 90,  actMs: 110, recMs: 150, damage: 10, reachPx: 80, knockdown: false, stepPx: 8,  hitstopTicks: 3, fx: 0,
-              hitstunTicks: 22,   // 1타 → 2타 실측 16틱 + 여유 6
+              hitstunTicks: 30,   // 1.67: 22 → 30 (1타 → 2타 실측 16틱 + 여유, 타격감)
               sprite: 'assets/aseprite/barel-combo0-dot-10/barel-combo0-dot-10.animation.json' },
         c2: { name: '역일섬', windMs: 70,  actMs: 100, recMs: 140, damage: 11, reachPx: 82, knockdown: false, stepPx: 8,  hitstopTicks: 3, fx: 1,
-              hitstunTicks: 28,   // 2타 → 3타 실측 22틱 + 여유 6 (18틱이면 3타 전에 풀림)
+              hitstunTicks: 36,   // 1.67: 28 → 36 (2타 → 3타 실측 22틱 + 여유, 18틱이면 3타 전에 풀림)
               sprite: 'assets/aseprite/barel-combo1-dot-10/barel-combo1-dot-10.animation.json' },
         c3: { name: '참격',   windMs: 200, actMs: 140, recMs: 340, damage: 16, reachPx: 98, knockdown: true,  stepPx: 16, hitstopTicks: 7, fx: 2,
               hitstunTicks: null, // 넉다운: 적은 'down' 상태가 된다
@@ -101,32 +101,78 @@ const COMBAT_FRAME_DATA = {
     },
   },
 
+  // ------------------------------------------------------------- 타격감 · 가독성 (1.67)
+  // 모든 플레이어 타격은 등급(tier) 하나를 갖는다. 히트스톱·경직 보너스·넉백 배수·화면 흔들림·흰색 번쩍임을 여기서 정한다.
+  // 보스는 hitstop·shake 만 적용하고 경직·넉백은 기존 보스 규칙을 따른다.
+  feel: {
+    tiers: {
+      light:    { hitstop: 4,  stunBonus: 8,  kbMul: 0.8, shake: 0,  flash: 2 },
+      mid:      { hitstop: 6,  stunBonus: 10, kbMul: 1.3, shake: 3,  flash: 3 },
+      heavy:    { hitstop: 9,  stunBonus: 12, kbMul: 2.2, shake: 7,  flash: 4 },
+      finisher: { hitstop: 12, stunBonus: 0,  kbMul: 3.0, shake: 12, flash: 5, knockdown: true, knockdownVx: 5.5 },
+    },
+    tierOrder: ['light', 'mid', 'heavy', 'finisher'],
+    // 표에 없는 attackId: 넉다운이거나 kind >= 2 면 heavy, 나머지는 light
+    tierByAttack: {
+      c1: 'light', c2: 'light', c3: 'heavy', air: 'mid', dashAttack: 'mid',
+      skill: 'heavy', redwave: 'heavy',              // 바렐 스킬 U/H/O/P/L
+      specialSlash: 'heavy', special: 'finisher',    // 필살기 흑월참: 3연 베기 / 초승달 마무리
+      magic: 'finisher',                             // 뇌격
+      viesaArrow: 'light', viesaMelee: 'mid', viesaSkill: 'heavy',
+      bump: 'light',                                 // 날아간 적에게 부딪힘
+    },
+    chainCap: 7,                                     // 끊기지 않은 연속 피격이 이 수에 닿으면 finisher + 넉다운
+    knockdownVx: 4,                                  // 넉다운 넉백(기존 값 그대로). finisher 는 등급의 knockdownVx(5.5)로 조금 더 멀리
+    collide: { minSpeed: 2.5, dmgMul: 0.3, kbMul: 0.6, dx: 30, dy: 14 },
+    hitJitterPx: { normal: 2, heavy: 3 },
+    damageTextScaleHeavy: 1.3,
+    hurtAnimRatio: 0.7,                              // 1스테이지 적 피격 그림: 경직의 앞 70% 에 모든 칸을 돌리고 나머지는 마지막 칸
+    zone: { stroke: 'rgba(255,60,60,.75)', fill: 'rgba(255,40,40,.28)', kdStroke: '#ff2050', kdFill: 'rgba(220,16,64,.32)',
+            activeFill: 'rgba(255,235,235,.55)', lineWidth: 1.2, kdLineWidth: 2.6, activeFlashTicks: 2 },
+    lane: { stroke: 'rgba(255,70,70,.85)', playerPulse: 'rgba(255,50,50,', attackFlashTicks: 12, playerDepthPx: 24 },
+    readability: { minWindTicks: 20, alertLateTicks: 8, alertPopTicks: 4, alertPopScale: 1.4 },
+    signals: { spFullFlashTicks: 3, skillReadyTicks: 30 },
+  },
+
   // ------------------------------------------------------------- 일반 적
   // windTicks = 공격 예고, activeTicks = 판정 유지, recoveryTicks = 공격 후 경직 (반격 시간)
-  // hurtTicks = 표에 없는 공격에 맞았을 때의 피격 경직 / knockdown = 공격이 플레이어를 넘어뜨림
+  // hurtTicks = 표에 없는 공격에 맞았을 때의 피격 경직 (1.67: 18 → 26) / knockdown = 공격이 플레이어를 넘어뜨림
+  // windTicks 는 feel.readability.minWindTicks(20) 이상 (1.67: 흑창병 18 → 20)
   // armorWhileWind = 예고 동작 중 넉다운이 아닌 공격에 경직되지 않음
   enemies: {
     hit: { reachPadPx: 8, depthPx: 20, heightPx: 55, activeGraceTicks: 2 },   // 근접 공격 판정 공통값
-    grunt:  { name: '망령 병사',   hp: 40,  speed: 1.2, damage: 8,  rangePx: 56,  windTicks: 28, activeTicks: 10, recoveryTicks: 30, knockbackPx: 3, hurtTicks: 18 },
-    rogue:  { name: '흑창병',     hp: 28,  speed: 2.0, damage: 6,  rangePx: 78,  windTicks: 18, activeTicks: 8,  recoveryTicks: 22, knockbackPx: 2, hurtTicks: 18 },
-    brute:  { name: '흑철 중기사', hp: 100, speed: 0.9, damage: 16, rangePx: 68,  windTicks: 44, activeTicks: 12, recoveryTicks: 44, knockbackPx: 6, hurtTicks: 18,
+    grunt:  { name: '망령 병사',   hp: 40,  speed: 1.2, damage: 8,  rangePx: 56,  windTicks: 28, activeTicks: 10, recoveryTicks: 30, knockbackPx: 3, hurtTicks: 26 },
+    rogue:  { name: '흑창병',     hp: 28,  speed: 2.0, damage: 6,  rangePx: 78,  windTicks: 20, activeTicks: 8,  recoveryTicks: 22, knockbackPx: 2, hurtTicks: 26 },
+    brute:  { name: '흑철 중기사', hp: 100, speed: 0.9, damage: 16, rangePx: 68,  windTicks: 44, activeTicks: 12, recoveryTicks: 44, knockbackPx: 6, hurtTicks: 26,
               knockdown: true, armorWhileWind: true },
-    archer: { name: '망령 궁수',   hp: 30,  speed: 1.5, damage: 7,  rangePx: 260, windTicks: 42, activeTicks: 6,  recoveryTicks: 46, knockbackPx: 3, hurtTicks: 18,
+    archer: { name: '망령 궁수',   hp: 30,  speed: 1.5, damage: 7,  rangePx: 260, windTicks: 42, activeTicks: 6,  recoveryTicks: 46, knockbackPx: 3, hurtTicks: 26,
               ranged: true },
-    default: { hurtTicks: 18 },
+    default: { hurtTicks: 26 },
   },
 };
 
-// 일반 적이 이번 타격으로 묶일 틱 수. 보스는 기존 규칙(10틱)을 그대로 쓴다.
-function enemyHitstun(e, attackId) {
+// 타격 등급: attackId → 등급 이름. 표에 없으면 kd 또는 kind >= 2 → heavy, 나머지 light
+function hitTier(attackId, kd, kind) {
+  const F = COMBAT_FRAME_DATA.feel, name = F.tierByAttack[attackId] || (kd || kind >= 2 ? 'heavy' : 'light');
+  return { name, rank: F.tierOrder.indexOf(name), ...F.tiers[name] };
+}
+// 기술별 hitstopTicks (등급값보다 크면 그쪽을 쓴다)
+function attackHitstop(attackId) {
+  const b = COMBAT_FRAME_DATA.barel;
+  const move = b.combo.moves[attackId] || (attackId === 'air' ? b.air : attackId === 'dashAttack' ? b.dashAttack : null);
+  return move?.hitstopTicks || 0;
+}
+// 일반 적이 이번 타격으로 묶일 틱 수 = max(적 기본, 기술 hitstun) + 등급 경직 보너스. 보스는 기존 규칙(10틱)을 그대로 쓴다.
+function enemyHitstun(e, attackId, tier = hitTier(attackId, false, 0)) {
   const table = COMBAT_FRAME_DATA.enemies, base = (table[e?.type] || table.default).hurtTicks;
   const b = COMBAT_FRAME_DATA.barel, move = attackId && (b.combo.moves[attackId] || (attackId === 'air' ? b.air : null));
-  return Number.isFinite(move?.hitstunTicks) ? Math.max(base, move.hitstunTicks) : base;
+  return (Number.isFinite(move?.hitstunTicks) ? Math.max(base, move.hitstunTicks) : base) + (tier?.stunBonus || 0);
 }
 // 게임 코드가 쓰던 짧은 이름(ET 의 hp/spd/dmg/range/wind/act/rec/kb)으로 바꿔 준다.
 function enemyCombatStats(type) {
   const d = COMBAT_FRAME_DATA.enemies[type];
-  const s = { hp: d.hp, spd: d.speed, dmg: d.damage, range: d.rangePx, wind: d.windTicks, act: d.activeTicks, rec: d.recoveryTicks, kb: d.knockbackPx };
+  const minWind = COMBAT_FRAME_DATA.feel.readability.minWindTicks;   // 1.67: 예고는 최소 20틱
+  const s = { hp: d.hp, spd: d.speed, dmg: d.damage, range: d.rangePx, wind: Math.max(minWind, d.windTicks), act: d.activeTicks, rec: d.recoveryTicks, kb: d.knockbackPx };
   if (d.knockdown) s.kd = true;
   if (d.ranged) s.ranged = true;
   return s;
@@ -144,5 +190,7 @@ function comboFramePhases(attackId, durationsMs) {
 }
 globalThis.COMBAT_FRAME_DATA = COMBAT_FRAME_DATA;
 globalThis.enemyHitstun = enemyHitstun;
+globalThis.hitTier = hitTier;
+globalThis.attackHitstop = attackHitstop;
 globalThis.enemyCombatStats = enemyCombatStats;
 globalThis.comboFramePhases = comboFramePhases;

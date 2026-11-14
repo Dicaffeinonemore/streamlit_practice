@@ -171,7 +171,7 @@ function updateViesaAttack(){
     if(p.viesaShotQueued&&frame>=5){startViesaAttack(name==='jump_shot'?'air':0);return;}
   }else{
     const active=name==='slash2'?frame>=2&&frame<=4:frame>=3&&frame<=4;
-    if(active)playerStrike({dmg:Math.round(ATK.c1.dmg*({slash1:.9,slash2:1,kick:1.2}[name])),reach:ATK.c1.reach,kd:name==='kick',fx:name==='kick'?2:1,stop:3,pushScale:name==='kick'?1.3:1});
+    if(active)playerStrike({dmg:Math.round(ATK.c1.dmg*({slash1:.9,slash2:1,kick:1.2}[name])),reach:ATK.c1.reach,kd:name==='kick',fx:name==='kick'?2:1,stop:3,pushScale:name==='kick'?1.3:1,id:'viesaMelee'});
     if(p.buf>0&&p.combo<2&&p.t>=16){startViesaMelee(p.combo+1);return;}
   }
   if(p.t>=duration){
@@ -190,7 +190,7 @@ function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,lan
   const y=clamp(p.y+laneOffset,GTOP+1,GBOT),mul=p.buff>0?1.5:1;
   hazards.push({type:'viesa_arrow',x:p.x+p.face*26,y,h:p.z+VIESA_ART.worldHeight*.6,dir:p.face,age:0,
     speed,vh:air?-speed*Math.tan(Math.PI/6):0,range,travel:0,depth,aimY:target&&!laneOffset?target.y:y,startY:y,
-    damage:Math.round((snipe?ATK.c1.dmg*2.5:rapid?10:8)*mul),snipe,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
+    damage:Math.round((snipe?ATK.c1.dmg*2.5:rapid?10:8)*mul),snipe,rapid,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
   sfx(snipe?'viesaSnipe':'viesaArrow');
 }
 function fadeViesaArrow(z){if(!z.fading){z.fading=true;z.fadeAge=0;}}
@@ -212,7 +212,7 @@ function updateViesaProjectile(z){
     ...barrels.filter(b=>!b.dead&&!z.hits.has(b)&&Math.abs(b.y-z.y)<z.depth&&z.h<80&&b.x+b.hw>=Math.min(from,z.x)-4&&b.x-b.hw<=Math.max(from,z.x)+4)]
     .sort((a,b)=>Math.abs(a.x-from)-Math.abs(b.x-from));
   for(const e of contacts){
-    z.hits.add(e);if(e.kind==='barrel')damageBarrel(e);else{damageEnemy(e,z.damage,z.snipe,z.snipe?2:1);if(!z.paidSpecial)p.sp=Math.min(SP_MAX,p.sp+4);}
+    z.hits.add(e);if(e.kind==='barrel')damageBarrel(e);else{damageEnemy(e,z.damage,z.snipe,z.snipe?2:1,false,z.snipe||z.rapid?'viesaSkill':'viesaArrow');if(!z.paidSpecial)p.sp=Math.min(SP_MAX,p.sp+4);}
     viesaEffect('hit_spark',e.x,z.y,z.h,{width:48,height:48});
     if(!z.snipe){z.x=e.x;z.dead=true;break;}
   }
@@ -232,7 +232,7 @@ function viesaDashStrike(from,hits){
     if(!canHit(e)||hits.has(e)||blocked&&isSovereign(e))continue;
     const dx=(e.x-from)*p.face;
     if(dx < -20-e.hw||dx > reach+e.hw||Math.abs(e.y-p.y)>=24||Math.abs(e.z-p.z)>=55)continue;
-    hits.add(e);damageEnemy(e,damage,false,1);p.sp=Math.min(SP_MAX,p.sp+5);
+    hits.add(e);damageEnemy(e,damage,false,1,false,'viesaSkill');p.sp=Math.min(SP_MAX,p.sp+5);
   }
 }
 function updateViesaAction(){
@@ -261,7 +261,7 @@ function updateViesaAction(){
     p.x=a.x0+a.face*(VW/4)*Math.min(1,p.t/16);p.z=a.h0;p.vz=0;
     if(p.t<=16){p.inv=Math.max(p.inv,2);viesaDashStrike(previousX,a.dashHits);}
     const frame=Math.floor(p.t/4)+1;
-    if(frame>=5&&frame<=6)playerStrike({dmg:Math.round(ATK.c1.dmg*1.6),reach:ATK.c1.reach,kd:true,fx:2,stop:4});
+    if(frame>=5&&frame<=6)playerStrike({dmg:Math.round(ATK.c1.dmg*1.6),reach:ATK.c1.reach,kd:true,fx:2,stop:4,id:'viesaSkill'});
     if(p.t>=28){viesaNext('backflip');if(a.high&&a.h0>0){p.t=4;p.inv=Math.max(p.inv,1);}}
   }else if(phase==='backflip'){
     const frame=Math.floor(p.t/4)+1,u=clamp(a.high&&a.h0>0?(p.t-4)/20:p.t/24,0,1),height=VIESA_ART.worldHeight;
@@ -355,7 +355,7 @@ function updateViesaUltimateProjectiles(){
       const inside=giant?Math.hypot(e.x-z.tx,e.y-z.ty)<=radius+e.hw:Math.abs(e.x-z.tx)<=e.hw+12&&Math.abs(e.y-z.ty)<=24*1.3&&Math.abs(e.z+40-z.th)<65;
       if(!inside||!giant&&tick-(z.cast.hitTimes.get(e)??-Infinity)<3)continue;
       z.cast.hitTimes.set(e,tick);const stop=hitStop;
-      damageEnemy(e,z.damage,giant,giant?2:0);
+      damageEnemy(e,z.damage,giant,giant?2:0,false,giant?'special':'viesaArrow');
       if(!giant&&e.st!=='dead'&&!e.phaseT)hitStop=stop;
     }
     if(giant)for(const b of barrels)if(!b.dead&&Math.hypot(b.x-z.tx,b.y-z.ty)<=radius)damageBarrel(b);
@@ -371,9 +371,6 @@ function playerActionLabel(action,fallback){
 function syncPlayerCharacterUI(id){
   playerControlCharacter=id;
   const v=id==='viesa';document.body.classList.toggle('viesa-player',v);
-  const guide=document.getElementById('viesaControlGuide');if(guide)guide.hidden=!v;
-  document.querySelector('#tutorial .grid').hidden=v;
-  document.querySelectorAll('#tutorial .tips').forEach(el=>el.hidden=v);
   document.querySelectorAll('.skillbtn').forEach(b=>{const skill=b.dataset.skill;b.hidden=v&&!VIESA_SKILLS[skill];const label=b.querySelector('.name');if(label)label.textContent=v?VIESA_SKILLS[skill]?.name||'':SKILLS[skill].name;});
   document.querySelectorAll('#touchPad [data-control]').forEach(b=>{b.hidden=v&&b.dataset.control==='KeyI';b.setAttribute('aria-label',playerActionLabel(b.dataset.control,b.dataset.originalLabel||(b.dataset.originalLabel=b.getAttribute('aria-label')||'')));});
   UX.refreshBindings?.();

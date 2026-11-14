@@ -74,16 +74,17 @@ function inputDown(code) {
       else lastTap = { dir: d, t: tick };
     }
   }
+  if (scene === 'tutorial') { lightCaps(code, true); return; }   // 조작 안내: 시범 플레이 입력과 섞지 않는다
   keys[code] = true;
-  if (scene === 'tutorial') lightCaps(code, true);
 }
-function inputUp(code) { keys[code] = false; if (scene === 'tutorial') lightCaps(code, false); }
+function inputUp(code) { if (scene === 'tutorial') { lightCaps(code, false); return; } keys[code] = false; }
 addEventListener('keydown', e => {
   if(!e.repeat&&vargulDebugKey(e.code)){e.preventDefault();return;}
+  if(e.code==='F9'&&!e.repeat){e.preventDefault();toggleHitboxDebug();return;}   // 판정 오버레이
   if (e.target.closest?.('input, select, textarea, button') && scene !== 'play' && !['Escape', 'KeyM'].includes(e.code)) return;
   if (e.metaKey || e.altKey) return;
   const code = UX.mapKey(e.code);
-  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'Enter'].includes(code) || (scene === 'play' && e.ctrlKey)) e.preventDefault();
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'Enter'].includes(e.code) || (code && code !== e.code) || (scene === 'play' && e.ctrlKey)) e.preventDefault();
   if (!e.repeat) inputDown(code);
 });
 addEventListener('keyup', e => inputUp(UX.mapKey(e.code)));
@@ -234,6 +235,8 @@ let camX = 0, camLock = false, lockAt = 0, waveIdx = 0;
 let player = null, enemies = [], items = [], barrels = [], parts = [], texts = [];
 let hazards = [], impacts = [], bursts = [], ghosts = [], bolts = [];   // 투사체·위험 지대 / 적중 이펙트 / 불꽃 / 잔상 / 번개
 let target = null;                     // 최근에 때린 잡몹 (HUD 표시)
+const FEEL = COMBAT_FRAME_DATA.feel;   // 1.67 타격감·가독성 수치
+let lastHit = null;                        // 마지막 타격 { e, tier, rank } — 히트스톱 중 떨림, 디버그 표시
 let tick = 0, hitStop = 0, shake = 0, flashT = 0, flashCol = '255,255,255', bannerT = 0, clearT = 0, goT = 0, stageStartScore = 0, nextId = 1;
 let slowT = 0;                         // 보스를 쓰러뜨리면 잠깐 느려진다 (ms)
 let introBoss = null, introT = 0, introLand = false;   // 보스 등장 연출
@@ -273,9 +276,10 @@ function selectCharacter(id, focus = false) {
     if (focus && button.dataset.character === id) button.focus();
   });
   $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
+  const k = a => UX.keyName(UX.options.bindings[a]);
   $('characterSelectionKeys').textContent = id === 'viesa'
-    ? 'J 화살 · H 근접 · U 연사 · L 저격 · O 지상 백플립 · P 공중 백플립 · K 흑월 난사'
-    : 'J 3연타 · 대시 중 공격: 대시 찌르기 · U 견제 찌르기 · H 내려찍기 · O 회전 베기 · P 점프 강하 · L 붉은 파동 · K 흑월참 · I 뇌격';
+    ? `${k('KeyJ')} 화살 · ${k('KeyH')} 근접 · ${k('KeyU')} 연사 · ${k('KeyL')} 저격 · ${k('KeyO')} 지상 백플립 · ${k('KeyP')} 공중 백플립 · ${k('KeyK')} 흑월 난사`
+    : `${k('KeyJ')} 3연타 · 대시 중 공격: 대시 찌르기 · ${k('KeyU')} 견제 찌르기 · ${k('KeyH')} 내려찍기 · ${k('KeyO')} 회전 베기 · ${k('KeyP')} 점프 강하 · ${k('KeyL')} 붉은 파동 · ${k('KeyK')} 흑월참 · ${k('KeyI')} 뇌격`;
   $('btnCharacterConfirm').disabled = !hero.available;
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
@@ -323,6 +327,7 @@ $('characterSelect').addEventListener('keydown', e => {
 $('btnCharacterConfirm').onclick = confirmCharacter;
 $('btnCharacterBack').onclick = backFromCharacterSelect;
 function showScreen(id) {
+  if (id !== 'tutorial') demoStop();               // 시범 플레이를 끝내고 보관한 게임 상태로 되돌린다
   $('btnOverBosses').hidden = !bossChallenge;
   $('btnPauseBosses').hidden = !bossChallenge;
   screens.forEach(s => $(s).classList.toggle('show', s === id));
@@ -344,6 +349,7 @@ function toTutorial(from = 'title') {
   $('btnHelpBack').hidden = !['pause', 'characterSelect'].includes(from); $('btnPractice').hidden = from === 'pause'; $('btnGo').hidden = from === 'pause';
   $('btnHelpBack').textContent = from === 'characterSelect' ? '캐릭터 선택' : '돌아가기';
   document.querySelector('#tutorial .dialog-body').scrollTop = 0;
+  demoStart(from);
 }
 function beginGame(cinematic = false) {
   bossChallenge = false;
@@ -386,7 +392,7 @@ function updatePractice() {
   if (player.st === 'dash') practiceDone.add('dash');
   if (!enemies.length || enemies[0].st === 'dead') { enemies = [mkEnemy('grunt', clamp(player.x + 110, 100, 550), player.y)]; enemies[0].training = true; }
   const label = code => UX.keyName(UX.options.bindings[code]);
-  const steps = [['move', '이동: 방향키 또는 이동 버튼으로 허수아비에게 접근하세요'], ['attack', `공격: ${label('KeyJ')} / 공격 버튼으로 같은 줄의 적을 맞히세요`],
+  const steps = [['move', `이동: ${['KeyA','KeyD','KeyW','KeyS'].map(label).join(' ')} 또는 이동 버튼으로 허수아비에게 접근하세요`], ['attack', `공격: ${label('KeyJ')} / 공격 버튼으로 같은 줄의 적을 맞히세요`],
     ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 방향키 두 번 · 대시 중 공격: 대시 찌르기`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
   const next = steps.find(([id]) => !practiceDone.has(id));
   $('practiceText').textContent = next ? `연습 ${practiceDone.size}/5 · ${next[1]}` : '연습 완료! 실전에서 공격 예고를 보고 피하세요.';
@@ -475,6 +481,7 @@ function onKeyOnce(code) {
 
 // ---------------------------------------------------------------- 스테이지 진행
 function startStage(i, restored = false) {
+  demoStop();
   globalThis.BarelJump?.reset();
   globalThis.BarelDashFx?.clear();
   resetViesaEffects();syncPlayerCharacterUI(player.characterId);
@@ -543,7 +550,7 @@ function sparks(x, y, z, n = 7, col = '#fff6a8') {
   for (let i = 0; i < n; i++)
     parts.push({ x, y, z, vx: rand(-3, 3), vz: rand(1, 5), life: rand(14, 26), col });
 }
-function floatText(x, y, txt, col = '#fff') { texts.push({ x, y, txt, col, life: 50 }); }
+function floatText(x, y, txt, col = '#fff', scale = 1) { texts.push({ x, y, txt, col, life: 50, scale }); }
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
 function impact(x, y, z, kind, dir) { impacts.push({ x, y, z, kind, dir: dir || 1, age: 0, seed: (Math.random() * 999) | 0 }); }
 function burst(x, y, z, cols) { if (UX.options.lowFx && bursts.length >= 6) return; bursts.push({ x, y, z, age: 0, seed: (Math.random() * 999) | 0, cols }); }
@@ -582,6 +589,7 @@ function canHit(e) { return e.st !== 'dead' && e.st !== 'down' && e.inv <= 0 && 
 
 // ---------------------------------------------------------------- 플레이어
 function startAtk(n) {
+  markAttackLane();                                // 같은 줄의 적 그림자가 0.2초 하얗게
   if(isViesa()){startViesaAttack(n);return;}
   const p = player;
   p.st = 'atk'; p.t = 0; p.buf = 0; p.hitSet = new Set(); p.x0 = p.x; p.wave = false; p.smash = false;
@@ -639,7 +647,7 @@ function playerStrike(A) {
     if (b.dead || p.hitSet.has(b)) continue;
     if (inReach(p, b, A.reach, 24, 55)) { p.hitSet.add(b); damageBarrel(b); }
   }
-  if (landed) { hitStop = Math.max(hitStop, A.stop); if (A.fx === 2) shake = Math.max(shake, 8); }
+  // 히트스톱·흔들림은 damageEnemy 가 타격 등급(COMBAT_FRAME_DATA.feel.tiers)으로 정한다 (1.67)
 }
 // 대검이 땅에 박히는 순간: 돌 파편 · 흙먼지 · 붉은 불꽃
 function groundSmash(x, y) {
@@ -685,8 +693,8 @@ function dashAttackStrike() {
     if(!canHit(e)||p.hitSet.has(e)||blocked&&isSovereign(e)||dx+e.hw<box.front||dx-e.hw>box.reach||
        Math.abs(e.y-p.y)>=box.depth||e.z>box.top||e.z+height<box.bottom)continue;
     const hp=e.hp;
-    p.hitSet.add(e);damageEnemy(e,damage,DASH_ATTACK.knockdown,2);
-    if(e.hp<hp){p.dashAttackHit=true;p.sp=Math.min(SP_MAX,p.sp+DASH_ATTACK.spGain);hitStop=Math.max(hitStop,DASH_ATTACK.hitstopTicks);}
+    p.hitSet.add(e);damageEnemy(e,damage,DASH_ATTACK.knockdown,2,false,'dashAttack');
+    if(e.hp<hp){p.dashAttackHit=true;p.sp=Math.min(SP_MAX,p.sp+DASH_ATTACK.spGain);}
   }
   for(const b of barrels){
     const dx=(b.x-p.x)*p.face;
@@ -767,13 +775,13 @@ function specialHit(last, k) {
   let any = false;
   for (const e of enemies) {
     if (!canHit(e) || sovBlock&&isSovereign(e)) continue;
-    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1, false, null, hitSound); any = true; }
+    if (Math.abs(e.x - p.spX) < rx + e.hw && Math.abs(e.y - p.spY) < ry) { damageEnemy(e, dmg, last, last ? 2 : 1, false, last ? 'special' : 'specialSlash', hitSound); any = true; }
   }
   for (const b of barrels) {
     if (!b.dead && Math.abs(b.x - p.spX) < rx && Math.abs(b.y - p.spY) < ry) damageBarrel(b, hitSound);
   }
   if (!any) impact(p.spX - f * 12, p.spY, 72 + (k === 1 ? 16 : (k === 0 ? 4 : -8)), last ? 2 : 1, f);
-  if (last) { flashT = 240; shake = Math.max(shake, 18); hitStop = Math.max(hitStop, 6); playerHitSfx(2, hitSound); }
+  if (last) { flashT = 240; shake = Math.max(shake, 18); playerHitSfx(2, hitSound); }
   else { shake = Math.max(shake, 6); }
 }
 
@@ -793,8 +801,8 @@ function fireBolts() {
   for (const e of enemies) {
     if (e.st === 'dead' || e.st === 'intro' || e.x < camX - 20 || e.x > camX + VW + 20) continue;
     xs.push([e.x, e.y]);
-    if (e.boss) { if (!e.invuln && e.alpha >= 0.9) damageEnemy(e, MAGIC.damage, false, 2, true); }
-    else { e.bolted = true; e.inv = 0; damageEnemy(e, MAGIC.damage, true, 2, true); }
+    if (e.boss) { if (!e.invuln && e.alpha >= 0.9) damageEnemy(e, MAGIC.damage, false, 2, true, 'magic'); }
+    else { e.bolted = true; e.inv = 0; damageEnemy(e, MAGIC.damage, true, 2, true, 'magic'); }
   }
   const c = xs.length ? xs[0] : [p.x + p.face * 120, p.y];
   xs.push([clamp(c[0] - 72, camX + 16, camX + VW - 16), c[1]], [clamp(c[0] + 72, camX + 16, camX + VW - 16), c[1]]);
@@ -850,7 +858,7 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
     if (!canHit(e) || p.skillHits.has(key) || sovBlock&&isSovereign(e)) continue;
     const dx = (e.x - p.x) * p.face;
     if (dx > -behind - e.hw && dx < reach + e.hw && Math.abs(e.y - p.y) < 38 && Math.abs(e.z - p.z) < 85) {
-      p.skillHits.add(key); damageEnemy(e, Math.round(dmg * mul), kd, fx); landed = true;
+      p.skillHits.add(key); damageEnemy(e, Math.round(dmg * mul), kd, fx, false, 'skill'); landed = true;
       p.sp = Math.min(SP_MAX, p.sp + (kd ? 9 : 5));
     }
   }
@@ -862,7 +870,7 @@ function skillStrike(phase, dmg, reach, behind, kd, fx) {
       p.skillHits.add(key); damageBarrel(b);
     }
   }
-  if (landed) { hitStop = Math.max(hitStop, kd ? 7 : 4); shake = Math.max(shake, kd ? 12 : 6); }
+  // 히트스톱·흔들림: 스킬은 heavy 등급 (damageEnemy)
   return landed;
 }
 function updSkill() {
@@ -916,7 +924,8 @@ function updPlayer() {
   if (p.buf > 0) p.buf -= MS;
   if (p.dashCd > 0) p.dashCd--;
   if(p.dashGrace>0)p.dashGrace--;
-  for (const id in p.skillCd) if (p.skillCd[id] > 0) p.skillCd[id] = Math.max(0, p.skillCd[id] - MS);
+  for (const id in p.skillCd) if (p.skillCd[id] > 0) { p.skillCd[id] = Math.max(0, p.skillCd[id] - MS); if (!p.skillCd[id]) markSkillReady(id); }
+  feelPlayerSignals();                              // SP 가득 오라·효과음, 스킬 준비 글자
   if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else if(p.grab?.stage1)updateStage1Grab();else if(p.grab?.gorath2)updateGorath2Grab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
   p.walk = false;
@@ -1083,16 +1092,24 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null,
   const gorathUlt = gorath2UltThreshold(e, dmg);
   if (gorathUlt) dmg = Math.max(0, e.hp - gorathUlt.hp);  // 발동 체력 아래로 피해가 넘어가지 않는다
   chain.n++; chain.t = CHAIN_MS; chain.max = Math.max(chain.max, chain.n);
-  e.hp -= dmg; e.flash = 6;
+  // 타격 등급 (1.67): 히트스톱·흔들림·흰색 번쩍임·경직 보너스·넉백. 일반 적은 연속 피격 상한(chainCap)에 닿으면 finisher + 넉다운.
+  // 필살기 도중의 타격은 상한에서 뺀다 (흑월참 3연 베기·비에사 화살비가 중간에 적을 넘어뜨리지 않도록)
+  let tier = hitTier(attackId, kd, kind);
+  const chainCapHit = !e.boss && p.st !== 'special' && (e.st === 'hurt' ? (e.chainN || 0) : 0) + 1 >= FEEL.chainCap;
+  if (chainCapHit) tier = hitTier('special', true, 2);
+  e.hp -= dmg; e.flash = tier.flash;
   if (dmg > 0) sfx('hurt');
-  hitStop = Math.max(hitStop, kd ? 6 : 3);
+  hitStop = Math.max(hitStop, tier.hitstop, attackHitstop(attackId));
+  if (tier.shake) shake = Math.max(shake, tier.shake);
   playerHitSfx(kind, hitSound);
   const dir = p.x <= e.x ? 1 : -1, hz = e.z + SPRITES[e.d.sprite].gy * SC * 0.55;
-  e.hr = 0; e.hdir = dir; e.hheavy = kind >= 2;
+  e.hr = 0; e.hdir = dir; e.hheavy = tier.rank >= 2;
+  e.bumpSet = new Set(); e.bumpDmg = dmg;          // 날아가며 부딪힐 적 (한 번 날아가는 동안 같은 적에게 한 번)
+  lastHit = { e, tier: tier.name, rank: tier.rank };
   if (isGorath2(e)) e.hitLow = !(p.z > 20 || p.st === 'special') && (attackId === 'c2' || p.st === 'dash' || (p.st === 'skill' && p.skill === 'thrust'));   // 2페이즈 피격 그림(상단·하단)
   impact(e.x - dir * e.hw * 0.6, e.y, hz, kind, dir);
   burst(e.x - dir * e.hw * 0.5, e.y, hz, kind === 2 ? ['#ffffff', '#9cc3ff', '#6a7cc0'] : undefined);
-  floatText(e.x, e.y - e.z - e.d.h * e.d.s - 14, dmg, '#ffe27a');
+  floatText(e.x, e.y - e.z - e.d.h * e.d.s - 14, dmg, '#ffe27a', tier.rank >= 2 ? FEEL.damageTextScaleHeavy : 1);
   if (!e.boss) target = { e, t: 150 };
 
   if (gorathUlt) { gorath2TriggerThreshold(e, gorathUlt); return; }
@@ -1133,10 +1150,12 @@ function damageEnemy(e, dmg, kd, kind = 0, fixedDamage = false, attackId = null,
     } else if (e.st === 'chase' || e.st === 'rec' || (isAurelion(e)&&e.st==='pat'&&!aurelionArmored(e)&&e.aurelion.guard!=='broken') || (isVargul(e)&&e.st==='pat'&&!vargulArmored(e))) { if(isAurelion(e)||isVargul(e))resetBossFx(e);e.st = 'hurt'; e.t = 0; e.vx = dir; }
     return;
   }
+  if (tier.knockdown) kd = true;                   // finisher(필살기 마무리·뇌격·연속 피격 상한)는 넉다운. 슈퍼아머도 뚫는다
   if (stage1Armor(e, kd, fixedDamage, attackId)) return;             // 1스테이지 중갑병·곤봉잡이 슈퍼아머
   if (COMBAT_FRAME_DATA.enemies[e.type]?.armorWhileWind && e.st === 'wind' && !kd) return;   // 거한은 예고 동작 중 슈퍼아머
-  if (kd) { e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * 4; }
-  else { e.st = 'hurt'; e.t = 0; e.hurtT = enemyHitstun(e, attackId); e.vx = dir * e.d.kb * 0.6; }
+  e.chainN = (e.st === 'hurt' ? (e.chainN || 0) : 0) + 1;
+  if (kd) { e.st = 'down'; e.t = 0; e.vz = 5; e.vx = dir * (tier.knockdownVx || FEEL.knockdownVx); e.chainN = 0; }
+  else { e.st = 'hurt'; e.t = 0; e.hurtT = enemyHitstun(e, attackId, tier); e.vx = dir * e.d.kb * tier.kbMul; }
   e.pat = null;
 }
 function spawnAdds(types) {
@@ -1341,7 +1360,7 @@ function updEnemy(e) {
 
     case 'hurt':
       e.x += e.vx; e.vx *= 0.85;
-      if (e.t > (e.boss ? 10 : (e.hurtT || 18))) { e.st = 'chase'; e.t = 0; e.wait = rand(0, 12); }
+      if (e.t > (e.boss ? 10 : (e.hurtT || COMBAT_FRAME_DATA.enemies.default.hurtTicks))) { e.st = 'chase'; e.t = 0; e.wait = rand(0, 12); e.chainN = 0; }
       break;
 
     case 'stun':                                    // 5초간 기절
@@ -1363,7 +1382,7 @@ function updEnemy(e) {
     case 'act': {
       if (e.pat === 'swing') {
         const EH = COMBAT_FRAME_DATA.enemies.hit;
-        if (e.t <= d.act && !e.hitSet.has(p) && inReach(e, p, d.range + EH.reachPadPx, EH.depthPx, EH.heightPx)) {
+        if (e.t <= d.act && !e.hitSet.has(p) && zoneContains(swingZone(e), p)) {   // 바닥 표시와 같은 범위 (feel-runtime.js)
           if (hurtPlayer(d.dmg, e.face, !!d.kd, e)) e.hitSet.add(p);
         }
         if (e.t > d.act + EH.activeGraceTicks) { e.st = 'rec'; e.t = 0; e.recT = d.rec; e.atkCd = rand(15, 45); }
@@ -1393,6 +1412,7 @@ function updEnemy(e) {
     }
   }
 
+  enemyCollide(e);                                 // 1.67: 날아간 적이 다른 적과 부딪힘
   // 적끼리 겹치지 않게 살짝 밀어내기
   if (e.st === 'chase' || e.st === 'rec') {
     for (const o of enemies) {
@@ -1567,7 +1587,7 @@ function updHazards() {
             if (!canHit(e) || z.hits.has(e.id) || sovBlock&&isSovereign(e) || Math.abs(e.y - z.y) >= 26 ||
                 Math.abs(e.z + 44 - z.h) >= 38 ||
                 e.x + e.hw < Math.min(from, z.x) - 14 || e.x - e.hw > Math.max(from, z.x) + 14) continue;
-            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1, false, null, 'barelWave');
+            z.hits.add(e.id); damageEnemy(e, z.damage, false, 1, false, 'redwave', 'barelWave');
             p.sp = Math.min(SP_MAX, p.sp + 4);
           }
           if (z.travel >= 520) z.dead = true;
@@ -1589,6 +1609,7 @@ function updHazards() {
 
 // ---------------------------------------------------------------- 메인 업데이트
 function update() {
+  if (scene === 'tutorial') return demoUpdate();
   if (['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene)) return false;
   tick++;
   if (scene === 'opening') { openingTime += MS; if (openingTime >= 18000) finishOpening(); return; }
@@ -2499,7 +2520,7 @@ function drawLegion(e) {
   }
   if (e.flash > 0) { o.wash = '#ffffff'; o.washA = 0.7; }
   else if (e.st === 'dead' && e.bolted) { o.wash = '#cfe0ff'; o.washA = 0.7; }
-  else if (e.st === 'wind' && e.t > 6 && Math.floor(e.t / 4) % 2) { o.wash = '#ffffff'; o.washA = 0.3; }   // 공격 예고
+  else if (enemyLateBlink(e)) { o.wash = '#ffffff'; o.washA = 0.3; }   // 공격 예고: 판정 8틱 전부터 2틱 간격
   const alpha = e.st === 'dead' ? clamp(1 - (e.t - 45) / 20, 0, 1) : 1;
   present(hdFigure(id, legionFrame(e), e.face, o), sx, e.y - e.z, alpha, false, e.face, 0, HD_SCALE[id]);
 }
@@ -2940,8 +2961,9 @@ function drawEnemyOverlay(e) {                     // 월드 좌표: 기절 별,
     }
   }
   const tele=e.type==='boss2'?(morgraMoves[e.morgraMove]?.phases?.startup?.[1]+1||0)*MS:(TELE[e.pat]||0);
-  const warnNow = isGorath2(e)?(gorath2Warning(e)&&Math.floor(tick/7)%2===0):isSovereign(e)?(sovereignWarning(e)&&Math.floor(tick*MS/110)%2===0):isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
+  const warnNow = isGorath2(e)?(gorath2Warning(e)&&Math.floor(tick/7)%2===0):isSovereign(e)?(sovereignWarning(e)&&Math.floor(tick*MS/110)%2===0):isVargul(e)?(vargulTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):isAurelion(e)?(aurelionTelegraph(e)?.warning&&Math.floor(e.pt/110)%2===0):(e.boss && e.st === 'wind' && e.t > 2) || (e.st === 'pat' && e.pt < tele && Math.floor(e.pt / 110) % 2 === 0);
   if (warnNow) outlineText('!', sx, top - (e.boss ? 24 : 28), '#ff3d3d', 'bold 26px sans-serif');
+  else if (!e.boss) drawEnemyAlert(e, sx, top);    // 1.67: 일반 적 예고 3단계 (노란 ! → 빨간 깜빡임, 넉다운은 !!)
 }
 
 // 화면 가장자리를 살짝 어둡게 (아케이드 모니터 느낌)
@@ -2974,12 +2996,13 @@ function render() {
     fxGround.L.clear(); drawGroundFx(fxGround.L); presentFx(fxGround);
     drawStage1GroundSprites();                    // 1스테이지 바닥 불·파편·먼지 스프라이트 (캐릭터 뒤)
     drawGorath2Ground();                          // 고라스: 쓰러진 몸, 고기 낙하 경고·잔해 (캐릭터 뒤)
+    drawFeelGround();                             // 1.67: 적 공격 범위 · 같은 줄 · SP 오라 (캐릭터 뒤)
     const sp = player.st === 'special' && !isViesa() ? player.t * MS : -1;
     // y 순서로 정렬해서 그린다 (필살기 중에는 흑기사와 그 잔상만 어둠 위에 따로 그림)
     const list = [];
     barrels.forEach(b => list.push({ y: b.y, f: () => drawBarrel(b) }));
     items.forEach(i => list.push({ y: i.y, f: () => drawItem(i) }));
-    enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemy(e) }));
+    enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemyFeel(e) }));   // 히트스톱 중 맞은 적 떨림
     sovereignDrawList(list);
     hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, f: () => drawZoneEruption(z) }); });
     ghosts.forEach(g => { if (sp < 0 || g.id !== 'player') list.push({ y: g.y - 0.5, f: () => drawGhost(g) }); });
@@ -3001,6 +3024,8 @@ function render() {
     drawStage1TopSprites();                       // 날아가는 화염병
     for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
     enemies.forEach(drawEnemyOverlay);
+    drawFeelTop();                                // 스킬 준비 글자
+    drawHitboxDebug();                            // ?hitbox=1 / F9
     drawGorathHazards();
     drawGorath2Top();                             // 고라스: 떨어지는 고기, 사슬·갈고리
     drawMorgraHazards();
@@ -3010,7 +3035,7 @@ function render() {
     drawViesaProjectiles();
     drawGorathGrab();
     drawStage1Grab();
-    for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, 'bold 16px sans-serif');
+    for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, `bold ${Math.round(16 * (t.scale || 1))}px sans-serif`);
   }
   ctx.restore();
   drawVignette();
@@ -3019,6 +3044,7 @@ function render() {
   if (UX.options.flash && flashT > 0) { ctx.fillStyle = `rgba(${flashCol},${Math.min(0.55, flashT / 220 * 0.55).toFixed(3)})`; rect(0, 0, W, H); }
   if (scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro')) { if (!drawGorath2IntroBars()) drawIntroCard(introT / bossIntroDuration(introBoss)); if (introBoss&&!isVargul(introBoss)) drawBossBar(introBoss); }
   else if (stage && player) drawHUD();
+  drawHitboxDebugText();
   if (stage && player) drawStage1Overlay();
 
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
@@ -3113,7 +3139,7 @@ function loop(t) {
     waitingAssets = true; acc = 0; GamePerf.reset(); scheduleLoop(100); return;
   }
   if (waitingAssets) { real = 0; waitingAssets = false; }
-  const frozen = ['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene);
+  const frozen = ['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene) && !(scene === 'tutorial' && DEMO.on && !DEMO.paused);
   const frozenKey = `${scene}|${renderRevision}|${GameAssets.revision}`;
   if (document.hidden || (frozen && frozenFrame === frozenKey)) {
     GamePerf.reset();
@@ -3130,10 +3156,11 @@ function loop(t) {
   }
   const renderStart = performance.now();
   ctx.setTransform(RENDER_K, 0, 0, RENDER_K, 0, 0);   // 960x540 좌표계를 실제 해상도로 확대
-  if (scene === 'title' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
+  if (scene === 'title' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && !DEMO.on && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
   else render();
   if (scene === 'characterSelect') drawCharacterPreview();
+  if (scene === 'tutorial') demoPresent();
   if (scene === 'challenge') drawBarelIdlePreview($('barelChallengePreview'),tick*MS);
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
   $('skillbar').hidden = scene !== 'play';
@@ -3143,6 +3170,7 @@ function loop(t) {
   scheduleLoop();
 }
 UX.mount();
+demoMount();
 fitCanvas();
 GameAssets.prepareStage(0);
 loopRequest = requestAnimationFrame(t => { last = t; loop(t); });

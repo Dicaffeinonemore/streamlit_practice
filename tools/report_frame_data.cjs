@@ -16,9 +16,24 @@ const head = cols => [row(cols), row(cols.map(() => '---'))];
 const PH = { windup: '예고', active: '**판정**', recovery: '회수' };
 const out = [];
 
-out.push('# 바렐 · 일반 적 — 전투 프레임 데이터 (v1.52, 패치 1.51 기준)', '');
+out.push('# 바렐 · 일반 적 — 전투 프레임 데이터 (v1.67 기준)', '');
 out.push('> `node tools/report_frame_data.cjs` 가 `combat-data.js`, 스프라이트 메타데이터, 실측 결과로 자동 생성한다. 직접 고치지 말고 `combat-data.js` 를 고친 뒤 다시 측정한다.', '');
 out.push('단위: 60fps 틱(1틱 = 16.7ms). 히트스톱 동안은 적의 경직도 함께 멈추므로 간격에서 뺐다.', '');
+
+// ---------------------------------------------------------------- 1.67 타격 등급
+const F = D.feel;
+out.push('## 타격 등급 (v1.67)', '');
+out.push('모든 플레이어 타격은 등급 하나를 갖는다. 피격 경직 = max(적 기본, 기술 경직) + 등급 보너스. 히트스톱은 등급값과 기술별 값 중 큰 쪽. 보스는 히트스톱·흔들림만 적용한다.', '');
+out.push(...head(['등급', '해당 공격', '히트스톱', '경직 보너스', '넉백 배수', '화면 흔들림', '흰색 번쩍임']));
+for (const name of F.tierOrder) {
+  const t = F.tiers[name], ids = Object.entries(F.tierByAttack).filter(([, v]) => v === name).map(([k]) => k).join(', ');
+  out.push(row([name, ids, `${t.hitstop}틱`, t.knockdown ? '넉다운' : `+${t.stunBonus}틱`, t.kbMul, t.shake, `${t.flash}틱`]));
+}
+out.push('');
+out.push(`- 표에 없는 공격: 넉다운이거나 강한 이펙트(kind 2)면 heavy, 나머지는 light.`);
+out.push(`- 연속 피격 상한: 일반 적이 경직이 풀리지 않은 채 ${F.chainCap}번째로 맞으면 finisher + 넉다운 (필살기 도중 제외).`);
+out.push(`- 날아간 적(속도 ${F.collide.minSpeed}px/틱 이상)이 다른 적과 겹치면(가로 ${F.collide.dx}px · 깊이 ${F.collide.dy}px 안) 원래 피해 × ${F.collide.dmgMul}, light 등급, 넉백 × ${F.collide.kbMul}. 한 번 날아가는 동안 같은 적에게 한 번.`);
+out.push(`- 일반 적·1스테이지 적의 공격 예고는 최소 ${F.readability.minWindTicks}틱.`, '');
 
 out.push('## 바렐 3연타', '');
 out.push(...head(['공격', '총(ms)', '예고/휘두름/회수(ms)', '판정 틱', '다음 타 연결 틱', '끝 틱', '피해', '사거리', '히트스톱', '피격 경직']));
@@ -98,7 +113,7 @@ for (const [id, s] of Object.entries(B.skills)) {
   const at = s.strikeMs != null ? [].concat(s.strikeMs).join(' / ') : s.strikeFromMs != null ? `${s.strikeFromMs}부터 돌진 끝까지` : `${s.fireMs} (파동 발사)`;
   const inv = s.invulnerableMs ? `${s.invulnerableMs[0]}–${s.invulnerableMs[1]}ms` : s.travelMs && (s.invulnerableWhileTravel || id === 'leap') ? `이동 중 ${s.travelMs[0]}–${s.travelMs[1]}ms` : '-';
   out.push(row([`${s.name} (${id})`, s.key, `${s.cooldownMs / 1000}초`, `${s.durMs}ms (${tk(s.durMs)}틱)`, at, s.damage + ([].concat(s.strikeMs || []).length > 1 ? ` × ${s.strikeMs.length}` : ''),
-    s.reachPx ? `${s.reachPx} / ${s.behindPx}px` : '투사체', s.knockdown ? '넉다운' : id === 'redwave' ? '관통 파동' : '경직(18틱)', inv]));
+    s.reachPx ? `${s.reachPx} / ${s.behindPx}px` : '투사체', s.knockdown ? '넉다운' : id === 'redwave' ? '관통 파동' : `경직(${D.enemies.default.hurtTicks}+${F.tiers[F.tierByAttack.skill].stunBonus}틱)`, inv]));
 }
 out.push('', `- 스킬이 끝나면 ${B.skillEndInvulnerableTicks}틱 무적. 스킬 판정 깊이 38px, 높이 85px.`, '');
 
@@ -110,10 +125,10 @@ for (const t of ['grunt', 'rogue', 'brute', 'archer']) {
   out.push(row([e.name, e.hp, e.speed, e.damage, `${e.rangePx}px`, `${e.windTicks}틱`, `${e.activeTicks}틱`, `${e.recoveryTicks}틱`, `${e.hurtTicks}틱`, tag]));
 }
 out.push('', `- 근접 판정: 사거리 + ${D.enemies.hit.reachPadPx}px, 깊이 ±${D.enemies.hit.depthPx}px, 높이 ${D.enemies.hit.heightPx}px. 판정은 예고가 끝난 뒤 '판정' 틱 + ${D.enemies.hit.activeGraceTicks}틱 동안 유지.`);
-out.push('- 피격 경직은 바렐 3연타에 맞으면 위 표의 공격별 값(일섬 22·역일섬 28), 그 밖의 공격은 이 표의 값.', '');
+out.push(`- 피격 경직은 바렐 3연타에 맞으면 공격별 값(일섬 ${B.combo.moves.c1.hitstunTicks}·역일섬 ${B.combo.moves.c2.hitstunTicks}), 그 밖의 공격은 이 표의 값. 여기에 타격 등급 보너스가 더해진다.`, '');
 
-out.push('## 바뀌지 않은 것', '');
-for (const u of r.untouched) out.push(`- ${u.case}: 피격 경직 ${u.measured}틱 (기존 ${u.expected}틱)`);
+out.push('## 표에 없는 공격', '');
+for (const u of r.untouched) out.push(`- ${u.case}: 피격 경직 ${u.measured}틱 (기대값 ${u.expected}틱 = 기본 ${D.enemies.default.hurtTicks} + light ${F.tiers.light.stunBonus})`);
 out.push('- 보스(고라스~소버린)와 비에사는 각자의 데이터·런타임 파일을 따른다.', '');
 
 fs.writeFileSync(path.join(root, 'docs/barel-frame-data.md'), out.join('\n'));

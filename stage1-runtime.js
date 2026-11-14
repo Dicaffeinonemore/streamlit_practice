@@ -39,6 +39,21 @@ const S1_MOVES = {
   heavy: { spin: { len: [6, 5, 5, 4, 4, 4, 4, 4, 5, 8], warnTo: 3, hits: [{ f: [4, 5], dmg: .6, radial: true }, { f: [6, 8], dmg: .6, radial: true, kd: true }] },
            grab: { len: [5, 5, 4, 3, 3, 4, 5, 5, 5, 5], warnTo: 2, dash: [3, 5, .06], grab: [5, 6] } },
 };
+// 1.67 최소 예고 시간: warnTo > 0 인 동작의 예고 프레임 합이 feel.readability.minWindTicks(20) 보다 짧으면
+// 예고 프레임 길이를 비율대로 늘려 맞춘다 (로드 시 한 번). warnTo 0 인 연계기(칼 도적 2·3타)는 첫 타 예고로 충분해서 제외.
+const S1_WIND_STRETCH = [];
+(function stretchStage1Wind() {
+  const min = COMBAT_FRAME_DATA.feel.readability.minWindTicks;
+  for (const [id, moves] of Object.entries(S1_MOVES)) for (const [clip, m] of Object.entries(moves)) {
+    if (!(m.warnTo > 0)) continue;
+    const warn = m.len.slice(0, m.warnTo), sum = warn.reduce((a, b) => a + b, 0);
+    if (sum >= min) continue;
+    const raw = warn.map(l => l * min / sum), out = raw.map(Math.floor);
+    raw.map((v, i) => [v - out[i], i]).sort((a, b) => b[0] - a[0]).slice(0, min - out.reduce((a, b) => a + b, 0)).forEach(([, i]) => out[i]++);
+    S1_WIND_STRETCH.push({ id, clip, before: warn.slice(), after: out.slice(), from: sum, to: min });
+    m.len = [...out, ...m.len.slice(m.warnTo)];
+  }
+})();
 const HEAVY_GRAB = { cd: 300, every: 40, dmg: .3, squeezes: 3, throwDmg: .6, escapeStun: 30, chokeTpf: 6, near: 1 };
 const MOLOTOV = { near: 260, far: 420, wind: 30, flight: 40, restMin: 90, restMax: 140, kickWind: 14, kickAct: 6, kickDmg: 4, kickCd: 90 };
 const FIRE = { rx: 70, ry: 22, life: 150, fade: 30, every: 20, dmg: 3, max: 3 };
@@ -323,7 +338,7 @@ function molotovThrow(e) {
 function molotovKick(e) {
   const p = player;
   if (e.st === 'wind') { if (e.t >= MOLOTOV.kickWind) { e.st = 'act'; e.t = 0; } return; }
-  if (!e.hitSet.has(p) && inReach(e, p, 40, 16) && hurtPlayer(MOLOTOV.kickDmg, e.face, false, e)) e.hitSet.add(p);
+  if (!e.hitSet.has(p) && zoneContains(kickZone(e), p) && hurtPlayer(MOLOTOV.kickDmg, e.face, false, e)) e.hitSet.add(p);   // 바닥 표시와 같은 범위
   if (e.t >= MOLOTOV.kickAct) { e.st = 'rec'; e.t = 0; e.recT = 20; e.pat = null; e.kickCd = MOLOTOV.kickCd; e.x -= e.face * 6; }
 }
 // 기상: 기존 일반 적 규칙 그대로 — 무적 45틱, 기상 그림이 끝난 뒤 20틱 더 공격하지 않는다
@@ -352,7 +367,7 @@ function houndChase(e) {
   if (dist > 3) { e.x += mx / dist * d.spd; e.y += my / dist * d.spd * .8; e.walk = true; }
 }
 function startHoundDive(e) {
-  e.dv = { t: 0, f: 0, dir: player.x >= e.x ? 1 : -1, hit: false };
+  e.dv = { t: 0, f: 0, dir: player.x >= e.x ? 1 : -1, hit: false, x0: e.x };   // x0: 바닥 표시(도약 시작점)
   e.face = e.dv.dir; e.st = 'wind'; e.t = 0; e.pat = 'dive'; sfx('bwind');
 }
 function runHoundDive(e) {
@@ -438,17 +453,14 @@ function runStage1Move(e) {
   e.st = fn <= m.warnTo ? 'wind' : 'act';
   if (m.dash && fn >= m.dash[0] && fn <= m.dash[1] && (p.x - e.x) * e.face > 34) e.x += e.face * m.dash[2] * STAGE1_ET_H;
   if (m.grab && fn >= m.grab[0] && fn <= m.grab[1] && !mv.used.has('grab')) {
-    const box = stage1HitBox(e.s1, mv.clip, { f: m.grab }), dx = (p.x - e.x) * e.face;
-    if (dx > -8 && dx < box.reach + 14 && Math.abs(p.y - e.y) < 14 && p.z < 32 && !practice && p.inv <= 0 &&
+    if (zoneContains(s1GrabZone(e, mv.clip, m.grab), p) && !practice && p.inv <= 0 &&   // 바닥 표시와 같은 범위 (feel-runtime.js)
         !['dead', 'down', 'special', 'grabbed'].includes(p.st) && !enemies.some(o => o !== e && o.st === 'grabbing')) {
       mv.used.add('grab'); beginStage1Grab(e); return;
     }
   }
   for (const [i, hit] of (m.hits || []).entries()) {
     if (fn < hit.f[0] || fn > hit.f[1] || mv.used.has(i)) continue;
-    const box = stage1HitBox(e.s1, mv.clip, hit), dx = (p.x - e.x) * e.face;
-    const inside = hit.radial ? dx > -box.back - 14 && dx < box.reach + 14 && Math.abs(p.y - e.y) < 26 && p.z < 60
-      : inReach(e, p, box.reach, COMBAT_FRAME_DATA.enemies.hit.depthPx, COMBAT_FRAME_DATA.enemies.hit.heightPx);
+    const inside = zoneContains(s1HitZone(e, mv.clip, hit), p);   // 바닥 표시와 같은 범위 (feel-runtime.js)
     if (inside && hurtPlayer(Math.round(hit.dmg * S1_J), hit.radial ? (Math.sign(p.x - e.x) || e.face) : e.face, !!hit.kd, e)) { mv.used.add(i); mv.hit = true; }
   }
 }
@@ -765,7 +777,8 @@ function stage1SoldierFrame(e) {
   if (e.st === 'rec' && e.getup) return ['getup', animIndex(hound ? S1_ANIM.houndGetup : S1_ANIM.getup, e.t)];
   if (e.st === 'hurt') {
     if (hound) return ['hurt', Math.min(5, Math.floor(e.t / S1_ANIM.houndHurt))];
-    const [, i] = at('hurt', e.t / (e.hurtT || 18) / 2);   // 1~5 상단 피격, 6~10 하단 피격
+    // 1~5 상단 피격, 6~10 하단 피격. 1.67: 경직의 앞 70% 에 다섯 칸을 돌리고 나머지는 마지막 칸에 머문다
+    const [, i] = at('hurt', Math.min(1, e.t / ((e.hurtT || COMBAT_FRAME_DATA.enemies.default.hurtTicks) * FEEL.hurtAnimRatio)) * .5);
     return ['hurt', clamp(i, 0, 4) + (e.hitLow ? 5 : 0)];
   }
   if (hound) {
@@ -849,7 +862,7 @@ function drawStage1Soldier(e) {
   const src = red ? tintedAtlas(e.s1, 'red', base, variant) : e.balcony ? tintedAtlas(e.s1, 'dark', base, variant) : base;
   smoothFor(k);
   const frame = cleanStage1Frame(e.s1 + variant + (red ? 'red' : e.balcony ? 'dark' : 'normal'), src, sx, sy, w, h);
-  drawLit(frame, 0, 0, w, h, -ax * k, -ay * k, w * k, h * k, e.flash > 0 && UX.options.flash ? 2 : 1);
+  drawLit(frame, 0, 0, w, h, -ax * k, -ay * k, w * k, h * k, (e.flash > 0 || enemyLateBlink(e)) && UX.options.flash ? 2 : 1);   // 판정 직전 2틱 간격 깜빡임
   ctx.restore();
   return true;
 }
@@ -926,9 +939,10 @@ function drawStage1TopSprites() {
 function drawStage1Ground(L) {
   for (const z of hazards) {
     if (z.type === 'firemark') {
-      const x = fxX(z.x), y = fxY(z.y), rx = FIRE.rx / SC, ry = FIRE.ry / SC, a = .55 + .35 * Math.sin(z.age * .02);
-      for (let i = 0; i < 64; i++) { const t = i / 64 * Math.PI * 2; L.put(x + Math.cos(t) * rx, y + Math.sin(t) * ry, '#ff2a2a', a); }
-      for (let dy = -ry + 1; dy < ry; dy++) { const hw = rx * Math.sqrt(1 - (dy / ry) ** 2); L.line(x - hw, y + dy, x + hw, y + dy, '#ff2a2a', 1, .12); }
+      // 색: 적 공격 범위와 같은 팔레트 (feel.zone 테두리 rgba(255,60,60,.75) · 채움 rgba(255,40,40,.28))
+      const x = fxX(z.x), y = fxY(z.y), rx = FIRE.rx / SC, ry = FIRE.ry / SC, a = .55 + .2 * Math.sin(z.age * .02);
+      for (let i = 0; i < 64; i++) { const t = i / 64 * Math.PI * 2; L.put(x + Math.cos(t) * rx, y + Math.sin(t) * ry, '#ff3c3c', a); }
+      for (let dy = -ry + 1; dy < ry; dy++) { const hw = rx * Math.sqrt(1 - (dy / ry) ** 2); L.line(x - hw, y + dy, x + hw, y + dy, '#ff2828', 1, .28); }
     } else if (z.type === 'fire' && !s1Fx('fire_loop')) {   // 임시 도형(스프라이트가 없을 때)
       const k = fireScale(z), x = fxX(z.x), y = fxY(z.y), rx = FIRE.rx / SC * k, ry = Math.max(1, FIRE.ry / SC * k), t = z.age;
       for (let dy = -Math.floor(ry); dy <= ry; dy++) {
