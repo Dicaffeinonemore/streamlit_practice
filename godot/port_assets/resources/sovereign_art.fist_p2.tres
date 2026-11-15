@@ -1,0 +1,280 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_bjmtw"]
+[ext_resource type="Texture2D" path="res://port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp" id="2_1n2ks"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(86, 2970, 86, 65)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(174, 2970, 53, 69)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(229, 2970, 83, 73)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(314, 2970, 66, 67)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(382, 2970, 76, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(460, 2970, 72, 63)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(534, 2970, 77, 63)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(613, 2970, 72, 68)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(687, 2970, 79, 79)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(768, 2970, 80, 81)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(850, 2970, 61, 79)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_1n2ks")
+region = Rect2(913, 2970, 80, 72)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_10")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_11")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_bjmtw")
+source_id = "sovereign_art.fist_p2"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(43.19, 32.37, 26.63, 34.75, 41.68, 36.48, 33.02, 33.56, 37.78, 31.82, 35.83, 31.28, 38.43, 31.61, 35.83, 33.88, 39.4, 39.4, 40.16, 40.59, 30.42, 39.73, 39.94, 36.15)
+frame_scales = PackedFloat64Array(0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "SOVEREIGN_ART",
+"clip": "fist_p2",
+"source_scale": null,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [43.19, 32.37],
+"rect": [86.0, 2970.0, 86.0, 65.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [43.19, 32.37],
+"atlas": [86.0, 2970.0, 86.0, 65.0],
+"core": [-2.79, 0.01],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [26.63, 34.75],
+"rect": [174.0, 2970.0, 53.0, 69.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [26.63, 34.75],
+"atlas": [174.0, 2970.0, 53.0, 69.0],
+"core": [7.3, -6.98],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [41.68, 36.48],
+"rect": [229.0, 2970.0, 83.0, 73.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [41.68, 36.48],
+"atlas": [229.0, 2970.0, 83.0, 73.0],
+"core": [-15.7, 3.09],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [33.02, 33.56],
+"rect": [314.0, 2970.0, 66.0, 67.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [33.02, 33.56],
+"atlas": [314.0, 2970.0, 66.0, 67.0],
+"core": [-9.05, 3.3],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [37.78, 31.82],
+"rect": [382.0, 2970.0, 76.0, 64.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [37.78, 31.82],
+"atlas": [382.0, 2970.0, 76.0, 64.0],
+"core": [-13.57, 1.42],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [35.83, 31.28],
+"rect": [460.0, 2970.0, 72.0, 63.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [35.83, 31.28],
+"atlas": [460.0, 2970.0, 72.0, 63.0],
+"core": [-16.44, 3.21],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [38.43, 31.61],
+"rect": [534.0, 2970.0, 77.0, 63.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [38.43, 31.61],
+"atlas": [534.0, 2970.0, 77.0, 63.0],
+"core": [-14.44, 2.8],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [35.83, 33.88],
+"rect": [613.0, 2970.0, 72.0, 68.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [35.83, 33.88],
+"atlas": [613.0, 2970.0, 72.0, 68.0],
+"core": [-13.69, 2.61],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [39.4, 39.4],
+"rect": [687.0, 2970.0, 79.0, 79.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [39.4, 39.4],
+"atlas": [687.0, 2970.0, 79.0, 79.0],
+"core": [-1.48, -3.05],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [40.16, 40.59],
+"rect": [768.0, 2970.0, 80.0, 81.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [40.16, 40.59],
+"atlas": [768.0, 2970.0, 80.0, 81.0],
+"core": [-1.73, -20.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [30.42, 39.73],
+"rect": [850.0, 2970.0, 61.0, 79.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [30.42, 39.73],
+"atlas": [850.0, 2970.0, 61.0, 79.0],
+"core": [-2.68, 7.75],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.0__4d19229839d6.webp",
+"pivot": [39.94, 36.15],
+"rect": [913.0, 2970.0, 80.0, 72.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [39.94, 36.15],
+"atlas": [913.0, 2970.0, 80.0, 72.0],
+"core": [-30.73, 4.35],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/4d19229839d628b2be33e11d.webp"
+}])

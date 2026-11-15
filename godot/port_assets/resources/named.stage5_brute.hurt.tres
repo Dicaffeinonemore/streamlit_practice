@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_1fd1n"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_qbn0g"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_qbn0g")
+region = Rect2(1615, 9368, 253, 188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_qbn0g")
+region = Rect2(0, 9662, 235, 177)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_1fd1n")
+source_id = "named.stage5_brute.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(160, 184, 137, 173)
+frame_scales = PackedFloat64Array(0.54, 0.54)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "stage5_brute"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [160.0, 184.0],
+"rect": [1615.0, 9368.0, 253.0, 188.0],
+"scale": 0.54,
+"source": {
+"anchor": [160.0, 184.0],
+"atlas": [1615.0, 9368.0, 253.0, 188.0],
+"edgeFragmentPixels": 5072.0,
+"id": 544.0,
+"rect": [10.0, 705.0, 263.0, 893.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [137.0, 173.0],
+"rect": [0.0, 9662.0, 235.0, 177.0],
+"scale": 0.54,
+"source": {
+"anchor": [137.0, 173.0],
+"atlas": [0.0, 9662.0, 235.0, 177.0],
+"edgeFragmentPixels": 10515.0,
+"id": 545.0,
+"rect": [313.0, 716.0, 548.0, 893.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

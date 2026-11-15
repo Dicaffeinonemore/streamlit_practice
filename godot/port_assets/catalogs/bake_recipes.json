@@ -1,0 +1,898 @@
+[
+  {
+    "actor": "player",
+    "face": 1,
+    "id": "hero_combo_0",
+    "options": "{}",
+    "pose": "heroAtk(0,t)",
+    "ticks": 21
+  },
+  {
+    "actor": "player",
+    "face": -1,
+    "id": "hero_combo_0",
+    "options": "{}",
+    "pose": "heroAtk(0,t)",
+    "ticks": 21
+  },
+  {
+    "actor": "player",
+    "face": 1,
+    "id": "hero_combo_1",
+    "options": "{}",
+    "pose": "heroAtk(1,t)",
+    "ticks": 19
+  },
+  {
+    "actor": "player",
+    "face": -1,
+    "id": "hero_combo_1",
+    "options": "{}",
+    "pose": "heroAtk(1,t)",
+    "ticks": 19
+  },
+  {
+    "actor": "player",
+    "face": 1,
+    "id": "hero_combo_2",
+    "options": "{}",
+    "pose": "heroAtk(2,t)",
+    "ticks": 41
+  },
+  {
+    "actor": "player",
+    "face": -1,
+    "id": "hero_combo_2",
+    "options": "{}",
+    "pose": "heroAtk(2,t)",
+    "ticks": 41
+  },
+  {
+    "actor": "player",
+    "face": 1,
+    "id": "hero_special",
+    "options": "{}",
+    "pose": "heroSpecial(t)",
+    "ticks": 126
+  },
+  {
+    "actor": "player",
+    "face": -1,
+    "id": "hero_special",
+    "options": "{}",
+    "pose": "heroSpecial(t)",
+    "ticks": 126
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_slam_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','slam',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_slam_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','slam',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_slam_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','slam',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_slam_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','slam',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_sweep_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','sweep',t,false)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_sweep_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','sweep',t,false)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_sweep_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','sweep',t,true)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_sweep_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','sweep',t,true)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_rage_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','rage',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_rage_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','rage',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_rage_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','rage',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_rage_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','rage',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_hook_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','hook',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_hook_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','hook',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_hook_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','hook',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_hook_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','hook',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_meat_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','meat',t,false)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_meat_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','meat',t,false)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss1",
+    "face": 1,
+    "id": "boss1_meat_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','meat',t,true)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss1",
+    "face": -1,
+    "id": "boss1_meat_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss1','meat',t,true)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_staff_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','staff',t,false)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_staff_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','staff',t,false)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_staff_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','staff',t,true)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_staff_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','staff',t,true)",
+    "ticks": 130
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_teleport_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','teleport',t,false)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_teleport_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','teleport',t,false)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_teleport_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','teleport',t,true)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_teleport_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','teleport',t,true)",
+    "ticks": 120
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_orbs_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','orbs',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_orbs_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','orbs',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_orbs_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','orbs',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_orbs_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','orbs',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_ravens_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','ravens',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_ravens_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','ravens',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_ravens_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','ravens',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_ravens_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','ravens',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_feather_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','feather',t,false)",
+    "ticks": 140
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_feather_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','feather',t,false)",
+    "ticks": 140
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_feather_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','feather',t,true)",
+    "ticks": 140
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_feather_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','feather',t,true)",
+    "ticks": 140
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_soul_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','soul',t,false)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_soul_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','soul',t,false)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss2",
+    "face": 1,
+    "id": "boss2_soul_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','soul',t,true)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss2",
+    "face": -1,
+    "id": "boss2_soul_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss2','soul',t,true)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_slash3_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','slash3',t,false)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_slash3_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','slash3',t,false)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_slash3_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','slash3',t,true)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_slash3_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','slash3',t,true)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_cleave_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','cleave',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_cleave_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','cleave',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_cleave_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','cleave',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_cleave_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','cleave',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_charge_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','charge',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_charge_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','charge',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_charge_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','charge',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_charge_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','charge',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_whirl_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','whirl',t,false)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_whirl_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','whirl',t,false)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_whirl_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','whirl',t,true)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_whirl_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','whirl',t,true)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_pillars_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','pillars',t,false)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_pillars_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','pillars',t,false)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss3",
+    "face": 1,
+    "id": "boss3_pillars_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','pillars',t,true)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss3",
+    "face": -1,
+    "id": "boss3_pillars_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss3','pillars',t,true)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_slash3_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slash3',t,false)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_slash3_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slash3',t,false)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_slash3_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slash3',t,true)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_slash3_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slash3',t,true)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_slam_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slam',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_slam_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slam',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_slam_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slam',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_slam_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','slam',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_frost_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','frost',t,false)",
+    "ticks": 190
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_frost_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','frost',t,false)",
+    "ticks": 190
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_frost_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','frost',t,true)",
+    "ticks": 190
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_frost_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','frost',t,true)",
+    "ticks": 190
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_orbs_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','orbs',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_orbs_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','orbs',t,false)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": 1,
+    "id": "boss4_orbs_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','orbs',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss4",
+    "face": -1,
+    "id": "boss4_orbs_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss4','orbs',t,true)",
+    "ticks": 160
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_slash3_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','slash3',t,false)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_slash3_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','slash3',t,false)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_slash3_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','slash3',t,true)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_slash3_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','slash3',t,true)",
+    "ticks": 210
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_cleave_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','cleave',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_cleave_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','cleave',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_cleave_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','cleave',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_cleave_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','cleave',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_charge_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','charge',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_charge_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','charge',t,false)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_charge_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','charge',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_charge_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','charge',t,true)",
+    "ticks": 150
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_whirl_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','whirl',t,false)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_whirl_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','whirl',t,false)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_whirl_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','whirl',t,true)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_whirl_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','whirl',t,true)",
+    "ticks": 180
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_pillars_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','pillars',t,false)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_pillars_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','pillars',t,false)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_pillars_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','pillars',t,true)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_pillars_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','pillars',t,true)",
+    "ticks": 200
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_eclipse_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','eclipse',t,false)",
+    "ticks": 220
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_eclipse_p1",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','eclipse',t,false)",
+    "ticks": 220
+  },
+  {
+    "actor": "boss5",
+    "face": 1,
+    "id": "boss5_eclipse_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','eclipse',t,true)",
+    "ticks": 220
+  },
+  {
+    "actor": "boss5",
+    "face": -1,
+    "id": "boss5_eclipse_p2",
+    "options": "{}",
+    "pose": "bossPoseAt('boss5','eclipse',t,true)",
+    "ticks": 220
+  }
+]

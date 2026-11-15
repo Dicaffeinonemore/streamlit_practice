@@ -1,0 +1,46 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_77rgj"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath2_art.pages.2__73967f836cf3.webp" id="2_lfqe2"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_lfqe2")
+region = Rect2(1724, 1802, 54, 30)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_77rgj")
+source_id = "gorath_remake.hook"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(6, 13)
+frame_scales = PackedFloat64Array(0.47856)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "GORATH2_ART",
+"clip": "hook"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [6.0, 13.0],
+"rect": [1724.0, 1802.0, 54.0, 30.0],
+"scale": 0.47856,
+"source": {
+"anchor": [6.0, 13.0],
+"atlas": [1724.0, 1802.0, 54.0, 30.0],
+"p": 2.0
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}])

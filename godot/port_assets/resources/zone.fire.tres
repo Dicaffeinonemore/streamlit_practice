@@ -1,0 +1,483 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_jwv57"]
+[ext_resource type="Texture2D" path="res://port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp" id="2_3ilbp"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(0, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(90, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(180, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(270, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(360, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(450, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(540, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(630, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(720, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(810, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(900, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(990, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1080, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1170, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1260, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1350, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_16"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1440, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_17"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1530, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_18"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1620, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_19"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1710, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_20"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1800, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_21"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1890, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_22"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(1980, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_23"]
+atlas = ExtResource("2_3ilbp")
+region = Rect2(2070, 0, 90, 226)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_10")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_11")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_12")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_13")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_14")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_15")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_16")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_17")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_18")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_19")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_20")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_21")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_22")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_23")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_jwv57")
+source_id = "zone.fire"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211, 0, 211)
+frame_scales = PackedFloat64Array(0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "ZONE_ART",
+"frame_selection": "zoneFrame(age,delay,life); source phase-dependent",
+"kind": "fire"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [0.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [0.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [90.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [90.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [180.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [180.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [270.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [270.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [360.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [360.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [450.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [450.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [540.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [540.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [630.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [630.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [720.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [720.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [810.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [810.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [900.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [900.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [990.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [990.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1080.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1080.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1170.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1170.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1260.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1260.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1350.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1350.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1440.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1440.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1530.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1530.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1620.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1620.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1710.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1710.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1800.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1800.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1890.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1890.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [1980.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [1980.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/runtime_unreferenced__bfbb03bc98dd.webp",
+"pivot": [0.0, 211.0],
+"rect": [2070.0, 0.0, 90.0, 226.0],
+"scale": 0.6,
+"source": {
+"anchor": [0.0, 211.0],
+"atlas": [2070.0, 0.0, 90.0, 226.0]
+},
+"source_image": "assets/runtime/bfbb03bc98dd86cf1d12fc0f.webp"
+}])

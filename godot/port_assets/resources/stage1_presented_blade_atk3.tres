@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_dbdup"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_blade_atk3_0.png" id="2_g65jb"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(1, 1, 145, 212)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(148, 1, 153, 188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(303, 1, 132, 199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(437, 1, 139, 193)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(578, 1, 185, 133)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(765, 1, 163, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(930, 1, 170, 106)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(1102, 1, 170, 139)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(1274, 1, 145, 148)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_g65jb")
+region = Rect2(1421, 1, 153, 147)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 66.666664,
+"texture": SubResource("frame_0")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_1")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_2")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_3")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_4")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_5")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_6")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_7")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_8")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_dbdup")
+source_id = "stage1_presented_blade_atk3"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(108.1, 201.5, 47.5, 176.9, 73.6, 187.7, 68.5, 181.1, 112.6, 115.1, 72.6, 128.4, 96.6, 106.2, 89.4, 139.2, 68.4, 148.2, 66.6, 147)
+frame_scales = PackedFloat64Array(0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346)
+duration_ms = PackedFloat64Array(66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"clip": "atk3",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "blade"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "06ac8215f4d8d7bb2d3ba16580387c4f29ade60e95fda5fd60825eae6b802898",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [108.1, 201.5],
+"rect": [1.0, 1.0, 145.0, 212.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "e5d6d885edb155046997e58c16b8845657aff3fe8fca845d625fb2b382cf5eed",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [47.5, 176.9],
+"rect": [148.0, 1.0, 153.0, 188.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "3c1859b876a62a8a5dc6e9a7cff180c5067f27735c2b3e117cc05ee0a379d629",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [73.6, 187.7],
+"rect": [303.0, 1.0, 132.0, 199.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "0536eb752075c6f874f04abf446d758465f374d292056da427215e650457a40f",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [68.5, 181.1],
+"rect": [437.0, 1.0, 139.0, 193.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "4f9a98e18fe8f7427bbcf5d9282b53d6c5e2c5104ba48538a3b1cba4e3b4f4fd",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [112.6, 115.1],
+"rect": [578.0, 1.0, 185.0, 133.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "7003a2f7e26d6f7c205a46cccdab7c82687c003c3dfc15112ac28ed6e0eec90d",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [72.6, 128.4],
+"rect": [765.0, 1.0, 163.0, 128.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "eed0010c4de6b9b6942c6376688063a491566b4b90c68d5935ae9a42f57d061c",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [96.6, 106.2],
+"rect": [930.0, 1.0, 170.0, 106.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "af0aa9ff1df4ba6a73d3ce0c68a93bc7e6cf9276fedcdf12e685166b975b7125",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [89.4, 139.2],
+"rect": [1102.0, 1.0, 170.0, 139.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "94c6fe265add451ca7428a4f62d54bdd643b1774db1d3deea90f0cf30b26493d",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [68.4, 148.2],
+"rect": [1274.0, 1.0, 145.0, 148.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "54739944646bc5af37c5527ccf47de105e8865632690abf297e386427a404d17",
+"image": "port_assets/baked/stage1_presented_blade_atk3_0.png",
+"page": 0.0,
+"pivot": [66.6, 147.0],
+"rect": [1421.0, 1.0, 153.0, 147.0],
+"scale": 0.57346,
+"source": {}
+}])

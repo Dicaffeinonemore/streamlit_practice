@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_0xns0"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_heavy_knockdown_0.png" id="2_c44my"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_c44my")
+region = Rect2(1, 1, 143, 166)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_c44my")
+region = Rect2(146, 1, 158, 160)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_c44my")
+region = Rect2(306, 1, 192, 146)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_c44my")
+region = Rect2(500, 1, 192, 140)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_c44my")
+region = Rect2(694, 1, 173, 138)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_c44my")
+region = Rect2(869, 1, 174, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_c44my")
+region = Rect2(1045, 1, 170, 121)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_c44my")
+region = Rect2(1217, 1, 176, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_c44my")
+region = Rect2(1395, 1, 179, 83)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_c44my")
+region = Rect2(1576, 1, 180, 77)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_0xns0")
+source_id = "stage1_presented_heavy_knockdown"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(69.6, 165.6, 73.2, 159.6, 70.2, 146.4, 67.8, 140.4, 63.6, 138, 85.8, 141.6, 87, 121.2, 86.4, 96, 82.8, 82.8, 87, 76.8)
+frame_scales = PackedFloat64Array(0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "knockdown",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "heavy"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "d62616a49ac5741a49fd3c4bf7e8dafc1451ee20ad9dc3f6eca8c2213010aec3",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [69.6, 165.6],
+"rect": [1.0, 1.0, 143.0, 166.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "75486c6072302ac06c0a70615fde855e30d3415f8ecccc818298a9f696406806",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [73.2, 159.6],
+"rect": [146.0, 1.0, 158.0, 160.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "7a1433b4bf052b5150eda26513e05ed9569e833e0d2b51074bec35dc9ab50d84",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [70.2, 146.4],
+"rect": [306.0, 1.0, 192.0, 146.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "10cc15026d6ade9166389af27747ac21e75dddcff15f31b20e2bc211248b68cd",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [67.8, 140.4],
+"rect": [500.0, 1.0, 192.0, 140.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "198326fccde4d9081a1ad39f90871e76aeba62197a1ca5a8d2e88faf25548bdc",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [63.6, 138.0],
+"rect": [694.0, 1.0, 173.0, 138.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a8d5a6f569ef674075d99aeea1acda03670e6ba06ec065955c6d06cbc4e97077",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [85.8, 141.6],
+"rect": [869.0, 1.0, 174.0, 142.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "83c8ca6a4bcf394de7dd4faa56b8d2cc8ad40a1ef84e522b347213aea56b8b43",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [87.0, 121.2],
+"rect": [1045.0, 1.0, 170.0, 121.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "8903192ed4710dae611b98240d33912d4fb1867665c7e4ef00b6da60cb2ec7df",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [86.4, 96.0],
+"rect": [1217.0, 1.0, 176.0, 96.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "52118c43354dfc284a678e04211523b504a6ffe672b2a77d7c91ea59aee6c793",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [82.8, 82.8],
+"rect": [1395.0, 1.0, 179.0, 83.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "d03878f0a5e30fc824cd169734bd9ec0ad1bed4ecb063ee2843a89cca14fdd7d",
+"image": "port_assets/baked/stage1_presented_heavy_knockdown_0.png",
+"page": 0.0,
+"pivot": [87.0, 76.8],
+"rect": [1576.0, 1.0, 180.0, 77.0],
+"scale": 0.75671,
+"source": {}
+}])

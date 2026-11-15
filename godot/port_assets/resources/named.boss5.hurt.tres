@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ewkmw"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_mv63s"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_mv63s")
+region = Rect2(926, 2646, 150, 122)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_mv63s")
+region = Rect2(1078, 2646, 114, 122)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_ewkmw")
+source_id = "named.boss5.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(68, 109, 61, 109)
+frame_scales = PackedFloat64Array(1.15, 1.15)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "boss5"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [68.0, 109.0],
+"rect": [926.0, 2646.0, 150.0, 122.0],
+"scale": 1.15,
+"source": {
+"anchor": [68.0, 109.0],
+"atlas": [926.0, 2646.0, 150.0, 122.0],
+"edgeFragmentPixels": 266.0,
+"id": 211.0,
+"rect": [198.0, 964.0, 348.0, 1086.0],
+"scale": 1.15,
+"source": "emperor"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [61.0, 109.0],
+"rect": [1078.0, 2646.0, 114.0, 122.0],
+"scale": 1.15,
+"source": {
+"anchor": [61.0, 109.0],
+"atlas": [1078.0, 2646.0, 114.0, 122.0],
+"edgeFragmentPixels": 27.0,
+"id": 212.0,
+"rect": [350.0, 964.0, 464.0, 1086.0],
+"scale": 1.15,
+"source": "emperor"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

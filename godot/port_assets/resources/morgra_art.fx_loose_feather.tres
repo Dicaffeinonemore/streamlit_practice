@@ -1,0 +1,85 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_6s6kd"]
+[ext_resource type="Texture2D" path="res://port_assets/images/morgra_art.atlas__207748d1db71.png" id="2_ljatw"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_ljatw")
+region = Rect2(846, 2122, 31, 35)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_ljatw")
+region = Rect2(997, 2122, 34, 29)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_ljatw")
+region = Rect2(963, 2122, 32, 31)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_6s6kd")
+source_id = "morgra_art.fx_loose_feather"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(15, 17, 17, 14, 16, 15)
+frame_scales = PackedFloat64Array(0.4675, 0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0)
+metadata = {
+"catalog": "MORGRA_ART",
+"clip": "fx_loose_feather",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [15.0, 17.0],
+"rect": [846.0, 2122.0, 31.0, 35.0],
+"scale": 0.4675,
+"source": {
+"anchor": [8.25, 9.35],
+"atlas": [846.0, 2122.0, 31.0, 35.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [17.0, 14.0],
+"rect": [997.0, 2122.0, 34.0, 29.0],
+"scale": 0.4675,
+"source": {
+"anchor": [9.35, 7.7],
+"atlas": [997.0, 2122.0, 34.0, 29.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [16.0, 15.0],
+"rect": [963.0, 2122.0, 32.0, 31.0],
+"scale": 0.4675,
+"source": {
+"anchor": [8.8, 8.25],
+"atlas": [963.0, 2122.0, 32.0, 31.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}])

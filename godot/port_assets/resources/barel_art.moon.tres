@@ -1,0 +1,123 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_4rqok"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_art.atlas__31399b82a9ee.png" id="2_wasne"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_wasne")
+region = Rect2(986, 2010, 151, 170)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_wasne")
+region = Rect2(1139, 2010, 192, 170)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_wasne")
+region = Rect2(1333, 2010, 208, 170)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_wasne")
+region = Rect2(1543, 2010, 189, 170)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_wasne")
+region = Rect2(1734, 2010, 163, 170)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_4rqok")
+source_id = "barel_art.moon"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(75.5, 170, 96, 170, 104, 170, 94.5, 170, 81.5, 170)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0)
+metadata = {
+"catalog": "BAREL_ART",
+"clip": "moon",
+"source_scale": null,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [75.5, 170.0],
+"rect": [986.0, 2010.0, 151.0, 170.0],
+"scale": 0.72,
+"source": {
+"anchor": [75.5, 170.0],
+"atlas": [986.0, 2010.0, 151.0, 170.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [96.0, 170.0],
+"rect": [1139.0, 2010.0, 192.0, 170.0],
+"scale": 0.72,
+"source": {
+"anchor": [96.0, 170.0],
+"atlas": [1139.0, 2010.0, 192.0, 170.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [104.0, 170.0],
+"rect": [1333.0, 2010.0, 208.0, 170.0],
+"scale": 0.72,
+"source": {
+"anchor": [104.0, 170.0],
+"atlas": [1333.0, 2010.0, 208.0, 170.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [94.5, 170.0],
+"rect": [1543.0, 2010.0, 189.0, 170.0],
+"scale": 0.72,
+"source": {
+"anchor": [94.5, 170.0],
+"atlas": [1543.0, 2010.0, 189.0, 170.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [81.5, 170.0],
+"rect": [1734.0, 2010.0, 163.0, 170.0],
+"scale": 0.72,
+"source": {
+"anchor": [81.5, 170.0],
+"atlas": [1734.0, 2010.0, 163.0, 170.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}])

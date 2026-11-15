@@ -1,0 +1,103 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_x8pu3"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_fx.rubble_chunk.file__d39897e42434.webp" id="2_gqja6"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_gqja6")
+region = Rect2(0, 0, 46, 26)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_gqja6")
+region = Rect2(46, 0, 46, 26)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_gqja6")
+region = Rect2(92, 0, 46, 26)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_gqja6")
+region = Rect2(138, 0, 46, 26)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_x8pu3")
+source_id = "stage1_fx.rubble_chunk"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(23, 13, 23, 13, 23, 13, 23, 13)
+frame_scales = PackedFloat64Array(0.66667, 0.66667, 0.66667, 0.66667)
+duration_ms = PackedFloat64Array(100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0)
+metadata = {
+"additive": false,
+"catalog": "STAGE1_FX",
+"clip": "rubble_chunk"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.rubble_chunk.file__d39897e42434.webp",
+"pivot": [23.0, 13.0],
+"rect": [0.0, 0.0, 46.0, 26.0],
+"scale": 0.66667,
+"source": {
+"anchor": [23.0, 13.0],
+"atlas": [0.0, 0.0, 46.0, 26.0]
+},
+"source_image": "assets/runtime/d39897e42434c9d0e478da5d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.rubble_chunk.file__d39897e42434.webp",
+"pivot": [23.0, 13.0],
+"rect": [46.0, 0.0, 46.0, 26.0],
+"scale": 0.66667,
+"source": {
+"anchor": [23.0, 13.0],
+"atlas": [46.0, 0.0, 46.0, 26.0]
+},
+"source_image": "assets/runtime/d39897e42434c9d0e478da5d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.rubble_chunk.file__d39897e42434.webp",
+"pivot": [23.0, 13.0],
+"rect": [92.0, 0.0, 46.0, 26.0],
+"scale": 0.66667,
+"source": {
+"anchor": [23.0, 13.0],
+"atlas": [92.0, 0.0, 46.0, 26.0]
+},
+"source_image": "assets/runtime/d39897e42434c9d0e478da5d.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.rubble_chunk.file__d39897e42434.webp",
+"pivot": [23.0, 13.0],
+"rect": [138.0, 0.0, 46.0, 26.0],
+"scale": 0.66667,
+"source": {
+"anchor": [23.0, 13.0],
+"atlas": [138.0, 0.0, 46.0, 26.0]
+},
+"source_image": "assets/runtime/d39897e42434c9d0e478da5d.webp"
+}])

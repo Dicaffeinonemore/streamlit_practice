@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_2njjx"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_wexj5"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_wexj5")
+region = Rect2(1033, 1592, 140, 68)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_wexj5")
+region = Rect2(1175, 1592, 135, 68)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_2njjx")
+source_id = "named.boss2p2.cast"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(90, 67, 70, 67)
+frame_scales = PackedFloat64Array(1.03, 1.03)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "cast",
+"role": "boss2p2"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [90.0, 67.0],
+"rect": [1033.0, 1592.0, 140.0, 68.0],
+"scale": 1.03,
+"source": {
+"anchor": [90.0, 67.0],
+"atlas": [1033.0, 1592.0, 140.0, 68.0],
+"edgeFragmentPixels": 0.0,
+"id": 99.0,
+"rect": [0.0, 482.0, 140.0, 550.0],
+"scale": 1.03,
+"source": "witch2"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [70.0, 67.0],
+"rect": [1175.0, 1592.0, 135.0, 68.0],
+"scale": 1.03,
+"source": {
+"anchor": [70.0, 67.0],
+"atlas": [1175.0, 1592.0, 135.0, 68.0],
+"edgeFragmentPixels": 0.0,
+"id": 100.0,
+"rect": [140.0, 482.0, 275.0, 550.0],
+"scale": 1.03,
+"source": "witch2"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

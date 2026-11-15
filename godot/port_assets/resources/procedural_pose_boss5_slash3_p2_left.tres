@@ -1,0 +1,3602 @@
+[gd_resource type="Resource" format=4]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_4xytb"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png" id="2_aw01q"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png" id="3_f0tas"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png" id="4_bbd4a"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_16"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_17"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_18"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_19"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_20"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_21"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_22"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_23"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_24"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_25"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_26"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_27"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_28"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_29"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_30"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_31"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_32"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_33"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_34"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_35"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_36"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_37"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_38"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_39"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_40"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_41"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_42"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_43"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_44"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_45"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_46"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_47"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_48"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_49"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_50"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_51"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_52"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_53"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_54"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_55"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_56"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_57"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_58"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_59"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_60"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_61"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_62"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_63"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_64"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_65"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_66"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_67"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_68"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_69"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_70"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_71"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_72"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_73"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_74"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_75"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_76"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_77"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_78"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_79"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_80"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_81"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_82"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_83"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_84"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_85"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_86"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_87"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_88"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_89"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_90"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_91"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(215, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_92"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(429, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_93"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(643, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_94"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(857, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_95"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1071, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_96"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1285, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_97"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1499, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_98"]
+atlas = ExtResource("2_aw01q")
+region = Rect2(1713, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_99"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_100"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_101"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_102"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_103"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_104"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_105"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_106"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_107"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_108"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_109"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_110"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_111"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_112"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_113"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_114"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_115"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_116"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_117"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_118"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_119"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_120"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_121"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_122"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_123"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_124"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_125"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 349, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_126"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_127"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_128"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_129"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_130"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_131"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_132"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_133"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_134"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 523, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_135"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_136"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_137"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_138"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_139"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_140"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_141"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_142"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_143"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 697, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_144"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_145"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_146"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_147"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_148"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_149"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_150"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_151"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_152"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 871, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_153"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_154"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_155"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_156"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_157"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_158"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_159"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_160"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_161"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 1045, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_162"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_163"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_164"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_165"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_166"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_167"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_168"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_169"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_170"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 1219, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_171"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_172"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_173"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_174"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_175"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_176"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_177"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_178"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_179"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 1393, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_180"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_181"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_182"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_183"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_184"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_185"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_186"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_187"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_188"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 1567, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_189"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_190"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(215, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_191"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(429, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_192"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(643, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_193"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(857, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_194"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1071, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_195"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1285, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_196"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1499, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_197"]
+atlas = ExtResource("3_f0tas")
+region = Rect2(1713, 1741, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_198"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(1, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_199"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(215, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_200"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(429, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_201"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(643, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_202"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(857, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_203"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(1071, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_204"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(1285, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_205"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(1499, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_206"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(1713, 1, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_207"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(1, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_208"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(215, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_209"]
+atlas = ExtResource("4_bbd4a")
+region = Rect2(429, 175, 212, 172)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 16.666666,
+"texture": SubResource("frame_0")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_1")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_2")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_3")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_4")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_5")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_6")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_7")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_8")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_9")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_10")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_11")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_12")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_13")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_14")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_15")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_16")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_17")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_18")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_19")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_20")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_21")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_22")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_23")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_24")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_25")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_26")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_27")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_28")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_29")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_30")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_31")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_32")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_33")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_34")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_35")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_36")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_37")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_38")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_39")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_40")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_41")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_42")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_43")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_44")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_45")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_46")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_47")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_48")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_49")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_50")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_51")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_52")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_53")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_54")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_55")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_56")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_57")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_58")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_59")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_60")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_61")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_62")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_63")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_64")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_65")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_66")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_67")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_68")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_69")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_70")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_71")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_72")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_73")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_74")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_75")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_76")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_77")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_78")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_79")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_80")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_81")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_82")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_83")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_84")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_85")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_86")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_87")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_88")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_89")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_90")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_91")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_92")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_93")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_94")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_95")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_96")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_97")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_98")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_99")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_100")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_101")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_102")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_103")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_104")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_105")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_106")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_107")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_108")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_109")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_110")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_111")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_112")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_113")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_114")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_115")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_116")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_117")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_118")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_119")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_120")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_121")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_122")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_123")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_124")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_125")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_126")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_127")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_128")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_129")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_130")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_131")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_132")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_133")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_134")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_135")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_136")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_137")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_138")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_139")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_140")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_141")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_142")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_143")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_144")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_145")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_146")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_147")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_148")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_149")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_150")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_151")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_152")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_153")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_154")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_155")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_156")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_157")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_158")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_159")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_160")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_161")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_162")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_163")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_164")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_165")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_166")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_167")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_168")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_169")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_170")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_171")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_172")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_173")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_174")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_175")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_176")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_177")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_178")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_179")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_180")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_181")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_182")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_183")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_184")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_185")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_186")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_187")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_188")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_189")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_190")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_191")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_192")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_193")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_194")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_195")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_196")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_197")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_198")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_199")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_200")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_201")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_202")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_203")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_204")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_205")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_206")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_207")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_208")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_209")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_4xytb")
+source_id = "procedural_pose_boss5_slash3_p2_left"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146, 106, 146)
+frame_scales = PackedFloat64Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+duration_ms = PackedFloat64Array(16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668)
+authoritative_duration = PackedByteArray("AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB")
+metadata = {
+"coverage": "bounded canonical source pose; continuous parameterized effect geometry remains native work",
+"face": -1.0,
+"pose_expression": "bossPoseAt('boss5','slash3',t,true)",
+"range": [0.0, 209.0],
+"source": "motion.js + game.js figure()",
+"tick_ms": 16.666666666666668
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "8faf9b6852a89e018bd5ecbfb8feae793a56f9f3ca3d356f9a88d4144f02c51d",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "b67e233c187b3a45a10eee53c56aacf5fc80466f380b0af4ec1a1b532ac35099",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2acd25e5393258ca240d41bce2b78e25850383085667c8e255f0807018b176dd",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3164a0abdc886bc5eab67cc304e32447843706bf4a61b3f1d2a6b6ffdc81bb20",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "9da654874e643abce55e7347b4ef52264eb509b9e0bcaee77a6ebf0f36f2c381",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "582dd2e0ab37ed932cfbb40292ff4feb0a7282e01f3f1ac00b1964f09d428c94",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ae62f068e0a655f48cecefb6685cb5c446a88e9859311512ff196c5b3901fd27",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "39b16e42c41a449b02d083e66ce22d229d4b2bf0f03f28dd4d0a1acbf6dd1cf1",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "b820669110d53196ddef7f878f7ea35247280c88f8b6846ef630a0bcff436bc6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3f92e29716f1fe8061fa2e5649fa54c65104441c95b9eafb850d1c625e957035",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "41ffa7608240a186a1a53b3594afdc89fb107312a2af2f282c5fc53c6a5bbbff",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "cf97fda4e6d3fb1f6289e537a8ea45e4b900338cefa15c2522b2e7b1c3598a27",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3f529e3445d860bd2dd85fb541498e8c014c48fbcdab822cefce09c40f0eecd9",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "bc8c941a228e4d21293271a064813c0de99d1dceb9a8c7d6e8a2141177c2b721",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4ee29331d4fc713d225bd3439f88d49ff29030a247c7819bf4d089bdb9c99c36",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4ee29331d4fc713d225bd3439f88d49ff29030a247c7819bf4d089bdb9c99c36",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "7c08d7f02ce9f78acd5588071e3e01640d0bd8c619d96ac469fa62008ccfe4bc",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "dda965256f618c9b79b00e716e5c4301048bd2dbc3deeeb4ebbfddbc96650886",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "cd003705a258d1a370c3c9f7664a2e0e460a876b327e59e6ce8f7d280fdd11bc",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "36d18ed8ddf186cfbdd3d2d896af4a90aeead5bd115f1c5a6b15263a670b2084",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f9dd5cd22eb53b8c02923f01455bfa96a7df6d257e04ae6dc068d2c4b5b59a4f",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "5cddce8d9cfde4cde392d5e049309a542749b399535c7f236bfd3617c87ebfee",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "6f520378d69231a96139e98ba354c997ac77cae380d09c57fa714c9ccd9a7237",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f167609f5ab8369dbad1059dd31d15bda4b3ba97aa0295eeeadf0ec0c410ff58",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "5c0000a71559bb71076f39486ca34399ffe4945f9bedb72019695f3a0fc44ee9",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "e65aacf8dc2af05ef18a4b9ba61a69163542663f07973e85baa2dbf7fe783a1e",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "7f316171c8083001cfae440bf35005bcaddf9a5ebae8970e27284c76fb447421",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c00471c9d9c9a66ed7b7e7d18396b69a450d7d09806d5dda98a7ce3000e9c1a1",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "90cda87272fc5cd5323a2c45fc32db26f013a104fbbfcdea87c7a6336e9d676b",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3c7f25e83511ccb5ed64182a47127781eb99924d0e7809cedfbad97f9a3b6aec",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "549d903eb9214481e58d878b1625adac829526e5d1b24de8b85b516745220e88",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "faa341bb7d7586b75c49264b5cef9252c1f75e821354efb8c1349cdcc9d782a6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "42b47deba7cd2b7c960b42c82552a819908c89f65ec88651f33abd9845c369a4",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ed4a0f3dfdc334489331ed38470075e121ece699268cd6343357ee91ab07a171",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ffeb6d112934d370d4d7c6464b17da8beab426b340963be3e3160417dfd5c8f4",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "895fdc95e2163c4a01679ff09c555e25f095e4b05d251022bc0a8ce5736f7c06",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "fb8a978815fc9d45051b1987c31224d1c75562c5886f9af91d913f4dc30acdc2",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f3a1188323abd1d67a126a000d6c58384f09cea22ada7e0eb5c7f26727497e7b",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2263c40da6fc7ea5d1ff38453982767fad96fc13f259199ba1470d06e0faaa43",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "48c97ca020244f1076c48562d13da6aa57889fc5f2e1d03b17f606ace55accc3",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c396ee0bacd1eda872d809351ed105de05fb234057779962fca5f2bb8613e431",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f62ebcbfde1f98cf190b2a3a758aa145efbd0bb465e18b022ca9569000bbf107",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ecaa74fbaaa6ce48e5a36941f7f03a4ef193df976bf8f6271989c48e3d0ae60a",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c3e913c6891732b18f304cc7a16f8a3844f36f2cc19cc0cd2fd729466a9c4d23",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a72cf95de25339b76b2ee180a3782685037e2780dcbdf1701d9aa4b3029b0ba2",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "cae552437e9f33334c9727320343b1251e2526f9bbf3e54c9650c81290726d02",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a93105f71012ccefb9bbf1f1ae5afb55814824bfe2e73208593827f3341f137f",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "7b18f54078df75436cd436b3b39907540f4e2def11b7f3b743c2dbebdc3b0e3e",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "13338d8951dc9d33bf7c38170f9d425a3a6bc2fc507502c689928d09ab351b2a",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "6fa330100db0b9e4ebf3d42a0d2d15d49f06af2bfbed4cca5b51c3703e6554cb",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2ae168020086c20407ee5457fd513457d3e4d98df4a8c48aeb0b6f0f9286b184",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "17196c96870ab7698c86e41a72af080992067acba7474cb41dfd6ef75a730ad7",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "247d6369144251dd80b3522c4bc39cdc90ac192694d0a1fbe1b2e39d55ee0410",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4484e18d708f6517e908d28461ea52727ddc6369f772dd5fe89c114d5b177659",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "6c52f8fb2b88bc1b21cbc310f710178e6c0535d7813bbb89a3979a6d00cc7cc6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4ee29331d4fc713d225bd3439f88d49ff29030a247c7819bf4d089bdb9c99c36",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4ee29331d4fc713d225bd3439f88d49ff29030a247c7819bf4d089bdb9c99c36",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "d65c30de19898372603aaac99104706736fa0330bb539fef163f0480c1ae36a5",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "dde7708c8a7ef1398c1d4ed9898eb9c0a4087b3a90946b3103b3325f8840c771",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ca3cb0efba1c8e4a7f862299519ef1a0814fdd9534709fdc3e1d3dc73b7b16e4",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a95d242a6d3d877ae75bced96db89117497401ed3afff89a0f06667341857432",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2c2b08cee57748d57fc8f931f07c2746906f8fcda4738280f5e6af6cbc837767",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a9c4eb6fc19edd8f5d00569bad88bc9d439efd5a8234c5e6d2e158619a894151",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "e8d8bddf0ac6e4a4d86646f72823fa34c0de79297e964d082d98a6892c83d97c",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "cdf02ede82b0faa0f325e13f2a22b11f4d35abe9b74a7707eac7d17a4b917bb8",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "067ce243a62f83fd9ea8c636a4c5223f3dff15df24f159dc412d1965cbe2e07f",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2add16d28be323ed737ca2eaee81f4d770224303459f2c330ec6f7c898e82210",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "5442e3cda0a8b38b4a5d563810958cd213c09ca22db9243c526c6ed44cfdb0f3",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "d2cb625bb9a1d6038e92974586d1070a0706e5f68819f6ed90e7221581732584",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ab5187dca8636bda31411533a77fa2cfa2cce3e6ea9312eb38709409b039d670",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "8a02b261c46e7cfecbc9b17d1b3f7b9fd2b282284309a7ae0c884c6b545bf60a",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "64f1becf62d977afe27a2dcfbc551af2f41c7e181a81fdb945980e89fbff01ac",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f47c36ac5ba4135a9381efdaeaae65bc510cd40a528466aeddec9d2418182438",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2232ac579cb3112e8704a69047104f8d3e79da1159f24c7ece7faebaeda64a19",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a842c69a1921dbf4f2bcc5a997bfbf6ccba3c3c4c1e5d51f2c1e4430caaa148d",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "895fdc95e2163c4a01679ff09c555e25f095e4b05d251022bc0a8ce5736f7c06",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "895fdc95e2163c4a01679ff09c555e25f095e4b05d251022bc0a8ce5736f7c06",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f39dada5cffbb30fcb89b47f0bf0e07e8876f0c790eead1e5bce398b27b7c490",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "7cc0bd587e08e0419b197d62cf0e31c292e2075d5a53146b4210cf0c5e3c2519",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "788cf08174839db40c5aff856d5dc3ca1e1451423e044771e7e3ace16c604cb9",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4d6337543da6a290b0e7ea1f1767e84adbec518385a3eb4b316e1107df07806b",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a0ff764cc01cfd7499d59516608f2beecd2b70336ae803797695d532256ed470",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "dfb7116d9d9299f5e3d8ae4cd89d67a4d736743900e84b7f223f503ce5b18539",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "4a0703292910e03978ef3e38022a54919f390f91f98843c665476e55bbff2464",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "0ed8b3e0d6010b256a2f8c5cf3bf7c2e513689ebe3f6b81add299fc0c9b0b3c7",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c2b1ff3c84c68c6a09d043548fe25a97ade1d6b14a76efa2f491dc13625434d6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3efb750c27adb3d22d2a410a03873f1140a10b2f453d0b9639503d6fd0f13d6f",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f728f45b3f17b82f493754db7f65171623c7b10c2c3e7cdfd51883abecab3317",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_0.png",
+"page": 0.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "14174eb63986a02fb950787b5e488ba50679191e3e288aa1b38d42a106c7d9ec",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "1fa3043457a7dc8cc4dff11ecb94d61e2f7824587d5afb801186cbcfede57a52",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a3a2e834de6c7872e25e9c15de769524ecdca62e1070e440c00ccaecc3929e5f",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "51b83790d20fddf86ab6e2c9bcf34a5d09ad4451a4e1d4254081d1e08c06ea84",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c5cbb43a3904e37d2749a6f5c41ce8682afd1c0a40882603d38eaeffa2f184c6",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "81951be6c05392894064a28d7c9705339078d21a72648f5c8ccf8f97971f1443",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "d488df616f1ee2f2eff52d20def223b51c6985421c947b1074afacc749de4ea2",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "ac1b2907712ad5c172ddce569fc1d423278f783f6a3440fc6855c3f2a2a8b31b",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "b7fd9c1cd54e9f8fd16a90cc8acdcee59ffebfe856fb8a4ba54cf202ff90fbb8",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "594b16a613bee37a9e11a8b6b052e17defdf6a72b4544d8f60589281d84fb2fc",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "e8e9d9102b267c956385da180c7dadea1a0c3f6179b57e3361876591a7a64253",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 349.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 523.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 697.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 871.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1045.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1219.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1393.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1567.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_1.png",
+"page": 1.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1741.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [643.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [857.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [1071.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [1285.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [1499.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [1713.0, 1.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [1.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [215.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "43ad55af058d96695f2bb5f48ae532ae5dba161ad6c5cba5b9b3b41538ff89cf",
+"image": "port_assets/baked/procedural_pose_boss5_slash3_p2_left_2.png",
+"page": 2.0,
+"pivot": [106.0, 146.0],
+"rect": [429.0, 175.0, 212.0, 172.0],
+"scale": 2.0,
+"source": {}
+}])

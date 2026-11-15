@@ -1,0 +1,46 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_rldty"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_bg.plaza.base__fd1ef44faa37.webp" id="2_s2lkk"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_s2lkk")
+region = Rect2(0, 0, 2048, 682)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_rldty")
+source_id = "stage1_background.plaza.base"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(0, 460)
+frame_scales = PackedFloat64Array(0.74775)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "STAGE1_BG",
+"section": "plaza",
+"world_floor_y": 340.0
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_bg.plaza.base__fd1ef44faa37.webp",
+"pivot": [0.0, 460.0],
+"rect": [0.0, 0.0, 2048.0, 682.0],
+"scale": 0.74775,
+"source": {
+"anchor": [0.0, 460.0],
+"atlas": [0.0, 0.0, 2048.0, 682.0]
+},
+"source_image": "assets/runtime/fd1ef44faa3788899a625a4f.webp"
+}])

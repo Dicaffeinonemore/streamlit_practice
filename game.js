@@ -1715,7 +1715,7 @@ function updIntro() {
   if (shake > 0) shake *= 0.85;
   if (flashT > 0) flashT -= MS;
   updFx();
-  if (introT + .001 >= duration) { scene = 'play'; b.st = 'chase'; b.atkCd = 40; player.inv = Math.max(player.inv, 18); }
+  if (introT + .001 >= duration) { scene = 'play'; b.st = 'chase'; b.atkCd = 40; player.inv = Math.max(player.inv, 18); player.quietInvUntil = tick + player.inv; }
 }
 function introPoseT(u) { return u < 0.28 ? 0 : u < 0.5 ? 500 * ease((u - 0.28) / 0.22) : u < 0.8 ? 500 : 500 * (1 - ease((u - 0.8) / 0.2)); }
 // Recovery never erases damage/death penalties. S/A require a deathless stage.
@@ -2115,7 +2115,9 @@ function drawPlayer() {
   const p = player, S = SPRITES.player, sx = p.x - camX, sp = p.st === 'special';
   ctx.save();if(p.st==='dead')ctx.globalAlpha*=clamp(1-(p.t-65)/35,0,1);
   drawShadow(sx, p.y, S.sh, p.z);ctx.restore();
-  if (p.inv > 0 && p.st === 'free' && Math.floor(tick / 4) % 2) return;
+  // 무적 깜박임: 보스 등장 연출 중이거나 그 직후의 등장 무적(quietInvUntil)에는 깜박이지 않는다
+  const introQuiet = scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro') || tick < (p.quietInvUntil || 0);
+  if (p.inv > 0 && p.st === 'free' && !introQuiet && Math.floor(tick / 4) % 2) return;
   if (p.buff > 0 && p.st !== 'dead') {              // 파워업 오라
     const Hh = S.gy * SC;
     ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';

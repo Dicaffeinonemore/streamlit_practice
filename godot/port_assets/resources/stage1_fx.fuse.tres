@@ -1,0 +1,103 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ixkqc"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_fx.fuse.file__d1fde6601f71.webp" id="2_3q5d6"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_3q5d6")
+region = Rect2(0, 0, 10, 18)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_3q5d6")
+region = Rect2(10, 0, 10, 18)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_3q5d6")
+region = Rect2(20, 0, 10, 18)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_3q5d6")
+region = Rect2(30, 0, 10, 18)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_ixkqc")
+source_id = "stage1_fx.fuse"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(5, 18, 5, 18, 5, 18, 5, 18)
+frame_scales = PackedFloat64Array(0.66667, 0.66667, 0.66667, 0.66667)
+duration_ms = PackedFloat64Array(100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0)
+metadata = {
+"additive": true,
+"catalog": "STAGE1_FX",
+"clip": "fuse"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fuse.file__d1fde6601f71.webp",
+"pivot": [5.0, 18.0],
+"rect": [0.0, 0.0, 10.0, 18.0],
+"scale": 0.66667,
+"source": {
+"anchor": [5.0, 18.0],
+"atlas": [0.0, 0.0, 10.0, 18.0]
+},
+"source_image": "assets/runtime/d1fde6601f71a10f155737fb.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fuse.file__d1fde6601f71.webp",
+"pivot": [5.0, 18.0],
+"rect": [10.0, 0.0, 10.0, 18.0],
+"scale": 0.66667,
+"source": {
+"anchor": [5.0, 18.0],
+"atlas": [10.0, 0.0, 10.0, 18.0]
+},
+"source_image": "assets/runtime/d1fde6601f71a10f155737fb.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fuse.file__d1fde6601f71.webp",
+"pivot": [5.0, 18.0],
+"rect": [20.0, 0.0, 10.0, 18.0],
+"scale": 0.66667,
+"source": {
+"anchor": [5.0, 18.0],
+"atlas": [20.0, 0.0, 10.0, 18.0]
+},
+"source_image": "assets/runtime/d1fde6601f71a10f155737fb.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fuse.file__d1fde6601f71.webp",
+"pivot": [5.0, 18.0],
+"rect": [30.0, 0.0, 10.0, 18.0],
+"scale": 0.66667,
+"source": {
+"anchor": [5.0, 18.0],
+"atlas": [30.0, 0.0, 10.0, 18.0]
+},
+"source_image": "assets/runtime/d1fde6601f71a10f155737fb.webp"
+}])

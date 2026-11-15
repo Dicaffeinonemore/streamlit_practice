@@ -1,0 +1,47 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_7rm5k"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath_art.atlas__7553ac96a449.png" id="2_fx1fa"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_fx1fa")
+region = Rect2(3472, 2009, 15, 11)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_7rm5k")
+source_id = "gorath_art.chain_tile"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(0, 6)
+frame_scales = PackedFloat64Array(0.5)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "GORATH_ART",
+"clip": "chain_tile",
+"source_scale": 0.5,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [0.0, 6.0],
+"rect": [3472.0, 2009.0, 15.0, 11.0],
+"scale": 0.5,
+"source": {
+"anchor": [0.0, 6.0],
+"atlas": [3472.0, 2009.0, 15.0, 11.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}])

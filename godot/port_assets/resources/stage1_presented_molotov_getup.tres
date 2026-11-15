@@ -1,0 +1,131 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_37nqa"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_molotov_getup_0.png" id="2_fgp1r"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_fgp1r")
+region = Rect2(1, 1, 178, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_fgp1r")
+region = Rect2(181, 1, 196, 114)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_fgp1r")
+region = Rect2(379, 1, 186, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_fgp1r")
+region = Rect2(567, 1, 157, 150)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_fgp1r")
+region = Rect2(726, 1, 145, 164)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_fgp1r")
+region = Rect2(873, 1, 139, 170)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_37nqa")
+source_id = "stage1_presented_molotov_getup"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(93, 96, 84.6, 114, 85.8, 127.8, 81, 150, 82.2, 163.8, 66, 169.8)
+frame_scales = PackedFloat64Array(0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "getup",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "molotov"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "4462a1aaeabb920c9419cf142678fbf8ff18db40044a8a0b01eab1507b104abf",
+"image": "port_assets/baked/stage1_presented_molotov_getup_0.png",
+"page": 0.0,
+"pivot": [93.0, 96.0],
+"rect": [1.0, 1.0, 178.0, 96.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "ae5bc77422b644ccff9c0b9634e6e623d8edc6be86c2ff09246cfd7996f3818a",
+"image": "port_assets/baked/stage1_presented_molotov_getup_0.png",
+"page": 0.0,
+"pivot": [84.6, 114.0],
+"rect": [181.0, 1.0, 196.0, 114.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "47479d22fd4e385b6b4e73307ca011b121a5c92ac2211a6b42a88464e7d40dbb",
+"image": "port_assets/baked/stage1_presented_molotov_getup_0.png",
+"page": 0.0,
+"pivot": [85.8, 127.8],
+"rect": [379.0, 1.0, 186.0, 128.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "1f84b744c7ec6bc476bf34ab675b735a8c95800494b7cbf7e6405792c09d6747",
+"image": "port_assets/baked/stage1_presented_molotov_getup_0.png",
+"page": 0.0,
+"pivot": [81.0, 150.0],
+"rect": [567.0, 1.0, 157.0, 150.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "cb90ea490f8444b3cc1b6fd443cdad140c728b4e6eb40218c13d37b87ff180f6",
+"image": "port_assets/baked/stage1_presented_molotov_getup_0.png",
+"page": 0.0,
+"pivot": [82.2, 163.8],
+"rect": [726.0, 1.0, 145.0, 164.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "d92aff997cfcba926ca6369f89553cb46162eeba8dd29e96c7fbc1eedd196619",
+"image": "port_assets/baked/stage1_presented_molotov_getup_0.png",
+"page": 0.0,
+"pivot": [66.0, 169.8],
+"rect": [873.0, 1.0, 139.0, 170.0],
+"scale": 0.57404,
+"source": {}
+}])

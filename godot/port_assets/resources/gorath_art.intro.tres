@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_as2ii"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath_art.atlas__7553ac96a449.png" id="2_cqcqv"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_cqcqv")
+region = Rect2(335, 1789, 317, 217)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_cqcqv")
+region = Rect2(2712, 1529, 245, 242)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_cqcqv")
+region = Rect2(0, 1789, 333, 218)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_cqcqv")
+region = Rect2(1368, 0, 308, 351)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_cqcqv")
+region = Rect2(1752, 391, 384, 288)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_cqcqv")
+region = Rect2(3775, 0, 282, 304)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_as2ii")
+source_id = "gorath_art.intro"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(164, 215, 119, 241, 244, 217, 152, 350, 228, 287, 141, 303)
+frame_scales = PackedFloat64Array(0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "GORATH_ART",
+"clip": "intro",
+"source_scale": 0.5,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [164.0, 215.0],
+"rect": [335.0, 1789.0, 317.0, 217.0],
+"scale": 0.5,
+"source": {
+"anchor": [164.0, 215.0],
+"atlas": [335.0, 1789.0, 317.0, 217.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [119.0, 241.0],
+"rect": [2712.0, 1529.0, 245.0, 242.0],
+"scale": 0.5,
+"source": {
+"anchor": [119.0, 241.0],
+"atlas": [2712.0, 1529.0, 245.0, 242.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [244.0, 217.0],
+"rect": [0.0, 1789.0, 333.0, 218.0],
+"scale": 0.5,
+"source": {
+"anchor": [244.0, 217.0],
+"atlas": [0.0, 1789.0, 333.0, 218.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [152.0, 350.0],
+"rect": [1368.0, 0.0, 308.0, 351.0],
+"scale": 0.5,
+"source": {
+"anchor": [152.0, 350.0],
+"atlas": [1368.0, 0.0, 308.0, 351.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [228.0, 287.0],
+"rect": [1752.0, 391.0, 384.0, 288.0],
+"scale": 0.5,
+"source": {
+"anchor": [228.0, 287.0],
+"atlas": [1752.0, 391.0, 384.0, 288.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [141.0, 303.0],
+"rect": [3775.0, 0.0, 282.0, 304.0],
+"scale": 0.5,
+"source": {
+"anchor": [141.0, 303.0],
+"atlas": [3775.0, 0.0, 282.0, 304.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}])

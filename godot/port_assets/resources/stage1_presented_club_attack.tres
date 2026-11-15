@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_vlblg"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_club_attack_0.png" id="2_nsiun"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(1, 1, 411, 382)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(414, 1, 411, 382)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(827, 1, 411, 382)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(1240, 1, 411, 382)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(1, 385, 412, 382)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(415, 385, 411, 383)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(828, 385, 411, 383)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(1241, 385, 411, 383)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(1, 770, 411, 383)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_nsiun")
+region = Rect2(414, 770, 412, 383)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 133.33333,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_3")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_4")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_5")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_vlblg")
+source_id = "stage1_presented_club_attack"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(190, 338, 192, 338, 180, 338, 235, 338, 240, 338, 215, 332, 190, 332, 230, 332, 225, 332, 240, 332)
+frame_scales = PackedFloat64Array(0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38)
+duration_ms = PackedFloat64Array(133.33333333333334, 100, 100, 83.33333333333334, 83.33333333333334, 83.33333333333334, 66.66666666666667, 100, 100, 100)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"clip": "attack",
+"club_attack_override": true,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "club"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 133.33333333333334,
+"expected_rgba_sha256": "3f794fd7c832885cf109be09f080848bb5551f5316d4771ddfbad7c809b7b7ca",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [190.0, 338.0],
+"rect": [1.0, 1.0, 411.0, 382.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "cced6399eb7f3a61aa1e318044b72b1f18aef8e722f149fec53c61e71d3b09c3",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [192.0, 338.0],
+"rect": [414.0, 1.0, 411.0, 382.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "2aa99550d0c794db1c4d1363e1f63c8eb3557e72d5819364036d8dc1ba820971",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [180.0, 338.0],
+"rect": [827.0, 1.0, 411.0, 382.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "f2dbb512de880ba02c093f9f226eb802806fa1ffe12613d60161dbd270000902",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [235.0, 338.0],
+"rect": [1240.0, 1.0, 411.0, 382.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "b932c7d1c9dca216f3e8e64d29f19704b7cd8529ed6e50f3d1a80ea123bfb770",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [240.0, 338.0],
+"rect": [1.0, 385.0, 412.0, 382.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "b1c56ae51ef44a6b36e3f2dafe87368856302c2bbfc93c373dc0ec2382a47735",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [215.0, 332.0],
+"rect": [415.0, 385.0, 411.0, 383.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "1f2c2eef3364394e14780de80b5562c7928191fd799ec0ede6e7a64815ec88df",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [190.0, 332.0],
+"rect": [828.0, 385.0, 411.0, 383.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "65cde9903ac4044c4473c69b6dcb0272712725ac6ccebd8cf2adc98cb761bb80",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [230.0, 332.0],
+"rect": [1241.0, 385.0, 411.0, 383.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "2752302b687a771f6ce0c4fc115fecdd8a35869840a8df33c597b2d89f07851e",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [225.0, 332.0],
+"rect": [1.0, 770.0, 411.0, 383.0],
+"scale": 0.38,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "57689eab6b0a83d24c52cb84843c85adb8c52a9fd1fd32fc3cd0b186f2620639",
+"image": "port_assets/baked/stage1_presented_club_attack_0.png",
+"page": 0.0,
+"pivot": [240.0, 332.0],
+"rect": [414.0, 770.0, 412.0, 383.0],
+"scale": 0.38,
+"source": {}
+}])

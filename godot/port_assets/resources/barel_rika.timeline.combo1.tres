@@ -1,0 +1,161 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_malb8"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png" id="2_o32lj"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(2, 2, 280, 203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(284, 2, 297, 198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(583, 2, 284, 203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(869, 2, 180, 315)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(1051, 2, 160, 312)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(1213, 2, 181, 262)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_o32lj")
+region = Rect2(1396, 2, 186, 245)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 35.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 35.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 35.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 60.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 45.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_6")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_malb8")
+source_id = "barel_rika.timeline.combo1"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(100.5, 203, 108.5, 198, 115.5, 203, 105.5, 315, 85.5, 312, 106.5, 262, 110.5, 245)
+frame_scales = PackedFloat64Array(0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376)
+duration_ms = PackedFloat64Array(35, 35, 35, 60, 50, 45, 50)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"catalog": "BAREL_RIKA_DATA",
+"clip": "combo1",
+"smooth": true,
+"timeline": [[0.0, 35.0], [1.0, 70.0], [2.0, 105.0], [3.0, 165.0], [4.0, 215.0], [5.0, 260.0], [6.0, 310.0]]
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 35.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [100.5, 203.0],
+"rect": [2.0, 2.0, 280.0, 203.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [100.5, 203.0],
+"atlas": [2.0, 2.0, 280.0, 203.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}, {
+"duration_ms": 35.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [108.5, 198.0],
+"rect": [284.0, 2.0, 297.0, 198.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [108.5, 198.0],
+"atlas": [284.0, 2.0, 297.0, 198.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}, {
+"duration_ms": 35.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [115.5, 203.0],
+"rect": [583.0, 2.0, 284.0, 203.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [115.5, 203.0],
+"atlas": [583.0, 2.0, 284.0, 203.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}, {
+"duration_ms": 60.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [105.5, 315.0],
+"rect": [869.0, 2.0, 180.0, 315.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [105.5, 315.0],
+"atlas": [869.0, 2.0, 180.0, 315.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}, {
+"duration_ms": 50.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [85.5, 312.0],
+"rect": [1051.0, 2.0, 160.0, 312.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [85.5, 312.0],
+"atlas": [1051.0, 2.0, 160.0, 312.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}, {
+"duration_ms": 45.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [106.5, 262.0],
+"rect": [1213.0, 2.0, 181.0, 262.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [106.5, 262.0],
+"atlas": [1213.0, 2.0, 181.0, 262.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}, {
+"duration_ms": 50.0,
+"image": "port_assets/images/barel_rika_data.combo1.path__d28c5e6fa060.png",
+"pivot": [110.5, 245.0],
+"rect": [1396.0, 2.0, 186.0, 245.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [110.5, 245.0],
+"atlas": [1396.0, 2.0, 186.0, 245.0]
+},
+"source_image": "assets/runtime/d28c5e6fa0606374f3d50506.png"
+}])

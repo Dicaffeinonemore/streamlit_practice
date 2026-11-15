@@ -1,0 +1,141 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_5ay08"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp" id="2_qth17"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_qth17")
+region = Rect2(0, 0, 210, 118)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_qth17")
+region = Rect2(210, 0, 210, 118)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_qth17")
+region = Rect2(420, 0, 210, 118)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_qth17")
+region = Rect2(630, 0, 210, 118)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_qth17")
+region = Rect2(840, 0, 210, 118)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_qth17")
+region = Rect2(1050, 0, 210, 118)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_5ay08")
+source_id = "stage1_fx.fire_loop"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(105, 118, 105, 118, 105, 118, 105, 118, 105, 118, 105, 118)
+frame_scales = PackedFloat64Array(0.66667, 0.66667, 0.66667, 0.66667, 0.66667, 0.66667)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"additive": true,
+"catalog": "STAGE1_FX",
+"clip": "fire_loop"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp",
+"pivot": [105.0, 118.0],
+"rect": [0.0, 0.0, 210.0, 118.0],
+"scale": 0.66667,
+"source": {
+"anchor": [105.0, 118.0],
+"atlas": [0.0, 0.0, 210.0, 118.0]
+},
+"source_image": "assets/runtime/94ae143f40a2b854e52ea436.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp",
+"pivot": [105.0, 118.0],
+"rect": [210.0, 0.0, 210.0, 118.0],
+"scale": 0.66667,
+"source": {
+"anchor": [105.0, 118.0],
+"atlas": [210.0, 0.0, 210.0, 118.0]
+},
+"source_image": "assets/runtime/94ae143f40a2b854e52ea436.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp",
+"pivot": [105.0, 118.0],
+"rect": [420.0, 0.0, 210.0, 118.0],
+"scale": 0.66667,
+"source": {
+"anchor": [105.0, 118.0],
+"atlas": [420.0, 0.0, 210.0, 118.0]
+},
+"source_image": "assets/runtime/94ae143f40a2b854e52ea436.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp",
+"pivot": [105.0, 118.0],
+"rect": [630.0, 0.0, 210.0, 118.0],
+"scale": 0.66667,
+"source": {
+"anchor": [105.0, 118.0],
+"atlas": [630.0, 0.0, 210.0, 118.0]
+},
+"source_image": "assets/runtime/94ae143f40a2b854e52ea436.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp",
+"pivot": [105.0, 118.0],
+"rect": [840.0, 0.0, 210.0, 118.0],
+"scale": 0.66667,
+"source": {
+"anchor": [105.0, 118.0],
+"atlas": [840.0, 0.0, 210.0, 118.0]
+},
+"source_image": "assets/runtime/94ae143f40a2b854e52ea436.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.fire_loop.file__94ae143f40a2.webp",
+"pivot": [105.0, 118.0],
+"rect": [1050.0, 0.0, 210.0, 118.0],
+"scale": 0.66667,
+"source": {
+"anchor": [105.0, 118.0],
+"atlas": [1050.0, 0.0, 210.0, 118.0]
+},
+"source_image": "assets/runtime/94ae143f40a2b854e52ea436.webp"
+}])

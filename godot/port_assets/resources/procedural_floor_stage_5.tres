@@ -1,0 +1,43 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_f7kxf"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_floor_stage_5_0.png" id="2_7kw8d"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_7kw8d")
+region = Rect2(1, 1, 320, 89)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_f7kxf")
+source_id = "procedural_floor_stage_5"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(0, 0)
+frame_scales = PackedFloat64Array(2)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"source": "game.js floorImage",
+"world_y": 332.0
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "08322740bc2404d652537525414a4c842155694848bdfa7c7be1ae59b2f9605c",
+"image": "port_assets/baked/procedural_floor_stage_5_0.png",
+"page": 0.0,
+"pivot": [0.0, 0.0],
+"rect": [1.0, 1.0, 320.0, 89.0],
+"scale": 2.0,
+"source": {}
+}])

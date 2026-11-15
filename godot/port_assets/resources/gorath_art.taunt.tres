@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_nh7xj"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath_art.atlas__7553ac96a449.png" id="2_01v4j"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_01v4j")
+region = Rect2(3216, 0, 272, 307)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_01v4j")
+region = Rect2(2138, 391, 307, 287)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_01v4j")
+region = Rect2(3490, 0, 283, 307)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_01v4j")
+region = Rect2(0, 391, 278, 303)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_01v4j")
+region = Rect2(555, 391, 312, 301)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_01v4j")
+region = Rect2(280, 391, 273, 303)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_nh7xj")
+source_id = "gorath_art.taunt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(142, 306, 170, 286, 148, 306, 139, 302, 161, 300, 142, 302)
+frame_scales = PackedFloat64Array(0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "GORATH_ART",
+"clip": "taunt",
+"source_scale": 0.5,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [142.0, 306.0],
+"rect": [3216.0, 0.0, 272.0, 307.0],
+"scale": 0.5,
+"source": {
+"anchor": [142.0, 306.0],
+"atlas": [3216.0, 0.0, 272.0, 307.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [170.0, 286.0],
+"rect": [2138.0, 391.0, 307.0, 287.0],
+"scale": 0.5,
+"source": {
+"anchor": [170.0, 286.0],
+"atlas": [2138.0, 391.0, 307.0, 287.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [148.0, 306.0],
+"rect": [3490.0, 0.0, 283.0, 307.0],
+"scale": 0.5,
+"source": {
+"anchor": [148.0, 306.0],
+"atlas": [3490.0, 0.0, 283.0, 307.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [139.0, 302.0],
+"rect": [0.0, 391.0, 278.0, 303.0],
+"scale": 0.5,
+"source": {
+"anchor": [139.0, 302.0],
+"atlas": [0.0, 391.0, 278.0, 303.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [161.0, 300.0],
+"rect": [555.0, 391.0, 312.0, 301.0],
+"scale": 0.5,
+"source": {
+"anchor": [161.0, 300.0],
+"atlas": [555.0, 391.0, 312.0, 301.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [142.0, 302.0],
+"rect": [280.0, 391.0, 273.0, 303.0],
+"scale": 0.5,
+"source": {
+"anchor": [142.0, 302.0],
+"atlas": [280.0, 391.0, 273.0, 303.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}])

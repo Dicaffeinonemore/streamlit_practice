@@ -1,0 +1,138 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_h04aq"]
+[ext_resource type="Texture2D" path="res://port_assets/images/viesa_art.sheets.0__621c304fb2d6.png" id="2_fbmvb"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_fbmvb")
+region = Rect2(157, 1846, 102, 50)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_fbmvb")
+region = Rect2(261, 1846, 160, 72)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_fbmvb")
+region = Rect2(423, 1846, 186, 110)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_fbmvb")
+region = Rect2(611, 1846, 147, 74)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_fbmvb")
+region = Rect2(760, 1846, 149, 77)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_h04aq")
+source_id = "viesa_art.fx_land_dust"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(51, 25, 80, 36, 93, 55, 73.5, 37, 74.5, 38.5)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0)
+metadata = {
+"catalog": "VIESA_ART",
+"clip": "fx_land_dust",
+"source_scale": 0.72,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [51.0, 25.0],
+"rect": [157.0, 1846.0, 102.0, 50.0],
+"scale": 0.72,
+"source": {
+"additive": false,
+"anchor": [51.0, 25.0],
+"atlas": [157.0, 1846.0, 102.0, 50.0],
+"sheet": 0.0,
+"source": [840.0, 778.0, 158.0, 163.0]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [80.0, 36.0],
+"rect": [261.0, 1846.0, 160.0, 72.0],
+"scale": 0.72,
+"source": {
+"additive": false,
+"anchor": [80.0, 36.0],
+"atlas": [261.0, 1846.0, 160.0, 72.0],
+"sheet": 0.0,
+"source": [998.0, 778.0, 168.0, 163.0]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [93.0, 55.0],
+"rect": [423.0, 1846.0, 186.0, 110.0],
+"scale": 0.72,
+"source": {
+"additive": false,
+"anchor": [93.0, 55.0],
+"atlas": [423.0, 1846.0, 186.0, 110.0],
+"sheet": 0.0,
+"source": [1166.0, 778.0, 188.0, 163.0]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [73.5, 37.0],
+"rect": [611.0, 1846.0, 147.0, 74.0],
+"scale": 0.72,
+"source": {
+"additive": false,
+"anchor": [73.5, 37.0],
+"atlas": [611.0, 1846.0, 147.0, 74.0],
+"sheet": 0.0,
+"source": [1354.0, 778.0, 147.0, 163.0]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [74.5, 38.5],
+"rect": [760.0, 1846.0, 149.0, 77.0],
+"scale": 0.72,
+"source": {
+"additive": false,
+"anchor": [74.5, 38.5],
+"atlas": [760.0, 1846.0, 149.0, 77.0],
+"sheet": 0.0,
+"source": [1501.0, 778.0, 171.0, 163.0]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}])

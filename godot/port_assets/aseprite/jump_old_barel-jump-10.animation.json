@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "jump",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "jump",
+  "sprite": "../exports/barel-jump-10/barel-jump-10.json",
+  "anchor": [
+    200,
+    352
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    17,
+    33,
+    83,
+    84,
+    66,
+    50,
+    134,
+    133,
+    34,
+    50
+  ],
+  "durationMs": 684,
+  "renderScale": 0.8987341772151899,
+  "alignment": {
+    "referenceLegacyHeight": 142,
+    "newBodyHeight": 158,
+    "worldOffsetsApplied": false,
+    "method": "Per-pose source sole removes baked sheet arc. Render subtracts actor.z exactly once."
+  },
+  "clock": {
+    "airSource": "player.jumpTime * MS",
+    "airDurationMs": 600,
+    "landingSource": "(player.t - landingT) * MS",
+    "landingDurationMs": 84
+  },
+  "physicsReference": {
+    "initialVz": 9.6,
+    "gravityPerTick": 0.55,
+    "airTicks": 36,
+    "apexTick": 18
+  },
+  "source": {
+    "file": "source/original.png",
+    "sha256": "f4a9ad3d085ff18d620b85e3c8e0f44ee84ee83dd8f147ea7d1d6879cc85d60e",
+    "resampled": false,
+    "redrawn": false,
+    "pixelClones": false
+  }
+}

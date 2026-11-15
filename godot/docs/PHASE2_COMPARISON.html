@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Moon Knight — Phase 2 comparison</title>
+<style>body{background:#110e15;color:#eee4da;font:16px system-ui;margin:28px}h1{font-size:25px}h2{margin-top:32px;font-size:19px}p{color:#bdb0be;max-width:1000px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}figure{margin:0}img{width:100%;border:1px solid #59434a}figcaption{padding:8px 0;color:#bdb0be}@media(max-width:900px){.pair{grid-template-columns:1fr}}</style>
+<h1>Black Moon Knight / original and native slice</h1>
+<p>Original source Canvas and Godot 4.7.2 at 960×540. Character frames, foot positions, original street layers and attack ranges are comparable. HUD, text rendering, particles and vignette have the documented Phase 2 differences.</p>
+<h2>Street / initial pose</h2><div class="pair">
+<figure><img src="../evidence/phase2_source_street.png"><figcaption>Original browser</figcaption></figure>
+<figure><img src="../evidence/phase2_street.png"><figcaption>Native Godot</figcaption></figure></div>
+<h2>Three soldiers / warning step 12</h2><div class="pair">
+<figure><img src="../evidence/phase2_source_telegraphs.png"><figcaption>Original browser / same collision geometry</figcaption></figure>
+<figure><img src="../evidence/phase2_telegraphs.png"><figcaption>Native Godot / F9 enabled</figcaption></figure></div>
+<h2>First combo / first hitstop</h2><div class="pair">
+<figure><img src="../evidence/phase2_source_combo.png"><figcaption>Original browser / original Rika and combo effect</figcaption></figure>
+<figure><img src="../evidence/phase2_combo.png"><figcaption>Native Godot / original Rika and combo effect</figcaption></figure></div>
+<h2>Native special</h2><img style="max-width:960px" src="../evidence/phase2_special.png">
+</html>

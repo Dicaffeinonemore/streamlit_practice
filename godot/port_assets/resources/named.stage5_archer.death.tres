@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_c66ol"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_rf15c"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_rf15c")
+region = Rect2(1610, 4440, 106, 86)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_rf15c")
+region = Rect2(1718, 4440, 165, 46)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_c66ol")
+source_id = "named.stage5_archer.death"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(60, 85, 80, 45)
+frame_scales = PackedFloat64Array(0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "death",
+"role": "stage5_archer"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [60.0, 85.0],
+"rect": [1610.0, 4440.0, 106.0, 86.0],
+"scale": 0.72,
+"source": {
+"anchor": [60.0, 85.0],
+"atlas": [1610.0, 4440.0, 106.0, 86.0],
+"edgeFragmentPixels": 2490.0,
+"id": 416.0,
+"rect": [1390.0, 802.0, 1496.0, 888.0],
+"scale": 0.72,
+"source": "soldiers5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [80.0, 45.0],
+"rect": [1718.0, 4440.0, 165.0, 46.0],
+"scale": 0.72,
+"source": {
+"anchor": [80.0, 45.0],
+"atlas": [1718.0, 4440.0, 165.0, 46.0],
+"edgeFragmentPixels": 1792.0,
+"id": 417.0,
+"rect": [1500.0, 842.0, 1665.0, 888.0],
+"scale": 0.72,
+"source": "soldiers5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

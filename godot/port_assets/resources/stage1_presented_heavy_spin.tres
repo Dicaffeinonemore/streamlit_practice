@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_w4qqb"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_heavy_spin_0.png" id="2_nlm54"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(1, 1, 113, 109)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(116, 1, 133, 107)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(251, 1, 97, 125)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(350, 1, 109, 158)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(461, 1, 151, 99)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(614, 1, 137, 103)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(753, 1, 99, 151)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(854, 1, 151, 98)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(1007, 1, 162, 100)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_nlm54")
+region = Rect2(1171, 1, 134, 108)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 133.33333,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_3")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_4")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_5")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_6")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_7")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_8")
+}, {
+"duration": 133.33333,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_w4qqb")
+source_id = "stage1_presented_heavy_spin"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(67.2, 108.6, 82.2, 106.8, 31.8, 125.4, 67.5, 157.8, 63.3, 99, 39, 103.2, 34.2, 150.6, 68.1, 97.8, 77.4, 99.6, 77.4, 108)
+frame_scales = PackedFloat64Array(1.210736, 1.210736, 1.210736, 1.210736, 1.210736, 1.210736, 1.210736, 1.210736, 1.210736, 1.210736)
+duration_ms = PackedFloat64Array(133.33333333333334, 100, 100, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 66.66666666666667, 83.33333333333334, 133.33333333333334)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"clip": "spin",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "heavy"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 133.33333333333334,
+"expected_rgba_sha256": "7999fed0529ad3a46a372af856d73319b84265503f5c7be01c12a21f986543cc",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [67.2, 108.6],
+"rect": [1.0, 1.0, 113.0, 109.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "4027c595c8969578ca859ff175c4556703f97db9ad6fe09a5146512e9f5881e4",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [82.2, 106.8],
+"rect": [116.0, 1.0, 133.0, 107.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "a9484acc5c03dfdb383fe71e2c14511e1a0bf45a9d4368689ff147ab701b21a8",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [31.8, 125.4],
+"rect": [251.0, 1.0, 97.0, 125.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "c1db131b99e8e6778781c7973144537138cf0a5e683662073572db0fdb7dc953",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [67.5, 157.8],
+"rect": [350.0, 1.0, 109.0, 158.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "1084367f9e00ec7a4063376efd3386eeab828798c33110e42850ddb5c89e406e",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [63.3, 99.0],
+"rect": [461.0, 1.0, 151.0, 99.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "e7157ff66a1bf1137922c4fe179ef60dc1f27f28cd481db2eba6ee8779814ec1",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [39.0, 103.2],
+"rect": [614.0, 1.0, 137.0, 103.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "11092c2d79085b51fb0209cfe8a17e36895085963abdeebb3885735af54d99a6",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [34.2, 150.6],
+"rect": [753.0, 1.0, 99.0, 151.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "8451633dd0aabfe6adfdc3b31d03297f3ba0c33dbf2010342c76d90c0e433df6",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [68.1, 97.8],
+"rect": [854.0, 1.0, 151.0, 98.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "205f320faeb89471e14dd15b7991622a3a0cbcb36fd08dec47fe143cbb5ce31c",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [77.4, 99.6],
+"rect": [1007.0, 1.0, 162.0, 100.0],
+"scale": 1.210736,
+"source": {}
+}, {
+"duration_ms": 133.33333333333334,
+"expected_rgba_sha256": "9dde1186b14d72de431946d220a3d909cfda58656d0b691187a612dce3b66be6",
+"image": "port_assets/baked/stage1_presented_heavy_spin_0.png",
+"page": 0.0,
+"pivot": [77.4, 108.0],
+"rect": [1171.0, 1.0, 134.0, 108.0],
+"scale": 1.210736,
+"source": {}
+}])

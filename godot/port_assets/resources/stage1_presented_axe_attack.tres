@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_62mvr"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_axe_attack_0.png" id="2_v80n8"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(1, 1, 152, 170)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(155, 1, 178, 162)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(335, 1, 173, 163)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(510, 1, 162, 186)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(674, 1, 168, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(844, 1, 176, 148)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(1022, 1, 192, 139)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(1216, 1, 192, 157)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(1410, 1, 148, 166)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_v80n8")
+region = Rect2(1560, 1, 149, 166)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 83.333336,
+"texture": SubResource("frame_0")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_1")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_6")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_7")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_8")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_62mvr")
+source_id = "stage1_presented_axe_attack"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(87, 170.4, 90.6, 162, 84, 163.2, 82.8, 186, 110.7, 176.4, 92.7, 147.6, 115.5, 139.2, 111, 157.2, 70.8, 165.6, 81.6, 165.6)
+frame_scales = PackedFloat64Array(0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325)
+duration_ms = PackedFloat64Array(83.33333333333334, 83.33333333333334, 66.66666666666667, 100, 50, 50, 83.33333333333334, 83.33333333333334, 83.33333333333334, 83.33333333333334)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"clip": "attack",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "axe"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "d33f62bf7437b5f0509761108c9eadf58469b3d04f4c0f25c289dae7ce62e3a4",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [87.0, 170.4],
+"rect": [1.0, 1.0, 152.0, 170.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "a8095ba50d6524d7c6b9c3f0a72bf4e990aff06e6dfe98f7b41d3ec9fa034557",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [90.6, 162.0],
+"rect": [155.0, 1.0, 178.0, 162.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "deae765a9167dd20ca6f50774aba7075a518101482c63044158c491d37638941",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [84.0, 163.2],
+"rect": [335.0, 1.0, 173.0, 163.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "513db5c58f0e8273ea6a6a52dde8d83ec1f911982326a526d06377b83883e6e0",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [82.8, 186.0],
+"rect": [510.0, 1.0, 162.0, 186.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "cb41ba76b50fd1459a5d240d9fcd68fa0fe5c6e698c0047378037626c872b9fa",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [110.7, 176.4],
+"rect": [674.0, 1.0, 168.0, 176.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "44333a6a3c797dc35c9e8910e20510cb473583f846bef351938047f5f0f586e9",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [92.7, 147.6],
+"rect": [844.0, 1.0, 176.0, 148.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "81ec34ce035280bd4130c7e19a9eb744fa120278e32ea3a24a1d36e220ad42e1",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [115.5, 139.2],
+"rect": [1022.0, 1.0, 192.0, 139.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "e0d5c566a6bc70631c3658f9b13134909cbf76ec43f6ff2be90b4a6686b4b9b0",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [111.0, 157.2],
+"rect": [1216.0, 1.0, 192.0, 157.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "309293afcf32e1abf16aa274bdd352fd324690adc28ab85167407d2ba5b20b68",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [70.8, 165.6],
+"rect": [1410.0, 1.0, 148.0, 166.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "07019454c5c01b8668bae923de523700dae39bdc47d3e4e5e7a47c7cf62095d9",
+"image": "port_assets/baked/stage1_presented_axe_attack_0.png",
+"page": 0.0,
+"pivot": [81.6, 165.6],
+"rect": [1560.0, 1.0, 149.0, 166.0],
+"scale": 0.55325,
+"source": {}
+}])

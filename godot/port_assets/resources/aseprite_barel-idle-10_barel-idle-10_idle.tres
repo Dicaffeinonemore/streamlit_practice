@@ -1,0 +1,443 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_e60ie"]
+[ext_resource type="Texture2D" path="res://port_assets/aseprite/barel-idle-10_barel-idle-10.png" id="2_b5xn4"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(0, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(448, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(896, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(1344, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(1792, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(2240, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(2688, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(3136, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(3584, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_b5xn4")
+region = Rect2(4032, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 130.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 130.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 1,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_e60ie")
+source_id = "aseprite_barel-idle-10_barel-idle-10_idle"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(200, 415, 195.179, 416, 193.79, 416, 193.405, 416, 192.702, 415, 193.443, 416, 194.264, 415, 194.415, 415, 194.159, 416, 198.691, 416)
+frame_scales = PackedFloat64Array(0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4)
+duration_ms = PackedFloat64Array(130, 130, 130, 130, 130, 130, 130, 130, 130, 130)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"loop": true,
+"metadata": {
+"alignment": {
+"canvasGround": 416.0,
+"footAnalysis": {
+"alphaThreshold": 128.0,
+"centroids": [{
+"left": 119.47121212121212,
+"right": 275.70703
+}, {
+"left": 109.9001367989056,
+"right": 275.6353383458647
+}, {
+"left": 107.14492753623188,
+"right": 275.6133828996283
+}, {
+"left": 106.3748148148148,
+"right": 275.6133828996283
+}, {
+"left": 105.30124223602483,
+"right": 275.28044280442805
+}, {
+"left": 106.42796005706134,
+"right": 275.6353383458647
+}, {
+"left": 106.90303907380608,
+"right": 276.80252100840335
+}, {
+"left": 107.90303907380608,
+"right": 276.10526315789474
+}, {
+"left": 106.4482269503546,
+"right": 277.0477941176471
+}, {
+"left": 112.73469387755102,
+"right": 279.8263888888889
+}],
+"method": "Least-squares common translation of two sole centroids, referenced to F1",
+"rows": [400.0, 417.0],
+"targetPairMidpoint": 197.58912168560607
+},
+"headSourceTop": 206.0,
+"newBodyHeight": 355.0,
+"referenceLegacyHeight": 142.0,
+"worldOffsetsApplied": false
+},
+"anchor": [200.0, 416.0],
+"animationId": "idle",
+"animationType": "loop",
+"character": "barel",
+"clip": "idle",
+"clock": {
+"legacyPeriodMs": 1300.0,
+"resetOnIdleEntry": false,
+"source": "tick * MS"
+},
+"durationMs": 1300.0,
+"expectedDurationsMs": [130.0, 130.0, 130.0, 130.0, 130.0, 130.0, 130.0, 130.0, 130.0, 130.0],
+"frameOffsets": [[0.0, 1.0], [4.821, 0.0], [6.21, 0.0], [6.595, 0.0], [7.298, 1.0], [6.557, 0.0], [5.736, 1.0], [5.585, 1.0], [5.841, 0.0], [1.309, 0.0]],
+"loop": true,
+"renderScale": 0.4,
+"schemaVersion": 1.0,
+"source": {
+"file": "source/original.png",
+"pixelCloneRepair": "F1-F9 missing front toes use only unoccluded supplied F10 toe samples; mappings in separation.json",
+"redrawn": false,
+"resampled": false,
+"sha256": "9e910d98d75c7248427eb9d08bd4bba84a365062180c1e5814a8ff6d6ceb61e8"
+},
+"sprite": "../exports/barel-idle-10/barel-idle-10.json"
+},
+"source": "assets/aseprite/barel-idle-10/barel-idle-10.animation.json",
+"tag": {
+"color": "#000000ff",
+"direction": "forward",
+"from": 0.0,
+"name": "idle",
+"to": 9.0
+}
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [200.0, 415.0],
+"rect": [0.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [200.0, 415.0],
+"atlas": [0.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 0.aseprite",
+"index": 0.0,
+"renderOffset": [0.0, 1.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [195.179, 416.0],
+"rect": [448.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [195.179, 416.0],
+"atlas": [448.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 1.aseprite",
+"index": 1.0,
+"renderOffset": [4.821, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [193.79, 416.0],
+"rect": [896.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [193.79, 416.0],
+"atlas": [896.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 2.aseprite",
+"index": 2.0,
+"renderOffset": [6.21, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [193.405, 416.0],
+"rect": [1344.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [193.405, 416.0],
+"atlas": [1344.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 3.aseprite",
+"index": 3.0,
+"renderOffset": [6.595, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [192.702, 415.0],
+"rect": [1792.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [192.702, 415.0],
+"atlas": [1792.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 4.aseprite",
+"index": 4.0,
+"renderOffset": [7.298, 1.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [193.443, 416.0],
+"rect": [2240.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [193.443, 416.0],
+"atlas": [2240.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 5.aseprite",
+"index": 5.0,
+"renderOffset": [6.557, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [194.264, 415.0],
+"rect": [2688.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [194.264, 415.0],
+"atlas": [2688.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 6.aseprite",
+"index": 6.0,
+"renderOffset": [5.736, 1.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [194.415, 415.0],
+"rect": [3136.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [194.415, 415.0],
+"atlas": [3136.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 7.aseprite",
+"index": 7.0,
+"renderOffset": [5.585, 1.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [194.159, 416.0],
+"rect": [3584.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [194.159, 416.0],
+"atlas": [3584.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 8.aseprite",
+"index": 8.0,
+"renderOffset": [5.841, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 130.0,
+"image": "port_assets/aseprite/barel-idle-10_barel-idle-10.png",
+"pivot": [198.691, 416.0],
+"rect": [4032.0, 0.0, 448.0, 448.0],
+"scale": 0.4,
+"source": {
+"anchor": [198.691, 416.0],
+"atlas": [4032.0, 0.0, 448.0, 448.0],
+"baseAnchor": [200.0, 416.0],
+"duration": 130.0,
+"filename": "barel-idle-10 9.aseprite",
+"index": 9.0,
+"renderOffset": [1.309, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}])

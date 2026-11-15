@@ -1,0 +1,218 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_qcpdn"]
+[ext_resource type="Texture2D" path="res://port_assets/images/morgra_art.atlas__207748d1db71.png" id="2_lw6db"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(1792, 1385, 219, 212)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(2013, 1385, 259, 212)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(2857, 1813, 262, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(947, 2003, 260, 111)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(2827, 2003, 266, 77)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(2396, 2003, 256, 91)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(1371, 1813, 205, 149)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(1235, 1603, 223, 205)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(1289, 1385, 213, 214)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_lw6db")
+region = Rect2(2449, 1163, 173, 217)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_qcpdn")
+source_id = "morgra_art.knockdown"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(95, 211, 99, 211, 153, 130, 121, 110, 124, 76, 111, 90, 138, 147, 88, 204, 77, 213, 73, 216)
+frame_scales = PackedFloat64Array(0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "MORGRA_ART",
+"clip": "knockdown",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [95.0, 211.0],
+"rect": [1792.0, 1385.0, 219.0, 212.0],
+"scale": 0.4675,
+"source": {
+"anchor": [52.25, 116.05],
+"atlas": [1792.0, 1385.0, 219.0, 212.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [99.0, 211.0],
+"rect": [2013.0, 1385.0, 259.0, 212.0],
+"scale": 0.4675,
+"source": {
+"anchor": [54.45, 116.05],
+"atlas": [2013.0, 1385.0, 259.0, 212.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [153.0, 130.0],
+"rect": [2857.0, 1813.0, 262.0, 132.0],
+"scale": 0.4675,
+"source": {
+"anchor": [84.15, 71.5],
+"atlas": [2857.0, 1813.0, 262.0, 132.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [121.0, 110.0],
+"rect": [947.0, 2003.0, 260.0, 111.0],
+"scale": 0.4675,
+"source": {
+"anchor": [66.55, 60.5],
+"atlas": [947.0, 2003.0, 260.0, 111.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [124.0, 75.99999999999999],
+"rect": [2827.0, 2003.0, 266.0, 77.0],
+"scale": 0.4675,
+"source": {
+"anchor": [68.2, 41.8],
+"atlas": [2827.0, 2003.0, 266.0, 77.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [111.0, 90.0],
+"rect": [2396.0, 2003.0, 256.0, 91.0],
+"scale": 0.4675,
+"source": {
+"anchor": [61.05, 49.5],
+"atlas": [2396.0, 2003.0, 256.0, 91.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [138.0, 146.99999999999997],
+"rect": [1371.0, 1813.0, 205.0, 149.0],
+"scale": 0.4675,
+"source": {
+"anchor": [75.9, 80.85],
+"atlas": [1371.0, 1813.0, 205.0, 149.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [88.0, 204.0],
+"rect": [1235.0, 1603.0, 223.0, 205.0],
+"scale": 0.4675,
+"source": {
+"anchor": [48.4, 112.2],
+"atlas": [1235.0, 1603.0, 223.0, 205.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [77.0, 213.0],
+"rect": [1289.0, 1385.0, 213.0, 214.0],
+"scale": 0.4675,
+"source": {
+"anchor": [42.35, 117.15],
+"atlas": [1289.0, 1385.0, 213.0, 214.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [73.0, 216.0],
+"rect": [2449.0, 1163.0, 173.0, 217.0],
+"scale": 0.4675,
+"source": {
+"anchor": [40.15, 118.8],
+"atlas": [2449.0, 1163.0, 173.0, 217.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}])

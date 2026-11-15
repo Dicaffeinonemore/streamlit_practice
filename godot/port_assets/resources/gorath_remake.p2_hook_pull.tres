@@ -1,0 +1,72 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_vq7a7"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath2_art.pages.5__63ad507112a5.webp" id="2_vchyk"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_vchyk")
+region = Rect2(1589, 706, 318, 224)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_vchyk")
+region = Rect2(223, 935, 311, 223)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_vq7a7")
+source_id = "gorath_remake.p2_hook_pull"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(141, 224, 141, 223)
+frame_scales = PackedFloat64Array(0.49257, 0.49257)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "GORATH2_ART",
+"clip": "p2_hook_pull"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.5__63ad507112a5.webp",
+"pivot": [141.0, 224.0],
+"rect": [1589.0, 706.0, 318.0, 224.0],
+"scale": 0.49257,
+"source": {
+"anchor": [141.0, 224.0],
+"atlas": [1589.0, 706.0, 318.0, 224.0],
+"back": [-69.5, 84.2],
+"hand": [84.7, 70.9],
+"p": 5.0,
+"tip": [86.7, 80.3]
+},
+"source_image": "assets/runtime/63ad507112a541e62110f861.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.5__63ad507112a5.webp",
+"pivot": [141.0, 223.0],
+"rect": [223.0, 935.0, 311.0, 223.0],
+"scale": 0.49257,
+"source": {
+"anchor": [141.0, 223.0],
+"atlas": [223.0, 935.0, 311.0, 223.0],
+"back": [-69.5, 83.7],
+"hand": [81.3, 64.8],
+"p": 5.0,
+"tip": [83.2, 71.9]
+},
+"source_image": "assets/runtime/63ad507112a541e62110f861.webp"
+}])

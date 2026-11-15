@@ -1,0 +1,369 @@
+[gd_resource type="Resource" script_class="BmkCombatData" format=3]
+
+[ext_resource type="Script" path="res://phase2/data/attack_data.gd" id="1_do0at"]
+[ext_resource type="Script" path="res://phase2/data/enemy_move.gd" id="2_y3nul"]
+[ext_resource type="Script" path="res://phase2/data/enemy_stats.gd" id="3_mvr5o"]
+[ext_resource type="Script" path="res://phase2/data/grade_data.gd" id="4_hdh1u"]
+[ext_resource type="Script" path="res://phase2/data/combat_data.gd" id="5_hrmyp"]
+
+[sub_resource type="Resource" id="Resource_26t50"]
+script = ExtResource("1_do0at")
+id = "c1"
+label = "일섬"
+wind_ms = 90.0
+active_ms = 110.0
+recovery_ms = 150.0
+duration_ms = 350.0
+damage = 10.0
+reach = 80.0
+step = 8.0
+hitstop = 3
+hitstun = 30
+strikes = PackedFloat64Array()
+
+[sub_resource type="Resource" id="Resource_0g10a"]
+script = ExtResource("1_do0at")
+id = "c2"
+label = "역일섬"
+wind_ms = 70.0
+active_ms = 100.0
+recovery_ms = 140.0
+duration_ms = 310.0
+damage = 11.0
+reach = 82.0
+step = 8.0
+hitstop = 3
+hitstun = 36
+effect = 1
+strikes = PackedFloat64Array()
+
+[sub_resource type="Resource" id="Resource_3x35f"]
+script = ExtResource("1_do0at")
+id = "c3"
+label = "참격"
+wind_ms = 200.0
+active_ms = 140.0
+recovery_ms = 340.0
+duration_ms = 680.0
+damage = 16.0
+reach = 98.0
+step = 16.0
+knockdown = true
+hitstop = 7
+effect = 2
+strikes = PackedFloat64Array()
+smash_ratio = 0.85
+
+[sub_resource type="Resource" id="Resource_qhv1a"]
+script = ExtResource("1_do0at")
+id = "air"
+label = "공중 베기"
+damage = 14.0
+reach = 64.0
+knockdown = true
+hitstop = 5
+effect = 2
+strikes = PackedFloat64Array()
+
+[sub_resource type="Resource" id="Resource_t6x3q"]
+script = ExtResource("2_y3nul")
+species = "axe"
+clip = "attack"
+lengths = PackedInt32Array(5, 5, 4, 6, 3, 3, 5, 5, 5, 5)
+warning_frames = 4
+hit_from = PackedInt32Array(5)
+hit_to = PackedInt32Array(6)
+hit_damage = PackedFloat64Array(8)
+hit_reach = PackedFloat64Array(46)
+hit_knockdown = PackedByteArray(0)
+
+[sub_resource type="Resource" id="Resource_fxi0d"]
+script = ExtResource("2_y3nul")
+species = "blade"
+clip = "atk1"
+lengths = PackedInt32Array(7, 7, 6, 3, 3, 3, 3, 3, 3, 3)
+warning_frames = 3
+next_clip = "atk2"
+hit_from = PackedInt32Array(4)
+hit_to = PackedInt32Array(4)
+hit_damage = PackedFloat64Array(5)
+hit_reach = PackedFloat64Array(45.6)
+hit_knockdown = PackedByteArray(0)
+
+[sub_resource type="Resource" id="Resource_t8kpo"]
+script = ExtResource("2_y3nul")
+species = "blade"
+clip = "atk2"
+lengths = PackedInt32Array(3, 3, 3, 3, 3, 3, 3, 3, 3, 3)
+next_clip = "atk3"
+hit_from = PackedInt32Array(6)
+hit_to = PackedInt32Array(7)
+hit_damage = PackedFloat64Array(5)
+hit_reach = PackedFloat64Array(76.5)
+hit_knockdown = PackedByteArray(0)
+
+[sub_resource type="Resource" id="Resource_uqn1u"]
+script = ExtResource("2_y3nul")
+species = "blade"
+clip = "atk3"
+lengths = PackedInt32Array(4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+hit_from = PackedInt32Array(5)
+hit_to = PackedInt32Array(6)
+hit_damage = PackedFloat64Array(8)
+hit_reach = PackedFloat64Array(51.6)
+hit_knockdown = PackedByteArray(1)
+
+[sub_resource type="Resource" id="Resource_ja8v2"]
+script = ExtResource("2_y3nul")
+species = "club"
+clip = "attack"
+lengths = PackedInt32Array(8, 6, 6, 5, 5, 5, 4, 6, 6, 6)
+warning_frames = 3
+dash_from = 4
+dash_to = 6
+dash_ratio = 0.08
+armor_from = 4
+armor_to = 6
+hit_from = PackedInt32Array(7)
+hit_to = PackedInt32Array(8)
+hit_damage = PackedFloat64Array(12)
+hit_reach = PackedFloat64Array(33.9)
+hit_knockdown = PackedByteArray(1)
+
+[sub_resource type="Resource" id="Resource_lp7cy"]
+script = ExtResource("3_mvr5o")
+id = "axe"
+hp = 40.0
+speed = 1.2
+damage = 8.0
+reach = 58.0
+knockback = 3.0
+score = 120
+height = 102.0
+half_width = 18.0
+
+[sub_resource type="Resource" id="Resource_xbmbo"]
+script = ExtResource("3_mvr5o")
+id = "blade"
+hp = 32.0
+speed = 1.44
+damage = 5.0
+reach = 62.0
+knockback = 2.0
+score = 140
+height = 107.0
+half_width = 18.0
+
+[sub_resource type="Resource" id="Resource_ux80y"]
+script = ExtResource("3_mvr5o")
+id = "club"
+hp = 55.0
+speed = 1.02
+damage = 12.0
+reach = 150.0
+knockback = 4.0
+score = 160
+height = 94.0
+half_width = 20.0
+
+[sub_resource type="Resource" id="Resource_pmgp8"]
+script = ExtResource("4_hdh1u")
+id = "light"
+hitstop = 4
+stun_bonus = 8
+knockback_multiplier = 0.8
+flash = 2
+
+[sub_resource type="Resource" id="Resource_jl3e7"]
+script = ExtResource("4_hdh1u")
+id = "mid"
+rank = 1
+hitstop = 6
+stun_bonus = 10
+knockback_multiplier = 1.3
+shake = 3.0
+flash = 3
+
+[sub_resource type="Resource" id="Resource_kxwnf"]
+script = ExtResource("4_hdh1u")
+id = "heavy"
+rank = 2
+hitstop = 9
+stun_bonus = 12
+knockback_multiplier = 2.2
+shake = 7.0
+flash = 4
+
+[sub_resource type="Resource" id="Resource_5fw51"]
+script = ExtResource("4_hdh1u")
+id = "finisher"
+rank = 3
+hitstop = 12
+knockback_multiplier = 3.0
+shake = 12.0
+flash = 5
+knockdown = true
+knockdown_speed = 5.5
+
+[sub_resource type="Resource" id="Resource_h47h7"]
+script = ExtResource("1_do0at")
+id = "thrust"
+label = "견제 찌르기"
+key = "U"
+duration_ms = 520.0
+damage = 20.0
+reach = 125.0
+effect = 1
+cooldown_ms = 3200.0
+strikes = PackedFloat64Array(220, 320)
+
+[sub_resource type="Resource" id="Resource_gpjui"]
+script = ExtResource("1_do0at")
+id = "slam"
+label = "내려찍기"
+key = "H"
+duration_ms = 820.0
+damage = 24.0
+reach = 130.0
+behind = 10.0
+knockdown = true
+effect = 2
+cooldown_ms = 6000.0
+strikes = PackedFloat64Array(330)
+
+[sub_resource type="Resource" id="Resource_gg8ey"]
+script = ExtResource("1_do0at")
+id = "whirl"
+label = "회전 베기"
+key = "O"
+duration_ms = 760.0
+damage = 16.0
+reach = 110.0
+behind = 110.0
+effect = 1
+cooldown_ms = 7000.0
+strikes = PackedFloat64Array(200, 330, 460)
+inv_from = 100.0
+inv_to = 540.0
+
+[sub_resource type="Resource" id="Resource_xac0p"]
+script = ExtResource("1_do0at")
+id = "leap"
+label = "점프 강하"
+key = "P"
+duration_ms = 960.0
+damage = 26.0
+reach = 76.0
+behind = 38.0
+knockdown = true
+effect = 2
+cooldown_ms = 8000.0
+strikes = PackedFloat64Array(560)
+travel_from = 120.0
+travel_to = 560.0
+height = 88.0
+
+[sub_resource type="Resource" id="Resource_44ce6"]
+script = ExtResource("1_do0at")
+id = "redwave"
+label = "붉은 파동"
+key = "L"
+duration_ms = 720.0
+damage = 24.0
+cooldown_ms = 6500.0
+strikes = PackedFloat64Array(300)
+
+[resource]
+script = ExtResource("5_hrmyp")
+source_hash = "7bf656f5afb61c448364607a1046f9f424ce7781aa72fe6b83a4d1b800b261a3"
+ground_speed = 3.1
+air_speed = 2.6
+depth_ratio = 0.75
+jump_velocity = 9.6
+gravity = 0.55
+buffer_ms = 220.0
+link_ms = 420.0
+active_ratio = 0.35
+active_tail = 30.0
+cancel_ratio = 0.45
+hurt_ticks = 17
+hurt_inv = 40
+hurt_speed = 2.0
+hurt_decay = 0.85
+hurt_stop = 4
+down_velocity = 5.0
+down_speed = 3.5
+down_decay = 0.96
+down_ticks = 55
+down_inv = 100
+down_stop = 6
+dash_distance = 80.0
+dash_duration = 190.0
+dash_move_ms = 150.0
+dash_cancel_ms = 110.0
+dash_inv = 15
+dash_cd = 31
+dash_attack_ends = PackedInt32Array(3, 7, 11, 14, 17, 23, 29, 35, 41, 47)
+dash_attack_segments = Array[PackedFloat64Array]([PackedFloat64Array(3, 7, 0.06), PackedFloat64Array(7, 14, 0.08), PackedFloat64Array(14, 17, 0.04)])
+dash_attack_from = 14
+dash_attack_to = 23
+dash_attack_cancel = 29
+dash_skill_cancel = 23
+dash_grace = 7
+dash_damage_ratio = 1.4
+dash_sp = 8.0
+dash_attack_stop = 6
+dash_body_height = 93.53872340425532
+dash_box = Rect2(8, 44.041, 95.84, 24)
+dash_front = 8.0
+dash_reach = 103.84
+dash_bottom = 44.041
+dash_top = 68.041
+dash_depth = 38.0
+dash_tip_height = 56.04082107039085
+skill_end_inv = 10
+attacks = Array[ExtResource("1_do0at")]([SubResource("Resource_26t50"), SubResource("Resource_0g10a"), SubResource("Resource_3x35f"), SubResource("Resource_qhv1a")])
+skills = Array[ExtResource("1_do0at")]([SubResource("Resource_h47h7"), SubResource("Resource_gpjui"), SubResource("Resource_gg8ey"), SubResource("Resource_xac0p"), SubResource("Resource_44ce6")])
+grades = Array[ExtResource("4_hdh1u")]([SubResource("Resource_pmgp8"), SubResource("Resource_jl3e7"), SubResource("Resource_kxwnf"), SubResource("Resource_5fw51")])
+enemy_stats = Array[ExtResource("3_mvr5o")]([SubResource("Resource_lp7cy"), SubResource("Resource_xbmbo"), SubResource("Resource_ux80y")])
+enemy_moves = Array[ExtResource("2_y3nul")]([SubResource("Resource_t6x3q"), SubResource("Resource_fxi0d"), SubResource("Resource_t8kpo"), SubResource("Resource_uqn1u"), SubResource("Resource_ja8v2")])
+tier_by_attack = Dictionary[String, String]({
+"air": "mid",
+"bump": "light",
+"c1": "light",
+"c2": "light",
+"c3": "heavy",
+"dashAttack": "mid",
+"magic": "finisher",
+"redwave": "heavy",
+"skill": "heavy",
+"special": "finisher",
+"specialSlash": "heavy",
+"viesaArrow": "light",
+"viesaMelee": "mid",
+"viesaSkill": "heavy"
+})
+chain_cap = 7
+knockdown_speed = 4.0
+bump_min = 2.5
+bump_damage = 0.3
+bump_knockback = 0.6
+bump_dx = 30.0
+bump_dy = 14.0
+enemy_hurt_ticks = 26
+enemy_depth = 20.0
+enemy_height = 55.0
+getup_lengths = PackedInt32Array(8, 6, 6, 6, 6, 8)
+after_getup = 20
+special_duration = 2100.0
+special_slash = 27.0
+special_finisher = 150.0
+special_from = 620.0
+special_interval = 213.33333333333334
+special_hits = PackedFloat64Array(80, 80, 160)
+special_finish_ms = 1580.0
+magic_duration = 640.0
+magic_fire = 380.0
+magic_damage = 80.0
+hurt_high_weights = PackedFloat64Array(3, 5, 5, 5, 6)
+hurt_low_weights = PackedFloat64Array(3, 5, 5, 6, 6)

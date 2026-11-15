@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_hll34"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_1v14h"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_1v14h")
+region = Rect2(1586, 8004, 281, 223)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_1v14h")
+region = Rect2(0, 8325, 257, 204)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_hll34")
+source_id = "named.stage3_brute.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(157, 220, 140, 197)
+frame_scales = PackedFloat64Array(0.48, 0.48)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "stage3_brute"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [157.0, 220.0],
+"rect": [1586.0, 8004.0, 281.0, 223.0],
+"scale": 0.48,
+"source": {
+"anchor": [157.0, 220.0],
+"atlas": [1586.0, 8004.0, 281.0, 223.0],
+"edgeFragmentPixels": 3829.0,
+"id": 510.0,
+"rect": [18.0, 690.0, 299.0, 913.0],
+"scale": 0.48,
+"source": "heavy3"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [140.0, 197.0],
+"rect": [0.0, 8325.0, 257.0, 204.0],
+"scale": 0.48,
+"source": {
+"anchor": [140.0, 197.0],
+"atlas": [0.0, 8325.0, 257.0, 204.0],
+"edgeFragmentPixels": 3914.0,
+"id": 511.0,
+"rect": [305.0, 713.0, 562.0, 917.0],
+"scale": 0.48,
+"source": "heavy3"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

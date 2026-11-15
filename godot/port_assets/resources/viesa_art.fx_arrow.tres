@@ -1,0 +1,50 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_i32jc"]
+[ext_resource type="Texture2D" path="res://port_assets/images/viesa_art.sheets.0__621c304fb2d6.png" id="2_dpp1i"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_dpp1i")
+region = Rect2(1291, 1326, 240, 39)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_i32jc")
+source_id = "viesa_art.fx_arrow"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(120, 19.5)
+frame_scales = PackedFloat64Array(0.72)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "VIESA_ART",
+"clip": "fx_arrow",
+"source_scale": 0.72,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [120.0, 19.5],
+"rect": [1291.0, 1326.0, 240.0, 39.0],
+"scale": 0.72,
+"source": {
+"additive": false,
+"anchor": [120.0, 19.5],
+"atlas": [1291.0, 1326.0, 240.0, 39.0],
+"sheet": 0.0,
+"source": [0.0, 0.0, 411.0, 157.0]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}])

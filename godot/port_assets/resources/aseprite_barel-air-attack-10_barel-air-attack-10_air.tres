@@ -1,0 +1,418 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_n0o56"]
+[ext_resource type="Texture2D" path="res://port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png" id="2_avpei"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_avpei")
+region = Rect2(0, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_avpei")
+region = Rect2(448, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_avpei")
+region = Rect2(896, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_avpei")
+region = Rect2(1344, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_avpei")
+region = Rect2(1792, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_avpei")
+region = Rect2(2240, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_avpei")
+region = Rect2(2688, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_avpei")
+region = Rect2(3136, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_avpei")
+region = Rect2(3584, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_avpei")
+region = Rect2(4032, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 40.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 40.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_n0o56")
+source_id = "aseprite_barel-air-attack-10_barel-air-attack-10_air"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(224, 384, 224, 384, 224, 384, 224, 384, 224, 384, 224, 384, 224, 384, 224, 384, 224, 384, 224, 384)
+frame_scales = PackedFloat64Array(0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316, 0.7473684210526316)
+duration_ms = PackedFloat64Array(40, 40, 40, 40, 40, 40, 40, 40, 40, 40)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"loop": false,
+"metadata": {
+"alignment": {
+"method": "Pelvis registration; F10 sole defines ground; actor.z applied once",
+"newBodyHeight": 190.0,
+"referenceLegacyHeight": 142.0,
+"worldOffsetsApplied": false
+},
+"anchor": [224.0, 384.0],
+"animationId": "air",
+"animationType": "oneshot",
+"character": "barel",
+"clip": "air",
+"clock": {
+"hitPoseFloor": 5.0,
+"legacyVisualDurationMs": 400.0,
+"mapping": "remaining-flight",
+"source": "player.t * MS",
+"termination": "landing-or-interrupt"
+},
+"combatReference": {
+"active": "every-air-attack-step",
+"damage": 14.0,
+"effectiveHitStopTicks": 6.0,
+"forwardPerTick": 2.6,
+"gravityPerTick": 0.55,
+"hitStopTicks": 5.0,
+"knockdown": true,
+"maxFlightTicks": 36.0,
+"reach": 64.0
+},
+"durationMs": 400.0,
+"expectedDurationsMs": [40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0],
+"frameOffsets": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+"loop": false,
+"renderScale": 0.7473684210526316,
+"schemaVersion": 1.0,
+"source": {
+"file": "source/original.png",
+"pixelClones": false,
+"redrawn": false,
+"resampled": false,
+"sha256": "0ade8aa05bc3aa6e30c1afc0f086cad5571051004760dd15306d943fdaec37c9"
+},
+"sprite": "../exports/barel-air-attack-10/barel-air-attack-10.json"
+},
+"source": "assets/aseprite/barel-air-attack-10/barel-air-attack-10.animation.json",
+"tag": {
+"color": "#000000ff",
+"direction": "forward",
+"from": 0.0,
+"name": "air",
+"to": 9.0
+}
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [0.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [0.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 0.aseprite",
+"index": 0.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [448.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [448.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 1.aseprite",
+"index": 1.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [896.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [896.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 2.aseprite",
+"index": 2.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [1344.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [1344.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 3.aseprite",
+"index": 3.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [1792.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [1792.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 4.aseprite",
+"index": 4.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [2240.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [2240.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 5.aseprite",
+"index": 5.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [2688.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [2688.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 6.aseprite",
+"index": 6.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [3136.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [3136.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 7.aseprite",
+"index": 7.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [3584.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [3584.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 8.aseprite",
+"index": 8.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 40.0,
+"image": "port_assets/aseprite/barel-air-attack-10_barel-air-attack-10.png",
+"pivot": [224.0, 384.0],
+"rect": [4032.0, 0.0, 448.0, 448.0],
+"scale": 0.7473684210526316,
+"source": {
+"anchor": [224.0, 384.0],
+"atlas": [4032.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 384.0],
+"duration": 40.0,
+"filename": "barel-air-attack-10 9.aseprite",
+"index": 9.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}])

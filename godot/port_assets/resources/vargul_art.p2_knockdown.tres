@@ -1,0 +1,348 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_fehgc"]
+[ext_resource type="Texture2D" path="res://port_assets/images/vargul_art.sheets.1__581edeaf9404.webp" id="2_6ype8"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(743, 2259, 286, 277)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(1031, 2259, 442, 294)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(1475, 2259, 383, 301)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(1860, 2259, 387, 279)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(2249, 2259, 305, 124)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(2556, 2259, 275, 109)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(2833, 2259, 262, 83)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(3097, 2259, 277, 79)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(3376, 2259, 302, 117)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(3680, 2259, 304, 98)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(0, 2562, 282, 112)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(284, 2562, 321, 140)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(607, 2562, 453, 275)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(1062, 2562, 444, 251)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(1508, 2562, 329, 250)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("2_6ype8")
+region = Rect2(1839, 2562, 439, 257)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_10")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_11")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_12")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_13")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_14")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_15")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_fehgc")
+source_id = "vargul_art.p2_knockdown"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(116.001, 270, 229.908, 280.374, 164.508, 292.959, 168.888, 268.683, 130.839, 117.678, 137.238, 102.762, 133.11, 77.31, 134.001, 72, 129.6, 106.401, 125.679, 88.758, 151.365, 110.454, 129.966, 139.536, 231.558, 249.648, 139.317, 249.366, 185.556, 247.779, 170.643, 254.313)
+frame_scales = PackedFloat64Array(0.4473857325, 0.38740653, 0.39870618, 0.42371610749999994, 0.5325, 0.5325, 0.5325, 0.5325, 0.5325, 0.5325, 0.5325, 0.5325, 0.3853090125, 0.3976576875, 0.4044768825, 0.40802333249999995)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "VARGUL_ART",
+"clip": "p2_knockdown",
+"source_scale": 1.5975,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [116.001, 270.0],
+"rect": [743.0, 2259.0, 286.0, 277.0],
+"scale": 0.4473857325,
+"source": {
+"anchor": [38.667, 90.0],
+"atlas": [743.0, 2259.0, 286.0, 277.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [229.908, 280.374],
+"rect": [1031.0, 2259.0, 442.0, 294.0],
+"scale": 0.38740653,
+"source": {
+"anchor": [76.636, 93.458],
+"atlas": [1031.0, 2259.0, 442.0, 294.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [164.50799999999998, 292.959],
+"rect": [1475.0, 2259.0, 383.0, 301.0],
+"scale": 0.39870618,
+"source": {
+"anchor": [54.836, 97.653],
+"atlas": [1475.0, 2259.0, 383.0, 301.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [168.888, 268.683],
+"rect": [1860.0, 2259.0, 387.0, 279.0],
+"scale": 0.42371610749999994,
+"source": {
+"anchor": [56.296, 89.561],
+"atlas": [1860.0, 2259.0, 387.0, 279.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [130.839, 117.678],
+"rect": [2249.0, 2259.0, 305.0, 124.0],
+"scale": 0.5325,
+"source": {
+"anchor": [43.613, 39.226],
+"atlas": [2249.0, 2259.0, 305.0, 124.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [137.238, 102.762],
+"rect": [2556.0, 2259.0, 275.0, 109.0],
+"scale": 0.5325,
+"source": {
+"anchor": [45.746, 34.254],
+"atlas": [2556.0, 2259.0, 275.0, 109.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [133.11, 77.31],
+"rect": [2833.0, 2259.0, 262.0, 83.0],
+"scale": 0.5325,
+"source": {
+"anchor": [44.37, 25.77],
+"atlas": [2833.0, 2259.0, 262.0, 83.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [134.001, 72.0],
+"rect": [3097.0, 2259.0, 277.0, 79.0],
+"scale": 0.5325,
+"source": {
+"anchor": [44.667, 24.0],
+"atlas": [3097.0, 2259.0, 277.0, 79.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [129.60000000000002, 106.401],
+"rect": [3376.0, 2259.0, 302.0, 117.0],
+"scale": 0.5325,
+"source": {
+"anchor": [43.2, 35.467],
+"atlas": [3376.0, 2259.0, 302.0, 117.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [125.679, 88.758],
+"rect": [3680.0, 2259.0, 304.0, 98.0],
+"scale": 0.5325,
+"source": {
+"anchor": [41.893, 29.586],
+"atlas": [3680.0, 2259.0, 304.0, 98.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [151.365, 110.454],
+"rect": [0.0, 2562.0, 282.0, 112.0],
+"scale": 0.5325,
+"source": {
+"anchor": [50.455, 36.818],
+"atlas": [0.0, 2562.0, 282.0, 112.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [129.966, 139.536],
+"rect": [284.0, 2562.0, 321.0, 140.0],
+"scale": 0.5325,
+"source": {
+"anchor": [43.322, 46.512],
+"atlas": [284.0, 2562.0, 321.0, 140.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [231.558, 249.64799999999997],
+"rect": [607.0, 2562.0, 453.0, 275.0],
+"scale": 0.3853090125,
+"source": {
+"anchor": [77.186, 83.216],
+"atlas": [607.0, 2562.0, 453.0, 275.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [139.317, 249.366],
+"rect": [1062.0, 2562.0, 444.0, 251.0],
+"scale": 0.3976576875,
+"source": {
+"anchor": [46.439, 83.122],
+"atlas": [1062.0, 2562.0, 444.0, 251.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [185.556, 247.779],
+"rect": [1508.0, 2562.0, 329.0, 250.0],
+"scale": 0.4044768825,
+"source": {
+"anchor": [61.852, 82.593],
+"atlas": [1508.0, 2562.0, 329.0, 250.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/vargul_art.sheets.1__581edeaf9404.webp",
+"pivot": [170.643, 254.313],
+"rect": [1839.0, 2562.0, 439.0, 257.0],
+"scale": 0.40802333249999995,
+"source": {
+"anchor": [56.881, 84.771],
+"atlas": [1839.0, 2562.0, 439.0, 257.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/581edeaf940444c9e1637503.webp"
+}])

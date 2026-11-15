@@ -1,0 +1,148 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_l76m4"]
+[ext_resource type="Texture2D" path="res://port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp" id="2_7fmej"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_7fmej")
+region = Rect2(373, 908, 281, 236)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_7fmej")
+region = Rect2(2714, 908, 252, 228)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_7fmej")
+region = Rect2(2113, 1374, 375, 195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_7fmej")
+region = Rect2(2585, 649, 298, 242)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_7fmej")
+region = Rect2(2428, 908, 284, 229)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_7fmej")
+region = Rect2(861, 649, 187, 256)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_l76m4")
+source_id = "aurelion_art.sword_wave"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(182, 234, 134, 226, 66, 194, 182, 240, 73, 228, 102, 255)
+frame_scales = PackedFloat64Array(0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "AURELION_ART",
+"clip": "sword_wave",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp",
+"pivot": [181.99999999999997, 233.99999999999997],
+"rect": [373.0, 908.0, 281.0, 236.0],
+"scale": 0.4675,
+"source": {
+"anchor": [100.1, 128.7],
+"atlas": [373.0, 908.0, 281.0, 236.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/c1722f9674f6465932e9feb1.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp",
+"pivot": [134.0, 226.0],
+"rect": [2714.0, 908.0, 252.0, 228.0],
+"scale": 0.4675,
+"source": {
+"anchor": [73.7, 124.3],
+"atlas": [2714.0, 908.0, 252.0, 228.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/c1722f9674f6465932e9feb1.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp",
+"pivot": [65.99999999999999, 194.0],
+"rect": [2113.0, 1374.0, 375.0, 195.0],
+"scale": 0.4675,
+"source": {
+"anchor": [36.3, 106.7],
+"atlas": [2113.0, 1374.0, 375.0, 195.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/c1722f9674f6465932e9feb1.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp",
+"pivot": [181.99999999999997, 240.0],
+"rect": [2585.0, 649.0, 298.0, 242.0],
+"scale": 0.4675,
+"source": {
+"anchor": [100.1, 132.0],
+"atlas": [2585.0, 649.0, 298.0, 242.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/c1722f9674f6465932e9feb1.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp",
+"pivot": [73.0, 228.0],
+"rect": [2428.0, 908.0, 284.0, 229.0],
+"scale": 0.4675,
+"source": {
+"anchor": [40.15, 125.4],
+"atlas": [2428.0, 908.0, 284.0, 229.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/c1722f9674f6465932e9feb1.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.0__c1722f9674f6.webp",
+"pivot": [102.0, 255.0],
+"rect": [861.0, 649.0, 187.0, 256.0],
+"scale": 0.4675,
+"source": {
+"anchor": [56.1, 140.25],
+"atlas": [861.0, 649.0, 187.0, 256.0],
+"sheet": 0.0
+},
+"source_image": "assets/runtime/c1722f9674f6465932e9feb1.webp"
+}])

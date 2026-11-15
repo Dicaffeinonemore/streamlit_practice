@@ -1,0 +1,349 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_3504n"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_sprite_player_0.png" id="2_bkwk1"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(1, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(57, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(113, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(169, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(225, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(281, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(337, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(393, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(449, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(505, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(561, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(617, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(673, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(729, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(785, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(841, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_16"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(897, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_17"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(953, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_18"]
+atlas = ExtResource("2_bkwk1")
+region = Rect2(1009, 1, 54, 60)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_10")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_11")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_12")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_13")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_14")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_15")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_16")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_17")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_18")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_3504n")
+source_id = "procedural_sprite_player"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56, 26, 56)
+frame_scales = PackedFloat64Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"coverage": "all HERO_FRAMES for player; canonical 0/1 for other sprite bodies; posed motion separately",
+"source": "sprites.js / MO.spriteShaded"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "ceedcdfc7b7df0515268fb703933fdde7d8c9b48fb7901d443385df4845c734d",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [1.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "2cbd9cb9d89809202f5c8da82b98c02fc63c7c007c2430dffe0ed4fed2e7c589",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [57.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "e88f365140d88d3a97d7b5b22c75241c5918c6c83bf6db83d4b67066cf6b91f4",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [113.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "e2af1a8253d5fa911f5c82feb1bae02d8c8ed5deee3e1efee6beb48d09f9955c",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [169.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "967e33fb871077e02160d5f57c0e34419ae335eeced6f8de7f65540f80e4ecba",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [225.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "19dc6819de538c69a6c7cceba5fde43848b9c2d9aafa875472dba792de781fcd",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [281.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "df5f7ccf42a6eb9c60c80233563be3d7e562a207a05e4d4dd6e30f2ab46e5d7e",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [337.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "27deac2697090d9df5c1c78eb34c88b0bf66852a3d47d3350057c6bedb34193b",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [393.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a950d99134cf08f4846dd06541b6b3bbe04d787f8fe6129441cb95faf07a6255",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [449.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "17de1bc9cdb14384d8b2f6beee972da2208ca64077a1d039c1e04ad9617d12f2",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [505.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "0083202504c1140ee7e0cbfce9f1e19a96b9d313b11dca216df0ee5ab9c7c880",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [561.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "c4abf5263c2c08ff0acc154b56895af776e3d008b0ddba326e84a57a421c09ef",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [617.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "0b1e9fc8434199ef07d3025b45d8e0499048352a659a72a115e7fe3a89b56698",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [673.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "b4b56fbdcd906e2e3137dc3bf180e158ee8e0d670997c9a166fe07e0495f1e17",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [729.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "f4324c6b59096eeabf72b52f02ab325404a0c81a7692316ebabf57aebc26e908",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [785.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "0f40d0b9f83d97d092c20e18e2ec7d65733507dd41dfa0ae6c0a3117363e0f1c",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [841.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "947d96615f024cf6cb7affb476b4875f94946b3fd71f6fa99531c9096afed253",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [897.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "b4b56fbdcd906e2e3137dc3bf180e158ee8e0d670997c9a166fe07e0495f1e17",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [953.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "f4f5cb136cc92c9590230ef95f8807af86f8bfb9c2bc3d2df7bbad01f2de8aff",
+"image": "port_assets/baked/procedural_sprite_player_0.png",
+"page": 0.0,
+"pivot": [26.0, 56.0],
+"rect": [1009.0, 1.0, 54.0, 60.0],
+"scale": 2.0,
+"source": {}
+}])

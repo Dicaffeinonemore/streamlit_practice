@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_5ryv7"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png" id="2_cpalh"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(167, 2, 158, 230)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(327, 2, 172, 223)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(501, 2, 183, 218)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(686, 2, 195, 212)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(883, 2, 208, 257)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(1093, 2, 226, 229)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(1321, 2, 233, 217)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(1556, 2, 218, 209)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_cpalh")
+region = Rect2(1776, 2, 241, 239)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 70.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 70.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 70.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 90.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 75.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 75.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 85.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 20.0,
+"texture": SubResource("frame_8")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_5ryv7")
+source_id = "barel_rika.timeline.special1"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(75.5, 230, 66.5, 223, 59.5, 219, 72.5, 212, 96.5, 258, 109.5, 229, 112.5, 217, 97.5, 210, 84.5, 240)
+frame_scales = PackedFloat64Array(0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376)
+duration_ms = PackedFloat64Array(70, 70, 70, 90, 75, 75, 85, 65, 20)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"catalog": "BAREL_RIKA_DATA",
+"clip": "special1",
+"smooth": true,
+"timeline": [[1.0, 70.0], [2.0, 140.0], [3.0, 210.0], [4.0, 300.0], [5.0, 375.0], [6.0, 450.0], [7.0, 535.0], [8.0, 600.0], [9.0, 620.0]]
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 70.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [75.5, 230.0],
+"rect": [167.0, 2.0, 158.0, 230.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [75.5, 230.0],
+"atlas": [167.0, 2.0, 158.0, 230.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 70.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [66.5, 223.0],
+"rect": [327.0, 2.0, 172.0, 223.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [66.5, 223.0],
+"atlas": [327.0, 2.0, 172.0, 223.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 70.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [59.5, 219.0],
+"rect": [501.0, 2.0, 183.0, 218.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [59.5, 219.0],
+"atlas": [501.0, 2.0, 183.0, 218.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 90.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [72.5, 212.0],
+"rect": [686.0, 2.0, 195.0, 212.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [72.5, 212.0],
+"atlas": [686.0, 2.0, 195.0, 212.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 75.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [96.5, 258.0],
+"rect": [883.0, 2.0, 208.0, 257.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [96.5, 258.0],
+"atlas": [883.0, 2.0, 208.0, 257.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 75.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [109.5, 229.0],
+"rect": [1093.0, 2.0, 226.0, 229.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [109.5, 229.0],
+"atlas": [1093.0, 2.0, 226.0, 229.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 85.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [112.5, 217.0],
+"rect": [1321.0, 2.0, 233.0, 217.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [112.5, 217.0],
+"atlas": [1321.0, 2.0, 233.0, 217.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [97.5, 210.0],
+"rect": [1556.0, 2.0, 218.0, 209.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [97.5, 210.0],
+"atlas": [1556.0, 2.0, 218.0, 209.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}, {
+"duration_ms": 20.0,
+"image": "port_assets/images/barel_rika_data.special1.path__d5d6a6bf76f3.png",
+"pivot": [84.5, 240.0],
+"rect": [1776.0, 2.0, 241.0, 239.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [84.5, 240.0],
+"atlas": [1776.0, 2.0, 241.0, 239.0]
+},
+"source_image": "assets/runtime/d5d6a6bf76f3d20ea86ae144.png"
+}])

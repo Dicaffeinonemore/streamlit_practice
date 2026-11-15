@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_xl57w"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_art.atlas__31399b82a9ee.png" id="2_h4xxb"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_h4xxb")
+region = Rect2(643, 879, 121, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_h4xxb")
+region = Rect2(766, 879, 156, 140)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_h4xxb")
+region = Rect2(924, 879, 174, 141)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_h4xxb")
+region = Rect2(1100, 879, 192, 137)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_h4xxb")
+region = Rect2(1294, 879, 131, 140)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_h4xxb")
+region = Rect2(1427, 879, 120, 142)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_xl57w")
+source_id = "barel_art.back"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(49, 142, 99, 140, 88, 141, 112, 137, 66, 140, 48, 142)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "BAREL_ART",
+"clip": "back",
+"source_scale": null,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [49.0, 142.0],
+"rect": [643.0, 879.0, 121.0, 142.0],
+"scale": 0.72,
+"source": {
+"anchor": [49.0, 142.0],
+"atlas": [643.0, 879.0, 121.0, 142.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [99.0, 140.0],
+"rect": [766.0, 879.0, 156.0, 140.0],
+"scale": 0.72,
+"source": {
+"anchor": [99.0, 140.0],
+"atlas": [766.0, 879.0, 156.0, 140.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [88.0, 141.0],
+"rect": [924.0, 879.0, 174.0, 141.0],
+"scale": 0.72,
+"source": {
+"anchor": [88.0, 141.0],
+"atlas": [924.0, 879.0, 174.0, 141.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [112.0, 137.0],
+"rect": [1100.0, 879.0, 192.0, 137.0],
+"scale": 0.72,
+"source": {
+"anchor": [112.0, 137.0],
+"atlas": [1100.0, 879.0, 192.0, 137.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [66.0, 140.0],
+"rect": [1294.0, 879.0, 131.0, 140.0],
+"scale": 0.72,
+"source": {
+"anchor": [66.0, 140.0],
+"atlas": [1294.0, 879.0, 131.0, 140.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [48.0, 142.0],
+"rect": [1427.0, 879.0, 120.0, 142.0],
+"scale": 0.72,
+"source": {
+"anchor": [48.0, 142.0],
+"atlas": [1427.0, 879.0, 120.0, 142.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}])

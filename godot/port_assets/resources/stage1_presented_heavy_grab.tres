@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_h2php"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_heavy_grab_0.png" id="2_6ft2o"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(1, 1, 174, 169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(177, 1, 161, 144)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(340, 1, 161, 160)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(503, 1, 176, 175)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(681, 1, 164, 174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(847, 1, 170, 173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(1019, 1, 181, 169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(1202, 1, 174, 166)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(1378, 1, 180, 166)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_6ft2o")
+region = Rect2(1560, 1, 167, 164)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 166.66667,
+"texture": SubResource("frame_0")
+}, {
+"duration": 166.66667,
+"texture": SubResource("frame_1")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_2")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 66.666664,
+"texture": SubResource("frame_5")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_6")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_7")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_8")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_h2php")
+source_id = "stage1_presented_heavy_grab"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(87, 169.2, 81.6, 144, 78, 159.6, 79.8, 175.2, 79.2, 174, 84.3, 172.8, 93, 169.2, 78.6, 165.6, 85.8, 165.6, 87, 164.4)
+frame_scales = PackedFloat64Array(0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671, 0.75671)
+duration_ms = PackedFloat64Array(166.66666666666669, 166.66666666666669, 66.66666666666667, 50, 50, 66.66666666666667, 83.33333333333334, 83.33333333333334, 83.33333333333334, 83.33333333333334)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"clip": "grab",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "heavy"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 166.66666666666669,
+"expected_rgba_sha256": "810e9ff89eb0772ce998d36096ded3541a9e34f13adb5d6965b521ba2dbf522c",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [87.0, 169.2],
+"rect": [1.0, 1.0, 174.0, 169.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 166.66666666666669,
+"expected_rgba_sha256": "42318b7885422b312b0401a8e851c3d7bafd1b71fd590b457bd3ee0be9d21711",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [81.6, 144.0],
+"rect": [177.0, 1.0, 161.0, 144.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "e23d289d696c3346634ebbf197a12bcc85c23b64f3654f0be43a237092acc478",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [78.0, 159.6],
+"rect": [340.0, 1.0, 161.0, 160.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "c647eeba0bd5b678ccb9e5d9db9cccf1cfc01309c1e7ff78e9ec30a78c9c313b",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [79.8, 175.2],
+"rect": [503.0, 1.0, 176.0, 175.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "f28629c9bbd8a786926751b81432ac71b2d018977bf9fc920c8712f05f4d5f5e",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [79.2, 174.0],
+"rect": [681.0, 1.0, 164.0, 174.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 66.66666666666667,
+"expected_rgba_sha256": "d0aef3fb9586056055e9fa06d5773eec660a12b51fa5c40e81f47f69c95f0bc6",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [84.3, 172.8],
+"rect": [847.0, 1.0, 170.0, 173.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "3530f3dca1f988e371599fd7d6e48eba81b208b2077d5cb95b4171a1e6403e8e",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [93.0, 169.2],
+"rect": [1019.0, 1.0, 181.0, 169.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "6faf7a2cec57213f8fb272e260147ebbf18e6ab597ca54e2d177c6474ffc635c",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [78.6, 165.6],
+"rect": [1202.0, 1.0, 174.0, 166.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "b5998c0bc15c6f17bcab3e18dd6d2932d176709c76e0dba2078e7954c5efdcce",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [85.8, 165.6],
+"rect": [1378.0, 1.0, 180.0, 166.0],
+"scale": 0.75671,
+"source": {}
+}, {
+"duration_ms": 83.33333333333334,
+"expected_rgba_sha256": "53341f30a6641ccd7927179e35d6e12c48e975db6120110d8463bd2545cbbf9e",
+"image": "port_assets/baked/stage1_presented_heavy_grab_0.png",
+"page": 0.0,
+"pivot": [87.0, 164.4],
+"rect": [1560.0, 1.0, 167.0, 164.0],
+"scale": 0.75671,
+"source": {}
+}])

@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_jdohs"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_molotov_hurt_0.png" id="2_hwd06"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(1, 1, 150, 193)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(153, 1, 129, 191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(284, 1, 133, 182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(419, 1, 133, 182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(554, 1, 144, 191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(700, 1, 152, 188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(854, 1, 150, 185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(1006, 1, 146, 188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(1154, 1, 143, 188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_hwd06")
+region = Rect2(1299, 1, 155, 187)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_jdohs")
+source_id = "stage1_presented_molotov_hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(88.2, 193.2, 67.2, 190.8, 72.6, 181.8, 70.2, 181.8, 77.1, 190.8, 73.8, 187.8, 70.8, 184.8, 70.8, 188.4, 68.4, 188.4, 79.8, 187.2)
+frame_scales = PackedFloat64Array(0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "hurt",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "molotov"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "e7616a929f2f154efc4cf2e3f98d7ddd2ada721eab70c8b36cb799a6f6e85415",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [88.2, 193.2],
+"rect": [1.0, 1.0, 150.0, 193.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "6cdd69d77921efe75c62ca0f18791e6448b6007e17aa5ffd2e405d540ddc9cea",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [67.2, 190.8],
+"rect": [153.0, 1.0, 129.0, 191.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "3e9ad1ae4aa629e9ce1f07fd0d734a2149f20c48f6dd81f9ef44f187f286bc08",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [72.6, 181.8],
+"rect": [284.0, 1.0, 133.0, 182.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "5fc6b97bddcba96f1fe61f5de32de99563647f8f7cb1e51a9de54de622388d12",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [70.2, 181.8],
+"rect": [419.0, 1.0, 133.0, 182.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "6b5aaf3fc808f8578b7447ebfce218b38befacf9e28f2636279c64eff00997ba",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [77.1, 190.8],
+"rect": [554.0, 1.0, 144.0, 191.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "6e4a383072bf81ff5c7b3b681867d941281cea69b348d15d51f13b50575b4447",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [73.8, 187.8],
+"rect": [700.0, 1.0, 152.0, 188.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a81afd43685e86ca6d61512e6e193c5ed312368e9394fef8f1a44d47e7c731c7",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [70.8, 184.8],
+"rect": [854.0, 1.0, 150.0, 185.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "3ff1c262186d5cd8896006359a110a7b455143e84a09a01ec6ef24c003e5c7a7",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [70.8, 188.4],
+"rect": [1006.0, 1.0, 146.0, 188.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "e74a4432acb93ba5bd9b28d26ef4e9e79741d4057a629b44ac68523616363c0e",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [68.4, 188.4],
+"rect": [1154.0, 1.0, 143.0, 188.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "7b53dbce509be19e41a1447c0aa378e446c6cafeef3dd8db5c097f49927552e5",
+"image": "port_assets/baked/stage1_presented_molotov_hurt_0.png",
+"page": 0.0,
+"pivot": [79.8, 187.2],
+"rect": [1299.0, 1.0, 155.0, 187.0],
+"scale": 0.57404,
+"source": {}
+}])

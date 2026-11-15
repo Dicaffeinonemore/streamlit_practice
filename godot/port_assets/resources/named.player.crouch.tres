@@ -1,0 +1,51 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_q0qyh"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_fkcjr"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_fkcjr")
+region = Rect2(1537, 4953, 333, 267)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_q0qyh")
+source_id = "named.player.crouch"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(204, 258)
+frame_scales = PackedFloat64Array(0.36)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "crouch",
+"role": "player"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [204.0, 258.0],
+"rect": [1537.0, 4953.0, 333.0, 267.0],
+"scale": 0.36,
+"source": {
+"anchor": [204.0, 258.0],
+"atlas": [1537.0, 4953.0, 333.0, 267.0],
+"edgeFragmentPixels": 0.0,
+"id": 427.0,
+"rect": [831.0, 212.0, 1164.0, 479.0],
+"scale": 0.36,
+"source": "player_base"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

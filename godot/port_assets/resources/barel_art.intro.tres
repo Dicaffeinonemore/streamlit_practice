@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ih53m"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_art.atlas__31399b82a9ee.png" id="2_h33i3"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_h33i3")
+region = Rect2(458, 1693, 120, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_h33i3")
+region = Rect2(580, 1693, 118, 138)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_h33i3")
+region = Rect2(700, 1693, 109, 139)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_h33i3")
+region = Rect2(811, 1693, 171, 136)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_h33i3")
+region = Rect2(984, 1693, 164, 138)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_h33i3")
+region = Rect2(1150, 1693, 122, 142)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_ih53m")
+source_id = "barel_art.intro"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(48, 142, 64, 138, 55, 139, 66, 136, 56, 138, 49, 142)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "BAREL_ART",
+"clip": "intro",
+"source_scale": null,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [48.0, 142.0],
+"rect": [458.0, 1693.0, 120.0, 142.0],
+"scale": 0.72,
+"source": {
+"anchor": [48.0, 142.0],
+"atlas": [458.0, 1693.0, 120.0, 142.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [64.0, 138.0],
+"rect": [580.0, 1693.0, 118.0, 138.0],
+"scale": 0.72,
+"source": {
+"anchor": [64.0, 138.0],
+"atlas": [580.0, 1693.0, 118.0, 138.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [55.0, 139.0],
+"rect": [700.0, 1693.0, 109.0, 139.0],
+"scale": 0.72,
+"source": {
+"anchor": [55.0, 139.0],
+"atlas": [700.0, 1693.0, 109.0, 139.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [66.0, 136.0],
+"rect": [811.0, 1693.0, 171.0, 136.0],
+"scale": 0.72,
+"source": {
+"anchor": [66.0, 136.0],
+"atlas": [811.0, 1693.0, 171.0, 136.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [56.0, 138.0],
+"rect": [984.0, 1693.0, 164.0, 138.0],
+"scale": 0.72,
+"source": {
+"anchor": [56.0, 138.0],
+"atlas": [984.0, 1693.0, 164.0, 138.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [49.0, 142.0],
+"rect": [1150.0, 1693.0, 122.0, 142.0],
+"scale": 0.72,
+"source": {
+"anchor": [49.0, 142.0],
+"atlas": [1150.0, 1693.0, 122.0, 142.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}])

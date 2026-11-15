@@ -1,0 +1,131 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_dbqlv"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_hound_getup_0.png" id="2_6ksdg"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_6ksdg")
+region = Rect2(1, 1, 215, 76)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_6ksdg")
+region = Rect2(218, 1, 210, 98)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_6ksdg")
+region = Rect2(430, 1, 207, 115)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_6ksdg")
+region = Rect2(639, 1, 214, 127)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_6ksdg")
+region = Rect2(855, 1, 217, 127)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_6ksdg")
+region = Rect2(1074, 1, 211, 128)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_dbqlv")
+source_id = "stage1_presented_hound_getup"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(113.4, 75.6, 123, 97.8, 113.4, 114.6, 121.8, 126.6, 120, 126.6, 106.8, 128.4)
+frame_scales = PackedFloat64Array(0.336, 0.336, 0.336, 0.336, 0.336, 0.336)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "getup",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "hound"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "cd14aee251a5b4b6996c2cfbb80bea174379cc8f635478fa9570f9dc7bd66505",
+"image": "port_assets/baked/stage1_presented_hound_getup_0.png",
+"page": 0.0,
+"pivot": [113.4, 75.6],
+"rect": [1.0, 1.0, 215.0, 76.0],
+"scale": 0.336,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "cad78d559de91165ea43ab5dc4e4b3f4374ba0977192f80170d52f620730b71d",
+"image": "port_assets/baked/stage1_presented_hound_getup_0.png",
+"page": 0.0,
+"pivot": [123.0, 97.8],
+"rect": [218.0, 1.0, 210.0, 98.0],
+"scale": 0.336,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "c6a58290c497851cf2356573137fe995ec60d895cae35d7c4bd6e2bfab035ce2",
+"image": "port_assets/baked/stage1_presented_hound_getup_0.png",
+"page": 0.0,
+"pivot": [113.4, 114.6],
+"rect": [430.0, 1.0, 207.0, 115.0],
+"scale": 0.336,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "b89155fa348beb05324f7b62e5ac56814424d4b75d55be845f0f232daac9f3bb",
+"image": "port_assets/baked/stage1_presented_hound_getup_0.png",
+"page": 0.0,
+"pivot": [121.8, 126.6],
+"rect": [639.0, 1.0, 214.0, 127.0],
+"scale": 0.336,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "76be53743736e6400218ef1354942fa6e07adc6e1879801e58a0fb1585817de6",
+"image": "port_assets/baked/stage1_presented_hound_getup_0.png",
+"page": 0.0,
+"pivot": [120.0, 126.6],
+"rect": [855.0, 1.0, 217.0, 127.0],
+"scale": 0.336,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "5bb6ac95720eaee21e1c954b50deb0f378abb68e4ded321dd4ed869bb9ae1458",
+"image": "port_assets/baked/stage1_presented_hound_getup_0.png",
+"page": 0.0,
+"pivot": [106.8, 128.4],
+"rect": [1074.0, 1.0, 211.0, 128.0],
+"scale": 0.336,
+"source": {}
+}])

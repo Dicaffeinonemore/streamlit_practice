@@ -1,0 +1,387 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_efvtj"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_pose_hero_combo_0_left_0.png" id="2_q6ike"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(183, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(365, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(547, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(729, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(911, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1093, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1275, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1457, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1639, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1821, 1, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(183, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(365, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(547, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(729, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_16"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(911, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_17"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1093, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_18"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1275, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_19"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1457, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_20"]
+atlas = ExtResource("2_q6ike")
+region = Rect2(1639, 145, 180, 142)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 16.666666,
+"texture": SubResource("frame_0")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_1")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_2")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_3")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_4")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_5")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_6")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_7")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_8")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_9")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_10")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_11")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_12")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_13")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_14")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_15")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_16")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_17")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_18")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_19")
+}, {
+"duration": 16.666666,
+"texture": SubResource("frame_20")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_efvtj")
+source_id = "procedural_pose_hero_combo_0_left"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116, 90, 116)
+frame_scales = PackedFloat64Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+duration_ms = PackedFloat64Array(16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668, 16.666666666666668)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"coverage": "bounded canonical source pose; continuous parameterized effect geometry remains native work",
+"face": -1.0,
+"pose_expression": "heroAtk(0,t)",
+"range": [0.0, 20.0],
+"source": "motion.js + game.js figure()",
+"tick_ms": 16.666666666666668
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "124e16d5d98737e50d237b37768755697fee300e8bcc1cbd80bbbdbef58e225b",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "6a126bc76bcec8e13107f743a8c15ff95edc0e3d68d60a9036da70e8199a6df7",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [183.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "87b57ed3bc1ff43e7dd120b27ec3c5f8940b22c28945ea2533351192504eb75a",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [365.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "f703c5c4a9dab65f7807efa4a16612e8281d13c1705637e60879bf54a759fa3b",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [547.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "90161fc70208760b69b12fdf5d01dff4683d293935ce5718b04bb71710eeef68",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [729.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "b3a30cb5e91149b3fb9ac2dcef5287aa9ffe3f51d9e7f9f345c7e214b2db786a",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [911.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "fd9ccac0a8045da9f9c748ac0591371ab0343fdd6f4f9e06ab56b6d050896f6b",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1093.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "2482ae677f1b6f0d2162cb269c4184e64f71476b20a2952c503718859b8c3cff",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1275.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "7faaa746b173a3f0a670e000b1790f20932ff091603477e06047a3d997f43fa7",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1457.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "528ffda032a0fcfab022d2067c6c2ecf6cc53c87cb1876e44b623cca0edde24f",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1639.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "403d570138f8d0e6b1285fd1d8866394915dfd6ad12e7095eaa896d3ecdb39a8",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1821.0, 1.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "72df6e7b9fd8b81dda003f61f298fce9025266926d4a168825d27c4a270b3255",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "e3daca20f17460a5d7820d114d24b8adfde62d739d11adae45662ba8ea93e988",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [183.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "a47fbd3b785f431ec9575c8d3b39dffb05c641889c65159227639f5bfed738d6",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [365.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "1de06b72152622cbd688d13577d3513684dcf1b034b603fa38892bb8637cff23",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [547.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "7b9c495432fb61f523102961b08b14231e2f8df3051bd87a827213734e427760",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [729.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "c053856913e93478560952531a06d66ef58840897ce2569b0dfdbb745cb378cc",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [911.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3dee5ba416ac140c50ea21b4c24ccc09f1738765ac4fd8b0d86375f18366dcb8",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1093.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "3b23bd248616a575283023f61f89572daec7674f97d13167fdfa500038e7c0fa",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1275.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "cb6e88059b37280e3084cf6c10777772c07900849693b066814113f94ea4fdf9",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1457.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": 16.666666666666668,
+"expected_rgba_sha256": "836af66d6cdb8a9c3c6f7276e5e391f4bd5956cc21780b2a2f7106a24fea4fbf",
+"image": "port_assets/baked/procedural_pose_hero_combo_0_left_0.png",
+"page": 0.0,
+"pivot": [90.0, 116.0],
+"rect": [1639.0, 145.0, 180.0, 142.0],
+"scale": 2.0,
+"source": {}
+}])

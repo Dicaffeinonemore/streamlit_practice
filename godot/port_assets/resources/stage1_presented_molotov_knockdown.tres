@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_aw7yy"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_molotov_knockdown_0.png" id="2_xrlko"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(1, 1, 145, 162)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(148, 1, 144, 162)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(294, 1, 188, 137)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(484, 1, 192, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(678, 1, 186, 124)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(866, 1, 179, 168)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(1047, 1, 192, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(1241, 1, 172, 170)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(1415, 1, 192, 172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_xrlko")
+region = Rect2(1609, 1, 184, 78)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_aw7yy")
+source_id = "stage1_presented_molotov_knockdown"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(74.4, 162, 66.6, 162, 84.6, 136.8, 56.4, 141.6, 72, 123.6, 87.6, 168, 51, 171.6, 23.4, 170.4, 15.6, 171.6, 79.8, 78)
+frame_scales = PackedFloat64Array(0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "knockdown",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "molotov"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "9364ace1558b2f9862053e5540637fe1400a70ab56ddaaf3eb7cc77d49f1e7bf",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [74.4, 162.0],
+"rect": [1.0, 1.0, 145.0, 162.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "6bc87445e106149eeb72ef925ea3111eb4787614a0db39bd6a37e1bd6f25dec3",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [66.6, 162.0],
+"rect": [148.0, 1.0, 144.0, 162.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "3eb2cb968ed1d025c62e1ac8dc98c3efac5e9d76b9a4b80e72bc5e820ec045ff",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [84.6, 136.8],
+"rect": [294.0, 1.0, 188.0, 137.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "2f432f9c31ce2adcbc8af5b3c8476daf915128927e183dec2f2c6ce7372d1aaf",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [56.4, 141.6],
+"rect": [484.0, 1.0, 192.0, 142.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "2c9a91751ca85e68b9ed227a7d057686e63144717a29596e90d01994705c691e",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [72.0, 123.6],
+"rect": [678.0, 1.0, 186.0, 124.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "dc0124f8ca8ed07115b6c2ec8d3b694efa41e666c12f6fafc4c7370165cc718e",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [87.6, 168.0],
+"rect": [866.0, 1.0, 179.0, 168.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "5ca21f07f2aae99bd3d812796c3f6c287fde316cf1c1b4e421713c45fbbe0a14",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [51.0, 171.6],
+"rect": [1047.0, 1.0, 192.0, 172.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a52e582b59dc0364a034fa9af602c091af2e0bcf8376ad2d732a870db1b53d43",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [23.4, 170.4],
+"rect": [1241.0, 1.0, 172.0, 170.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "b1aa725b889a02e07b4f4de92608f4ec2c5804d433e32413297a7507a7966fa8",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [15.6, 171.6],
+"rect": [1415.0, 1.0, 192.0, 172.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "d0b73a45366f9a0a6374a34778552e50abb9eee0ca53eb952354ad8b092549a6",
+"image": "port_assets/baked/stage1_presented_molotov_knockdown_0.png",
+"page": 0.0,
+"pivot": [79.8, 78.0],
+"rect": [1609.0, 1.0, 184.0, 78.0],
+"scale": 0.57404,
+"source": {}
+}])

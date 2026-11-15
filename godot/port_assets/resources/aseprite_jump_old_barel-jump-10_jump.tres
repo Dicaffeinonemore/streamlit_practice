@@ -1,0 +1,412 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_bxhyf"]
+[ext_resource type="Texture2D" path="res://port_assets/aseprite/jump_old_barel-jump-10.png" id="2_xqa1w"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(0, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(384, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(768, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(1152, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(1536, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(1920, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(2304, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(2688, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(3072, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_xqa1w")
+region = Rect2(3456, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 17.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 33.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 83.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 84.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 66.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 134.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 133.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 34.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_bxhyf")
+source_id = "aseprite_jump_old_barel-jump-10_jump"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352)
+frame_scales = PackedFloat64Array(0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899, 0.8987341772151899)
+duration_ms = PackedFloat64Array(17, 33, 83, 84, 66, 50, 134, 133, 34, 50)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"loop": false,
+"metadata": {
+"alignment": {
+"method": "Per-pose source sole removes baked sheet arc. Render subtracts actor.z exactly once.",
+"newBodyHeight": 158.0,
+"referenceLegacyHeight": 142.0,
+"worldOffsetsApplied": false
+},
+"anchor": [200.0, 352.0],
+"animationId": "jump",
+"animationType": "oneshot",
+"character": "barel",
+"clip": "jump",
+"clock": {
+"airDurationMs": 600.0,
+"airSource": "player.jumpTime * MS",
+"landingDurationMs": 84.0,
+"landingSource": "(player.t - landingT) * MS"
+},
+"durationMs": 684.0,
+"expectedDurationsMs": [17.0, 33.0, 83.0, 84.0, 66.0, 50.0, 134.0, 133.0, 34.0, 50.0],
+"frameOffsets": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+"loop": false,
+"physicsReference": {
+"airTicks": 36.0,
+"apexTick": 18.0,
+"gravityPerTick": 0.55,
+"initialVz": 9.6
+},
+"renderScale": 0.8987341772151899,
+"schemaVersion": 1.0,
+"source": {
+"file": "source/original.png",
+"pixelClones": false,
+"redrawn": false,
+"resampled": false,
+"sha256": "f4a9ad3d085ff18d620b85e3c8e0f44ee84ee83dd8f147ea7d1d6879cc85d60e"
+},
+"sprite": "../exports/barel-jump-10/barel-jump-10.json"
+},
+"source": "assets/aseprite/jump_old/barel-jump-10.animation.json",
+"tag": {
+"color": "#000000ff",
+"direction": "forward",
+"from": 0.0,
+"name": "jump",
+"to": 9.0
+}
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 17.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [0.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [0.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 17.0,
+"filename": "barel-jump-10 0.aseprite",
+"index": 0.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 33.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [384.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [384.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 33.0,
+"filename": "barel-jump-10 1.aseprite",
+"index": 1.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 83.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [768.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [768.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 83.0,
+"filename": "barel-jump-10 2.aseprite",
+"index": 2.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 84.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [1152.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [1152.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 84.0,
+"filename": "barel-jump-10 3.aseprite",
+"index": 3.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 66.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [1536.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [1536.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 66.0,
+"filename": "barel-jump-10 4.aseprite",
+"index": 4.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 50.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [1920.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [1920.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 50.0,
+"filename": "barel-jump-10 5.aseprite",
+"index": 5.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 134.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [2304.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [2304.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 134.0,
+"filename": "barel-jump-10 6.aseprite",
+"index": 6.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 133.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [2688.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [2688.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 133.0,
+"filename": "barel-jump-10 7.aseprite",
+"index": 7.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 34.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [3072.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [3072.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 34.0,
+"filename": "barel-jump-10 8.aseprite",
+"index": 8.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 50.0,
+"image": "port_assets/aseprite/jump_old_barel-jump-10.png",
+"pivot": [200.0, 352.0],
+"rect": [3456.0, 0.0, 384.0, 384.0],
+"scale": 0.8987341772151899,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [3456.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 50.0,
+"filename": "barel-jump-10 9.aseprite",
+"index": 9.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}])

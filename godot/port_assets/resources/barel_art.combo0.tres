@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_srxqu"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_art.atlas__31399b82a9ee.png" id="2_flfcj"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_flfcj")
+region = Rect2(682, 144, 121, 142)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_flfcj")
+region = Rect2(805, 144, 119, 143)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_flfcj")
+region = Rect2(926, 144, 160, 112)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_flfcj")
+region = Rect2(1088, 144, 166, 122)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_flfcj")
+region = Rect2(1256, 144, 140, 141)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_flfcj")
+region = Rect2(1398, 144, 121, 142)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_srxqu")
+source_id = "barel_art.combo0"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(48, 142, 65, 143, 66, 112, 67, 122, 58, 141, 49, 142)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "BAREL_ART",
+"clip": "combo0",
+"source_scale": null,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [48.0, 142.0],
+"rect": [682.0, 144.0, 121.0, 142.0],
+"scale": 0.72,
+"source": {
+"anchor": [48.0, 142.0],
+"atlas": [682.0, 144.0, 121.0, 142.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [65.0, 143.0],
+"rect": [805.0, 144.0, 119.0, 143.0],
+"scale": 0.72,
+"source": {
+"anchor": [65.0, 143.0],
+"atlas": [805.0, 144.0, 119.0, 143.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [66.0, 112.0],
+"rect": [926.0, 144.0, 160.0, 112.0],
+"scale": 0.72,
+"source": {
+"anchor": [66.0, 112.0],
+"atlas": [926.0, 144.0, 160.0, 112.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [67.0, 122.0],
+"rect": [1088.0, 144.0, 166.0, 122.0],
+"scale": 0.72,
+"source": {
+"anchor": [67.0, 122.0],
+"atlas": [1088.0, 144.0, 166.0, 122.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [58.0, 141.0],
+"rect": [1256.0, 144.0, 140.0, 141.0],
+"scale": 0.72,
+"source": {
+"anchor": [58.0, 141.0],
+"atlas": [1256.0, 144.0, 140.0, 141.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_art.atlas__31399b82a9ee.png",
+"pivot": [49.0, 142.0],
+"rect": [1398.0, 144.0, 121.0, 142.0],
+"scale": 0.72,
+"source": {
+"anchor": [49.0, 142.0],
+"atlas": [1398.0, 144.0, 121.0, 142.0]
+},
+"source_image": "assets/runtime/31399b82a9ee75f073f9df87.png"
+}])

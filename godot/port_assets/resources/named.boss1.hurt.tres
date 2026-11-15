@@ -1,0 +1,99 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ccd81"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_y0fej"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_y0fej")
+region = Rect2(1710, 0, 141, 105)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_y0fej")
+region = Rect2(1853, 0, 162, 103)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_y0fej")
+region = Rect2(0, 134, 120, 93)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_ccd81")
+source_id = "named.boss1.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(88, 97, 73, 97, 56, 97)
+frame_scales = PackedFloat64Array(0.94, 0.94, 0.94)
+duration_ms = PackedFloat64Array(100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "boss1"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [88.0, 97.0],
+"rect": [1710.0, 0.0, 141.0, 105.0],
+"scale": 0.94,
+"source": {
+"anchor": [88.0, 97.0],
+"atlas": [1710.0, 0.0, 141.0, 105.0],
+"edgeFragmentPixels": 0.0,
+"id": 10.0,
+"rect": [450.0, 853.0, 591.0, 958.0],
+"scale": 0.94,
+"source": "gorath_motion"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [73.0, 97.0],
+"rect": [1853.0, 0.0, 162.0, 103.0],
+"scale": 0.94,
+"source": {
+"anchor": [73.0, 97.0],
+"atlas": [1853.0, 0.0, 162.0, 103.0],
+"edgeFragmentPixels": 0.0,
+"id": 11.0,
+"rect": [657.0, 853.0, 819.0, 956.0],
+"scale": 0.94,
+"source": "gorath_motion"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [56.0, 97.0],
+"rect": [0.0, 134.0, 120.0, 93.0],
+"scale": 0.94,
+"source": {
+"anchor": [56.0, 97.0],
+"atlas": [0.0, 134.0, 120.0, 93.0],
+"edgeFragmentPixels": 0.0,
+"id": 12.0,
+"rect": [850.0, 853.0, 970.0, 946.0],
+"scale": 0.94,
+"source": "gorath_motion"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

@@ -1,0 +1,104 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_alw6k"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_rika_data.air.path__0386249e520e.png" id="2_lyklo"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_lyklo")
+region = Rect2(160, 2, 157, 239)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_lyklo")
+region = Rect2(774, 2, 172, 219)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_lyklo")
+region = Rect2(948, 2, 208, 238)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_lyklo")
+region = Rect2(1158, 2, 263, 209)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 50.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 70.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 230.0,
+"texture": SubResource("frame_3")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_alw6k")
+source_id = "barel_rika.timeline.air"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(46.75, 239, 97.75, 219, 99.75, 238, 81.75, 209)
+frame_scales = PackedFloat64Array(0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376)
+duration_ms = PackedFloat64Array(50, 50, 70, 230)
+authoritative_duration = PackedByteArray(1, 1, 1, 1)
+metadata = {
+"catalog": "BAREL_RIKA_DATA",
+"clip": "air",
+"smooth": true,
+"timeline": [[1.0, 50.0], [5.0, 100.0], [6.0, 170.0], [7.0, 400.0]]
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 50.0,
+"image": "port_assets/images/barel_rika_data.air.path__0386249e520e.png",
+"pivot": [46.75, 239.0],
+"rect": [160.0, 2.0, 157.0, 239.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [46.75, 239.0],
+"atlas": [160.0, 2.0, 157.0, 239.0]
+},
+"source_image": "assets/runtime/0386249e520e6bd7c153d7f1.png"
+}, {
+"duration_ms": 50.0,
+"image": "port_assets/images/barel_rika_data.air.path__0386249e520e.png",
+"pivot": [97.75, 219.0],
+"rect": [774.0, 2.0, 172.0, 219.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [97.75, 219.0],
+"atlas": [774.0, 2.0, 172.0, 219.0]
+},
+"source_image": "assets/runtime/0386249e520e6bd7c153d7f1.png"
+}, {
+"duration_ms": 70.0,
+"image": "port_assets/images/barel_rika_data.air.path__0386249e520e.png",
+"pivot": [99.75, 238.0],
+"rect": [948.0, 2.0, 208.0, 238.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [99.75, 238.0],
+"atlas": [948.0, 2.0, 208.0, 238.0]
+},
+"source_image": "assets/runtime/0386249e520e6bd7c153d7f1.png"
+}, {
+"duration_ms": 230.0,
+"image": "port_assets/images/barel_rika_data.air.path__0386249e520e.png",
+"pivot": [81.75, 209.0],
+"rect": [1158.0, 2.0, 263.0, 209.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [81.75, 209.0],
+"atlas": [1158.0, 2.0, 263.0, 209.0]
+},
+"source_image": "assets/runtime/0386249e520e6bd7c153d7f1.png"
+}])

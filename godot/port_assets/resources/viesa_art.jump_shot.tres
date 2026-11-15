@@ -1,0 +1,148 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_jt2ee"]
+[ext_resource type="Texture2D" path="res://port_assets/images/viesa_art.sheets.0__621c304fb2d6.png" id="2_g1ehc"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_g1ehc")
+region = Rect2(1433, 308, 113, 107)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_g1ehc")
+region = Rect2(1548, 308, 120, 119)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_g1ehc")
+region = Rect2(1670, 308, 116, 114)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_g1ehc")
+region = Rect2(1788, 308, 115, 115)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_g1ehc")
+region = Rect2(1905, 308, 117, 105)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_jt2ee")
+source_id = "viesa_art.jump_shot"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(51.691, 110.946, 52.531, 117.67, 51.27, 115.569, 55.473, 115.148, 54.212, 106.743)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0)
+metadata = {
+"catalog": "VIESA_ART",
+"clip": "jump_shot",
+"source_scale": 0.72,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [51.691, 110.946],
+"rect": [1433.0, 308.0, 113.0, 107.0],
+"scale": 0.72,
+"source": {
+"anchor": [51.691, 110.946],
+"atlas": [1433.0, 308.0, 113.0, 107.0],
+"drawing": 1.0,
+"sheet": 0.0,
+"source": [71.0, 660.0, 269.0, 254.0],
+"sourceSheet": 7.0,
+"tip": [47.791, 65.046]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [52.531, 117.67],
+"rect": [1548.0, 308.0, 120.0, 119.0],
+"scale": 0.72,
+"source": {
+"anchor": [52.531, 117.67],
+"atlas": [1548.0, 308.0, 120.0, 119.0],
+"drawing": 2.0,
+"sheet": 0.0,
+"source": [380.0, 644.0, 286.0, 283.0],
+"sourceSheet": 7.0,
+"tip": [53.237, 66.53]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [51.27, 115.569],
+"rect": [1670.0, 308.0, 116.0, 114.0],
+"scale": 0.72,
+"source": {
+"anchor": [51.27, 115.569],
+"atlas": [1670.0, 308.0, 116.0, 114.0],
+"drawing": 3.0,
+"sheet": 0.0,
+"source": [697.0, 649.0, 277.0, 272.0],
+"sourceSheet": 7.0,
+"tip": [51.17, 66.416]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [55.473, 115.148],
+"rect": [1788.0, 308.0, 115.0, 115.0],
+"scale": 0.72,
+"source": {
+"anchor": [55.473, 115.148],
+"atlas": [1788.0, 308.0, 115.0, 115.0],
+"drawing": 4.0,
+"sheet": 0.0,
+"source": [1013.0, 650.0, 274.0, 274.0],
+"sourceSheet": 7.0,
+"tip": [45.858, 65.635]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
+"pivot": [54.212, 106.743],
+"rect": [1905.0, 308.0, 117.0, 105.0],
+"scale": 0.72,
+"source": {
+"anchor": [54.212, 106.743],
+"atlas": [1905.0, 308.0, 117.0, 105.0],
+"drawing": 5.0,
+"sheet": 0.0,
+"source": [1343.0, 670.0, 279.0, 251.0],
+"sourceSheet": 7.0,
+"tip": [48.967, 61.386]
+},
+"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+}])

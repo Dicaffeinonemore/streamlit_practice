@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_m8j70"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_club_idle_0.png" id="2_84136"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_84136")
+region = Rect2(1, 1, 156, 181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_84136")
+region = Rect2(159, 1, 157, 182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_84136")
+region = Rect2(318, 1, 157, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_84136")
+region = Rect2(477, 1, 154, 182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_84136")
+region = Rect2(633, 1, 152, 179)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_84136")
+region = Rect2(787, 1, 156, 179)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_84136")
+region = Rect2(945, 1, 156, 179)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_84136")
+region = Rect2(1103, 1, 155, 180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_84136")
+region = Rect2(1260, 1, 156, 182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_84136")
+region = Rect2(1418, 1, 155, 178)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_m8j70")
+source_id = "stage1_presented_club_idle"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(72.6, 181.2, 71.4, 182.4, 72.6, 183.6, 71.4, 182.4, 72, 178.8, 72, 178.8, 72.6, 178.8, 70.8, 180, 70.2, 182.4, 70.8, 177.6)
+frame_scales = PackedFloat64Array(0.5191, 0.5191, 0.5191, 0.5191, 0.5191, 0.5191, 0.5191, 0.5191, 0.5191, 0.5191)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "idle",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "club"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "e7d95e178d1d456fad18ad22f45f913c5d287a1aa9141ccc327949b61b71cf89",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [72.6, 181.2],
+"rect": [1.0, 1.0, 156.0, 181.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "9196302766b79a6472de56cecddd6eaddbede6991b55f5fc3a4913a436f42fc2",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [71.4, 182.4],
+"rect": [159.0, 1.0, 157.0, 182.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "ae8c24b34d129ab3905253cb379903e47dea11604926e027a1a9c371a7fb6de7",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [72.6, 183.6],
+"rect": [318.0, 1.0, 157.0, 184.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a3e5115ca2b2e11f235ee3bb56f16c5a664755b0b7c124d048e5337838ba9601",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [71.4, 182.4],
+"rect": [477.0, 1.0, 154.0, 182.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "be5a4e5dad4be6204a81c38d65a5ba68ccc9533fbad7eef7a7690fdcaf225643",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [72.0, 178.8],
+"rect": [633.0, 1.0, 152.0, 179.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "4a0a0dce9956355823585a96aab9e0570a242bd1a2b1d63958dcf993ef0a0bbc",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [72.0, 178.8],
+"rect": [787.0, 1.0, 156.0, 179.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "e8f6bb0779ed19f680ca1f321bcc28b6e335a1ce31171d5097dafe6010c524cc",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [72.6, 178.8],
+"rect": [945.0, 1.0, 156.0, 179.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "e732c0e7e02c282f154f657f59c8448c934dab198eeafe09469754a776898e97",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [70.8, 180.0],
+"rect": [1103.0, 1.0, 155.0, 180.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "8a29d4adb63af58ca81b9bd66c11aa7eacce18d1904e7c5c5ed27b30496dcca4",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [70.2, 182.4],
+"rect": [1260.0, 1.0, 156.0, 182.0],
+"scale": 0.5191,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "ea2fea4172db688708ddad4704687c1f24633a181657274825573724f117a73d",
+"image": "port_assets/baked/stage1_presented_club_idle_0.png",
+"page": 0.0,
+"pivot": [70.8, 177.6],
+"rect": [1418.0, 1.0, 155.0, 178.0],
+"scale": 0.5191,
+"source": {}
+}])

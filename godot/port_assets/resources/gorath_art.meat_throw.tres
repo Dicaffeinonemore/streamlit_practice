@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_08ro5"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath_art.atlas__7553ac96a449.png" id="2_0kwjd"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_0kwjd")
+region = Rect2(3535, 391, 260, 282)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_0kwjd")
+region = Rect2(869, 391, 269, 297)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_0kwjd")
+region = Rect2(2923, 0, 291, 307)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_0kwjd")
+region = Rect2(2722, 391, 303, 284)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_0kwjd")
+region = Rect2(2822, 978, 287, 273)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_0kwjd")
+region = Rect2(1648, 696, 272, 280)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_08ro5")
+source_id = "gorath_art.meat_throw"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(129, 281, 137, 296, 156, 306, 134, 282, 142, 271, 132, 279)
+frame_scales = PackedFloat64Array(0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "GORATH_ART",
+"clip": "meat_throw",
+"source_scale": 0.5,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [129.0, 281.0],
+"rect": [3535.0, 391.0, 260.0, 282.0],
+"scale": 0.5,
+"source": {
+"anchor": [129.0, 281.0],
+"atlas": [3535.0, 391.0, 260.0, 282.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [137.0, 296.0],
+"rect": [869.0, 391.0, 269.0, 297.0],
+"scale": 0.5,
+"source": {
+"anchor": [137.0, 296.0],
+"atlas": [869.0, 391.0, 269.0, 297.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [156.0, 306.0],
+"rect": [2923.0, 0.0, 291.0, 307.0],
+"scale": 0.5,
+"source": {
+"anchor": [156.0, 306.0],
+"atlas": [2923.0, 0.0, 291.0, 307.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [134.0, 282.0],
+"rect": [2722.0, 391.0, 303.0, 284.0],
+"scale": 0.5,
+"source": {
+"anchor": [134.0, 282.0],
+"atlas": [2722.0, 391.0, 303.0, 284.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [142.0, 271.0],
+"rect": [2822.0, 978.0, 287.0, 273.0],
+"scale": 0.5,
+"source": {
+"anchor": [142.0, 271.0],
+"atlas": [2822.0, 978.0, 287.0, 273.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [132.0, 279.0],
+"rect": [1648.0, 696.0, 272.0, 280.0],
+"scale": 0.5,
+"source": {
+"anchor": [132.0, 279.0],
+"atlas": [1648.0, 696.0, 272.0, 280.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}])

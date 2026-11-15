@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_25410"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_molotov_throw_0.png" id="2_w5odt"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(1, 1, 154, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(157, 1, 142, 196)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(301, 1, 161, 191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(464, 1, 149, 200)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(615, 1, 160, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(777, 1, 159, 167)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(938, 1, 163, 176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(1103, 1, 163, 164)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(1268, 1, 160, 167)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_w5odt")
+region = Rect2(1430, 1, 144, 166)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_25410")
+source_id = "stage1_presented_molotov_throw"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(78.6, 183.6, 66.6, 196.2, 81, 191.4, 76.8, 200.4, 86.7, 183.6, 89.1, 166.8, 82.5, 175.8, 89.4, 163.8, 88.2, 166.8, 75, 165.6)
+frame_scales = PackedFloat64Array(0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404, 0.57404)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "throw",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "molotov"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "54d0f459944d6352366bca0e770fc5199640845691ed323f7a059e1ed2411db4",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [78.6, 183.6],
+"rect": [1.0, 1.0, 154.0, 184.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "d1285eca5dbf6b3354dcda83f8ccb0aac3d3a409f861dc0120fb09a82b5718f9",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [66.6, 196.2],
+"rect": [157.0, 1.0, 142.0, 196.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "f9adc455e9e0a37e9ba86d70409a11cdef2c1e8e53fd44c6effaf7bdd574c4b8",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [81.0, 191.4],
+"rect": [301.0, 1.0, 161.0, 191.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "2bea830830733b027d2a975d785e6bd690bdb54f8c392e98c6611851f26e8c5e",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [76.8, 200.4],
+"rect": [464.0, 1.0, 149.0, 200.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "6dc820e3940f57aaab4c656dbdc151c2f762618ef7f69b3ea9cfccbd5c3a257d",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [86.7, 183.6],
+"rect": [615.0, 1.0, 160.0, 184.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "1e4632dd84f81a7425986b174efc52d2f26da1def1ddc82529cfb8905c8ad0c4",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [89.1, 166.8],
+"rect": [777.0, 1.0, 159.0, 167.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "dab3dc7a2115d9305331bd2e88c0ad3b4a1d498ffd0c5ceba4edf74462371274",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [82.5, 175.8],
+"rect": [938.0, 1.0, 163.0, 176.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "5f1a2be03d45cecff4a902e57a2a4e223599af91dbe6bb65fc744dda072ec016",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [89.4, 163.8],
+"rect": [1103.0, 1.0, 163.0, 164.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "122f089bf06411b0fc7b34f31947b3d3860f7ea5ada5663692545a72eac62b93",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [88.2, 166.8],
+"rect": [1268.0, 1.0, 160.0, 167.0],
+"scale": 0.57404,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a0308003f671d1a3c60abdf8a05db7b6cb624674da7c9093b9a72998bb57540d",
+"image": "port_assets/baked/stage1_presented_molotov_throw_0.png",
+"page": 0.0,
+"pivot": [75.0, 165.6],
+"rect": [1430.0, 1.0, 144.0, 166.0],
+"scale": 0.57404,
+"source": {}
+}])

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "character": "barel",
+  "animationId": "down",
+  "animationType": "oneshot",
+  "loop": false,
+  "clip": "knockdown_getup",
+  "sprite": "../exports/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.json",
+  "anchor": [
+    320,
+    576
+  ],
+  "frameOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expectedDurationsMs": [
+    80,
+    80,
+    80,
+    80,
+    100,
+    240,
+    120,
+    120,
+    100,
+    100
+  ],
+  "durationMs": 1100,
+  "renderScale": 0.3873431533006001,
+  "tickDurations": [
+    3,
+    4,
+    12,
+    3,
+    4,
+    10,
+    6,
+    5,
+    5,
+    4
+  ],
+  "alignment": {
+    "reference": "idle F1 helmet width / down F1 helmet width",
+    "idleHelmetWidth": 40,
+    "downHelmetWidth": 52,
+    "idleRenderScale": 0.5035460992907801
+  },
+  "physicsReference": {
+    "recoveryAfterTick": 55,
+    "initialVz": 5,
+    "knockback": 3.5,
+    "friction": 0.96,
+    "getupInvulnerability": 100
+  }
+}

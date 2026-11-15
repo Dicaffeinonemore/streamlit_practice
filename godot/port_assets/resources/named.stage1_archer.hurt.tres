@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_8vxfb"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_a8qm7"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_a8qm7")
+region = Rect2(1666, 3009, 89, 126)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_a8qm7")
+region = Rect2(1757, 3009, 77, 126)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_8vxfb")
+source_id = "named.stage1_archer.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(48, 126, 34, 125)
+frame_scales = PackedFloat64Array(0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "stage1_archer"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [48.0, 126.0],
+"rect": [1666.0, 3009.0, 89.0, 126.0],
+"scale": 0.72,
+"source": {
+"anchor": [48.0, 126.0],
+"atlas": [1666.0, 3009.0, 89.0, 126.0],
+"edgeFragmentPixels": 1745.0,
+"id": 256.0,
+"rect": [1172.0, 754.0, 1261.0, 880.0],
+"scale": 0.72,
+"source": "soldiers1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [34.0, 125.0],
+"rect": [1757.0, 3009.0, 77.0, 126.0],
+"scale": 0.72,
+"source": {
+"anchor": [34.0, 125.0],
+"atlas": [1757.0, 3009.0, 77.0, 126.0],
+"edgeFragmentPixels": 1752.0,
+"id": 257.0,
+"rect": [1276.0, 755.0, 1353.0, 881.0],
+"scale": 0.72,
+"source": "soldiers1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

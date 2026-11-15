@@ -1,0 +1,1371 @@
+{
+  "embedded": [
+    {
+      "channels": 2,
+      "duration": 1.416,
+      "file": "port_assets/audio/original/death/mobdie.mp3",
+      "key": "mobdie",
+      "leading_silence_offset": 0.2785416666666667,
+      "namespace": "death",
+      "sample_rate": 48000,
+      "sha256": "3fcc2dc1ec003ffe5d88a2ce238b66ce6d815d4c9ab114a891fd5d62337db1b2"
+    },
+    {
+      "channels": 2,
+      "duration": 1.248,
+      "file": "port_assets/audio/original/barel/swordHit.mp3",
+      "key": "swordHit",
+      "leading_silence_offset": 0.13118749999999998,
+      "namespace": "barel",
+      "sample_rate": 48000,
+      "sha256": "e026bc6d36a046a89fb65e172209dea98f40173a37f97ace9a55dfc97ed37d9d"
+    },
+    {
+      "channels": 2,
+      "duration": 1.056,
+      "file": "port_assets/audio/original/barel/barelWave.mp3",
+      "key": "barelWave",
+      "leading_silence_offset": 0.16629166666666667,
+      "namespace": "barel",
+      "sample_rate": 48000,
+      "sha256": "6d86a334b13f162c592af68ff75e5597b45e4fc552890a3ec3e79052e6b8c2f6"
+    },
+    {
+      "channels": 2,
+      "duration": 0.8097916666666667,
+      "file": "port_assets/audio/original/barel/barelFinalHit.mp3",
+      "key": "barelFinalHit",
+      "leading_silence_offset": 0.04572916666666667,
+      "namespace": "barel",
+      "sample_rate": 48000,
+      "sha256": "73e84b70e5888b55c34827f20ff5f291fa175bb33a3d987b70774dc447a65181"
+    },
+    {
+      "channels": 2,
+      "duration": 1.056,
+      "file": "port_assets/audio/original/barel/hurt.mp3",
+      "key": "hurt",
+      "leading_silence_offset": 0.06216666666666666,
+      "namespace": "barel",
+      "sample_rate": 48000,
+      "sha256": "6c8ba21c363ccea13c49c5665391429479ca4aef78a9e5b0a1d074e356ca7cec"
+    },
+    {
+      "channels": 2,
+      "duration": 5.6685625,
+      "file": "port_assets/audio/original/barel/barelSlam.mp3",
+      "key": "barelSlam",
+      "leading_silence_offset": 0.5059583333333333,
+      "namespace": "barel",
+      "sample_rate": 48000,
+      "sha256": "cc3d7da66353478e3e581a80b94d20be705191036161e3be0592c14eb6d89da7"
+    },
+    {
+      "channels": 1,
+      "duration": 0.8620208333333333,
+      "file": "port_assets/audio/original/barel/barelCombo.mp3",
+      "key": "barelCombo",
+      "leading_silence_offset": 0.025895833333333333,
+      "namespace": "barel",
+      "sample_rate": 48000,
+      "sha256": "48350642cae177ff55d5169f6dc333a4ac73892c326f34b35f97d79cde78b224"
+    },
+    {
+      "channels": 1,
+      "duration": 0.648,
+      "file": "port_assets/audio/original/viesa/viesaSnipe.mp3",
+      "key": "viesaSnipe",
+      "leading_silence_offset": 0.021062499999999998,
+      "namespace": "viesa",
+      "sample_rate": 48000,
+      "sha256": "7270f40fc03cb64870f6905db36eeee2209c1eff1de8ca9bf2e7ff0aca21f9fb"
+    },
+    {
+      "channels": 2,
+      "duration": 1.44,
+      "file": "port_assets/audio/original/viesa/viesaUltimate.mp3",
+      "key": "viesaUltimate",
+      "leading_silence_offset": 0.0115625,
+      "namespace": "viesa",
+      "sample_rate": 48000,
+      "sha256": "75a58045bbd5bfb3ec6dddfb4aa6d2eaaa5571494557b822311c1265156f0003"
+    },
+    {
+      "channels": 2,
+      "duration": 1.0448958333333334,
+      "file": "port_assets/audio/original/viesa/viesaArrow.mp3",
+      "key": "viesaArrow",
+      "leading_silence_offset": 0.1098125,
+      "namespace": "viesa",
+      "sample_rate": 48000,
+      "sha256": "5b3fd4fd824031ed33b27df338777a3637327e59d48bb4ae1cc0ed6ed5d26e27"
+    },
+    {
+      "channels": 2,
+      "duration": 0.696,
+      "file": "port_assets/audio/original/gorath/g2hook.mp3",
+      "key": "g2hook",
+      "leading_silence_offset": 0.19997916666666665,
+      "namespace": "gorath",
+      "sample_rate": 48000,
+      "sha256": "d303eead7fda9d248db0170fafc07cfbaa135fd277d57e65d36ad3f2e36775e9"
+    },
+    {
+      "channels": 2,
+      "duration": 1.097125,
+      "file": "port_assets/audio/original/gorath/g2charge.mp3",
+      "key": "g2charge",
+      "leading_silence_offset": 0.0725625,
+      "namespace": "gorath",
+      "sample_rate": 48000,
+      "sha256": "d1d4a829b5d3e739753dc897375c7a26bec6a32224a42577d936ba53ac5f0599"
+    }
+  ],
+  "encoder": {
+    "compression_level": 0.5,
+    "format": "Vorbis",
+    "libsndfile": "1.2.2",
+    "soundfile": "0.13.1",
+    "stable_ogg_serial": true
+  },
+  "music": [
+    {
+      "bpm": 78,
+      "encoded_samples": 2363077,
+      "file": "port_assets/audio/music/stage_1_loop.ogg",
+      "id": "stage_1",
+      "loop_end": 2363077,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "잿빛 군단의 행군",
+      "ogg_sha256": "0cce902c01709c2933638ac042ce468ce61bb5ffcf178c37dd81bc72dfe4f77e",
+      "pcm": "port_assets/audio/pcm/stage_1_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.00017994007794186473,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 66,
+      "encoded_samples": 2792727,
+      "file": "port_assets/audio/music/stage_2_loop.ogg",
+      "id": "stage_2",
+      "loop_end": 2792727,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "안개 속 진혼곡",
+      "ogg_sha256": "e5cc15a9e5bc4726169a8a3d79ab470e5d9bb1c27212119770dc9aab1cb608e6",
+      "pcm": "port_assets/audio/pcm/stage_2_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.0002129747881554067,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 84,
+      "encoded_samples": 2194286,
+      "file": "port_assets/audio/music/stage_3_loop.ogg",
+      "id": "stage_3",
+      "loop_end": 2194286,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "불타는 왕좌",
+      "ogg_sha256": "387857fad1b4c511e8720104bc636e8de3ad73ba4e70bfeeee8cde0103631c1c",
+      "pcm": "port_assets/audio/pcm/stage_3_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.0005187292699702084,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 64,
+      "encoded_samples": 2880000,
+      "file": "port_assets/audio/music/stage_4_loop.ogg",
+      "id": "stage_4",
+      "loop_end": 2880000,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "얼어붙은 묘지의 기도",
+      "ogg_sha256": "377add41f89554679928245552dfa2709de18c9020b32cbe7ca835488d529ecb",
+      "pcm": "port_assets/audio/pcm/stage_4_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 5.055792280472815e-05,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 86,
+      "encoded_samples": 2143256,
+      "file": "port_assets/audio/music/stage_5_loop.ogg",
+      "id": "stage_5",
+      "loop_end": 2143256,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "검은 달의 강림",
+      "ogg_sha256": "4a4ffa731a14843f722dc5349cbedbe48e2daf4608852707d985fec593a66a6f",
+      "pcm": "port_assets/audio/pcm/stage_5_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.0003311401233077049,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 104,
+      "encoded_samples": 1772308,
+      "file": "port_assets/audio/music/boss_1_loop.ogg",
+      "id": "boss_1",
+      "loop_end": 1772308,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "도살자의 북",
+      "ogg_sha256": "e0648376bb8a0defd4973b4edd8bb0b7972b85949462da99acacc03f2cef0c1c",
+      "pcm": "port_assets/audio/pcm/boss_1_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.022278178483247757,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 96,
+      "encoded_samples": 1920000,
+      "file": "port_assets/audio/music/boss_2_loop.ogg",
+      "id": "boss_2",
+      "loop_end": 1920000,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "까마귀의 미사",
+      "ogg_sha256": "1c9587491a1579d8f1642587eb39ede4e5b1aabc67ab1dc858df076502e15667",
+      "pcm": "port_assets/audio/pcm/boss_2_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.0004952773451805115,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 112,
+      "encoded_samples": 1645714,
+      "file": "port_assets/audio/music/boss_3_loop.ogg",
+      "id": "boss_3",
+      "loop_end": 1645714,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "황금왕의 심판",
+      "ogg_sha256": "382894614823db5319548715fa5251d9465f539614efe960eeb74e6c1f68030a",
+      "pcm": "port_assets/audio/pcm/boss_3_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.011594481766223907,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 98,
+      "encoded_samples": 1880816,
+      "file": "port_assets/audio/music/boss_4_loop.ogg",
+      "id": "boss_4",
+      "loop_end": 1880816,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "영구동토의 왕",
+      "ogg_sha256": "9aa4655892588db80219d90feed111280686d80821abaca7004e771d3cb1b443",
+      "pcm": "port_assets/audio/pcm/boss_4_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.01372995600104332,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 118,
+      "encoded_samples": 1562034,
+      "file": "port_assets/audio/music/boss_5_loop.ogg",
+      "id": "boss_5",
+      "loop_end": 1562034,
+      "loop_start": 0,
+      "loop_steps": 256,
+      "name": "종언의 월식",
+      "ogg_sha256": "cad2ff609cf6db5cf35a0ad7710c9c2dd925545b023c6040fb3cdfea90de5fe4",
+      "pcm": "port_assets/audio/pcm/boss_5_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.001793060451745987,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 256
+    },
+    {
+      "bpm": 96,
+      "encoded_samples": 960000,
+      "file": "port_assets/audio/music/victory_loop.ogg",
+      "id": "victory",
+      "intro": "port_assets/audio/music/victory_intro.wav",
+      "intro_samples": 240000,
+      "loop_end": 960000,
+      "loop_start": 0,
+      "loop_steps": 128,
+      "name": "승리의 개선가",
+      "ogg_sha256": "11446e3037a53b11c7dc21bda1e63d36c0d0edcc88805e54b0cfa05c091c1aac",
+      "pcm": "port_assets/audio/pcm/victory_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.0009967628866434097,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 160
+    },
+    {
+      "bpm": 80,
+      "encoded_samples": 1152000,
+      "file": "port_assets/audio/music/ending_loop.ogg",
+      "id": "ending",
+      "intro": "port_assets/audio/music/ending_intro.wav",
+      "intro_samples": 288000,
+      "loop_end": 1152000,
+      "loop_start": 0,
+      "loop_steps": 128,
+      "name": "새벽을 여는 기사",
+      "ogg_sha256": "96bb213b872bf01ca628207508e8965cc6f1952f3e06bdf6473e0c6f6a4ae824",
+      "pcm": "port_assets/audio/pcm/ending_loop.wav",
+      "sample_rate": 48000,
+      "seam_delta": 0.00021819164976477623,
+      "source": "score.js SCORE.create/step; gain .34 x bus 2.5; no preview fade",
+      "warmup_steps": 160
+    }
+  ],
+  "priority": [
+    "custom_boss_file",
+    "original/boss.mp3",
+    "synthesized_boss_track"
+  ],
+  "sample_playback_source": "  const GORATH_SAMPLE_FALLBACK = { g2hook: 'bwave', g2charge: 'bcharge' };\r\n  const gorathSamples = new Map();\r\n  function prepareGorathSamples() {\r\n    const urls = { g2hook: global.GORATH_HOOK_SFX_URL, g2charge: global.GORATH_CHARGE_SFX_URL };\r\n    for (const [name, url] of Object.entries(urls)) {\r\n      if (!url || gorathSamples.has(name)) continue;\r\n      fetch(url).then(r => {\r\n        if (!r.ok) throw new Error('Gorath sample unavailable');\r\n        return r.arrayBuffer();\r\n      }).then(decode).then(buffer => { gorathSamples.set(name, buffer); }).catch(() => {});\r\n    }\r\n  }\r\n  function playGorathSample(name) {\r\n    const buffer = gorathSamples.get(name);\r\n    if (!buffer) return false;\r\n    const src = AU.ctx.createBufferSource(); src.buffer = buffer;\r\n    src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();\r\n    return true;\r\n  }\r\n  // Embedded with the scripts so local, Streamlit and single-HTML builds use\r\n  // the same sample. One buffer, independent sources for simultaneous kills.\r\n  let enemyDeathBuffer = null, enemyDeathReady = null, enemyDeathOffset = 0;\r\n  function prepareEnemyDeath() {\r\n    if (!enemyDeathReady && global.ENEMY_DEATH_SFX_URL && AU.ctx) {\r\n      enemyDeathReady = fetch(global.ENEMY_DEATH_SFX_URL).then(r => {\r\n        if (!r.ok) throw new Error('Enemy death sample unavailable');\r\n        return r.arrayBuffer();\r\n      }).then(decode).then(buffer => {\r\n        // Skip encoded leading silence so the audible hit starts on the killing blow.\r\n        let first = buffer.length;\r\n        for (let ch = 0; ch < buffer.numberOfChannels; ch++) {\r\n          const data = buffer.getChannelData(ch);\r\n          for (let i = 0; i < first; i++) {\r\n            if (Math.abs(data[i]) > .003) { first = i; break; }\r\n          }\r\n        }\r\n        if (first === buffer.length) return; // Silent sample: retain the immediate fallback.\r\n        enemyDeathOffset = Math.max(0, first / buffer.sampleRate - .002);\r\n        enemyDeathBuffer = buffer;\r\n      }).catch(() => {});\r\n    }\r\n  }\r\n  function playEnemyDeath() {\r\n    if (!enemyDeathBuffer) return false;  // Keep synthesized fallback while loading/on failure.\r\n    const src = AU.ctx.createBufferSource(); src.buffer = enemyDeathBuffer;\r\n    src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start(0, enemyDeathOffset);\r\n    return true;\r\n  }\r\n  const viesaSkillBuffers = new Map();\r\n  const barelSamples = new Map();\r\n  function prepareBarelSamples() {\r\n    if (!AU.ctx) return Promise.resolve([]);\r\n    for (const [name,url] of Object.entries(global.BAREL_SFX_URLS || {})) {\r\n      if (barelSamples.has(name)) continue;\r\n      const sample = {buffer:null,offset:0,last:-Infinity};\r\n      sample.ready = fetch(url).then(r=>{\r\n        if(!r.ok)throw Error('Barel sample unavailable');return r.arrayBuffer();\r\n      }).then(decode).then(buffer=>{\r\n        let first=buffer.length;\r\n        for(let ch=0;ch<buffer.numberOfChannels;ch++){\r\n          const data=buffer.getChannelData(ch);\r\n          for(let i=0;i<first;i++)if(Math.abs(data[i])>.003){first=i;break;}\r\n        }\r\n        if(first===buffer.length)throw Error('Silent Barel sample');\r\n        sample.offset=Math.max(0,first/buffer.sampleRate-.002);sample.buffer=buffer;\r\n        return true;\r\n      }).catch(()=>false);\r\n      barelSamples.set(name,sample);\r\n    }\r\n    return Promise.all([...barelSamples.values()].map(s=>s.ready));\r\n  }\r\n  function playBarelSample(name, options) {\r\n    const sample=barelSamples.get(name);if(!sample)return;\r\n    const requested=AU.ctx.currentTime;\r\n    const play=()=>{\r\n      if(!sample.buffer||!AU.on||paused||AU.ctx.state==='closed'||\r\n        AU.ctx.currentTime-requested>.15||AU.ctx.currentTime-sample.last<.018)return;\r\n      sample.last=AU.ctx.currentTime;\r\n      const src=AU.ctx.createBufferSource();src.buffer=sample.buffer;\r\n      const limit=options?.duration;\r\n      if(Number.isFinite(limit)&&limit>0){\r\n        const duration=Math.min(limit,sample.buffer.duration-sample.offset),gain=AU.ctx.createGain(),now=AU.ctx.currentTime;\r\n        gain.gain.setValueAtTime(1,now);gain.gain.setValueAtTime(1,now+Math.max(0,duration-.008));\r\n        gain.gain.linearRampToValueAtTime(0,now+duration);\r\n        src.connect(gain);gain.connect(AU.sfxB);src.onended=()=>{src.disconnect();gain.disconnect();};\r\n        src.start(0,sample.offset,duration);\r\n      }else{\r\n        src.connect(AU.sfxB);src.onended=()=>src.disconnect();src.start(0,sample.offset);\r\n      }\r\n    };\r\n    if(sample.buffer)play();else sample.ready.then(play);\r\n  }\r\n  function prepareViesaSkills() {\r\n    for (const [name, url] of Object.entries(global.VIESA_SFX_URLS || {})) {\r\n      const ready = fetch(url).then(r => {\r\n        if (!r.ok) throw new Error('Viesa skill sample unavailable');\r\n        return r.arrayBuffer();\r\n      }).then(decode);\r\n      viesaSkillBuffers.set(name, ready);\r\n      ready.catch(() => {});\r\n    }\r\n  }\r\n  function playViesaSkill(name) {\r\n    // Predecode on audio unlock; a first cast also waits for its sample.\r\n    viesaSkillBuffers.get(name)?.then(buffer => {\r\n      if (!AU.on || paused || AU.ctx.state === 'closed') return;\r\n      const src = AU.ctx.createBufferSource(); src.buffer = buffer;\r\n      src.connect(AU.sfxB); src.onended = () => src.disconnect(); src.start();\r\n    }).catch(() => {});\r\n  }\r\n  function playFile(buf, rate) {\r\n    const c = AU.ctx, now = c.currentTime, bus = c.createGain(), src = c.createBufferSource();\r\n    src.buffer = buf; src.loop = true; src.playbackRate.value = rate; src.connect(bus); bus.connect(AU.musB);\r\n    bus.gain.setValueAtTime(0, now); bus.gain.linearRampToValueAtTime(BOSS_FILE_GAIN, now + .8);\r\n    src.start(now + .05);\r\n    AU.mus = { buf, engine: { bus, dispose() { try { src.stop(); } catch (e) { /* 이미 멈춤 */ } src.disconnect(); bus.disconnect(); } } };\r\n  }\r\n  function bossInfo() {\r\n    return { source: bossFile.customBuf ? 'custom' : bossFile.defBuf ? 'default' : 'synth',\r\n      name: bossFile.customName, stored: bossFile.stored, loading: bossFile.defState === 'loading' };\r\n  }\r\n  function notifyBoss() {\r\n    // 보스전 도중 곡이 바뀌면(파일 선택·해제, 기본 곡 로딩 완료) 새 곡으로 이어서 튼다.\r\n    if (AU.on && AU.want >= 0 && wantedBoss && !wantedVictory && (AU.mus?.buf || null) !== (bossBuffer() || null)) music(AU.want, wantedRate, true);\r\n    bossFile.listeners.forEach(f => { try { f(bossInfo()); } catch (e) { /* 무시 */ } });\r\n  }\r\n  async function prepareBoss() {\r\n    if (!AU.ctx) return;\r\n    if (bossFile.customRaw && !bossFile.customBuf) {\r\n      try { bossFile.customBuf = await decode(bossFile.customRaw); }\r\n      catch (e) { bossFile.customRaw = null; bossFile.customName = ''; }\r\n    }\r\n    if (bossFile.defState === 'idle') {\r\n      bossFile.defState = 'loading'; notifyBoss();\r\n      try {\r\n        const r = await fetch(global.BOSS_BGM_URL || 'assets/bgm/boss.mp3');\r\n        if (!r.ok) throw new Error(r.status);\r\n        bossFile.defBuf = await decode(await r.arrayBuffer()); bossFile.defState = 'ready';\r\n      } catch (e) { bossFile.defState = 'missing'; }   // 기본 mp3 가 없으면 합성 BGM\r\n    }\r\n    notifyBoss();\r\n  }\r\n  function idb(mode, op) {\r\n    return new Promise(done => {\r\n      try {\r\n        const req = indexedDB.open('bmk_audio', 1);\r\n        req.onupgradeneeded = () => req.result.createObjectStore('files');\r\n        req.onerror = () => done(undefined);\r\n        req.onsuccess = () => {\r\n          const db = req.result;\r\n          try {\r\n            const tx = db.transaction('files', mode), r = op(tx.objectStore('files'));\r\n            tx.oncomplete = () => { db.close(); done(mode === 'readonly' ? r.result : true); };\r\n            tx.onerror = tx.onabort = () => { db.close(); done(undefined); };\r\n          } catch (e) { db.close(); done(undefined); }\r\n        };\r\n      } catch (e) { done(undefined); }\r\n    });\r\n  }\r\n  async function setBossFile(file) {\r\n    if (!file) return { ok: false, message: '파일을 고르지 않았습니다.' };\r\n    if (file.size > BOSS_MAX_BYTES) return { ok: false, message: '30MB 이하의 파일만 쓸 수 있습니다.' };\r\n    if (!init()) return { ok: false, message: '이 브라우저는 오디오를 지원하지 않습니다.' };\r\n    const raw = await file.arrayBuffer();\r\n    let buf;\r\n    try { buf = await decode(raw); } catch (e) { return { ok: false, message: '재생할 수 없는 오디오 파일입니다.' }; }\r\n    Object.assign(bossFile, { customRaw: raw, customBuf: buf, customName: file.name });\r\n    bossFile.stored = !!await idb('readwrite', s => s.put({ name: file.name, data: raw }, 'bossBgm'));\r\n    notifyBoss();\r\n    return { ok: true, saved: bossFile.stored };\r\n  }\r\n  async function clearBossFile() {\r\n    Object.assign(bossFile, { customRaw: null, customBuf: null, customName: '', stored: false });\r\n    await idb('readwrite', s => s.delete('bossBgm'));\r\n    notifyBoss();\r\n  }\r\n  idb('readonly', s => s.get('bossBgm')).then(v => {\r\n    if (bossFile.customRaw || !v || typeof v.name !== 'string' || !(v.data instanceof ArrayBuffer)) return;\r\n    Object.assign(bossFile, { customRaw: v.data, customName: v.name, stored: true });\r\n    if (AU.ctx) prepareBoss(); else notifyBoss();\r\n  });\r\n",
+  "sample_rate": 48000,
+  "schema": 1,
+  "synthesized": [
+    {
+      "file": "port_assets/audio/sfx/swordSwing_0.wav",
+      "key": "swordSwing",
+      "sample_rate": 48000,
+      "samples": 8670,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/swordSwing_1.wav",
+      "key": "swordSwing",
+      "sample_rate": 48000,
+      "samples": 9524,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/swordSwing_2.wav",
+      "key": "swordSwing",
+      "sample_rate": 48000,
+      "samples": 10415,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/swordHit_0.wav",
+      "key": "swordHit",
+      "sample_rate": 48000,
+      "samples": 8256,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/swordHit_1.wav",
+      "key": "swordHit",
+      "sample_rate": 48000,
+      "samples": 9120,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/swordHit_2.wav",
+      "key": "swordHit",
+      "sample_rate": 48000,
+      "samples": 9984,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/swing_0.wav",
+      "key": "swing",
+      "sample_rate": 48000,
+      "samples": 10811,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/swing_1.wav",
+      "key": "swing",
+      "sample_rate": 48000,
+      "samples": 12859,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/swing_2.wav",
+      "key": "swing",
+      "sample_rate": 48000,
+      "samples": 14839,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/dash_0.wav",
+      "key": "dash",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/dash_1.wav",
+      "key": "dash",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/dash_2.wav",
+      "key": "dash",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/jump_0.wav",
+      "key": "jump",
+      "sample_rate": 48000,
+      "samples": 9168,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/jump_1.wav",
+      "key": "jump",
+      "sample_rate": 48000,
+      "samples": 9168,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/jump_2.wav",
+      "key": "jump",
+      "sample_rate": 48000,
+      "samples": 9168,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/hit_0.wav",
+      "key": "hit",
+      "sample_rate": 48000,
+      "samples": 11081,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/hit_1.wav",
+      "key": "hit",
+      "sample_rate": 48000,
+      "samples": 11081,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/hit_2.wav",
+      "key": "hit",
+      "sample_rate": 48000,
+      "samples": 22608,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/hurt_0.wav",
+      "key": "hurt",
+      "sample_rate": 48000,
+      "samples": 13009,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/hurt_1.wav",
+      "key": "hurt",
+      "sample_rate": 48000,
+      "samples": 13009,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/hurt_2.wav",
+      "key": "hurt",
+      "sample_rate": 48000,
+      "samples": 13009,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/hurtH_0.wav",
+      "key": "hurtH",
+      "sample_rate": 48000,
+      "samples": 20208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/hurtH_1.wav",
+      "key": "hurtH",
+      "sample_rate": 48000,
+      "samples": 20208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/hurtH_2.wav",
+      "key": "hurtH",
+      "sample_rate": 48000,
+      "samples": 20208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/pdie_0.wav",
+      "key": "pdie",
+      "sample_rate": 48000,
+      "samples": 51260,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/pdie_1.wav",
+      "key": "pdie",
+      "sample_rate": 48000,
+      "samples": 51260,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/pdie_2.wav",
+      "key": "pdie",
+      "sample_rate": 48000,
+      "samples": 51260,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/spcharge_0.wav",
+      "key": "spcharge",
+      "sample_rate": 48000,
+      "samples": 32208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/spcharge_1.wav",
+      "key": "spcharge",
+      "sample_rate": 48000,
+      "samples": 32208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/spcharge_2.wav",
+      "key": "spcharge",
+      "sample_rate": 48000,
+      "samples": 32208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/spdash_0.wav",
+      "key": "spdash",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/spdash_1.wav",
+      "key": "spdash",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/spdash_2.wav",
+      "key": "spdash",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/spslash_0.wav",
+      "key": "spslash",
+      "sample_rate": 48000,
+      "samples": 11889,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/spslash_1.wav",
+      "key": "spslash",
+      "sample_rate": 48000,
+      "samples": 11889,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/spslash_2.wav",
+      "key": "spslash",
+      "sample_rate": 48000,
+      "samples": 11889,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/moon_0.wav",
+      "key": "moon",
+      "sample_rate": 48000,
+      "samples": 46354,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/moon_1.wav",
+      "key": "moon",
+      "sample_rate": 48000,
+      "samples": 46354,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/moon_2.wav",
+      "key": "moon",
+      "sample_rate": 48000,
+      "samples": 46354,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/pwave_0.wav",
+      "key": "pwave",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/pwave_1.wav",
+      "key": "pwave",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/pwave_2.wav",
+      "key": "pwave",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/land_0.wav",
+      "key": "land",
+      "sample_rate": 48000,
+      "samples": 32125,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/land_1.wav",
+      "key": "land",
+      "sample_rate": 48000,
+      "samples": 32125,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/land_2.wav",
+      "key": "land",
+      "sample_rate": 48000,
+      "samples": 32125,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/slam_0.wav",
+      "key": "slam",
+      "sample_rate": 48000,
+      "samples": 29808,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/slam_1.wav",
+      "key": "slam",
+      "sample_rate": 48000,
+      "samples": 29808,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/slam_2.wav",
+      "key": "slam",
+      "sample_rate": 48000,
+      "samples": 29808,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/bswing_0.wav",
+      "key": "bswing",
+      "sample_rate": 48000,
+      "samples": 18473,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/bswing_1.wav",
+      "key": "bswing",
+      "sample_rate": 48000,
+      "samples": 18473,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/bswing_2.wav",
+      "key": "bswing",
+      "sample_rate": 48000,
+      "samples": 18473,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/bcharge_0.wav",
+      "key": "bcharge",
+      "sample_rate": 48000,
+      "samples": 29814,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/bcharge_1.wav",
+      "key": "bcharge",
+      "sample_rate": 48000,
+      "samples": 29814,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/bcharge_2.wav",
+      "key": "bcharge",
+      "sample_rate": 48000,
+      "samples": 29814,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/bwind_0.wav",
+      "key": "bwind",
+      "sample_rate": 48000,
+      "samples": 17716,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/bwind_1.wav",
+      "key": "bwind",
+      "sample_rate": 48000,
+      "samples": 17716,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/bwind_2.wav",
+      "key": "bwind",
+      "sample_rate": 48000,
+      "samples": 17716,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/tele_0.wav",
+      "key": "tele",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/tele_1.wav",
+      "key": "tele",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/tele_2.wav",
+      "key": "tele",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/tele2_0.wav",
+      "key": "tele2",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/tele2_1.wav",
+      "key": "tele2",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/tele2_2.wav",
+      "key": "tele2",
+      "sample_rate": 48000,
+      "samples": 16848,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/orb_0.wav",
+      "key": "orb",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/orb_1.wav",
+      "key": "orb",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/orb_2.wav",
+      "key": "orb",
+      "sample_rate": 48000,
+      "samples": 13008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/raven_0.wav",
+      "key": "raven",
+      "sample_rate": 48000,
+      "samples": 22582,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/raven_1.wav",
+      "key": "raven",
+      "sample_rate": 48000,
+      "samples": 22582,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/raven_2.wav",
+      "key": "raven",
+      "sample_rate": 48000,
+      "samples": 22582,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/bwave_0.wav",
+      "key": "bwave",
+      "sample_rate": 48000,
+      "samples": 16845,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/bwave_1.wav",
+      "key": "bwave",
+      "sample_rate": 48000,
+      "samples": 16845,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/bwave_2.wav",
+      "key": "bwave",
+      "sample_rate": 48000,
+      "samples": 16845,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/pillar_0.wav",
+      "key": "pillar",
+      "sample_rate": 48000,
+      "samples": 27321,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/pillar_1.wav",
+      "key": "pillar",
+      "sample_rate": 48000,
+      "samples": 27321,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/pillar_2.wav",
+      "key": "pillar",
+      "sample_rate": 48000,
+      "samples": 27321,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/bossdie_0.wav",
+      "key": "bossdie",
+      "sample_rate": 48000,
+      "samples": 80208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/bossdie_1.wav",
+      "key": "bossdie",
+      "sample_rate": 48000,
+      "samples": 80208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/bossdie_2.wav",
+      "key": "bossdie",
+      "sample_rate": 48000,
+      "samples": 80208,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/phase2_0.wav",
+      "key": "phase2",
+      "sample_rate": 48000,
+      "samples": 36945,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/phase2_1.wav",
+      "key": "phase2",
+      "sample_rate": 48000,
+      "samples": 36945,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/phase2_2.wav",
+      "key": "phase2",
+      "sample_rate": 48000,
+      "samples": 36945,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/groggy_0.wav",
+      "key": "groggy",
+      "sample_rate": 48000,
+      "samples": 27408,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/groggy_1.wav",
+      "key": "groggy",
+      "sample_rate": 48000,
+      "samples": 27408,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/groggy_2.wav",
+      "key": "groggy",
+      "sample_rate": 48000,
+      "samples": 27408,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/victory_0.wav",
+      "key": "victory",
+      "sample_rate": 48000,
+      "samples": 90687,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/victory_1.wav",
+      "key": "victory",
+      "sample_rate": 48000,
+      "samples": 90687,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/victory_2.wav",
+      "key": "victory",
+      "sample_rate": 48000,
+      "samples": 90687,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/defeat_0.wav",
+      "key": "defeat",
+      "sample_rate": 48000,
+      "samples": 118608,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/defeat_1.wav",
+      "key": "defeat",
+      "sample_rate": 48000,
+      "samples": 118608,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/defeat_2.wav",
+      "key": "defeat",
+      "sample_rate": 48000,
+      "samples": 118608,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/click_0.wav",
+      "key": "click",
+      "sample_rate": 48000,
+      "samples": 5810,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/click_1.wav",
+      "key": "click",
+      "sample_rate": 48000,
+      "samples": 5810,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/click_2.wav",
+      "key": "click",
+      "sample_rate": 48000,
+      "samples": 5810,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/spready_0.wav",
+      "key": "spready",
+      "sample_rate": 48000,
+      "samples": 25967,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/spready_1.wav",
+      "key": "spready",
+      "sample_rate": 48000,
+      "samples": 25967,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/spready_2.wav",
+      "key": "spready",
+      "sample_rate": 48000,
+      "samples": 25967,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/g2chop_0.wav",
+      "key": "g2chop",
+      "sample_rate": 48000,
+      "samples": 7734,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/g2chop_1.wav",
+      "key": "g2chop",
+      "sample_rate": 48000,
+      "samples": 7734,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/g2chop_2.wav",
+      "key": "g2chop",
+      "sample_rate": 48000,
+      "samples": 7734,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/g2roar_0.wav",
+      "key": "g2roar",
+      "sample_rate": 48000,
+      "samples": 51413,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/g2roar_1.wav",
+      "key": "g2roar",
+      "sample_rate": 48000,
+      "samples": 51413,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/g2roar_2.wav",
+      "key": "g2roar",
+      "sample_rate": 48000,
+      "samples": 51413,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/g2creak_0.wav",
+      "key": "g2creak",
+      "sample_rate": 48000,
+      "samples": 15835,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/g2creak_1.wav",
+      "key": "g2creak",
+      "sample_rate": 48000,
+      "samples": 15835,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/g2creak_2.wav",
+      "key": "g2creak",
+      "sample_rate": 48000,
+      "samples": 15835,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/g2block_0.wav",
+      "key": "g2block",
+      "sample_rate": 48000,
+      "samples": 9648,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/g2block_1.wav",
+      "key": "g2block",
+      "sample_rate": 48000,
+      "samples": 9648,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/g2block_2.wav",
+      "key": "g2block",
+      "sample_rate": 48000,
+      "samples": 9648,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/g2thud_0.wav",
+      "key": "g2thud",
+      "sample_rate": 48000,
+      "samples": 15723,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/g2thud_1.wav",
+      "key": "g2thud",
+      "sample_rate": 48000,
+      "samples": 15723,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/g2thud_2.wav",
+      "key": "g2thud",
+      "sample_rate": 48000,
+      "samples": 15723,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/g2crowd_0.wav",
+      "key": "g2crowd",
+      "sample_rate": 48000,
+      "samples": 84918,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/g2crowd_1.wav",
+      "key": "g2crowd",
+      "sample_rate": 48000,
+      "samples": 84918,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/g2crowd_2.wav",
+      "key": "g2crowd",
+      "sample_rate": 48000,
+      "samples": 84918,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/mobdie_0.wav",
+      "key": "mobdie",
+      "sample_rate": 48000,
+      "samples": 16853,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/mobdie_1.wav",
+      "key": "mobdie",
+      "sample_rate": 48000,
+      "samples": 16853,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/mobdie_2.wav",
+      "key": "mobdie",
+      "sample_rate": 48000,
+      "samples": 16853,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/barrel_0.wav",
+      "key": "barrel",
+      "sample_rate": 48000,
+      "samples": 10128,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/barrel_1.wav",
+      "key": "barrel",
+      "sample_rate": 48000,
+      "samples": 10128,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/barrel_2.wav",
+      "key": "barrel",
+      "sample_rate": 48000,
+      "samples": 10128,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/pickup_0.wav",
+      "key": "pickup",
+      "sample_rate": 48000,
+      "samples": 14450,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/pickup_1.wav",
+      "key": "pickup",
+      "sample_rate": 48000,
+      "samples": 14450,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/pickup_2.wav",
+      "key": "pickup",
+      "sample_rate": 48000,
+      "samples": 14450,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/mcharge_0.wav",
+      "key": "mcharge",
+      "sample_rate": 48000,
+      "samples": 25008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/mcharge_1.wav",
+      "key": "mcharge",
+      "sample_rate": 48000,
+      "samples": 25008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/mcharge_2.wav",
+      "key": "mcharge",
+      "sample_rate": 48000,
+      "samples": 25008,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    },
+    {
+      "file": "port_assets/audio/sfx/bolt_0.wav",
+      "key": "bolt",
+      "sample_rate": 48000,
+      "samples": 48048,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 0
+    },
+    {
+      "file": "port_assets/audio/sfx/bolt_1.wav",
+      "key": "bolt",
+      "sample_rate": 48000,
+      "samples": 48048,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 1
+    },
+    {
+      "file": "port_assets/audio/sfx/bolt_2.wav",
+      "key": "bolt",
+      "sample_rate": 48000,
+      "samples": 48048,
+      "source": "audio.js SFX / source setup and gain",
+      "variant": 2
+    }
+  ]
+}

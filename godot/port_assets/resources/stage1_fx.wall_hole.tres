@@ -1,0 +1,46 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_5q0ev"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_fx.wall_hole.file__cd00bbc5b8df.webp" id="2_sluwj"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_sluwj")
+region = Rect2(0, 0, 374, 172)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_5q0ev")
+source_id = "stage1_fx.wall_hole"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(187, 86)
+frame_scales = PackedFloat64Array(0.66667)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"additive": false,
+"catalog": "STAGE1_FX",
+"clip": "wall_hole"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.wall_hole.file__cd00bbc5b8df.webp",
+"pivot": [187.0, 86.0],
+"rect": [0.0, 0.0, 374.0, 172.0],
+"scale": 0.66667,
+"source": {
+"anchor": [187.0, 86.0],
+"atlas": [0.0, 0.0, 374.0, 172.0]
+},
+"source_image": "assets/runtime/cd00bbc5b8df3c908043396b.webp"
+}])

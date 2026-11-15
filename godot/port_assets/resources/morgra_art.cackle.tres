@@ -1,0 +1,123 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_2t2ks"]
+[ext_resource type="Texture2D" path="res://port_assets/images/morgra_art.atlas__207748d1db71.png" id="2_g6hgy"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_g6hgy")
+region = Rect2(1389, 1163, 192, 218)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_g6hgy")
+region = Rect2(1170, 1163, 217, 219)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_g6hgy")
+region = Rect2(2213, 1163, 234, 217)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_g6hgy")
+region = Rect2(1326, 932, 215, 221)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_g6hgy")
+region = Rect2(1543, 932, 173, 221)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_2t2ks")
+source_id = "morgra_art.cackle"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(65, 216, 88, 218, 103, 216, 107, 220, 75, 219)
+frame_scales = PackedFloat64Array(0.4675, 0.4675, 0.4675, 0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0)
+metadata = {
+"catalog": "MORGRA_ART",
+"clip": "cackle",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [65.0, 216.0],
+"rect": [1389.0, 1163.0, 192.0, 218.0],
+"scale": 0.4675,
+"source": {
+"anchor": [35.75, 118.8],
+"atlas": [1389.0, 1163.0, 192.0, 218.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [88.0, 218.0],
+"rect": [1170.0, 1163.0, 217.0, 219.0],
+"scale": 0.4675,
+"source": {
+"anchor": [48.4, 119.9],
+"atlas": [1170.0, 1163.0, 217.0, 219.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [103.0, 216.0],
+"rect": [2213.0, 1163.0, 234.0, 217.0],
+"scale": 0.4675,
+"source": {
+"anchor": [56.65, 118.8],
+"atlas": [2213.0, 1163.0, 234.0, 217.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [107.0, 220.0],
+"rect": [1326.0, 932.0, 215.0, 221.0],
+"scale": 0.4675,
+"source": {
+"anchor": [58.85, 121.0],
+"atlas": [1326.0, 932.0, 215.0, 221.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [75.0, 219.0],
+"rect": [1543.0, 932.0, 173.0, 221.0],
+"scale": 0.4675,
+"source": {
+"anchor": [41.25, 120.45],
+"atlas": [1543.0, 932.0, 173.0, 221.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}])

@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_lvi1n"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_axe_knockdown_0.png" id="2_cleew"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_cleew")
+region = Rect2(1, 1, 146, 178)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_cleew")
+region = Rect2(149, 1, 187, 178)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_cleew")
+region = Rect2(338, 1, 192, 162)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_cleew")
+region = Rect2(532, 1, 190, 144)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_cleew")
+region = Rect2(724, 1, 187, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_cleew")
+region = Rect2(913, 1, 182, 121)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_cleew")
+region = Rect2(1097, 1, 192, 106)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_cleew")
+region = Rect2(1291, 1, 175, 80)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_cleew")
+region = Rect2(1468, 1, 182, 70)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_cleew")
+region = Rect2(1652, 1, 184, 62)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_lvi1n")
+source_id = "stage1_presented_axe_knockdown"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(73.8, 177.6, 68.4, 177.6, 69, 162, 67.8, 144, 67.8, 128.4, 88.8, 121.2, 112.8, 105.6, 91.2, 80.4, 89.4, 69.6, 89.4, 62.4)
+frame_scales = PackedFloat64Array(0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "knockdown",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "axe"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "7b2aa0dd29373c52856d0e93d761ed7476b58c4a97722c42315a0a70b41fd84b",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [73.8, 177.6],
+"rect": [1.0, 1.0, 146.0, 178.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "7512bebea10e56f83709d57b8da9a39c7dab8ff0574a8334a8c0ff886670ff2d",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [68.4, 177.6],
+"rect": [149.0, 1.0, 187.0, 178.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "79f6fecb96304020dc962a4c96ab83e52107a75ff840c667969a64fa7610f270",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [69.0, 162.0],
+"rect": [338.0, 1.0, 192.0, 162.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "35287261b237c0244281b4984ebe62abe251e9000aca5dd5ac4c2694cb897820",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [67.8, 144.0],
+"rect": [532.0, 1.0, 190.0, 144.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "0714d9f08162d1d7aa815da0c6c32e8e0a7e4ba854eb386235bd2963000e8b57",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [67.8, 128.4],
+"rect": [724.0, 1.0, 187.0, 128.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "6d25d5d8d3d8e9b5886d0668361902df192c22cec75bb19f79caa63247f68ae0",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [88.8, 121.2],
+"rect": [913.0, 1.0, 182.0, 121.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "a0095734fbfc118c7276ca8370d479a38bf558ff2dccfb54c8d9e7babda305fb",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [112.8, 105.6],
+"rect": [1097.0, 1.0, 192.0, 106.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "909081c91e12b63fb5312a065c5eafc7a045d5eccd3080e1fa7ca0f4405f71ee",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [91.2, 80.4],
+"rect": [1291.0, 1.0, 175.0, 80.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "df3f6f01e8f96c2613c4f1804e604d2ed28eefc7e6b1f535860e88affdb40a00",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [89.4, 69.6],
+"rect": [1468.0, 1.0, 182.0, 70.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "2a09c02bbc4cbf4aef2c9db1911f0776942095a16a85e8152461dc7588c6fdc0",
+"image": "port_assets/baked/stage1_presented_axe_knockdown_0.png",
+"page": 0.0,
+"pivot": [89.4, 62.4],
+"rect": [1652.0, 1.0, 184.0, 62.0],
+"scale": 0.55325,
+"source": {}
+}])

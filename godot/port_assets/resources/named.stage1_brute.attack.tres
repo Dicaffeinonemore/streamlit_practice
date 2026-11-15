@@ -1,0 +1,147 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_0vji6"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_1jxur"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_1jxur")
+region = Rect2(0, 6734, 266, 223)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_1jxur")
+region = Rect2(268, 6734, 290, 211)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_1jxur")
+region = Rect2(560, 6734, 384, 206)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_1jxur")
+region = Rect2(946, 6734, 370, 200)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_1jxur")
+region = Rect2(1318, 6734, 319, 211)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_0vji6")
+source_id = "named.stage1_brute.attack"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(153, 220, 130, 206, 94, 205, 95, 198, 104, 207)
+frame_scales = PackedFloat64Array(0.53, 0.53, 0.53, 0.53, 0.53)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "attack",
+"role": "stage1_brute"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [153.0, 220.0],
+"rect": [0.0, 6734.0, 266.0, 223.0],
+"scale": 0.53,
+"source": {
+"anchor": [153.0, 220.0],
+"atlas": [0.0, 6734.0, 266.0, 223.0],
+"edgeFragmentPixels": 6632.0,
+"id": 471.0,
+"rect": [5.0, 455.0, 271.0, 678.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [130.0, 206.0],
+"rect": [268.0, 6734.0, 290.0, 211.0],
+"scale": 0.53,
+"source": {
+"anchor": [130.0, 206.0],
+"atlas": [268.0, 6734.0, 290.0, 211.0],
+"edgeFragmentPixels": 5710.0,
+"id": 472.0,
+"rect": [280.0, 469.0, 570.0, 680.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [94.0, 205.0],
+"rect": [560.0, 6734.0, 384.0, 206.0],
+"scale": 0.53,
+"source": {
+"anchor": [94.0, 205.0],
+"atlas": [560.0, 6734.0, 384.0, 206.0],
+"edgeFragmentPixels": 10529.0,
+"id": 473.0,
+"rect": [586.0, 470.0, 970.0, 676.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [95.0, 198.0],
+"rect": [946.0, 6734.0, 370.0, 200.0],
+"scale": 0.53,
+"source": {
+"anchor": [95.0, 198.0],
+"atlas": [946.0, 6734.0, 370.0, 200.0],
+"edgeFragmentPixels": 6421.0,
+"id": 474.0,
+"rect": [970.0, 477.0, 1340.0, 677.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [104.0, 207.0],
+"rect": [1318.0, 6734.0, 319.0, 211.0],
+"scale": 0.53,
+"source": {
+"anchor": [104.0, 207.0],
+"atlas": [1318.0, 6734.0, 319.0, 211.0],
+"edgeFragmentPixels": 6712.0,
+"id": 475.0,
+"rect": [1341.0, 468.0, 1660.0, 679.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

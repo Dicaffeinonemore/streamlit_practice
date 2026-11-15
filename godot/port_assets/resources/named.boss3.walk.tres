@@ -1,0 +1,51 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_qxohk"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_030uc"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_030uc")
+region = Rect2(981, 1790, 90, 110)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_qxohk")
+source_id = "named.boss3.walk"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(52, 104)
+frame_scales = PackedFloat64Array(1.1)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "walk",
+"role": "boss3"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [52.0, 104.0],
+"rect": [981.0, 1790.0, 90.0, 110.0],
+"scale": 1.1,
+"source": {
+"anchor": [52.0, 104.0],
+"atlas": [981.0, 1790.0, 90.0, 110.0],
+"edgeFragmentPixels": 0.0,
+"id": 128.0,
+"rect": [673.0, 0.0, 763.0, 110.0],
+"scale": 1.1,
+"source": "gold"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

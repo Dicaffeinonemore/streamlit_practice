@@ -1,0 +1,65 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_0lhpy"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_fx.rubble_pile.file__26de22f2db2a.webp" id="2_xo3lt"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_xo3lt")
+region = Rect2(0, 0, 108, 68)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_xo3lt")
+region = Rect2(108, 0, 108, 68)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_0lhpy")
+source_id = "stage1_fx.rubble_pile"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(54, 68, 54, 68)
+frame_scales = PackedFloat64Array(0.66667, 0.66667)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"additive": false,
+"catalog": "STAGE1_FX",
+"clip": "rubble_pile"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.rubble_pile.file__26de22f2db2a.webp",
+"pivot": [54.0, 68.0],
+"rect": [0.0, 0.0, 108.0, 68.0],
+"scale": 0.66667,
+"source": {
+"anchor": [54.0, 68.0],
+"atlas": [0.0, 0.0, 108.0, 68.0]
+},
+"source_image": "assets/runtime/26de22f2db2ad95f8a6e414b.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_fx.rubble_pile.file__26de22f2db2a.webp",
+"pivot": [54.0, 68.0],
+"rect": [108.0, 0.0, 108.0, 68.0],
+"scale": 0.66667,
+"source": {
+"anchor": [54.0, 68.0],
+"atlas": [108.0, 0.0, 108.0, 68.0]
+},
+"source_image": "assets/runtime/26de22f2db2ad95f8a6e414b.webp"
+}])

@@ -1,0 +1,713 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_sq5v7"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp" id="2_72fmj"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(0, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(70, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(140, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(210, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(280, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(350, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(420, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(490, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(560, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(630, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(700, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(770, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(840, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(910, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(980, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1050, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_16"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1120, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_17"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1190, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_18"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1260, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_19"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1330, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_20"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1400, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_21"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1470, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_22"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1540, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_23"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1610, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_24"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1680, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_25"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1750, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_26"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1820, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_27"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1890, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_28"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(1960, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_29"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2030, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_30"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2100, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_31"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2170, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_32"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2240, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_33"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2310, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_34"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2380, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_35"]
+atlas = ExtResource("2_72fmj")
+region = Rect2(2450, 0, 70, 24)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 83.333336,
+"texture": SubResource("frame_0")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_1")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_2")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_3")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_4")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_5")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_6")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_7")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_8")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_9")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_10")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_11")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_12")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_13")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_14")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_15")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_16")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_17")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_18")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_19")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_20")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_21")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_22")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_23")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_24")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_25")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_26")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_27")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_28")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_29")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_30")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_31")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_32")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_33")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_34")
+}, {
+"duration": 83.333336,
+"texture": SubResource("frame_35")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_sq5v7")
+source_id = "stage1_background.street.layer_6"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+frame_scales = PackedFloat64Array(0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107, 0.74107)
+duration_ms = PackedFloat64Array(83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333, 83.33333333333333)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"catalog": "STAGE1_BG",
+"layer": 6.0,
+"section": "street",
+"source_x": 1366.0,
+"source_y": 534.0
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [0.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [0.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [70.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [70.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [140.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [140.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [210.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [210.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [280.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [280.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [350.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [350.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [420.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [420.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [490.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [490.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [560.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [560.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [630.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [630.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [700.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [700.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [770.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [770.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [840.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [840.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [910.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [910.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [980.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [980.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1050.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1050.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1120.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1120.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1190.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1190.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1260.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1260.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1330.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1330.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1400.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1400.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1470.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1470.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1540.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1540.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1610.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1610.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1680.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1680.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1750.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1750.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1820.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1820.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1890.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1890.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [1960.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [1960.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2030.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2030.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2100.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2100.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2170.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2170.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2240.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2240.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2310.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2310.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2380.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2380.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}, {
+"duration_ms": 83.33333333333333,
+"image": "port_assets/images/stage1_bg.street.anims.6.file__b7123fd9bf8a.webp",
+"pivot": [0.0, 0.0],
+"rect": [2450.0, 0.0, 70.0, 24.0],
+"scale": 0.74107,
+"source": {
+"anchor": [0.0, 0.0],
+"atlas": [2450.0, 0.0, 70.0, 24.0]
+},
+"source_image": "assets/runtime/b7123fd9bf8af17cba2c96c4.webp"
+}])

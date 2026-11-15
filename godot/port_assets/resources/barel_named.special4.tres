@@ -1,0 +1,216 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_h6ff6"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png" id="2_bglit"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_bglit")
+region = Rect2(0, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_bglit")
+region = Rect2(640, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_bglit")
+region = Rect2(1280, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_bglit")
+region = Rect2(1920, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_bglit")
+region = Rect2(2560, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_bglit")
+region = Rect2(0, 640, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_bglit")
+region = Rect2(640, 640, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_bglit")
+region = Rect2(1280, 640, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_bglit")
+region = Rect2(1920, 640, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_bglit")
+region = Rect2(2560, 640, 640, 640)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_h6ff6")
+source_id = "barel_named.special4"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(320, 580, 320, 580, 320, 580, 320, 580, 320, 580, 320, 580, 320, 580, 320, 580, 320, 580, 320, 580)
+frame_scales = PackedFloat64Array(0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765, 0.3758823529411765)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "BAREL_NAMED_MOTION_DATA",
+"clip": "special4"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [0.0, 0.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [0.0, 0.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [640.0, 0.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [640.0, 0.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [1280.0, 0.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [1280.0, 0.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [1920.0, 0.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [1920.0, 0.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [2560.0, 0.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [2560.0, 0.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [0.0, 640.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [0.0, 640.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [640.0, 640.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [640.0, 640.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [1280.0, 640.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [1280.0, 640.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [1920.0, 640.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [1920.0, 640.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_named_motion_data.special4.path__e7483fb857b3.png",
+"pivot": [320.0, 580.0],
+"rect": [2560.0, 640.0, 640.0, 640.0],
+"scale": 0.3758823529411765,
+"source": {
+"anchor": [320.0, 580.0],
+"atlas": [2560.0, 640.0, 640.0, 640.0]
+},
+"source_image": "assets/runtime/e7483fb857b35ef3d825a177.png"
+}])

@@ -1,0 +1,228 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_dpoio"]
+[ext_resource type="Texture2D" path="res://port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp" id="2_seeoe"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(793, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(949, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(1105, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(1261, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(1417, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(1573, 422, 153, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(1728, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(1884, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(2040, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_seeoe")
+region = Rect2(2196, 422, 154, 132)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_dpoio")
+source_id = "sovereign_art.fx_helm_beam"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(0, 66, 0, 66, 0, 66, 0, 66, 0, 66, 0, 66, 0, 66, 0, 66, 0, 66, 0, 66)
+frame_scales = PackedFloat64Array(0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "SOVEREIGN_ART",
+"clip": "fx_helm_beam",
+"source_scale": null,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [793.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [793.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [949.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [949.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [1105.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [1105.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [1261.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [1261.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [1417.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [1417.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [1573.0, 422.0, 153.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [1573.0, 422.0, 153.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [1728.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [1728.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [1884.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [1884.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [2040.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [2040.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/sovereign_art.sheets.2__fc59b1365902.webp",
+"pivot": [0.0, 66.0],
+"rect": [2196.0, 422.0, 154.0, 132.0],
+"scale": 0.6666666666666666,
+"source": {
+"anchor": [0.0, 66.0],
+"atlas": [2196.0, 422.0, 154.0, 132.0],
+"sheet": 2.0
+},
+"source_image": "assets/runtime/fc59b1365902939b3296033a.webp"
+}])

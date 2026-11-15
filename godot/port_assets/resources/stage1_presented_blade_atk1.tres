@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_h3peo"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_blade_atk1_0.png" id="2_whv6u"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(1, 1, 143, 158)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(146, 1, 156, 149)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(304, 1, 185, 154)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(491, 1, 153, 205)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(646, 1, 172, 148)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(820, 1, 164, 150)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(986, 1, 170, 140)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(1158, 1, 170, 136)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(1330, 1, 170, 135)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_whv6u")
+region = Rect2(1502, 1, 161, 137)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 116.666664,
+"texture": SubResource("frame_0")
+}, {
+"duration": 116.666664,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 50.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_h3peo")
+source_id = "stage1_presented_blade_atk1"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(70.9, 153.5, 84.1, 143.9, 97.9, 148.1, 72.4, 199.1, 89.2, 142.7, 68.4, 150, 77.7, 140.4, 81, 136.2, 74.1, 135, 67.2, 137.4)
+frame_scales = PackedFloat64Array(0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346)
+duration_ms = PackedFloat64Array(116.66666666666669, 116.66666666666669, 100, 50, 50, 50, 50, 50, 50, 50)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"clip": "atk1",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "blade"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 116.66666666666669,
+"expected_rgba_sha256": "ef9e5f3771007de1ca427e82d87b80438331f0304ec34e84f403a6cbd84de821",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [70.9, 153.5],
+"rect": [1.0, 1.0, 143.0, 158.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 116.66666666666669,
+"expected_rgba_sha256": "303533156c5469ec22c913f98e33da531f7b79f29543aaad075e396d5325f1bf",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [84.1, 143.9],
+"rect": [146.0, 1.0, 156.0, 149.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 100.0,
+"expected_rgba_sha256": "a03b704119f54d6342f86e81e6b7031c1a9b15b572a4b81800377fa39fed2418",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [97.9, 148.1],
+"rect": [304.0, 1.0, 185.0, 154.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "985b10e2ebb3aaf8d92771cd589b1a948dbec02bf7441378fda637f6e9ffec5f",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [72.4, 199.1],
+"rect": [491.0, 1.0, 153.0, 205.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "b60932a62814b59d1b126d0f71be37be95e458b6d90ad3f92df476033eac4b24",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [89.2, 142.7],
+"rect": [646.0, 1.0, 172.0, 148.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "5b2567e484b512fb9974cc52e45411e41a1013c31a056ccc18bb078ed1a4afe7",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [68.4, 150.0],
+"rect": [820.0, 1.0, 164.0, 150.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "0a3b6ae694f19271337ea90d363e8dcb3a5dd8421181d91f545c0c0a70b587f9",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [77.7, 140.4],
+"rect": [986.0, 1.0, 170.0, 140.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "9fac550bcc4bad5bea8152ea4657b7cd42cbc07e65875aecad9ef5b6f886ac28",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [81.0, 136.2],
+"rect": [1158.0, 1.0, 170.0, 136.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "04f3a8a5a78bb87d50a7bfa36180656e720c10a623fa2520cd3f20927f896040",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [74.1, 135.0],
+"rect": [1330.0, 1.0, 170.0, 135.0],
+"scale": 0.57346,
+"source": {}
+}, {
+"duration_ms": 50.0,
+"expected_rgba_sha256": "fe7dc13aee16cf341dc3da9c21e823f8055b646a285702bef375faf7f987854d",
+"image": "port_assets/baked/stage1_presented_blade_atk1_0.png",
+"page": 0.0,
+"pivot": [67.2, 137.4],
+"rect": [1502.0, 1.0, 161.0, 137.0],
+"scale": 0.57346,
+"source": {}
+}])

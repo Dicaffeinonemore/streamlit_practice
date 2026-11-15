@@ -1,0 +1,51 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_yvlim"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_rulqx"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_rulqx")
+region = Rect2(202, 6291, 342, 208)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_yvlim")
+source_id = "named.player.impact"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(160, 194)
+frame_scales = PackedFloat64Array(0.5)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "impact",
+"role": "player"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [160.0, 194.0],
+"rect": [202.0, 6291.0, 342.0, 208.0],
+"scale": 0.5,
+"source": {
+"anchor": [160.0, 194.0],
+"atlas": [202.0, 6291.0, 342.0, 208.0],
+"edgeFragmentPixels": 9.0,
+"id": 456.0,
+"rect": [895.0, 566.0, 1237.0, 774.0],
+"scale": 0.5,
+"source": "player_moves"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

@@ -1,0 +1,405 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_gb65s"]
+[ext_resource type="Texture2D" path="res://port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png" id="2_wv6nd"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(0, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(448, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(896, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(1344, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(1792, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(2240, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(2688, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(3136, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(3584, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_wv6nd")
+region = Rect2(4032, 0, 448, 448)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 65.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 65.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 1,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_gb65s")
+source_id = "aseprite_barel-grabbed-10_barel-grabbed-10_grabbed"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(224, 416, 224, 416, 224, 414, 224, 414, 224, 416, 224, 416, 224, 414, 224, 414, 224, 416, 224, 416)
+frame_scales = PackedFloat64Array(0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541, 0.5819672131147541)
+duration_ms = PackedFloat64Array(65, 65, 65, 65, 65, 65, 65, 65, 65, 65)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"loop": true,
+"metadata": {
+"alignment": {
+"newBodyHeight": 244.0,
+"referenceLegacyHeight": 142.0,
+"worldOffsetsApplied": false
+},
+"anchor": [224.0, 416.0],
+"animationId": "grabbed",
+"animationType": "loop",
+"character": "barel",
+"clip": "grabbed",
+"clock": {
+"legacyPeriodMs": 650.0,
+"source": "player.t * MS"
+},
+"durationMs": 650.0,
+"expectedDurationsMs": [65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0],
+"frameOffsets": [[0.0, 0.0], [0.0, 0.0], [0.0, 2.0], [0.0, 2.0], [0.0, 0.0], [0.0, 0.0], [0.0, 2.0], [0.0, 2.0], [0.0, 0.0], [0.0, 0.0]],
+"loop": true,
+"loopDurationMs": 520.0,
+"loopFromFrame": 2.0,
+"renderScale": 0.5819672131147541,
+"schemaVersion": 1.0,
+"source": {
+"file": "source/original.png",
+"pixelClones": false,
+"redrawn": false,
+"resampled": false,
+"sha256": "ac160cbc2c3f4d358a1167c449ff1a8712520552760cb2a5558e5f5e808cd500"
+},
+"sprite": "../exports/barel-grabbed-10/barel-grabbed-10.json"
+},
+"source": "assets/aseprite/barel-grabbed-10/barel-grabbed-10.animation.json",
+"tag": {
+"color": "#000000ff",
+"direction": "forward",
+"from": 0.0,
+"name": "grabbed",
+"to": 9.0
+}
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 416.0],
+"rect": [0.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 416.0],
+"atlas": [0.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 0.aseprite",
+"index": 0.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 416.0],
+"rect": [448.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 416.0],
+"atlas": [448.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 1.aseprite",
+"index": 1.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 414.0],
+"rect": [896.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 414.0],
+"atlas": [896.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 2.aseprite",
+"index": 2.0,
+"renderOffset": [0.0, 2.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 414.0],
+"rect": [1344.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 414.0],
+"atlas": [1344.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 3.aseprite",
+"index": 3.0,
+"renderOffset": [0.0, 2.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 416.0],
+"rect": [1792.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 416.0],
+"atlas": [1792.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 4.aseprite",
+"index": 4.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 416.0],
+"rect": [2240.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 416.0],
+"atlas": [2240.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 5.aseprite",
+"index": 5.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 414.0],
+"rect": [2688.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 414.0],
+"atlas": [2688.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 6.aseprite",
+"index": 6.0,
+"renderOffset": [0.0, 2.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 414.0],
+"rect": [3136.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 414.0],
+"atlas": [3136.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 7.aseprite",
+"index": 7.0,
+"renderOffset": [0.0, 2.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 416.0],
+"rect": [3584.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 416.0],
+"atlas": [3584.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 8.aseprite",
+"index": 8.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 65.0,
+"image": "port_assets/aseprite/barel-grabbed-10_barel-grabbed-10.png",
+"pivot": [224.0, 416.0],
+"rect": [4032.0, 0.0, 448.0, 448.0],
+"scale": 0.5819672131147541,
+"source": {
+"anchor": [224.0, 416.0],
+"atlas": [4032.0, 0.0, 448.0, 448.0],
+"baseAnchor": [224.0, 416.0],
+"duration": 65.0,
+"filename": "barel-grabbed-10 9.aseprite",
+"index": 9.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 448.0,
+"w": 448.0
+},
+"spriteSourceSize": {
+"h": 448.0,
+"w": 448.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}])

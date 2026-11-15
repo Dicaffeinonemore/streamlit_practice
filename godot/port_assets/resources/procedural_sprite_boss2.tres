@@ -1,0 +1,60 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_q82wg"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/procedural_sprite_boss2_0.png" id="2_1m1li"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_1m1li")
+region = Rect2(1, 1, 62, 76)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_1m1li")
+region = Rect2(65, 1, 62, 76)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_q82wg")
+source_id = "procedural_sprite_boss2"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(28, 70, 28, 70)
+frame_scales = PackedFloat64Array(2, 2)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"coverage": "all HERO_FRAMES for player; canonical 0/1 for other sprite bodies; posed motion separately",
+"source": "sprites.js / MO.spriteShaded"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "f0a5032f2e8d4f805c8788da8282639dc2a5b44b05b66b86daa697e2629ad371",
+"image": "port_assets/baked/procedural_sprite_boss2_0.png",
+"page": 0.0,
+"pivot": [28.0, 70.0],
+"rect": [1.0, 1.0, 62.0, 76.0],
+"scale": 2.0,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "d88673d10959eb8a04f82fd05781212b7de37fad57f7927e42e10d90c9780c59",
+"image": "port_assets/baked/procedural_sprite_boss2_0.png",
+"page": 0.0,
+"pivot": [28.0, 70.0],
+"rect": [65.0, 1.0, 62.0, 76.0],
+"scale": 2.0,
+"source": {}
+}])

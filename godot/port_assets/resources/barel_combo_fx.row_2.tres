@@ -1,0 +1,145 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_kots7"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_combo_fx_art.image__d801c4edd330.png" id="2_iivjc"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_iivjc")
+region = Rect2(0, 570, 220, 330)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_iivjc")
+region = Rect2(220, 570, 270, 330)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_iivjc")
+region = Rect2(490, 570, 310, 330)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_iivjc")
+region = Rect2(800, 570, 285, 330)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_iivjc")
+region = Rect2(1085, 570, 265, 330)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_iivjc")
+region = Rect2(1350, 570, 250, 330)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_kots7")
+source_id = "barel_combo_fx.row_2"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(133, 145, 180, 145, 177, 145, 133, 145, 115, 145, 117, 145)
+frame_scales = PackedFloat64Array(0.42, 0.42, 0.42, 0.42, 0.42, 0.42)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"additive": true,
+"catalog": "BAREL_COMBO_FX_ART",
+"dx": 48.0,
+"flip": true,
+"frame_selection": "BarelComboFx.frameFor",
+"height": 50.0,
+"row": 2.0
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_combo_fx_art.image__d801c4edd330.png",
+"pivot": [133.0, 145.0],
+"rect": [0.0, 570.0, 220.0, 330.0],
+"scale": 0.42,
+"source": {
+"anchor": [133.0, 145.0],
+"atlas": [0.0, 570.0, 220.0, 330.0]
+},
+"source_image": "assets/runtime/d801c4edd3307fa266577b8e.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_combo_fx_art.image__d801c4edd330.png",
+"pivot": [180.0, 145.0],
+"rect": [220.0, 570.0, 270.0, 330.0],
+"scale": 0.42,
+"source": {
+"anchor": [180.0, 145.0],
+"atlas": [220.0, 570.0, 270.0, 330.0]
+},
+"source_image": "assets/runtime/d801c4edd3307fa266577b8e.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_combo_fx_art.image__d801c4edd330.png",
+"pivot": [177.0, 145.0],
+"rect": [490.0, 570.0, 310.0, 330.0],
+"scale": 0.42,
+"source": {
+"anchor": [177.0, 145.0],
+"atlas": [490.0, 570.0, 310.0, 330.0]
+},
+"source_image": "assets/runtime/d801c4edd3307fa266577b8e.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_combo_fx_art.image__d801c4edd330.png",
+"pivot": [133.0, 145.0],
+"rect": [800.0, 570.0, 285.0, 330.0],
+"scale": 0.42,
+"source": {
+"anchor": [133.0, 145.0],
+"atlas": [800.0, 570.0, 285.0, 330.0]
+},
+"source_image": "assets/runtime/d801c4edd3307fa266577b8e.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_combo_fx_art.image__d801c4edd330.png",
+"pivot": [115.0, 145.0],
+"rect": [1085.0, 570.0, 265.0, 330.0],
+"scale": 0.42,
+"source": {
+"anchor": [115.0, 145.0],
+"atlas": [1085.0, 570.0, 265.0, 330.0]
+},
+"source_image": "assets/runtime/d801c4edd3307fa266577b8e.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_combo_fx_art.image__d801c4edd330.png",
+"pivot": [117.0, 145.0],
+"rect": [1350.0, 570.0, 250.0, 330.0],
+"scale": 0.42,
+"source": {
+"anchor": [117.0, 145.0],
+"atlas": [1350.0, 570.0, 250.0, 330.0]
+},
+"source_image": "assets/runtime/d801c4edd3307fa266577b8e.png"
+}])

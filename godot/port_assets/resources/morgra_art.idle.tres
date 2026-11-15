@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_vkx85"]
+[ext_resource type="Texture2D" path="res://port_assets/images/morgra_art.atlas__207748d1db71.png" id="2_vo7am"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_vo7am")
+region = Rect2(387, 1163, 169, 219)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_vo7am")
+region = Rect2(558, 1163, 176, 219)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_vo7am")
+region = Rect2(1718, 932, 179, 220)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_vo7am")
+region = Rect2(1899, 932, 175, 220)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_vo7am")
+region = Rect2(2076, 932, 175, 220)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_vo7am")
+region = Rect2(2253, 932, 172, 220)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_vkx85")
+source_id = "morgra_art.idle"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(71, 217, 75, 218, 78, 218, 76, 218, 75, 218, 73, 217)
+frame_scales = PackedFloat64Array(0.4675, 0.4675, 0.4675, 0.4675, 0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "MORGRA_ART",
+"clip": "idle",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [70.99999999999999, 216.99999999999997],
+"rect": [387.0, 1163.0, 169.0, 219.0],
+"scale": 0.4675,
+"source": {
+"anchor": [39.05, 119.35],
+"atlas": [387.0, 1163.0, 169.0, 219.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [75.0, 218.0],
+"rect": [558.0, 1163.0, 176.0, 219.0],
+"scale": 0.4675,
+"source": {
+"anchor": [41.25, 119.9],
+"atlas": [558.0, 1163.0, 176.0, 219.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [78.0, 218.0],
+"rect": [1718.0, 932.0, 179.0, 220.0],
+"scale": 0.4675,
+"source": {
+"anchor": [42.9, 119.9],
+"atlas": [1718.0, 932.0, 179.0, 220.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [75.99999999999999, 218.0],
+"rect": [1899.0, 932.0, 175.0, 220.0],
+"scale": 0.4675,
+"source": {
+"anchor": [41.8, 119.9],
+"atlas": [1899.0, 932.0, 175.0, 220.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [75.0, 218.0],
+"rect": [2076.0, 932.0, 175.0, 220.0],
+"scale": 0.4675,
+"source": {
+"anchor": [41.25, 119.9],
+"atlas": [2076.0, 932.0, 175.0, 220.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [73.0, 216.99999999999997],
+"rect": [2253.0, 932.0, 172.0, 220.0],
+"scale": 0.4675,
+"source": {
+"anchor": [40.15, 119.35],
+"atlas": [2253.0, 932.0, 172.0, 220.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}])

@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_fd8pj"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_6tk4l"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_6tk4l")
+region = Rect2(1639, 6734, 277, 229)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_6tk4l")
+region = Rect2(0, 6965, 260, 218)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_fd8pj")
+source_id = "named.stage1_brute.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(127, 215, 113, 215)
+frame_scales = PackedFloat64Array(0.53, 0.53)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "stage1_brute"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [127.0, 215.0],
+"rect": [1639.0, 6734.0, 277.0, 229.0],
+"scale": 0.53,
+"source": {
+"anchor": [127.0, 215.0],
+"atlas": [1639.0, 6734.0, 277.0, 229.0],
+"edgeFragmentPixels": 5903.0,
+"id": 476.0,
+"rect": [28.0, 680.0, 305.0, 909.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [113.0, 215.0],
+"rect": [0.0, 6965.0, 260.0, 218.0],
+"scale": 0.53,
+"source": {
+"anchor": [113.0, 215.0],
+"atlas": [0.0, 6965.0, 260.0, 218.0],
+"edgeFragmentPixels": 5479.0,
+"id": 477.0,
+"rect": [305.0, 680.0, 565.0, 898.0],
+"scale": 0.53,
+"source": "heavy1"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_uw1n5"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_amiqp"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_amiqp")
+region = Rect2(175, 3216, 78, 120)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_amiqp")
+region = Rect2(255, 3216, 81, 118)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_uw1n5")
+source_id = "named.stage2_grunt.idle"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(44, 117, 45, 115)
+frame_scales = PackedFloat64Array(0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "idle",
+"role": "stage2_grunt"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [44.0, 117.0],
+"rect": [175.0, 3216.0, 78.0, 120.0],
+"scale": 0.72,
+"source": {
+"anchor": [44.0, 117.0],
+"atlas": [175.0, 3216.0, 78.0, 120.0],
+"edgeFragmentPixels": 1391.0,
+"id": 260.0,
+"rect": [226.0, 185.0, 304.0, 305.0],
+"scale": 0.72,
+"source": "soldiers2"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [45.0, 115.0],
+"rect": [255.0, 3216.0, 81.0, 118.0],
+"scale": 0.72,
+"source": {
+"anchor": [45.0, 115.0],
+"atlas": [255.0, 3216.0, 81.0, 118.0],
+"edgeFragmentPixels": 1298.0,
+"id": 261.0,
+"rect": [305.0, 187.0, 386.0, 305.0],
+"scale": 0.72,
+"source": "soldiers2"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

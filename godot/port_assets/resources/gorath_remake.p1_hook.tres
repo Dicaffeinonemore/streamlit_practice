@@ -1,0 +1,388 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_eu2wd"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath2_art.pages.1__fc603148f359.webp" id="2_h8dig"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath2_art.pages.0__1f5dc7881a42.webp" id="3_ombiq"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath2_art.pages.2__73967f836cf3.webp" id="4_tiylq"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_h8dig")
+region = Rect2(1212, 1009, 243, 246)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_h8dig")
+region = Rect2(1375, 1504, 269, 244)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_h8dig")
+region = Rect2(970, 509, 300, 248)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("3_ombiq")
+region = Rect2(1445, 384, 239, 326)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("3_ombiq")
+region = Rect2(1581, 0, 216, 352)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("3_ombiq")
+region = Rect2(925, 384, 217, 340)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("3_ombiq")
+region = Rect2(293, 737, 216, 316)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("3_ombiq")
+region = Rect2(511, 737, 218, 309)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(578, 244, 302, 240)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(844, 487, 300, 238)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_10"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(1146, 487, 300, 238)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_11"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(1181, 244, 302, 239)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_12"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(882, 244, 297, 240)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_13"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(1533, 0, 293, 241)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_14"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(0, 244, 289, 241)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_15"]
+atlas = ExtResource("4_tiylq")
+region = Rect2(282, 0, 289, 242)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_10")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_11")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_12")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_13")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_14")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_15")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_eu2wd")
+source_id = "gorath_remake.p1_hook"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(118, 246, 121, 244, 107, 248, 87, 326, 84, 352, 86, 340, 89, 316, 94, 309, 120, 240, 130, 238, 129, 238, 127, 239, 123, 240, 118, 241, 115, 241, 116, 242)
+frame_scales = PackedFloat64Array(0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856, 0.47856)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "GORATH2_ART",
+"clip": "p1_hook"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.1__fc603148f359.webp",
+"pivot": [118.0, 246.0],
+"rect": [1212.0, 1009.0, 243.0, 246.0],
+"scale": 0.47856,
+"source": {
+"anchor": [118.0, 246.0],
+"atlas": [1212.0, 1009.0, 243.0, 246.0],
+"back": [-56.5, 57.4],
+"p": 1.0,
+"tip": [59.3, 30.6]
+},
+"source_image": "assets/runtime/fc603148f35955cc4b8f18e9.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.1__fc603148f359.webp",
+"pivot": [121.0, 244.0],
+"rect": [1375.0, 1504.0, 269.0, 244.0],
+"scale": 0.47856,
+"source": {
+"anchor": [121.0, 244.0],
+"atlas": [1375.0, 1504.0, 269.0, 244.0],
+"back": [-57.9, 56.5],
+"p": 1.0,
+"tip": [70.3, 40.7]
+},
+"source_image": "assets/runtime/fc603148f35955cc4b8f18e9.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.1__fc603148f359.webp",
+"pivot": [107.0, 248.0],
+"rect": [970.0, 509.0, 300.0, 248.0],
+"scale": 0.47856,
+"source": {
+"anchor": [107.0, 248.0],
+"atlas": [970.0, 509.0, 300.0, 248.0],
+"back": [-51.2, 54.6],
+"p": 1.0,
+"tip": [91.9, 83.7]
+},
+"source_image": "assets/runtime/fc603148f35955cc4b8f18e9.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.0__1f5dc7881a42.webp",
+"pivot": [87.0, 326.0],
+"rect": [1445.0, 384.0, 239.0, 326.0],
+"scale": 0.47856,
+"source": {
+"anchor": [87.0, 326.0],
+"atlas": [1445.0, 384.0, 239.0, 326.0],
+"back": [-41.6, 52.2],
+"p": 0.0,
+"tip": [72.3, 147.9]
+},
+"source_image": "assets/runtime/1f5dc7881a4233a08d5d76ff.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.0__1f5dc7881a42.webp",
+"pivot": [84.0, 352.0],
+"rect": [1581.0, 0.0, 216.0, 352.0],
+"scale": 0.47856,
+"source": {
+"anchor": [84.0, 352.0],
+"atlas": [1581.0, 0.0, 216.0, 352.0],
+"back": [-39.2, 77.5],
+"p": 0.0,
+"tip": [49.3, 121.1]
+},
+"source_image": "assets/runtime/1f5dc7881a4233a08d5d76ff.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.0__1f5dc7881a42.webp",
+"pivot": [86.0, 340.0],
+"rect": [925.0, 384.0, 217.0, 340.0],
+"scale": 0.47856,
+"source": {
+"anchor": [86.0, 340.0],
+"atlas": [925.0, 384.0, 217.0, 340.0],
+"back": [-39.7, 75.6],
+"p": 0.0,
+"tip": [44.5, 123.9]
+},
+"source_image": "assets/runtime/1f5dc7881a4233a08d5d76ff.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.0__1f5dc7881a42.webp",
+"pivot": [89.0, 316.0],
+"rect": [293.0, 737.0, 216.0, 316.0],
+"scale": 0.47856,
+"source": {
+"anchor": [89.0, 316.0],
+"atlas": [293.0, 737.0, 216.0, 316.0],
+"back": [-39.7, 77.0],
+"p": 0.0,
+"tip": [47.4, 123.9]
+},
+"source_image": "assets/runtime/1f5dc7881a4233a08d5d76ff.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.0__1f5dc7881a42.webp",
+"pivot": [94.0, 309.0],
+"rect": [511.0, 737.0, 218.0, 309.0],
+"scale": 0.47856,
+"source": {
+"anchor": [94.0, 309.0],
+"atlas": [511.0, 737.0, 218.0, 309.0],
+"back": [-42.1, 54.1],
+"p": 0.0,
+"tip": [58.4, 113.4]
+},
+"source_image": "assets/runtime/1f5dc7881a4233a08d5d76ff.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [120.0, 240.0],
+"rect": [578.0, 244.0, 302.0, 240.0],
+"scale": 0.47856,
+"source": {
+"anchor": [120.0, 240.0],
+"atlas": [578.0, 244.0, 302.0, 240.0],
+"back": [-57.4, 64.1],
+"hand": [84.7, 86.4],
+"p": 2.0,
+"tip": [86.6, 90.4]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [130.0, 238.0],
+"rect": [844.0, 487.0, 300.0, 238.0],
+"scale": 0.47856,
+"source": {
+"anchor": [130.0, 238.0],
+"atlas": [844.0, 487.0, 300.0, 238.0],
+"back": [-62.2, 68.9],
+"hand": [79.0, 73.0],
+"p": 2.0,
+"tip": [80.9, 78.5]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [129.0, 238.0],
+"rect": [1146.0, 487.0, 300.0, 238.0],
+"scale": 0.47856,
+"source": {
+"anchor": [129.0, 238.0],
+"atlas": [1146.0, 487.0, 300.0, 238.0],
+"back": [-61.7, 69.4],
+"hand": [79.4, 69.6],
+"p": 2.0,
+"tip": [81.4, 69.9]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [127.0, 239.0],
+"rect": [1181.0, 244.0, 302.0, 239.0],
+"scale": 0.47856,
+"source": {
+"anchor": [127.0, 239.0],
+"atlas": [1181.0, 244.0, 302.0, 239.0],
+"back": [-60.8, 65.1],
+"hand": [81.4, 76.6],
+"p": 2.0,
+"tip": [83.3, 73.7]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [123.0, 240.0],
+"rect": [882.0, 244.0, 297.0, 240.0],
+"scale": 0.47856,
+"source": {
+"anchor": [123.0, 240.0],
+"atlas": [882.0, 244.0, 297.0, 240.0],
+"back": [-58.9, 61.7],
+"hand": [80.9, 79.7],
+"p": 2.0,
+"tip": [82.8, 81.4]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [118.0, 241.0],
+"rect": [1533.0, 0.0, 293.0, 241.0],
+"scale": 0.47856,
+"source": {
+"anchor": [118.0, 241.0],
+"atlas": [1533.0, 0.0, 293.0, 241.0],
+"back": [-56.5, 60.3],
+"hand": [81.4, 82.8],
+"p": 2.0,
+"tip": [83.3, 84.7]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [115.0, 241.0],
+"rect": [0.0, 244.0, 289.0, 241.0],
+"scale": 0.47856,
+"source": {
+"anchor": [115.0, 241.0],
+"atlas": [0.0, 244.0, 289.0, 241.0],
+"back": [-55.0, 59.3],
+"hand": [80.9, 82.3],
+"p": 2.0,
+"tip": [82.8, 84.2]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath2_art.pages.2__73967f836cf3.webp",
+"pivot": [116.0, 242.0],
+"rect": [282.0, 0.0, 289.0, 242.0],
+"scale": 0.47856,
+"source": {
+"anchor": [116.0, 242.0],
+"atlas": [282.0, 0.0, 289.0, 242.0],
+"back": [-55.5, 59.3],
+"hand": [80.4, 81.6],
+"p": 2.0,
+"tip": [82.3, 83.7]
+},
+"source_image": "assets/runtime/73967f836cf3f521b955ed40.webp"
+}])

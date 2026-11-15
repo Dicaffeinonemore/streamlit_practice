@@ -1,0 +1,412 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_15igl"]
+[ext_resource type="Texture2D" path="res://port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png" id="2_4oyao"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(0, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(384, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(768, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(1152, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(1536, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(1920, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(2304, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(2688, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(3072, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_4oyao")
+region = Rect2(3456, 0, 384, 384)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 70.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 35.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 35.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 30.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 30.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 20.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 20.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 20.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 25.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 25.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_15igl")
+source_id = "aseprite_barel-combo1-dot-10_barel-combo1-dot-10_basic-attack-2"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352, 200, 352)
+frame_scales = PackedFloat64Array(0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538, 0.7634408602150538)
+duration_ms = PackedFloat64Array(70, 35, 35, 30, 30, 20, 20, 20, 25, 25)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+metadata = {
+"loop": false,
+"metadata": {
+"alignment": {
+"canvasGround": 352.0,
+"neutralFrame": 9.0,
+"newNeutralHeight": 186.0,
+"note": "Original dot source density; shared display scale and sole alignment only",
+"referenceLegacyHeight": 142.0,
+"worldOffsetsApplied": false
+},
+"anchor": [200.0, 352.0],
+"attackId": "combo1",
+"character": "barel",
+"clip": "basic-attack-2",
+"combat": {
+"activeEndMs": 200.0,
+"activeStartMs": 105.0,
+"comboLinkMs": 233.0,
+"durationMs": 310.0
+},
+"expectedDurationsMs": [70.0, 35.0, 35.0, 30.0, 30.0, 20.0, 20.0, 20.0, 25.0, 25.0],
+"frameOffsets": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+"phases": {
+"activeFollowThroughFrames": [5.0, 5.0],
+"preparationFrames": [1.0, 1.0],
+"primaryStrikeFrames": [3.0, 4.0],
+"recoveryFrames": [6.0, 10.0],
+"risingStartupFrames": [2.0, 2.0]
+},
+"renderScale": 0.7634408602150538,
+"schemaVersion": 1.0,
+"source": {
+"file": "source/original.png",
+"pixelClones": false,
+"redrawn": false,
+"resampled": false,
+"sha256": "45f40be72dbe53afd34bbd0b376c65de95ed4bc0514b5c1cd65ca1bd0b7263f8"
+},
+"sprite": "../exports/barel-combo1-dot-10/barel-combo1-dot-10.json"
+},
+"source": "assets/aseprite/barel-combo1-dot-10/barel-combo1-dot-10.animation.json",
+"tag": {
+"color": "#000000ff",
+"direction": "forward",
+"from": 0.0,
+"name": "basic-attack-2",
+"to": 9.0
+}
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 70.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [0.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [0.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 70.0,
+"filename": "barel-combo1-dot-10 0.aseprite",
+"index": 0.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 35.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [384.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [384.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 35.0,
+"filename": "barel-combo1-dot-10 1.aseprite",
+"index": 1.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 35.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [768.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [768.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 35.0,
+"filename": "barel-combo1-dot-10 2.aseprite",
+"index": 2.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 30.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [1152.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [1152.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 30.0,
+"filename": "barel-combo1-dot-10 3.aseprite",
+"index": 3.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 30.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [1536.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [1536.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 30.0,
+"filename": "barel-combo1-dot-10 4.aseprite",
+"index": 4.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 20.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [1920.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [1920.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 20.0,
+"filename": "barel-combo1-dot-10 5.aseprite",
+"index": 5.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 20.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [2304.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [2304.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 20.0,
+"filename": "barel-combo1-dot-10 6.aseprite",
+"index": 6.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 20.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [2688.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [2688.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 20.0,
+"filename": "barel-combo1-dot-10 7.aseprite",
+"index": 7.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 25.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [3072.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [3072.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 25.0,
+"filename": "barel-combo1-dot-10 8.aseprite",
+"index": 8.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 25.0,
+"image": "port_assets/aseprite/barel-combo1-dot-10_barel-combo1-dot-10.png",
+"pivot": [200.0, 352.0],
+"rect": [3456.0, 0.0, 384.0, 384.0],
+"scale": 0.7634408602150538,
+"source": {
+"anchor": [200.0, 352.0],
+"atlas": [3456.0, 0.0, 384.0, 384.0],
+"baseAnchor": [200.0, 352.0],
+"duration": 25.0,
+"filename": "barel-combo1-dot-10 9.aseprite",
+"index": 9.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 384.0,
+"w": 384.0
+},
+"spriteSourceSize": {
+"h": 384.0,
+"w": 384.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}])

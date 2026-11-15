@@ -1,0 +1,142 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_vnkte"]
+[ext_resource type="Texture2D" path="res://port_assets/images/gorath_art.atlas__7553ac96a449.png" id="2_pj6pb"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_pj6pb")
+region = Rect2(2489, 696, 316, 278)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_pj6pb")
+region = Rect2(2290, 1257, 376, 264)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_pj6pb")
+region = Rect2(1105, 1257, 316, 268)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_pj6pb")
+region = Rect2(505, 1257, 299, 269)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_pj6pb")
+region = Rect2(705, 1529, 305, 253)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_pj6pb")
+region = Rect2(1364, 696, 282, 280)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_vnkte")
+source_id = "gorath_art.chain_throw"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(153, 277, 147, 263, 153, 266, 149, 268, 152, 252, 136, 279)
+frame_scales = PackedFloat64Array(0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "GORATH_ART",
+"clip": "chain_throw",
+"source_scale": 0.5,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [153.0, 277.0],
+"rect": [2489.0, 696.0, 316.0, 278.0],
+"scale": 0.5,
+"source": {
+"anchor": [153.0, 277.0],
+"atlas": [2489.0, 696.0, 316.0, 278.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [147.0, 263.0],
+"rect": [2290.0, 1257.0, 376.0, 264.0],
+"scale": 0.5,
+"source": {
+"anchor": [147.0, 263.0],
+"atlas": [2290.0, 1257.0, 376.0, 264.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [153.0, 266.0],
+"rect": [1105.0, 1257.0, 316.0, 268.0],
+"scale": 0.5,
+"source": {
+"anchor": [153.0, 266.0],
+"atlas": [1105.0, 1257.0, 316.0, 268.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [149.0, 268.0],
+"rect": [505.0, 1257.0, 299.0, 269.0],
+"scale": 0.5,
+"source": {
+"anchor": [149.0, 268.0],
+"atlas": [505.0, 1257.0, 299.0, 269.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [152.0, 252.0],
+"rect": [705.0, 1529.0, 305.0, 253.0],
+"scale": 0.5,
+"source": {
+"anchor": [152.0, 252.0],
+"atlas": [705.0, 1529.0, 305.0, 253.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/gorath_art.atlas__7553ac96a449.png",
+"pivot": [136.0, 279.0],
+"rect": [1364.0, 696.0, 282.0, 280.0],
+"scale": 0.5,
+"source": {
+"anchor": [136.0, 279.0],
+"atlas": [1364.0, 696.0, 282.0, 280.0]
+},
+"source_image": "assets/runtime/7553ac96a44920f792cbf651.png"
+}])

@@ -1,0 +1,75 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_y7526"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_n3m7l"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_n3m7l")
+region = Rect2(1426, 6076, 224, 206)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_n3m7l")
+region = Rect2(1652, 6076, 219, 213)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_y7526")
+source_id = "named.player.jump"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(135, 197, 120, 205)
+frame_scales = PackedFloat64Array(0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "jump",
+"role": "player"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [135.0, 197.0],
+"rect": [1426.0, 6076.0, 224.0, 206.0],
+"scale": 0.72,
+"source": {
+"anchor": [135.0, 197.0],
+"atlas": [1426.0, 6076.0, 224.0, 206.0],
+"edgeFragmentPixels": 5.0,
+"id": 453.0,
+"rect": [240.0, 563.0, 464.0, 769.0],
+"scale": 0.72,
+"source": "player_moves"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [120.0, 205.0],
+"rect": [1652.0, 6076.0, 219.0, 213.0],
+"scale": 0.72,
+"source": {
+"anchor": [120.0, 205.0],
+"atlas": [1652.0, 6076.0, 219.0, 213.0],
+"edgeFragmentPixels": 36.0,
+"id": 454.0,
+"rect": [470.0, 555.0, 689.0, 768.0],
+"scale": 0.72,
+"source": "player_moves"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

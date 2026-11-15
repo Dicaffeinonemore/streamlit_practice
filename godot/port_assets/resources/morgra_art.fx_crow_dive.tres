@@ -1,0 +1,66 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_kcta3"]
+[ext_resource type="Texture2D" path="res://port_assets/images/morgra_art.atlas__207748d1db71.png" id="2_7yrea"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_7yrea")
+region = Rect2(3364, 2003, 66, 60)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_7yrea")
+region = Rect2(3676, 2003, 65, 56)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_kcta3")
+source_id = "morgra_art.fx_crow_dive"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(33, 30, 32, 28)
+frame_scales = PackedFloat64Array(0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100)
+authoritative_duration = PackedByteArray(0, 0)
+metadata = {
+"catalog": "MORGRA_ART",
+"clip": "fx_crow_dive",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [32.99999999999999, 30.0],
+"rect": [3364.0, 2003.0, 66.0, 60.0],
+"scale": 0.4675,
+"source": {
+"anchor": [18.15, 16.5],
+"atlas": [3364.0, 2003.0, 66.0, 60.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/morgra_art.atlas__207748d1db71.png",
+"pivot": [32.0, 28.0],
+"rect": [3676.0, 2003.0, 65.0, 56.0],
+"scale": 0.4675,
+"source": {
+"anchor": [17.6, 15.4],
+"atlas": [3676.0, 2003.0, 65.0, 56.0]
+},
+"source_image": "assets/runtime/207748d1db71793ab8195558.png"
+}])

@@ -1,0 +1,147 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_iwlu6"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_f8dxw"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_f8dxw")
+region = Rect2(0, 9368, 253, 292)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_f8dxw")
+region = Rect2(255, 9368, 315, 255)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_f8dxw")
+region = Rect2(572, 9368, 374, 181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_f8dxw")
+region = Rect2(948, 9368, 340, 203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_f8dxw")
+region = Rect2(1290, 9368, 323, 181)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_iwlu6")
+source_id = "named.stage5_brute.attack"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(154, 290, 131, 253, 150, 180, 100, 201, 165, 179)
+frame_scales = PackedFloat64Array(0.54, 0.54, 0.54, 0.54, 0.54)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "attack",
+"role": "stage5_brute"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [154.0, 290.0],
+"rect": [0.0, 9368.0, 253.0, 292.0],
+"scale": 0.54,
+"source": {
+"anchor": [154.0, 290.0],
+"atlas": [0.0, 9368.0, 253.0, 292.0],
+"edgeFragmentPixels": 10450.0,
+"id": 539.0,
+"rect": [11.0, 369.0, 264.0, 661.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [131.0, 253.0],
+"rect": [255.0, 9368.0, 315.0, 255.0],
+"scale": 0.54,
+"source": {
+"anchor": [131.0, 253.0],
+"atlas": [255.0, 9368.0, 315.0, 255.0],
+"edgeFragmentPixels": 17435.0,
+"id": 540.0,
+"rect": [294.0, 406.0, 609.0, 661.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [150.0, 180.0],
+"rect": [572.0, 9368.0, 374.0, 181.0],
+"scale": 0.54,
+"source": {
+"anchor": [150.0, 180.0],
+"atlas": [572.0, 9368.0, 374.0, 181.0],
+"edgeFragmentPixels": 14064.0,
+"id": 541.0,
+"rect": [625.0, 479.0, 999.0, 660.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [100.0, 201.0],
+"rect": [948.0, 9368.0, 340.0, 203.0],
+"scale": 0.54,
+"source": {
+"anchor": [100.0, 201.0],
+"atlas": [948.0, 9368.0, 340.0, 203.0],
+"edgeFragmentPixels": 12866.0,
+"id": 542.0,
+"rect": [1000.0, 458.0, 1340.0, 661.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [165.0, 179.0],
+"rect": [1290.0, 9368.0, 323.0, 181.0],
+"scale": 0.54,
+"source": {
+"anchor": [165.0, 179.0],
+"atlas": [1290.0, 9368.0, 323.0, 181.0],
+"edgeFragmentPixels": 13501.0,
+"id": 543.0,
+"rect": [1340.0, 480.0, 1663.0, 661.0],
+"scale": 0.54,
+"source": "heavy5"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])

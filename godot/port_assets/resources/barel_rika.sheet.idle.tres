@@ -1,0 +1,217 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_iq1v4"]
+[ext_resource type="Texture2D" path="res://port_assets/images/barel_rika_data.idle.path__8dc199161040.png" id="2_0almr"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_0almr")
+region = Rect2(2, 2, 162, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_0almr")
+region = Rect2(166, 2, 171, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_0almr")
+region = Rect2(339, 2, 176, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_0almr")
+region = Rect2(517, 2, 179, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_0almr")
+region = Rect2(698, 2, 176, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_0almr")
+region = Rect2(876, 2, 185, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_0almr")
+region = Rect2(1063, 2, 179, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_0almr")
+region = Rect2(1244, 2, 165, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_0almr")
+region = Rect2(1411, 2, 172, 232)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_0almr")
+region = Rect2(1585, 2, 178, 232)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_iq1v4")
+source_id = "barel_rika.sheet.idle"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(80.5, 232, 89.5, 232, 94.5, 232, 97.5, 232, 94.5, 232, 103.5, 232, 97.5, 232, 83.5, 232, 90.5, 232, 96.5, 232)
+frame_scales = PackedFloat64Array(0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376, 0.44068965517241376)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "BAREL_RIKA_DATA",
+"clip": "idle",
+"smooth": true
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [80.5, 232.0],
+"rect": [2.0, 2.0, 162.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [80.5, 232.0],
+"atlas": [2.0, 2.0, 162.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [89.5, 232.0],
+"rect": [166.0, 2.0, 171.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [89.5, 232.0],
+"atlas": [166.0, 2.0, 171.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [94.5, 232.0],
+"rect": [339.0, 2.0, 176.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [94.5, 232.0],
+"atlas": [339.0, 2.0, 176.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [97.5, 232.0],
+"rect": [517.0, 2.0, 179.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [97.5, 232.0],
+"atlas": [517.0, 2.0, 179.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [94.5, 232.0],
+"rect": [698.0, 2.0, 176.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [94.5, 232.0],
+"atlas": [698.0, 2.0, 176.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [103.5, 232.0],
+"rect": [876.0, 2.0, 185.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [103.5, 232.0],
+"atlas": [876.0, 2.0, 185.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [97.5, 232.0],
+"rect": [1063.0, 2.0, 179.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [97.5, 232.0],
+"atlas": [1063.0, 2.0, 179.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [83.5, 232.0],
+"rect": [1244.0, 2.0, 165.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [83.5, 232.0],
+"atlas": [1244.0, 2.0, 165.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [90.5, 232.0],
+"rect": [1411.0, 2.0, 172.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [90.5, 232.0],
+"atlas": [1411.0, 2.0, 172.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/barel_rika_data.idle.path__8dc199161040.png",
+"pivot": [96.5, 232.0],
+"rect": [1585.0, 2.0, 178.0, 232.0],
+"scale": 0.44068965517241376,
+"source": {
+"anchor": [96.5, 232.0],
+"atlas": [1585.0, 2.0, 178.0, 232.0]
+},
+"source_image": "assets/runtime/8dc1991610409933f3494769.png"
+}])

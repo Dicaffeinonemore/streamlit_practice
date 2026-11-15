@@ -1,0 +1,199 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_eihat"]
+[ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_axe_walk_0.png" id="2_tib5r"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(1, 1, 169, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(172, 1, 139, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(313, 1, 122, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(437, 1, 125, 185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(564, 1, 157, 181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(723, 1, 146, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(871, 1, 143, 184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(1016, 1, 119, 185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(1137, 1, 166, 181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_tib5r")
+region = Rect2(1305, 1, 167, 182)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_eihat")
+source_id = "stage1_presented_axe_walk"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(73.2, 183.6, 69.6, 183.6, 60.6, 183.6, 59.4, 184.8, 79.2, 181.2, 75.6, 183.6, 63.6, 183.6, 60, 184.8, 75.6, 181.2, 82.2, 182.4)
+frame_scales = PackedFloat64Array(0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325, 0.55325)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"clip": "walk",
+"club_attack_override": false,
+"preferred": true,
+"source": "stage1-runtime.js drawStage1Soldier / cleanStage1Frame",
+"species": "axe"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"expected_rgba_sha256": "ad0210da97a811e5d48b3189eca9b53fb74712a24ca40de96e8715c5689d340a",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [73.2, 183.6],
+"rect": [1.0, 1.0, 169.0, 184.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "432f0176dce1e0a1ff1f6a1d6c2a71050e5b958827d3266139c6d7733747d33f",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [69.6, 183.6],
+"rect": [172.0, 1.0, 139.0, 184.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "844745f817a955fe1e18921ff069ca63a5104e02d1b2618bdf898492305863de",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [60.6, 183.6],
+"rect": [313.0, 1.0, 122.0, 184.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "23b5ae45063eaa25df46c993fa9ea8f7658f3e744bd8a16bd527c52684c64770",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [59.4, 184.8],
+"rect": [437.0, 1.0, 125.0, 185.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "eba57e8fe3fa858c7d97e63ace52e1a8fce869c4174dcf2d02a0a7cace040f73",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [79.2, 181.2],
+"rect": [564.0, 1.0, 157.0, 181.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "b32d451f37a48b3208bac47d718415328becb12469f3e40e4919a236048b253f",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [75.6, 183.6],
+"rect": [723.0, 1.0, 146.0, 184.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "f19765ade128ebcedc6bbc17f9797409c9b8c04c69a57314ba992fe58a43e02d",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [63.6, 183.6],
+"rect": [871.0, 1.0, 143.0, 184.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "d7fb3c8de3af9d6f5c3f45751086cc41348a1921cb6ff6ec8e4e9528cf598401",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [60.0, 184.8],
+"rect": [1016.0, 1.0, 119.0, 185.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "7f3bba5a9adf55af0d61654be2b9561d60de19837d92209c91ec22e7b536e363",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [75.6, 181.2],
+"rect": [1137.0, 1.0, 166.0, 181.0],
+"scale": 0.55325,
+"source": {}
+}, {
+"duration_ms": null,
+"expected_rgba_sha256": "30611dd0ee203ac82f143b570b2ffc40086a16487ed2bf5389e9b025dcce2255",
+"image": "port_assets/baked/stage1_presented_axe_walk_0.png",
+"page": 0.0,
+"pivot": [82.2, 182.4],
+"rect": [1305.0, 1.0, 167.0, 182.0],
+"scale": 0.55325,
+"source": {}
+}])

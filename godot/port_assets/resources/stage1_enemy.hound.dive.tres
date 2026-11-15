@@ -1,0 +1,255 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_rgf06"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp" id="2_og32r"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_og32r")
+region = Rect2(0, 258, 175, 115)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_og32r")
+region = Rect2(177, 258, 192, 90)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_og32r")
+region = Rect2(371, 258, 192, 130)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_og32r")
+region = Rect2(565, 258, 192, 137)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_og32r")
+region = Rect2(759, 258, 186, 104)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_og32r")
+region = Rect2(947, 258, 179, 110)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_6"]
+atlas = ExtResource("2_og32r")
+region = Rect2(1128, 258, 191, 113)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_7"]
+atlas = ExtResource("2_og32r")
+region = Rect2(1321, 258, 187, 113)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_8"]
+atlas = ExtResource("2_og32r")
+region = Rect2(1510, 258, 180, 108)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_9"]
+atlas = ExtResource("2_og32r")
+region = Rect2(1692, 258, 184, 121)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_5")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_8")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_9")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_rgf06")
+source_id = "stage1_enemy.hound.dive"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(84, 115.2, 91.5, 90, 90, 128.7, 88.8, 132.3, 93.9, 116.1, 84, 109.8, 105.6, 113.4, 94.2, 113.4, 89.4, 108, 87, 120.6)
+frame_scales = PackedFloat64Array(0.336, 0.336, 0.336, 0.336, 0.336, 0.336, 0.336, 0.336, 0.336, 0.336)
+duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+metadata = {
+"catalog": "STAGE1_ENEMY_ART",
+"clip": "dive",
+"source_sheet_ratio": {
+"dive": 1.0,
+"getup": 0.71,
+"hurt": 0.626,
+"idle": 1.0,
+"knockdown": 0.674,
+"run": 1.0
+},
+"species": "hound"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [84.0, 115.2],
+"rect": [0.0, 258.0, 175.0, 115.0],
+"scale": 0.336,
+"source": {
+"anchor": [84.0, 115.2],
+"atlas": [0.0, 258.0, 175.0, 115.0],
+"back": [-28.2, 14.3],
+"hand": [30.2, 24.6],
+"tip": [30.2, 24.6]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [91.5, 90.0],
+"rect": [177.0, 258.0, 192.0, 90.0],
+"scale": 0.336,
+"source": {
+"anchor": [91.5, 90.0],
+"atlas": [177.0, 258.0, 192.0, 90.0],
+"back": [-30.7, 17.3],
+"hand": [29.7, 19.8],
+"tip": [33.6, 13.1]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [90.0, 128.7],
+"rect": [371.0, 258.0, 192.0, 130.0],
+"scale": 0.336,
+"source": {
+"anchor": [90.0, 128.7],
+"atlas": [371.0, 258.0, 192.0, 130.0],
+"back": [-30.2, 32.2],
+"hand": [34.1, 26.7],
+"tip": [34.1, 26.7]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [88.8, 132.3],
+"rect": [565.0, 258.0, 192.0, 137.0],
+"scale": 0.336,
+"source": {
+"anchor": [88.8, 132.3],
+"atlas": [565.0, 258.0, 192.0, 137.0],
+"back": [-29.8, 21.9],
+"hand": [34.5, 27.9],
+"tip": [34.5, 27.9]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [93.9, 116.1],
+"rect": [759.0, 258.0, 186.0, 104.0],
+"scale": 0.336,
+"source": {
+"anchor": [93.9, 116.1],
+"atlas": [759.0, 258.0, 186.0, 104.0],
+"back": [-31.6, 29.1],
+"hand": [29.5, 36.4],
+"tip": [30.7, 15.2]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [84.0, 109.8],
+"rect": [947.0, 258.0, 179.0, 110.0],
+"scale": 0.336,
+"source": {
+"anchor": [84.0, 109.8],
+"atlas": [947.0, 258.0, 179.0, 110.0],
+"back": [-28.2, 17.3],
+"hand": [31.9, 31.2],
+"tip": [31.9, 31.2]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [105.6, 113.4],
+"rect": [1128.0, 258.0, 191.0, 113.0],
+"scale": 0.336,
+"source": {
+"anchor": [105.6, 113.4],
+"atlas": [1128.0, 258.0, 191.0, 113.0],
+"back": [-35.5, 33.1],
+"hand": [28.6, 21.6],
+"tip": [28.6, 21.6]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [94.2, 113.4],
+"rect": [1321.0, 258.0, 187.0, 113.0],
+"scale": 0.336,
+"source": {
+"anchor": [94.2, 113.4],
+"atlas": [1321.0, 258.0, 187.0, 113.0],
+"back": [-31.7, 17.9],
+"hand": [30.8, 20.4],
+"tip": [30.8, 20.4]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [89.4, 108.0],
+"rect": [1510.0, 258.0, 180.0, 108.0],
+"scale": 0.336,
+"source": {
+"anchor": [89.4, 108.0],
+"atlas": [1510.0, 258.0, 180.0, 108.0],
+"back": [-30.0, 16.7],
+"hand": [30.2, 19.8],
+"tip": [30.2, 19.8]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/stage1_enemy_art.hound.atlas__7719dff445da.webp",
+"pivot": [87.0, 120.6],
+"rect": [1692.0, 258.0, 184.0, 121.0],
+"scale": 0.336,
+"source": {
+"anchor": [87.0, 120.6],
+"atlas": [1692.0, 258.0, 184.0, 121.0],
+"back": [-29.2, 17.3],
+"hand": [32.5, 24.0],
+"tip": [32.5, 24.0]
+},
+"source_image": "assets/runtime/7719dff445daa57039bc358f.webp"
+}])

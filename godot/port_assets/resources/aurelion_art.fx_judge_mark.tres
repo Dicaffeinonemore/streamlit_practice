@@ -1,0 +1,88 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ipueu"]
+[ext_resource type="Texture2D" path="res://port_assets/images/aurelion_art.sheets.1__2649c70513cd.webp" id="2_nlk0j"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_nlk0j")
+region = Rect2(2306, 650, 158, 65)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_nlk0j")
+region = Rect2(2466, 650, 158, 65)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_nlk0j")
+region = Rect2(2626, 650, 158, 65)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_2")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_ipueu")
+source_id = "aurelion_art.fx_judge_mark"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(79, 39, 79, 39, 79, 39)
+frame_scales = PackedFloat64Array(0.4675, 0.4675, 0.4675)
+duration_ms = PackedFloat64Array(100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0)
+metadata = {
+"catalog": "AURELION_ART",
+"clip": "fx_judge_mark",
+"source_scale": 0.55,
+"timing": "state-driven; see original timing catalog"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.1__2649c70513cd.webp",
+"pivot": [79.0, 39.0],
+"rect": [2306.0, 650.0, 158.0, 65.0],
+"scale": 0.4675,
+"source": {
+"anchor": [43.45, 21.45],
+"atlas": [2306.0, 650.0, 158.0, 65.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/2649c70513cd86397e2291a5.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.1__2649c70513cd.webp",
+"pivot": [79.0, 39.0],
+"rect": [2466.0, 650.0, 158.0, 65.0],
+"scale": 0.4675,
+"source": {
+"anchor": [43.45, 21.45],
+"atlas": [2466.0, 650.0, 158.0, 65.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/2649c70513cd86397e2291a5.webp"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/aurelion_art.sheets.1__2649c70513cd.webp",
+"pivot": [79.0, 39.0],
+"rect": [2626.0, 650.0, 158.0, 65.0],
+"scale": 0.4675,
+"source": {
+"anchor": [43.45, 21.45],
+"atlas": [2626.0, 650.0, 158.0, 65.0],
+"sheet": 1.0
+},
+"source_image": "assets/runtime/2649c70513cd86397e2291a5.webp"
+}])

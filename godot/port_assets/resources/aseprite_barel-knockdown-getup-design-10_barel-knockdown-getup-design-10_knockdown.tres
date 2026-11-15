@@ -1,0 +1,265 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_yqu4u"]
+[ext_resource type="Texture2D" path="res://port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png" id="2_5g3mt"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_5g3mt")
+region = Rect2(0, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_1"]
+atlas = ExtResource("2_5g3mt")
+region = Rect2(640, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_2"]
+atlas = ExtResource("2_5g3mt")
+region = Rect2(1280, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_3"]
+atlas = ExtResource("2_5g3mt")
+region = Rect2(1920, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_4"]
+atlas = ExtResource("2_5g3mt")
+region = Rect2(2560, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="frame_5"]
+atlas = ExtResource("2_5g3mt")
+region = Rect2(3200, 0, 640, 640)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 80.0,
+"texture": SubResource("frame_0")
+}, {
+"duration": 80.0,
+"texture": SubResource("frame_1")
+}, {
+"duration": 80.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 80.0,
+"texture": SubResource("frame_3")
+}, {
+"duration": 100.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 240.0,
+"texture": SubResource("frame_5")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_yqu4u")
+source_id = "aseprite_barel-knockdown-getup-design-10_barel-knockdown-getup-design-10_knockdown"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(320, 576, 320, 576, 320, 576, 320, 576, 320, 576, 320, 576)
+frame_scales = PackedFloat64Array(0.3873431533006001, 0.3873431533006001, 0.3873431533006001, 0.3873431533006001, 0.3873431533006001, 0.3873431533006001)
+duration_ms = PackedFloat64Array(80, 80, 80, 80, 100, 240)
+authoritative_duration = PackedByteArray(1, 1, 1, 1, 1, 1)
+metadata = {
+"loop": false,
+"metadata": {
+"alignment": {
+"downHelmetWidth": 52.0,
+"idleHelmetWidth": 40.0,
+"idleRenderScale": 0.5035460992907801,
+"reference": "idle F1 helmet width / down F1 helmet width"
+},
+"anchor": [320.0, 576.0],
+"animationId": "down",
+"animationType": "oneshot",
+"character": "barel",
+"clip": "knockdown_getup",
+"durationMs": 1100.0,
+"expectedDurationsMs": [80.0, 80.0, 80.0, 80.0, 100.0, 240.0, 120.0, 120.0, 100.0, 100.0],
+"frameOffsets": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+"loop": false,
+"physicsReference": {
+"friction": 0.96,
+"getupInvulnerability": 100.0,
+"initialVz": 5.0,
+"knockback": 3.5,
+"recoveryAfterTick": 55.0
+},
+"renderScale": 0.3873431533006001,
+"schemaVersion": 1.0,
+"sprite": "../exports/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.json",
+"tickDurations": [3.0, 4.0, 12.0, 3.0, 4.0, 10.0, 6.0, 5.0, 5.0, 4.0]
+},
+"source": "assets/aseprite/barel-knockdown-getup-design-10/barel-knockdown-getup-design-10.animation.json",
+"tag": {
+"color": "#000000ff",
+"direction": "forward",
+"from": 0.0,
+"name": "knockdown",
+"to": 5.0
+}
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": 80.0,
+"image": "port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png",
+"pivot": [320.0, 576.0],
+"rect": [0.0, 0.0, 640.0, 640.0],
+"scale": 0.3873431533006001,
+"source": {
+"anchor": [320.0, 576.0],
+"atlas": [0.0, 0.0, 640.0, 640.0],
+"baseAnchor": [320.0, 576.0],
+"duration": 80.0,
+"filename": "barel-knockdown-getup-design-10 0.aseprite",
+"index": 0.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 640.0,
+"w": 640.0
+},
+"spriteSourceSize": {
+"h": 640.0,
+"w": 640.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 80.0,
+"image": "port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png",
+"pivot": [320.0, 576.0],
+"rect": [640.0, 0.0, 640.0, 640.0],
+"scale": 0.3873431533006001,
+"source": {
+"anchor": [320.0, 576.0],
+"atlas": [640.0, 0.0, 640.0, 640.0],
+"baseAnchor": [320.0, 576.0],
+"duration": 80.0,
+"filename": "barel-knockdown-getup-design-10 1.aseprite",
+"index": 1.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 640.0,
+"w": 640.0
+},
+"spriteSourceSize": {
+"h": 640.0,
+"w": 640.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 80.0,
+"image": "port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png",
+"pivot": [320.0, 576.0],
+"rect": [1280.0, 0.0, 640.0, 640.0],
+"scale": 0.3873431533006001,
+"source": {
+"anchor": [320.0, 576.0],
+"atlas": [1280.0, 0.0, 640.0, 640.0],
+"baseAnchor": [320.0, 576.0],
+"duration": 80.0,
+"filename": "barel-knockdown-getup-design-10 2.aseprite",
+"index": 2.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 640.0,
+"w": 640.0
+},
+"spriteSourceSize": {
+"h": 640.0,
+"w": 640.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 80.0,
+"image": "port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png",
+"pivot": [320.0, 576.0],
+"rect": [1920.0, 0.0, 640.0, 640.0],
+"scale": 0.3873431533006001,
+"source": {
+"anchor": [320.0, 576.0],
+"atlas": [1920.0, 0.0, 640.0, 640.0],
+"baseAnchor": [320.0, 576.0],
+"duration": 80.0,
+"filename": "barel-knockdown-getup-design-10 3.aseprite",
+"index": 3.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 640.0,
+"w": 640.0
+},
+"spriteSourceSize": {
+"h": 640.0,
+"w": 640.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 100.0,
+"image": "port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png",
+"pivot": [320.0, 576.0],
+"rect": [2560.0, 0.0, 640.0, 640.0],
+"scale": 0.3873431533006001,
+"source": {
+"anchor": [320.0, 576.0],
+"atlas": [2560.0, 0.0, 640.0, 640.0],
+"baseAnchor": [320.0, 576.0],
+"duration": 100.0,
+"filename": "barel-knockdown-getup-design-10 4.aseprite",
+"index": 4.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 640.0,
+"w": 640.0
+},
+"spriteSourceSize": {
+"h": 640.0,
+"w": 640.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}, {
+"duration_ms": 240.0,
+"image": "port_assets/aseprite/barel-knockdown-getup-design-10_barel-knockdown-getup-design-10.png",
+"pivot": [320.0, 576.0],
+"rect": [3200.0, 0.0, 640.0, 640.0],
+"scale": 0.3873431533006001,
+"source": {
+"anchor": [320.0, 576.0],
+"atlas": [3200.0, 0.0, 640.0, 640.0],
+"baseAnchor": [320.0, 576.0],
+"duration": 240.0,
+"filename": "barel-knockdown-getup-design-10 5.aseprite",
+"index": 5.0,
+"renderOffset": [0.0, 0.0],
+"sourceSize": {
+"h": 640.0,
+"w": 640.0
+},
+"spriteSourceSize": {
+"h": 640.0,
+"w": 640.0,
+"x": 0.0,
+"y": 0.0
+},
+"trimmed": false
+}
+}])

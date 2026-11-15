@@ -1,0 +1,51 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_pvotj"]
+[ext_resource type="Texture2D" path="res://port_assets/images/named_art.atlas__1736ff063a35.png" id="2_xxfh3"]
+
+[sub_resource type="AtlasTexture" id="frame_0"]
+atlas = ExtResource("2_xxfh3")
+region = Rect2(1306, 5304, 300, 291)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="source_frames"]
+animations = [{
+"frames": [{
+"duration": 100.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"source",
+"speed": 1000.0
+}]
+
+[resource]
+script = ExtResource("1_pvotj")
+source_id = "named.player.hurt"
+sprite_frames = SubResource("source_frames")
+frame_pivots = PackedVector2Array(135, 286)
+frame_scales = PackedFloat64Array(0.36)
+duration_ms = PackedFloat64Array(100)
+authoritative_duration = PackedByteArray(0)
+metadata = {
+"catalog": "NAMED_SPRITES",
+"clip": "hurt",
+"role": "player"
+}
+source_frames = Array[Dictionary]([{
+"duration_ms": null,
+"image": "port_assets/images/named_art.atlas__1736ff063a35.png",
+"pivot": [135.0, 286.0],
+"rect": [1306.0, 5304.0, 300.0, 291.0],
+"scale": 0.36,
+"source": {
+"anchor": [135.0, 286.0],
+"atlas": [1306.0, 5304.0, 300.0, 291.0],
+"edgeFragmentPixels": 0.0,
+"id": 431.0,
+"rect": [925.0, 601.0, 1225.0, 892.0],
+"scale": 0.36,
+"source": "player_base"
+},
+"source_image": "assets/runtime/1736ff063a355859c5bb4038.png"
+}])
