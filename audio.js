@@ -133,10 +133,12 @@
   function sfx(name, a) {
     if (!AU.on || !AU.ctx || AU.ctx.state === 'closed') return;
     const sampleName = name === 'hurtH' ? 'hurt' : name;
-    if (global.BAREL_SFX_URLS && Object.hasOwn(global.BAREL_SFX_URLS, sampleName)) {
+    if ((global.BAREL_SFX_URLS && Object.hasOwn(global.BAREL_SFX_URLS, sampleName)) ||
+        (sampleName === 'aurelionWave' && global.AURELION_SFX_URLS?.aurelionWave)) {
       playBarelSample(sampleName, a); return;
     }
-    if (global.VIESA_SFX_URLS && Object.hasOwn(global.VIESA_SFX_URLS, name)) {
+    if ((global.VIESA_SFX_URLS && Object.hasOwn(global.VIESA_SFX_URLS, name)) ||
+        (global.AURELION_SFX_URLS && Object.hasOwn(global.AURELION_SFX_URLS, name))) {
       playViesaSkill(name);
       return;
     }
@@ -247,7 +249,9 @@
   const barelSamples = new Map();
   function prepareBarelSamples() {
     if (!AU.ctx) return Promise.resolve([]);
-    for (const [name,url] of Object.entries(global.BAREL_SFX_URLS || {})) {
+    const urls = { ...global.BAREL_SFX_URLS };
+    if (global.AURELION_SFX_URLS?.aurelionWave) urls.aurelionWave = global.AURELION_SFX_URLS.aurelionWave;
+    for (const [name,url] of Object.entries(urls)) {
       if (barelSamples.has(name)) continue;
       const sample = {buffer:null,offset:0,last:-Infinity};
       sample.ready = fetch(url).then(r=>{
@@ -288,7 +292,9 @@
     if(sample.buffer)play();else sample.ready.then(play);
   }
   function prepareViesaSkills() {
-    for (const [name, url] of Object.entries(global.VIESA_SFX_URLS || {})) {
+    const urls = { ...global.VIESA_SFX_URLS };
+    if (global.AURELION_SFX_URLS?.aurelionExplosion) urls.aurelionExplosion = global.AURELION_SFX_URLS.aurelionExplosion;
+    for (const [name, url] of Object.entries(urls)) {
       const ready = fetch(url).then(r => {
         if (!r.ok) throw new Error('Viesa skill sample unavailable');
         return r.arrayBuffer();

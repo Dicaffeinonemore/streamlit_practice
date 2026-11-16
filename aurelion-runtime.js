@@ -1,8 +1,8 @@
 'use strict';
 const AURELION_K = .55 * .85;
-const AURELION_SFX = {kneel_voice:'bwind',holy_chant:'mcharge',holy_strike:'pillar',armor_fall:'land',
+const AURELION_SFX = {kneel_voice:'bwind',holy_chant:'mcharge',holy_strike:'aurelionExplosion',armor_fall:'land',
   armor_rise:'bwind',royal_decree:'phase2',royal_roar:'phase2',roar_short:'bcharge',grunt_lift:'bwind',
-  slam_impact:'land',blade_stuck:'hit',swing_heavy:'swing',blade_charge:'mcharge',wave_release:'bwave',
+  slam_impact:'aurelionExplosion',blade_stuck:'hit',swing_heavy:'swing',blade_charge:'mcharge',wave_release:'aurelionWave',
   guard_ring:'mcharge',parry_clang:'hit',heavy_breath:'bwind',whirl:'swing'};
 const AURELION_GROUP = GameAssets.group(2,AURELION_ART.sheets);
 const AURELION_SHEETS = AURELION_GROUP.images;

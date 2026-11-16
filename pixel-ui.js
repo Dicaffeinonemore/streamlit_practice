@@ -55,6 +55,7 @@ function drawPixelHUD(p) {
     ctx.save(); ctx.beginPath(); ctx.roundRect(274, y, width, 34, 17); ctx.clip();
     ctx.fillStyle = color; ctx.fillRect(274, y, width, 34);
     if (amount > 0) ctx.drawImage(PIXEL_UI, 305, y, 300, 34, 274, y, amount, 34);
+    if (y === 350) spGaugeShine(274, y, width, 34);   // SP 가득: 마나 게이지 반짝임
     ctx.restore();
   }
   // Empty scroll slots are silhouettes, never mistaken for usable charges.

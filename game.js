@@ -17,14 +17,36 @@ addEventListener('resize', fitCanvas);
 // 피격 번쩍임. ctx.filter='brightness()'는 그릴 때마다 중간 버퍼를 만들어 공격·피격 순간 프레임이 떨어진다.
 // 대신 같은 그림을 'lighter'로 한 번 더 겹친다: c + (gain-1)·c = gain·c 이므로 밝기 gain(≤2)과 같은 결과다.
 let flashGain = 1;
-function drawLit(im, sx, sy, sw, sh, dx, dy, dw, dh, gain = flashGain) {
+function drawLit(im, sx, sy, sw, sh, dx, dy, dw, dh, gain = flashGain, tint = 0) {
   if (im.naturalWidth * im.naturalHeight > 4 * 1024 * 1024) {
     im = GameAssets.frame(im, sx, sy, sw, sh); sx = sy = 0; sw = im.width; sh = im.height;
   }
   ctx.drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh);
+  if (tint > 0) {                                   // 파워업: 몸 실루엣만 노랗게 덮는다
+    const c = tintedSprite(im, sx, sy, sw, sh, BUFF_TINT_COLOR);
+    ctx.save(); ctx.filter = 'none'; ctx.globalAlpha *= tint; ctx.drawImage(c, 0, 0, c.width, c.height, dx, dy, dw, dh); ctx.restore();
+  }
   if (gain <= 1) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= Math.min(1, gain - 1);
   ctx.drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh); ctx.restore();
+}
+// 스프라이트 한 칸을 단색 실루엣으로 (ctx.filter 없이 — 모바일 사파리에서도 동작)
+const BUFF_TINT_COLOR = '#ffd23f';
+const tintCanvas = document.createElement('canvas'), tintCtx = tintCanvas.getContext('2d');
+function tintedSprite(im, sx, sy, sw, sh, color) {
+  const w = Math.max(1, Math.ceil(sw)), h = Math.max(1, Math.ceil(sh));
+  if (tintCanvas.width !== w || tintCanvas.height !== h) { tintCanvas.width = w; tintCanvas.height = h; }
+  else tintCtx.clearRect(0, 0, w, h);
+  tintCtx.globalCompositeOperation = 'source-over'; tintCtx.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
+  tintCtx.globalCompositeOperation = 'source-atop'; tintCtx.fillStyle = color; tintCtx.fillRect(0, 0, w, h);
+  tintCtx.globalCompositeOperation = 'source-over';
+  return tintCanvas;
+}
+// 파워업 중인 플레이어 몸의 노란 점멸 세기 (0이면 안 칠함). 섬광 옵션을 끄면 깜빡이지 않고 옅게 유지
+function buffTint(actor) {
+  if (!player || actor !== player || !(actor.buff > 0) || actor.st === 'dead') return 0;
+  if (!UX.options.flash) return 0.25;
+  return 0.45 * Math.max(0, Math.sin(tick * 0.35));
 }
 // 스프라이트 보간: 화면에서 2배 이상 커지면 도트를 또렷하게(nearest), 그보다 작으면 고품질로 부드럽게 줄인다.
 // k = 그릴 크기 / 원본 픽셀 크기. 현재 변환(줌, 해상도 배율)까지 곱해서 판단한다
@@ -589,7 +611,6 @@ function canHit(e) { return e.st !== 'dead' && e.st !== 'down' && e.inv <= 0 && 
 
 // ---------------------------------------------------------------- 플레이어
 function startAtk(n) {
-  markAttackLane();                                // 같은 줄의 적 그림자가 0.2초 하얗게
   if(isViesa()){startViesaAttack(n);return;}
   const p = player;
   p.st = 'atk'; p.t = 0; p.buf = 0; p.hitSet = new Set(); p.x0 = p.x; p.wave = false; p.smash = false;
@@ -924,7 +945,7 @@ function updPlayer() {
   if (p.buf > 0) p.buf -= MS;
   if (p.dashCd > 0) p.dashCd--;
   if(p.dashGrace>0)p.dashGrace--;
-  for (const id in p.skillCd) if (p.skillCd[id] > 0) { p.skillCd[id] = Math.max(0, p.skillCd[id] - MS); if (!p.skillCd[id]) markSkillReady(id); }
+  for (const id in p.skillCd) if (p.skillCd[id] > 0) { p.skillCd[id] = Math.max(0, p.skillCd[id] - MS); }
   feelPlayerSignals();                              // SP 가득 오라·효과음, 스킬 준비 글자
   if (p.st === 'grabbed') { if(p.grab?.sovereign)updateSovereignGrab();else if(p.grab?.stage1)updateStage1Grab();else if(p.grab?.gorath2)updateGorath2Grab();else updateGorathGrab(); return; }
   const wasWalking = p.walk;
@@ -2118,11 +2139,6 @@ function drawPlayer() {
   // 무적 깜박임: 보스 등장 연출 중이거나 그 직후의 등장 무적(quietInvUntil)에는 깜박이지 않는다
   const introQuiet = scene === 'bossintro' || (scene === 'pause' && resumeScene === 'bossintro') || tick < (p.quietInvUntil || 0);
   if (p.inv > 0 && p.st === 'free' && !introQuiet && Math.floor(tick / 4) % 2) return;
-  if (p.buff > 0 && p.st !== 'dead') {              // 파워업 오라
-    const Hh = S.gy * SC;
-    ctx.globalAlpha = 0.35 + 0.15 * Math.sin(tick * 0.3); ctx.fillStyle = '#ffd23f';
-    ctx.beginPath(); ctx.ellipse(sx, p.y - p.z - Hh * 0.5, S.sh * SC * 1.5, Hh * 0.58, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
-  }
   const lying = (p.st === 'down' && p.z === 0 && p.t > 8) || (p.st === 'dead' && p.z === 0);
   if (drawViesaPlayer()) return;
   if (drawBarelPlayer()) return;
@@ -2133,7 +2149,7 @@ function drawPlayer() {
   const f = playerFrame(lying), HF = HERO_FRAMES[f] || HERO_FRAMES[0];
   const F = figure('player', p.face, pose, {
     f, shOff: [HF.lx, HF.bob],                       // 걷기·웅크림 프레임이 몸을 옮긴 만큼 어깨(팔)도 따라간다
-    wash: p.flash > 0 ? '#ffffff' : (sp ? '#ff3a4a' : null), washA: p.flash > 0 ? 0.75 : 0.3,
+    wash: p.flash > 0 ? '#ffffff' : buffTint(p) > 0 ? BUFF_TINT_COLOR : (sp ? '#ff3a4a' : null), washA: p.flash > 0 ? 0.75 : buffTint(p) || 0.3,
     eyes: sp && p.t * MS < 1500 ? heroEye(f) : null });
   if (F.res) { p.tipX = p.x + (F.res.tip[0] - F.ax) * SC; p.tipH = p.z + (F.ay - F.res.tip[1]) * SC; }   // 검 끝 (뇌격 빛이 모이는 곳)
   present(F, sx, p.y - p.z, 1, lying, p.face, S.gy);
@@ -2349,7 +2365,7 @@ function drawPlayerHD(lying) {
   const hurtT = p.st === 'hurt' ? p.t * MS : 999, osc = p.st === 'hurt' ? Math.exp(-hurtT / 180) : 0;
   const F = hdFigure('player', s.name, p.face, {
     bottom: s.bottom, lean: -8 * osc * p.face,
-    wash: p.flash > 0 ? '#ffffff' : (sp ? '#ff3a4a' : null), washA: p.flash > 0 ? 0.75 : 0.16 });
+    wash: p.flash > 0 ? '#ffffff' : buffTint(p) > 0 ? BUFF_TINT_COLOR : (sp ? '#ff3a4a' : null), washA: p.flash > 0 ? 0.75 : buffTint(p) || 0.16 });
   const top = hdTop(F.fr);                         // 검 끝 (뇌격 빛이 모이는 곳)
   p.tipX = p.x + top[0] * p.face; p.tipH = p.z + top[1];
   if (p.st === 'atk' && p.combo === 2) p.tipX = p.x + p.face * 56;   // 참격이 땅에 박히는 자리
@@ -3026,7 +3042,6 @@ function render() {
     drawStage1TopSprites();                       // 날아가는 화염병
     for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
     enemies.forEach(drawEnemyOverlay);
-    drawFeelTop();                                // 스킬 준비 글자
     drawHitboxDebug();                            // ?hitbox=1 / F9
     drawGorathHazards();
     drawGorath2Top();                             // 고라스: 떨어지는 고기, 사슬·갈고리

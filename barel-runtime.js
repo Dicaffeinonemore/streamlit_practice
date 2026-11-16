@@ -58,7 +58,7 @@ function paintBarel(frame,actor,alpha=1) {
     const width=frame.index===7?220:190;
     ctx.beginPath();ctx.rect(-ax,-ay,width,h);ctx.clip();
   }
-  drawLit(image,x,y,w,h,-ax,-ay,w,h,lit && actor.st!=='hurt'?1.8:1);ctx.restore();return true;
+  drawLit(image,x,y,w,h,-ax,-ay,w,h,lit && actor.st!=='hurt'?1.8:1,buffTint(actor));ctx.restore();return true;
 }
 // Shared stable framing for ordinary and boss-challenge selection previews.
 function drawBarelIdlePreview(canvas,elapsedMs){
@@ -84,7 +84,7 @@ function drawBarelIdlePreview(canvas,elapsedMs){
 function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alpha=1) {
   const f=barelFrame(name,progress);if(!f || !BAREL_ATLAS.naturalWidth)return;
   const [sx,sy,w,h]=f.atlas;
-  ctx.save();ctx.translate(x-camX,y);ctx.scale(name==='moon'?-face:face,1);ctx.globalAlpha=alpha*(UX.options.lowFx?.65:1);
+  ctx.save();ctx.translate(x-camX,y);ctx.scale(name==='moon'||name==='wave'?-face:face,1);   // moon·wave 그림은 왼쪽을 보고 그려져 있다ctx.globalAlpha=alpha*(UX.options.lowFx?.65:1);
   ctx.globalCompositeOperation='lighter';ctx.drawImage(BAREL_ATLAS,sx,sy,w,h,-width/2,-height,width,height);ctx.restore();
 }
 function drawBarelPlayer() {
