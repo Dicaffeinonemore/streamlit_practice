@@ -11,6 +11,8 @@ var music: AudioStreamPlayer
 var enabled: bool = true
 var track_id: String = "stage"
 var victory_intro: bool = false
+var music_level: float = 0.7
+var sfx_level: float = 0.8
 
 func _ready() -> void:
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://port_assets/catalogs/audio.json")) as Dictionary
@@ -54,7 +56,7 @@ func play(key: String, variant: int = 0) -> void:
 	var index: int = voice_index
 	var voice: AudioStreamPlayer = voices[index]
 	voice_index = (voice_index + 1) % voices.size()
-	gains[index] = 0.8 * 0.9 * 0.8 if offsets.has(id) else 0.8
+	gains[index] = 0.8 * 0.9 * sfx_level if offsets.has(id) else sfx_level
 	voice.volume_db = linear_to_db(gains[index])
 	remaining[index] = 0.88 if key == "barelCombo" else -1.0
 	voice.stream = streams[id]
@@ -78,10 +80,17 @@ func pause_audio(paused: bool) -> void:
 
 func toggle() -> void:
 	enabled = not enabled
-	music.volume_db = linear_to_db(0.8 * 0.7) if enabled else -80.0
+	set_levels(music_level,sfx_level)
 	if not enabled:
 		for voice: AudioStreamPlayer in voices:
 			voice.stop()
+
+func set_levels(music_value: float, sfx_value: float) -> void:
+	music_level = clampf(music_value,0,1)
+	sfx_level = clampf(sfx_value,0,1)
+	if music != null:
+		var multiplier: float = 0.8 * 0.34 * 2 if track_id == "boss" else 0.8
+		music.volume_db = linear_to_db(multiplier * music_level) if enabled and music_level > 0 else -80.0
 
 func _exit_tree() -> void:
 	music.stop()
@@ -100,7 +109,7 @@ func play_track(id: String) -> void:
 	music.stream = load(path) as AudioStream
 	if music.stream is AudioStreamMP3: (music.stream as AudioStreamMP3).loop = true
 	if music.stream is AudioStreamOggVorbis: (music.stream as AudioStreamOggVorbis).loop = true
-	music.volume_db = linear_to_db(0.8 * 0.34 * 0.7 * 2 if id == "boss" else 0.8 * 0.7) if enabled else -80
+	set_levels(music_level,sfx_level)
 	if DisplayServer.get_name() != "headless": music.play()
 
 func on_music_finished() -> void:

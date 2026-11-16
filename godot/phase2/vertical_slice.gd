@@ -19,6 +19,9 @@ var audio: BmkGameAudio
 var source: Dictionary
 var capture_mode: bool = false
 var visual_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var show_shake: bool = true
+var show_flash: bool = true
+var show_danger_zones: bool = true
 
 func _ready() -> void:
 	get_window().content_scale_size = Vector2i(960,540)
@@ -94,7 +97,7 @@ func _physics_process(_delta: float) -> void:
 func present() -> void:
 	world.position = Vector2(-session.cam_x * 1.5,-146.0 * 1.5)
 	# Cosmetic shake uses its own RNG; it cannot perturb combat spawn randomness.
-	if session.shake > 0.5 and not clock.paused and not capture_mode:
+	if show_shake and session.shake > 0.5 and not clock.paused and not capture_mode:
 		world.position += Vector2(visual_rng.randf_range(-1,1),visual_rng.randf_range(-1,1)) * session.shake * 0.6
 	var pose: Dictionary = selector.player(session)
 	player_view.present(session,session.player,bank.animation("barel_rika.sheet." + str(pose["clip"])),int(pose["index"]),true)

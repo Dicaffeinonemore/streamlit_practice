@@ -5,10 +5,22 @@ func _draw() -> void:
 	super._draw()
 	if game == null or game.session is not BmkStageSimulation: return
 	var s: BmkStageSimulation = game.session as BmkStageSimulation
-	draw_rect(Rect2(298,31,662,29),Color(0.025,0.02,0.035,0.98))
-	var names: Array[String] = ["OCCUPIED STREET","CONQUERED MARKET","HOUND KENNEL","EXECUTION PLAZA","BUTCHER'S ARENA"]
-	text(Vector2(304,49),"STAGE 1 / %d OF 5 / %s" % [s.sections.idx + 1,names[s.sections.idx]],Color("bbb0b5"),12)
-	text(Vector2(755,47),"MAGIC %d   WAVE %d/%d" % [s.player.mg,mini(s.sections.event_index + 1,(s.sections.section["events"] as Array).size()),(s.sections.section["events"] as Array).size()],Color("bbb0b5"),12)
+	if game is BmkMenuGame and (game as BmkMenuGame).game_mode == "practice":
+		var practice: BmkMenuGame = game as BmkMenuGame
+		var guide: Array[String] = ["move","attack","jump","dash","skill"]
+		var labels: Dictionary = {"move":"MOVE", "attack":"HIT THE DUMMY", "jump":"JUMP", "dash":"DASH", "skill":"HIT WITH A SKILL"}
+		var prompt: String = "PRACTICE COMPLETE"
+		for step: String in guide:
+			if not practice.practice_done.has(step):
+				prompt = str(labels[step])
+				break
+		draw_rect(Rect2(260,82,440,32),Color(0,0,0,0.8))
+		text(Vector2(275,104),"PRACTICE %d / 5   %s" % [practice.practice_done.size(),prompt],Color("ffe18b"),15)
+	if game is not BmkMenuGame:
+		draw_rect(Rect2(298,31,662,29),Color(0.025,0.02,0.035,0.98))
+		var names: Array[String] = ["OCCUPIED STREET","CONQUERED MARKET","HOUND KENNEL","EXECUTION PLAZA","BUTCHER'S ARENA"]
+		text(Vector2(304,49),"STAGE 1 / %d OF 5 / %s" % [s.sections.idx + 1,names[s.sections.idx]],Color("bbb0b5"),12)
+		text(Vector2(755,47),"MAGIC %d   WAVE %d/%d" % [s.player.mg,mini(s.sections.event_index + 1,(s.sections.section["events"] as Array).size()),(s.sections.section["events"] as Array).size()],Color("bbb0b5"),12)
 	var boss_: BmkStageActor = s.gorath.boss(s)
 	if boss_ != null:
 		draw_rect(Rect2(168,425,624,47),Color(0.025,0.01,0.025,0.85))
@@ -33,7 +45,7 @@ func _draw() -> void:
 	if s.sections.fade_t >= 0:
 		var alpha: float = s.sections.fade_t / 30.0 if s.sections.fade_t <= 30 else 1 - (s.sections.fade_t - 30) / 30.0
 		draw_rect(Rect2(0,0,960,540),Color(0,0,0,alpha))
-	if s.boss_white > 0: draw_rect(Rect2(0,0,960,540),Color(1,1,1,0.6))
+	if game.show_flash and s.boss_white > 0: draw_rect(Rect2(0,0,960,540),Color(1,1,1,0.6))
 	if game.debug_view.visible: text(Vector2(405,102),"1-5 SECTION   F10 PHASE 2   F11 ULTIMATE",Color("c1efc5"),12)
 	if s.mode == "clear":
 		draw_rect(Rect2(0,0,960,540),Color(0.01,0.005,0.02,0.72))

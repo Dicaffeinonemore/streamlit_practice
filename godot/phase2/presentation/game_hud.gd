@@ -2,6 +2,7 @@ class_name BmkGameHud
 extends Control
 var game: BmkVerticalSlice
 var font: Font
+var source_hud_atlas: Texture2D
 
 func _ready() -> void:
 	font = ThemeDB.fallback_font
@@ -22,23 +23,29 @@ func _draw() -> void:
 	var p: BmkActorState = s.player
 	if p.st == "cast" and not p.cast_fired:
 		draw_rect(Rect2(0,0,960,540),Color(0.04,0.06,0.19,0.32 * minf(1,p.t * s.MS / 300)))
-	if s.flash_t > 0:
+	if game.show_flash and s.flash_t > 0:
 		draw_rect(Rect2(0,0,960,540),Color(1,0.8,0.85,minf(0.55,s.flash_t / 220 * 0.55)))
-	draw_rect(Rect2(0,0,960,79),Color(0.025,0.02,0.035,0.86))
-	text(Vector2(20,25),"BAREL",Color("e4d5ba"),20)
-	text(Vector2(20,46),"HP %d / 100    LIFE %d" % [p.hp,p.lives],Color("f2e9dd"),13)
-	bar(Vector2(20,53),260,p.hp / 100,Color("bd354b"))
-	bar(Vector2(20,66),260,p.sp / 100,Color("70b7ee"))
-	text(Vector2(304,27),"BLACK MOON KNIGHT",Color("e4d5ba"),19)
-	text(Vector2(304,49),"STAGE 1 / OCCUPIED STREET",Color("bbb0b5"),12)
-	text(Vector2(755,25),"SCORE %06d" % p.score,Color("e4d5ba"),16)
-	text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)
+	if game is BmkMenuGame:
+		draw_source_hud(p)
+	else:
+		draw_rect(Rect2(0,0,960,79),Color(0.025,0.02,0.035,0.86))
+		text(Vector2(20,25),"BAREL",Color("e4d5ba"),20)
+		text(Vector2(20,46),"HP %d / 100    LIFE %d" % [p.hp,p.lives],Color("f2e9dd"),13)
+		bar(Vector2(20,53),260,p.hp / 100,Color("bd354b"))
+		bar(Vector2(20,66),260,p.sp / 100,Color("70b7ee"))
+		text(Vector2(304,27),"BLACK MOON KNIGHT",Color("e4d5ba"),19)
+		text(Vector2(304,49),"STAGE 1 / OCCUPIED STREET",Color("bbb0b5"),12)
+		text(Vector2(755,25),"SCORE %06d" % p.score,Color("e4d5ba"),16)
+		text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)
 	if s.chain_n > 1:
 		text(Vector2(820,108),"%d HIT" % s.chain_n,Color("ffe18b"),25)
-	var arcade: bool = game.physical.preset == "arcade"
 	draw_rect(Rect2(0,490,960,50),Color(0.025,0.02,0.035,0.86))
-	text(Vector2(18,509),"ARROWS MOVE   Z ATTACK   X JUMP   C SPECIAL   A MAGIC   SHIFT DASH" if arcade else "WASD MOVE   J ATTACK   K JUMP   SPACE SPECIAL   L MAGIC   SHIFT DASH",Color("d0c5ca"),12)
-	text(Vector2(18,529),"S THRUST   D SLAM   Q WHIRL   W LEAP   E RED WAVE" if arcade else "U THRUST   I SLAM   O WHIRL   P LEAP   H RED WAVE",Color("a3b4c9"),12)
+	var keys: Array[String] = []
+	for action: String in BmkPhysicalInput.ACTIONS:
+		var events: Array[InputEvent] = InputMap.action_get_events("bmk_" + action)
+		keys.append(OS.get_keycode_string((events[0] as InputEventKey).physical_keycode) if not events.is_empty() else "?")
+	text(Vector2(18,509),"%s/%s/%s/%s MOVE  %s ATTACK  %s JUMP  %s SPECIAL  %s MAGIC  %s DASH" % [keys[0],keys[1],keys[2],keys[3],keys[5],keys[4],keys[7],keys[8],keys[6]],Color("d0c5ca"),12)
+	text(Vector2(18,529),"%s THRUST   %s SLAM   %s WHIRL   %s LEAP   %s RED WAVE" % [keys[9],keys[10],keys[11],keys[12],keys[13]],Color("a3b4c9"),12)
 	text(Vector2(659,529),"F1 KEYS   F9 DEBUG   ESC PAUSE   R RESTART",Color("a3b4c9"),11)
 	var index: int = 0
 	for skill: BmkAttackData in s.data.skills:
@@ -60,3 +67,19 @@ func _draw() -> void:
 		var title: String = "SECTION 1 COMPLETE" if game.section.complete else ("GAME OVER" if s.game_over else "PAUSED")
 		text(Vector2(304,251),title,Color("e4d5ba"),30)
 		text(Vector2(304,288),"R: RESTART STREET" if game.section.complete or s.game_over else "ESC: RESUME    R: RESTART",Color("ddd5dd"),16)
+
+func draw_source_hud(p: BmkActorState) -> void:
+	if source_hud_atlas == null: source_hud_atlas = load("res://port_assets/images/pixel_ui_source__1d6b42ef373a.png") as Texture2D
+	var atlas: Texture2D = source_hud_atlas
+	var scale_: float = 960.0 / 1672.0 * 0.62 * 1064.0 / 1104.0
+	var origin: Vector2 = Vector2(3,20)
+	draw_texture_rect_region(atlas,Rect2(origin,Vector2(1104,420) * scale_),Rect2(0,140,1104,420))
+	for row: Array in [[290,p.hp / 100.0,Color("290508")],[350,p.sp / 100.0,Color("031329")]]:
+		var pos: Vector2 = origin + Vector2(274,int(row[0]) - 140) * scale_
+		draw_rect(Rect2(pos,Vector2(468,34) * scale_),row[2])
+		var amount: float = 468 * clampf(float(row[1]),0,1)
+		if amount > 0: draw_texture_rect_region(atlas,Rect2(pos,Vector2(amount,34) * scale_),Rect2(305,int(row[0]),300,34))
+	for i: int in range(3):
+		if i >= p.mg: draw_rect(Rect2(origin + Vector2(773 + i * 82,303 - 140) * scale_,Vector2(83,90) * scale_),Color(0.04,0.03,0.04,0.85))
+		if i >= p.lives: draw_rect(Rect2(origin + Vector2(284 + i * 88,423 - 140) * scale_,Vector2(88,132) * scale_),Color(0.04,0.03,0.04,0.85))
+	text(Vector2(6,14),"SCORE %d" % p.score,Color("ffe1a0"),11)

@@ -10,10 +10,15 @@ func read_json(path: String) -> Variant:
 	return JSON.parse_string(FileAccess.get_file_as_string(path))
 
 func write_json(path: String, value: Variant) -> Error:
-	var file: FileAccess = FileAccess.open(path,FileAccess.WRITE)
+	var temporary: String = path + ".tmp"
+	var file: FileAccess = FileAccess.open(temporary,FileAccess.WRITE)
 	if file == null: return FileAccess.get_open_error()
 	file.store_string(JSON.stringify(value))
-	return file.get_error()
+	file.flush()
+	var error: Error = file.get_error()
+	file.close()
+	if error != OK: return error
+	return DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary), ProjectSettings.globalize_path(path))
 
 func checkpoint() -> BmkCheckpoint:
 	return BmkCheckpoint.decode(read_json(checkpoint_path))

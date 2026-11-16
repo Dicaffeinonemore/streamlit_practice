@@ -8,9 +8,11 @@ const PATH: String = "user://bmk_settings.json"
 @export var shake: bool = true
 @export var flash: bool = true
 @export var danger_zones: bool = true
+var storage_path: String = PATH
 
 static func read(path: String = PATH) -> BmkSettings:
 	var result: BmkSettings = BmkSettings.new()
+	result.storage_path = path
 	if not FileAccess.file_exists(path): return result
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if raw is not Dictionary: return result
@@ -24,7 +26,7 @@ static func read(path: String = PATH) -> BmkSettings:
 		var used: Dictionary[int,bool] = {}
 		for action: String in BmkPhysicalInput.ACTIONS:
 			var code: Variant = raw["bindings"].get(action)
-			if (code is float or code is int) and float(code) == floor(float(code)) and int(code) > 0 and not used.has(int(code)):
+			if (code is float or code is int) and float(code) == floor(float(code)) and valid_key(int(code)) and not used.has(int(code)):
 				result.bindings[action] = int(code)
 				used[int(code)] = true
 	if result.preset == "custom" and result.bindings.size() != BmkPhysicalInput.ACTIONS.size():
@@ -32,16 +34,26 @@ static func read(path: String = PATH) -> BmkSettings:
 		result.bindings.clear()
 	return result
 
-func save(path: String = PATH) -> Error:
-	var file: FileAccess = FileAccess.open(path,FileAccess.WRITE)
-	if file == null: return FileAccess.get_open_error()
-	file.store_string(JSON.stringify({"preset":preset,"bindings":bindings,"music_volume":music_volume,"sfx_volume":sfx_volume,"shake":shake,"flash":flash,"danger_zones":danger_zones}))
-	return file.get_error()
+func save(path: String = "") -> Error:
+	var target: String = storage_path if path.is_empty() else path
+	var store: BmkSaveStore = BmkSaveStore.new()
+	return store.write_json(target,{"preset":preset,"bindings":bindings,"music_volume":music_volume,"sfx_volume":sfx_volume,"shake":shake,"flash":flash,"danger_zones":danger_zones})
 
 func bind(action: String, code: int) -> bool:
-	if action not in BmkPhysicalInput.ACTIONS or code <= 0 or code in [KEY_ESCAPE,KEY_F1,KEY_F2,KEY_F9,KEY_F10,KEY_F11,KEY_M,KEY_R]: return false
+	if action not in BmkPhysicalInput.ACTIONS or not valid_key(code): return false
 	for other: String in bindings:
 		if other != action and bindings[other] == code: return false
 	bindings[action] = code
 	preset = "custom"
 	return true
+
+static func valid_key(code: int) -> bool:
+	if code in [KEY_M,KEY_R]: return false
+	return code >= KEY_A and code <= KEY_Z or code >= KEY_0 and code <= KEY_9 or code in [KEY_LEFT,KEY_RIGHT,KEY_UP,KEY_DOWN,KEY_SPACE,KEY_SHIFT]
+
+func use_preset(id: String) -> void:
+	var codes: Array[int] = BmkPhysicalInput.WASD if id == "wasd" else BmkPhysicalInput.ARCADE
+	bindings.clear()
+	for i: int in range(BmkPhysicalInput.ACTIONS.size()):
+		bindings[BmkPhysicalInput.ACTIONS[i]] = codes[i]
+	preset = id

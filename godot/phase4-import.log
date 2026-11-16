@@ -1,5 +1,7 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
 [   0% ] first_scan_filesystem | Started 프로젝트 초기화 (5 steps)
 [   0% ] first_scan_filesystem | 파일 구조 스캔 중...
 [  16% ] first_scan_filesystem | 전역 클래스 이름을 불러오는 중...
@@ -9,10 +11,13 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [  83% ] first_scan_filesystem | 파일 스캔 시작 중...
 [ DONE ] first_scan_filesystem
 
-[   0% ] update_scripts_classes | Started 전역 클래스를 등록하는 중... (3 steps)
-[   0% ] update_scripts_classes | BmkPhysicalInput
-[  25% ] update_scripts_classes | BmkSettings
-[  50% ] update_scripts_classes | 
+[   0% ] update_scripts_classes | Started 전역 클래스를 등록하는 중... (6 steps)
+[   0% ] update_scripts_classes | BmkGameAudio
+[  14% ] update_scripts_classes | BmkMenuGame
+[  28% ] update_scripts_classes | BmkMenuShell
+[  42% ] update_scripts_classes | BmkSaveStore
+[  57% ] update_scripts_classes | BmkSettings
+[  71% ] update_scripts_classes | 
 [ DONE ] update_scripts_classes
 
 [   0% ] loading_editor_layout | Started 편집기를 불러오는 중 (5 steps)
@@ -20,3 +25,7 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [  16% ] loading_editor_layout | 독을 불러오는 중...
 [ DONE ] loading_editor_layout
 
+ERROR: Cannot save file 'C:/Users/훈도/AppData/Roaming/Godot/editor_settings-4.7.tres'.
+   at: save (scene/resources/resource_format_text.cpp:1768)
+ERROR: Error saving editor settings to C:/Users/훈도/AppData/Roaming/Godot/editor_settings-4.7.tres
+   at: save (editor/settings/editor_settings.cpp:1525)

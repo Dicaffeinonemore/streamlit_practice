@@ -4,6 +4,7 @@ var session: BmkSimulation
 var bank: BmkAssetBank
 var section: BmkStreetSection
 var background_id: String = "street"
+var show_danger_zones: bool = true
 
 func draw_asset(asset: BmkAnimationAsset, index: int, at: Vector2) -> void:
 	var frame: int = index % asset.sprite_frames.get_frame_count(&"source")
@@ -39,7 +40,7 @@ func draw_feel() -> void:
 	var wind_lane: bool = false
 	for e: BmkActorState in session.enemies:
 		var zone: BmkHitZone = session.enemy_controller.attack_zone(session,e)
-		if zone != null and (not zone.active or zone.active_age <= 2):
+		if show_danger_zones and zone != null and (not zone.active or zone.active_age <= 2):
 			var rect: Rect2 = zone.rectangle()
 			var fill: Rect2 = rect
 			if not zone.active:
