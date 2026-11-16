@@ -34,6 +34,7 @@ function drawViesaUI(p){
     ctx.save();ctx.beginPath();ctx.roundRect(425,y,695,h,24);ctx.clip();
     ctx.fillStyle=dark;ctx.fillRect(425,y,695,h);
     if(amount>0)ctx.drawImage(viesaUI.atlas,445,y,sampleWidth,h,425,y,amount,h);
+    if(y===400)spGaugeShine(425,y,695,h);   // SP 가득: 마나 게이지 반짝임
     ctx.restore();
   }
   for(let i=0;i<3;i++){

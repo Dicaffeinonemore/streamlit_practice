@@ -126,15 +126,8 @@ function feelShadowR(e) {
   return SPRITES[e.d?.sprite]?.sh || 15;
 }
 function feelEllipse(x, y, rx, ry) { ctx.beginPath(); ctx.ellipse(x, y, Math.max(1, rx), Math.max(1, ry), 0, 0, Math.PI * 2); }
-let laneFlash = null;                              // { t, set } — 공격 키를 누른 순간 같은 줄의 적
-let readyMarks = [];                               // 스킬 준비 글자 [{ code, t }]
 function feelLaneEnemy(e, depth) {
   return !e.boss && e.st !== 'dead' && e.st !== 'down' && !e.balcony && e.st !== 'enter' && Math.abs(player.y - e.y) <= depth;
-}
-// 바렐 · 비에사가 공격 키를 누른 순간 (startAtk)
-function markAttackLane() {
-  if (!player || !enemies) return;
-  laneFlash = { t: FEEL.lane.attackFlashTicks, set: new Set(enemies.filter(e => feelLaneEnemy(e, FEEL.lane.playerDepthPx))) };
 }
 function drawDangerZone(z) {
   const Zc = FEEL.zone, x0 = z.x0 - camX, x1 = z.x1 - camX, y0 = z.yC - z.depth, h = z.depth * 2, w = x1 - x0;
@@ -164,33 +157,11 @@ function drawDangerZone(z) {
 function drawFeelGround() {
   if (!stage || !player || !enemies) return;
   const p = player, EH = COMBAT_FRAME_DATA.enemies.hit, L = FEEL.lane;
-  // SP 가득: 발밑 푸른 오라가 천천히 돈다
-  if (p.sp >= SP_MAX && p.st !== 'dead') {
-    ctx.save();
-    const rx = 30, ry = 9, sx = p.x - camX;
-    ctx.fillStyle = 'rgba(90,170,255,.14)'; feelEllipse(sx, p.y, rx, ry); ctx.fill();
-    ctx.strokeStyle = 'rgba(140,205,255,.85)'; ctx.lineWidth = 1.4; ctx.setLineDash([7, 5]); ctx.lineDashOffset = -tick * .35;
-    feelEllipse(sx, p.y, rx, ry); ctx.stroke();
-    ctx.setLineDash([3, 9]); ctx.lineDashOffset = tick * .5; ctx.strokeStyle = 'rgba(220,240,255,.7)';
-    feelEllipse(sx, p.y, rx - 6, ry - 2); ctx.stroke();
-    ctx.restore();
-  }
+  // SP 가득 신호는 HUD 마나 게이지가 반짝이는 것으로 보여 준다 (spGaugeShine)
   if (UX.options.dangerZones) for (const e of enemies) { const z = enemyAttackZone(e); if (z) drawDangerZone(z); }
-  // 같은 줄: 쫓아오거나 예고 중인 적의 그림자 테두리
-  let windLane = false;
-  ctx.save(); ctx.lineWidth = 1;
-  for (const e of enemies) {
-    if (!feelLaneEnemy(e, EH.depthPx) || (e.st !== 'chase' && e.st !== 'wind')) continue;
-    if (e.st === 'wind') windLane = true;
-    const r = feelShadowR(e) * SC * (1 - Math.min(e.z, 150) / 300);
-    ctx.strokeStyle = L.stroke; feelEllipse(e.x - camX, e.y, r, 6 * SC * 0.7); ctx.stroke();
-  }
-  if (laneFlash) for (const e of laneFlash.set) {      // 공격 키: 같은 줄의 적 그림자가 0.2초 하얗게
-    if (e.st === 'dead') continue;
-    const r = feelShadowR(e) * SC * (1 - Math.min(e.z, 150) / 300), a = laneFlash.t / L.attackFlashTicks;
-    ctx.fillStyle = `rgba(255,255,255,${(.45 * a).toFixed(3)})`; ctx.strokeStyle = `rgba(255,255,255,${(.9 * a).toFixed(3)})`;
-    feelEllipse(e.x - camX, e.y, r + 2, 6 * SC * 0.7 + 1); ctx.fill(); ctx.stroke();
-  }
+  // 예고 중인 적과 같은 줄인지 (적 발밑에는 아무것도 그리지 않는다)
+  const windLane = enemies.some(e => e.st === 'wind' && feelLaneEnemy(e, EH.depthPx));
+  ctx.save();
   if (windLane && p.st !== 'dead') {               // 예고 중인 적과 같은 줄: 플레이어 그림자가 붉게 맥동 → 위아래로 비키면 된다
     const a = .35 + .3 * Math.sin(tick * .35), r = (SPRITES.player?.sh || 16) * SC * (1 - Math.min(p.z, 150) / 300);
     ctx.fillStyle = L.playerPulse + (a * .5).toFixed(3) + ')'; ctx.strokeStyle = L.playerPulse + Math.min(1, a + .35).toFixed(3) + ')'; ctx.lineWidth = 1.5;
@@ -253,25 +224,22 @@ function feelPlayerSignals() {
   if (p.sp >= SP_MAX) {
     if (!p.spFull) { p.spFull = true; sfx('spready'); p.flash = Math.max(p.flash || 0, FEEL.signals.spFullFlashTicks); }
   } else p.spFull = false;
-  for (const m of readyMarks) m.t--;
-  readyMarks = readyMarks.filter(m => m.t > 0);
-  if (laneFlash && --laneFlash.t <= 0) laneFlash = null;
 }
-function markSkillReady(id) {
-  const code = Object.keys(SKILL_KEYS).find(k => SKILL_KEYS[k] === id);
-  if (!code) return;
-  readyMarks = readyMarks.filter(m => m.code !== code);
-  readyMarks.push({ code, t: FEEL.signals.skillReadyTicks });
-}
-function drawFeelTop() {
-  if (!player || !readyMarks.length || player.st === 'dead') return;
-  const p = player, n = FEEL.signals.skillReadyTicks;
-  readyMarks.forEach((m, i) => {
-    const u = 1 - m.t / n, key = UX.keyName(UX.options.bindings[m.code] || m.code);
-    ctx.save(); ctx.globalAlpha = clamp(m.t / 8, 0, 1) * clamp(u * 6, 0, 1);
-    outlineText(key, p.x - camX + (i - (readyMarks.length - 1) / 2) * 16, p.y - p.z - 112 - u * 10, '#a8dcff', 'bold 13px sans-serif');
-    ctx.restore();
-  });
+// SP 가득: HUD 마나(파란) 게이지 위로 빛이 밝아졌다 어두워지고, 하이라이트 띠가 왼쪽→오른쪽으로 훑고 지나간다.
+// 게이지 모양으로 clip 한 상태에서 부른다. (x, y, w, h) = 게이지 칸
+function spGaugeShine(x, y, w, h) {
+  const p = player;
+  if (!p || p.sp < SP_MAX || p.st === 'dead') return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const pulse = UX.options.flash ? .5 + .5 * Math.sin(tick * .15) : .5;
+  ctx.fillStyle = `rgba(90,170,255,${(.12 + .22 * pulse).toFixed(3)})`; ctx.fillRect(x, y, w, h);
+  if (UX.options.flash) {
+    const period = 70, u = (tick % period) / period, bw = w * .22, bx = x - bw + (w + bw * 2) * u;
+    const g = ctx.createLinearGradient(bx - bw, 0, bx + bw, 0);
+    g.addColorStop(0, 'rgba(200,235,255,0)'); g.addColorStop(.5, 'rgba(220,245,255,.85)'); g.addColorStop(1, 'rgba(200,235,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(bx - bw, y, bw * 2, h);
+  }
+  ctx.restore();
 }
 
 // ---------------------------------------------------------------- 디버그 판정 오버레이 (?hitbox=1 또는 F9)
