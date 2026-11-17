@@ -183,10 +183,18 @@ const UX = (() => {
   function assignKey(code) {
     const status = document.getElementById('bindingStatus');
     if (!validKey(code)) { status.textContent = '영문·숫자·방향키·Space·Shift 키를 사용하세요. M은 소리 켜기/끄기에 사용됩니다.'; return; }
+    // 다른 동작이 쓰던 키를 고르면 거절하지 않고 두 동작의 키를 서로 맞바꾼다.
     const other = Object.keys(defaults).find(k => k !== capture && options.bindings[k] === code);
-    if (other) { status.textContent = playerActionLabel(other, labels[other]) + '에 사용 중인 키입니다.'; return; }
+    const previous = options.bindings[capture];
+    if (other) options.bindings[other] = previous;
     options.bindings[capture] = code; options.customBindings = { ...options.bindings };
-    capture = null; write('settings', options); bindingButtons(); status.textContent = '저장했습니다.';
+    let swapped = '';
+    if (other) {
+      const name = playerActionLabel(other, labels[other]), last = name.charCodeAt(name.length - 1);
+      const josa = last >= 0xAC00 && last <= 0xD7A3 && (last - 0xAC00) % 28 ? '과' : '와';   // 받침 있으면 '과'
+      swapped = `${name}${josa} 키를 서로 바꿨습니다 (${name}: ${keyName(previous)}). `;
+    }
+    capture = null; write('settings', options); bindingButtons(); status.textContent = swapped + '저장했습니다.';
   }
   function bindingButtons() {
     const box = document.getElementById('bindings'); box.replaceChildren();
