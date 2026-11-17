@@ -43,7 +43,7 @@ func start_new() -> void:
 	var entry: BmkCheckpoint = BmkCheckpoint.new()
 	var error: Error = save_store.save_checkpoint(entry)
 	if error != OK:
-		menu.message.text = "SAVE FAILED: %s" % error_string(error)
+		menu.message.text = "저장하지 못했습니다: %s" % error_string(error)
 		return
 	story_entry = entry
 	menu.visible = false
@@ -52,10 +52,10 @@ func start_new() -> void:
 func restore_checkpoint() -> void:
 	var entry: BmkCheckpoint = save_store.checkpoint()
 	if entry == null:
-		menu.message.text = "NO VALID CHECKPOINT"
+		menu.message.text = "사용할 수 있는 저장 기록이 없습니다."
 		return
 	if entry.stage != 0 or entry.character_id != "barel":
-		menu.message.text = "THIS CHARACTER OR STAGE IS NOT AVAILABLE YET"
+		menu.message.text = "이 캐릭터 또는 스테이지는 아직 준비 중입니다."
 		return
 	game_mode = "story"
 	load_story_entry(entry)
@@ -144,10 +144,10 @@ func _physics_process(delta: float) -> void:
 		recorded = true
 		var seconds: int = s.js_round(s.stat_ticks / 60.0)
 		var rank: String = BmkRankCalculator.calculate(seconds,s.stat_damage,s.stat_deaths,s.chain_max)
-		var report: String = "RANK %s   TIME %d:%02d\nMAX CHAIN %d   DAMAGE %d   DEATHS %d\nSCORE %d" % [rank,seconds / 60,seconds % 60,s.chain_max,s.stat_damage,s.stat_deaths,s.player.score]
+		var report: String = "랭크 %s   시간 %d:%02d\n최대 연속 공격 %d   누적 피해 %d   사망 %d\n점수 %d" % [rank,seconds / 60,seconds % 60,s.chain_max,s.stat_damage,s.stat_deaths,s.player.score]
 		if game_mode == "story":
 			var error: Error = save_store.record(0,s.player.score,rank,seconds)
-			if error != OK: report += "\nRECORD SAVE FAILED"
+			if error != OK: report += "\n기록 저장에 실패했습니다."
 			var entry: BmkCheckpoint = BmkCheckpoint.new()
 			entry.stage = 1
 			entry.score = int(s.player.score)
@@ -156,7 +156,7 @@ func _physics_process(delta: float) -> void:
 			entry.sp = int(s.player.sp)
 			entry.mg = int(s.player.mg)
 			entry.buff = int(s.player.buff)
-			if save_store.save_checkpoint(entry) != OK: report += "\nCHECKPOINT SAVE FAILED"
+			if save_store.save_checkpoint(entry) != OK: report += "\n이어하기 저장에 실패했습니다."
 		pause_game(true)
 		menu.show_result(report,game_mode == "challenge")
 

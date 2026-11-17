@@ -40,7 +40,9 @@ ENEMIES = {
     'axe': {'name': '도끼 도적', 'height': 1.0, 'clips': {
         'idle': '도끼 도적 대기 모션', 'walk': '도끼 도적 이동 모션', 'attack': '도끼 도적 공격 모션',
         'hurt': '도끼 도적 피격 모션', 'knockdown': '도끼 도적 녹다운 모션', 'getup': '도끼 도적 기상 모션'}},
-    'blade': {'name': '칼 도적', 'height': 1.05, 'clips': {
+    # 녹다운 시트는 대기 시트와 칸 크기(320px)가 같아 배율 1로 잡히지만 인물이 작게 그려져 있다.
+    # 녹다운 1번 칸 키 / 대기 1번 칸 키가 다른 적은 0.94~0.96, 칼 도적만 0.83 → 0.95 에 맞춘다.
+    'blade': {'name': '칼 도적', 'height': 1.05, 'sheetFix': {'knockdown': 1.15}, 'clips': {
         'idle': '칼 도적 대기 모션', 'walk': '칼 도적 이동 모션', 'atk1': '칼 도적 1타', 'atk2': '칼 도적 2타', 'atk3': '칼 도적 3타',
         'hurt': '칼 도적 피격 모션', 'knockdown': '칼 도적 녹다운 모션', 'getup': '칼 도적 기상 모션'}},
     'club': {'name': '곤봉잡이', 'height': 0.92, 'clips': {
@@ -131,6 +133,7 @@ def sheet_ratios(spec, sheets):
         area_r = {cid: (ia / opaque_area(sheets[cid])) ** .5 for cid in group}
         body = [area_r[c] for c in group if c in BODY_ONLY] or list(area_r.values())
         for cid in group: out[cid] = float(np.median(body))
+    for cid, r in spec.get('sheetFix', {}).items(): out[cid] *= r   # 칸 크기로 못 잡는 시트별 그림 배율 차이
     return out
 
 

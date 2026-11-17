@@ -1,0 +1,9 @@
+# Phase 4 implementation and verification
+
+The F5 main scene is `res://phase4/game.tscn`. It provides Korean title, character selection, pause, settings, custom bindings, stage entry saves, continue, score/rank records, results, practice and the unlocked Stage 1 Gorath challenge. Original extracted player, boss and enemy HUD frames, skill artwork and title artwork are used. The simulation remains the Phase 3 fixed-tick implementation.
+
+Automated checks cover keyboard-driven completion of all five practice tasks and dummy respawn, checkpoint isolation, the Gorath encounter through death and challenge results using a controlled lethal hit, separate-process save/settings reload, menu transitions, actual rendered mouse and keyboard events, and Phase 2 and 3 source parity regressions. Screenshots are `evidence/phase4_title.png`, `phase4_hud.png` and `phase4_boss_hud.png`.
+
+Known differences: the Godot menu layout and controls are adaptations rather than pixel-identical HTML/CSS; the original title GIF is shown as a still frame; practice uses the existing Stage 1 axe soldier in place of the source grunt; the enemy portrait crop and some HUD animation/details differ; touch controls, tutorial and demo remain future phases. Stage 2 and Viesa are not implemented, so the saved next-stage checkpoint cannot yet be continued, and other boss challenges remain locked. Custom boss music file selection and browser performance/quality options have not been ported. Source art and save data are retained independently of the browser's localStorage.
+
+For side-by-side review compare title and character selection, both key presets and custom binding, pause and settings, each practice task and target respawn, story stage entry/retry, clear rank and checkpoint, unlocked Gorath challenge and result, and player/boss/enemy HUD and skill cooldowns.

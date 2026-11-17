@@ -53,9 +53,9 @@ func run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	check(root.get_texture().get_image().save_png("res://evidence/phase4_title.png") == OK,"Capture title")
-	await click_button("NEW GAME")
+	await click_button("새 게임")
 	check(game.menu.mode == "characters","Mouse opens character selection")
-	await click_button("BAREL - START")
+	await click_button("바렐로 시작")
 	check(not game.menu.visible and not game.clock.paused,"Mouse starts game")
 	game.present()
 	await process_frame
@@ -63,13 +63,26 @@ func run() -> void:
 	check(root.get_texture().get_image().save_png("res://evidence/phase4_hud.png") == OK,"Capture HUD")
 	await key(KEY_ESCAPE)
 	check(game.menu.mode == "pause" and game.clock.paused,"Escape opens pause")
-	await click_button("SETTINGS")
+	await click_button("설정")
 	check(game.menu.mode == "settings","Mouse opens settings")
-	await click_button("CUSTOM KEYS")
+	await click_button("키 직접 설정")
 	check(game.menu.mode == "bindings","Mouse opens bindings")
-	await click_button("LEFT: Left")
+	await click_button("왼쪽: Left")
 	await key(KEY_F)
 	check(game.preferences.preset == "custom" and game.preferences.bindings.get("KeyA") == KEY_F,"Keyboard binds selected action")
+	game.save_store.record(0,100,"A",100)
+	game.start_challenge()
+	game.present()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	check(root.get_texture().get_image().save_png("res://evidence/phase4_boss_hud.png") == OK,"Capture boss HUD")
+	game.start_practice()
+	var s: BmkStageSimulation = game.session as BmkStageSimulation
+	s.last_hit_id = s.enemies[0].id
+	game.present()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	check(root.get_texture().get_image().save_png("res://evidence/phase4_enemy_hud.png") == OK,"Capture enemy HUD")
 	for path: String in [game.save_store.checkpoint_path,game.save_store.records_path,game.preferences.storage_path]:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	print("RENDERED MENU: %d checks; %d failures" % [checks,failures.size()])

@@ -3,9 +3,13 @@ extends Control
 var game: BmkVerticalSlice
 var font: Font
 var source_hud_atlas: Texture2D
+var korean_font: Font
 
 func _ready() -> void:
 	font = ThemeDB.fallback_font
+	var system_font: SystemFont = SystemFont.new()
+	system_font.font_names = PackedStringArray(["Malgun Gothic", "Noto Sans CJK KR", "Arial"])
+	korean_font = system_font
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func text(at: Vector2, value: String, color: Color = Color.WHITE, size_value: int = 16) -> void:
@@ -27,6 +31,7 @@ func _draw() -> void:
 		draw_rect(Rect2(0,0,960,540),Color(1,0.8,0.85,minf(0.55,s.flash_t / 220 * 0.55)))
 	if game is BmkMenuGame:
 		draw_source_hud(p)
+		draw_source_skills(p,s)
 	else:
 		draw_rect(Rect2(0,0,960,79),Color(0.025,0.02,0.035,0.86))
 		text(Vector2(20,25),"BAREL",Color("e4d5ba"),20)
@@ -83,3 +88,15 @@ func draw_source_hud(p: BmkActorState) -> void:
 		if i >= p.mg: draw_rect(Rect2(origin + Vector2(773 + i * 82,303 - 140) * scale_,Vector2(83,90) * scale_),Color(0.04,0.03,0.04,0.85))
 		if i >= p.lives: draw_rect(Rect2(origin + Vector2(284 + i * 88,423 - 140) * scale_,Vector2(88,132) * scale_),Color(0.04,0.03,0.04,0.85))
 	text(Vector2(6,14),"SCORE %d" % p.score,Color("ffe1a0"),11)
+
+func draw_source_skills(p: BmkActorState, s: BmkSimulation) -> void:
+	var actions: Array[String] = ["KeyU","KeyH","KeyO","KeyP","KeyL"]
+	for i: int in range(mini(5,s.data.skills.size())):
+		var at: Vector2 = Vector2(915,145 + i * 50)
+		draw_texture_rect_region(source_hud_atlas,Rect2(at,Vector2(29,50)),Rect2(505 + 131 * i,644,140,243))
+		draw_rect(Rect2(at + Vector2(4,13),Vector2(9,9)),Color("03101c"))
+		var events: Array[InputEvent] = InputMap.action_get_events("bmk_" + actions[i])
+		if not events.is_empty(): text(at + Vector2(4,21),OS.get_keycode_string((events[0] as InputEventKey).physical_keycode),Color("ffe1a0"),8)
+		var skill: BmkAttackData = s.data.skills[i]
+		var ratio: float = clampf(p.skill_cd[skill.id] / skill.cooldown_ms,0,1)
+		if ratio > 0: draw_rect(Rect2(at,Vector2(29,50 * ratio)),Color(0,0,0,0.7))

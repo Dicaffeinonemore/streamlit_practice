@@ -60,7 +60,7 @@ func run() -> void:
 	check(game.physical.preset == "custom","Custom bindings become active")
 	game.save_store.write_json(game.save_store.checkpoint_path,{"version":1,"stage":99})
 	game.restore_checkpoint()
-	check(game.menu.message.text == "NO VALID CHECKPOINT","Invalid save is rejected")
+	check(game.menu.message.text.contains("저장 기록"),"Invalid save is rejected")
 	game.menu.show_title()
 	game.start_practice()
 	check(game.game_mode == "practice" and not game.clock.paused and game.session.enemies.size() == 1 and game.session.enemies[0].training,"Practice creates a training enemy")

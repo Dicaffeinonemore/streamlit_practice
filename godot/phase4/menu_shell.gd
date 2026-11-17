@@ -23,6 +23,9 @@ var title_image: TextureRect
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	var korean_font: SystemFont = SystemFont.new()
+	korean_font.font_names = PackedStringArray(["Malgun Gothic", "Noto Sans CJK KR", "Arial"])
+	add_theme_font_override("font",korean_font)
 	title_image = TextureRect.new()
 	var title_asset: BmkAnimationAsset = load("res://port_assets/resources/title_original_gif.tres") as BmkAnimationAsset
 	title_image.texture = title_asset.sprite_frames.get_frame_texture(&"source",0)
@@ -76,102 +79,106 @@ func show_title() -> void:
 	clear_buttons()
 	title.text = "BLACK MOON KNIGHT"
 	var records_: Dictionary = store.records() if store != null else {"bestScore":0}
-	message.text = "BEST SCORE  %d" % int(records_["bestScore"])
-	add_button("NEW GAME",show_characters)
-	add_button("CONTINUE",func() -> void: continue_game.emit(),store == null or store.checkpoint() == null)
-	add_button("PRACTICE",func() -> void: practice_game.emit())
-	add_button("BOSS CHALLENGE",show_challenges)
-	add_button("SETTINGS",show_settings)
-	add_button("QUIT",func() -> void: quit_game.emit())
+	message.text = "최고 점수  %d" % int(records_["bestScore"])
+	add_button("새 게임",show_characters)
+	add_button("이어하기",func() -> void: continue_game.emit(),store == null or store.checkpoint() == null)
+	add_button("연습하기",func() -> void: practice_game.emit())
+	add_button("보스 도전",show_challenges)
+	add_button("설정",show_settings)
+	add_button("종료",func() -> void: quit_game.emit())
 
 func show_characters() -> void:
 	mode = "characters"
 	clear_buttons()
-	title.text = "SELECT CHARACTER"
-	message.text = "BAREL  /  BLACK KNIGHT"
-	add_button("BAREL - START",func() -> void: new_game.emit())
-	add_button("VIESA - COMING IN PHASE 5",func() -> void: pass,true)
-	add_button("BACK",show_title)
+	title.text = "캐릭터 선택"
+	message.text = "바렐 / 흑기사"
+	add_button("바렐로 시작",func() -> void: new_game.emit())
+	add_button("비에사 - 추후 추가",func() -> void: pass,true)
+	add_button("뒤로",show_title)
 
 func show_challenges() -> void:
 	mode = "challenge"
 	clear_buttons()
-	title.text = "BOSS CHALLENGE"
-	message.text = "Clear a stage to unlock its boss."
+	title.text = "보스 도전"
+	message.text = "본편의 스테이지를 클리어하면 해금됩니다."
 	var records_: Array = store.records()["stages"]
 	var unlocked: bool = records_.size() > 0 and records_[0] != null
-	add_button("STAGE 1 / GORATH",func() -> void: challenge_game.emit(),not unlocked)
-	for i: int in range(2,6): add_button("STAGE %d / UNAVAILABLE" % i,func() -> void: pass,true)
-	add_button("BACK",show_title)
+	add_button("스테이지 1 / 도살자 고라스",func() -> void: challenge_game.emit(),not unlocked)
+	for i: int in range(2,6): add_button("스테이지 %d / 추후 추가" % i,func() -> void: pass,true)
+	add_button("뒤로",show_title)
 
 func show_pause() -> void:
 	mode = "pause"
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "PAUSED"
+	title.text = "일시정지"
 	message.text = ""
-	add_button("RESUME",func() -> void: resume_game.emit())
-	add_button("RETRY STAGE",func() -> void: retry_game.emit())
-	add_button("SETTINGS",show_settings)
-	add_button("TITLE",show_title)
+	add_button("계속하기",func() -> void: resume_game.emit())
+	add_button("다시 시작",func() -> void: retry_game.emit())
+	add_button("설정",show_settings)
+	add_button("타이틀로",show_title)
 
 func show_result(value: String, challenge: bool) -> void:
 	mode = "result"
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "GORATH DEFEATED" if challenge else "STAGE 1 CLEAR"
+	title.text = "고라스 격파!" if challenge else "스테이지 1 클리어!"
 	message.text = value
-	add_button("RETRY",func() -> void: retry_game.emit())
-	add_button("TITLE",show_title)
+	add_button("다시 시작",func() -> void: retry_game.emit())
+	add_button("타이틀로",show_title)
 
 func show_settings() -> void:
 	if mode != "settings" and mode != "bindings": settings_origin = mode
 	mode = "settings"
 	capture_action = ""
 	clear_buttons()
-	title.text = "SETTINGS"
-	message.text = "KEYS: " + settings.preset.to_upper()
-	add_button("ARCADE",func() -> void: change_preset("arcade"))
+	title.text = "설정"
+	message.text = "키 배치: " + settings.preset.to_upper()
+	add_button("아케이드",func() -> void: change_preset("arcade"))
 	add_button("WASD",func() -> void: change_preset("wasd"))
-	add_button("CUSTOM KEYS",show_bindings)
-	add_button("MUSIC: %d%%" % roundi(settings.music_volume * 100),func() -> void: change_volume("music_volume"))
-	add_button("SOUND: %d%%" % roundi(settings.sfx_volume * 100),func() -> void: change_volume("sfx_volume"))
+	add_button("키 직접 설정",show_bindings)
+	add_button("배경 음악: %d%%" % roundi(settings.music_volume * 100),func() -> void: change_volume("music_volume"))
+	add_button("효과음: %d%%" % roundi(settings.sfx_volume * 100),func() -> void: change_volume("sfx_volume"))
 	for option: String in ["shake","flash","danger_zones"]:
-		add_button("%s: %s" % [option.to_upper(),"ON" if settings.get(option) else "OFF"],func() -> void: change_toggle(option))
-	add_button("BACK",show_pause if settings_origin == "pause" else show_title)
+		var label: String = {"shake":"화면 흔들림", "flash":"화면 번쩍임", "danger_zones":"위험 구역 표시"}[option]
+		add_button("%s: %s" % [label,"켜짐" if settings.get(option) else "꺼짐"],func() -> void: change_toggle(option))
+	add_button("뒤로",show_pause if settings_origin == "pause" else show_title)
 
 func change_preset(id: String) -> void:
 	settings.use_preset(id)
-	settings.save()
+	var error: Error = settings.save()
 	settings_changed.emit()
 	show_settings()
+	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
 
 func change_volume(option: String) -> void:
 	var value: int = roundi(float(settings.get(option)) * 10)
 	settings.set(option, float((value + 1) % 11) / 10.0)
-	settings.save()
+	var error: Error = settings.save()
 	settings_changed.emit()
 	show_settings()
+	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
 
 func change_toggle(option: String) -> void:
 	settings.set(option,not bool(settings.get(option)))
-	settings.save()
+	var error: Error = settings.save()
 	settings_changed.emit()
 	show_settings()
+	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
 
 func show_bindings() -> void:
 	if settings.bindings.size() != BmkPhysicalInput.ACTIONS.size(): settings.use_preset(settings.preset)
 	mode = "bindings"
 	clear_buttons()
-	title.text = "CUSTOM KEYS"
-	message.text = "Select an action, then press a key. ESC cancels."
-	var labels: Array[String] = ["LEFT","RIGHT","UP","DOWN","JUMP","ATTACK","DASH","SPECIAL","MAGIC","THRUST","SLAM","WHIRL","LEAP","RED WAVE"]
+	title.text = "키 직접 설정"
+	message.text = "동작을 고른 뒤 키를 누르세요. ESC: 취소"
+	var labels: Array[String] = ["왼쪽","오른쪽","위","아래","점프","공격","회피","필살기","마법","찌르기","강타","회전","강하","적월파"]
 	for i: int in range(BmkPhysicalInput.ACTIONS.size()):
 		var action: String = BmkPhysicalInput.ACTIONS[i]
-		add_button("%s: %s" % [labels[i],OS.get_keycode_string(settings.bindings[action])],func() -> void: capture_action = action; message.text = "PRESS A KEY FOR " + action)
-	add_button("BACK",show_settings)
+		add_button("%s: %s" % [labels[i],OS.get_keycode_string(settings.bindings[action])],func() -> void: capture_action = action; message.text = "새 키를 누르세요: " + action)
+	add_button("뒤로",show_settings)
 
 func _input(event: InputEvent) -> void:
 	if not visible or capture_action.is_empty() or event is not InputEventKey: return
@@ -184,9 +191,10 @@ func _input(event: InputEvent) -> void:
 		return
 	var code: int = key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
 	if key.ctrl_pressed or key.alt_pressed or key.meta_pressed or not settings.bind(capture_action,code):
-		message.text = "KEY IS RESERVED OR ALREADY ASSIGNED"
+		message.text = "사용할 수 없거나 이미 지정된 키입니다."
 		return
-	settings.save()
+	var error: Error = settings.save()
 	settings_changed.emit()
 	capture_action = ""
 	show_bindings()
+	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
