@@ -39,7 +39,10 @@ func _draw() -> void:
 		return
 	var p: BmkActorState = session.player
 	var t: float = p.t * session.MS
-	if p.st == "atk":
+	# game.js drawPlayer(): drawViesaPlayer() returns first, so Barel's body effects never draw for Viesa.
+	if p.is_viesa(): p = null
+	if p == null: pass
+	elif p.st == "atk":
 		var row: int = 0 if p.atk == "air" else int(p.atk.substr(1)) - 1
 		var index: int = -1
 		if p.atk == "air" and p.z > 0 and t < 240:
@@ -52,18 +55,18 @@ func _draw() -> void:
 				index = mini(1,int(floor((t - a.wind_ms) / (peak - a.wind_ms) * 2))) if t < peak else mini(5,2 + int(floor((t - peak) / (end - peak) * 4)))
 		if index >= 0:
 			asset_frame("barel_combo_fx.row_%d" % row,index,Vector2(p.x + p.face * 48,p.y - p.z - (50 if row == 2 else 55)),-p.face if row == 2 else p.face)
-	if p.st == "dash_attack" and p.t >= 3 and p.t < 14:
+	if p != null and p.st == "dash_attack" and p.t >= 3 and p.t < 14:
 		barel_effect("dust",(p.t - 3) / 11.0,Vector2(p.x - p.face * 24,p.y + 2),Vector2(120,30),p.face)
-	if p.st == "skill":
+	if p != null and p.st == "skill":
 		var start: float = {"thrust":220,"slam":330,"whirl":150,"leap":560,"redwave":220}[p.skill]
 		var u: float = (t - start) / (session.data.skill(p.skill).duration_ms - start)
 		if u >= 0 and u < 1:
 			var id: String = {"thrust":"slash","slam":"impact","whirl":"moon","leap":"impact","redwave":"wave"}[p.skill]
 			var dx: float = 0 if p.skill == "whirl" else (100 if p.skill == "thrust" else 65)
 			barel_effect(id,u,Vector2(p.x + p.face * dx,p.y - p.z),Vector2(270 if p.skill == "whirl" else 240,190),p.face)
-	if p.st == "cast" and t > 180:
+	if p != null and p.st == "cast" and t > 180:
 		barel_effect("lightning",(t - 180) / (session.data.magic_duration - 180),Vector2(p.x,p.y - p.z),Vector2(210,270),p.face)
-	if p.st == "special":
+	if p != null and p.st == "special":
 		var id: String = "moon" if t < 620 else ("slash" if t < 1260 else "impact")
 		var u: float = t / 620.0 if t < 620 else (fmod(t - 620,session.data.special_interval) / session.data.special_interval if t < 1260 else (t - 1260) / 740.0)
 		var size_value: Vector2 = Vector2(270,240) if t < 620 else (Vector2(300,220) if t < 1260 else Vector2(330,270))

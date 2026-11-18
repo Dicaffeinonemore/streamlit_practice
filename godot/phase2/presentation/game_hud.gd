@@ -30,8 +30,9 @@ func _draw() -> void:
 	if game.show_flash and s.flash_t > 0:
 		draw_rect(Rect2(0,0,960,540),Color(1,0.8,0.85,minf(0.55,s.flash_t / 220 * 0.55)))
 	if game is BmkMenuGame:
-		draw_source_hud(p)
-		draw_source_skills(p,s)
+		if not hud_hidden():
+			draw_source_hud(p)
+			draw_source_skills(p,s)
 	else:
 		draw_rect(Rect2(0,0,960,79),Color(0.025,0.02,0.035,0.86))
 		text(Vector2(20,25),"BAREL",Color("e4d5ba"),20)
@@ -73,7 +74,14 @@ func _draw() -> void:
 		text(Vector2(304,251),title,Color("e4d5ba"),30)
 		text(Vector2(304,288),"R: RESTART STREET" if game.section.complete or s.game_over else "ESC: RESUME    R: RESTART",Color("ddd5dd"),16)
 
+## game.js render(): the boss intro replaces the player HUD with its card.
+func hud_hidden() -> bool:
+	return false
+
 func draw_source_hud(p: BmkActorState) -> void:
+	if p.is_viesa():
+		BmkViesaHud.draw_player(self,p)
+		return
 	if source_hud_atlas == null: source_hud_atlas = load("res://port_assets/images/pixel_ui_source__1d6b42ef373a.png") as Texture2D
 	var atlas: Texture2D = source_hud_atlas
 	var scale_: float = 960.0 / 1672.0 * 0.62 * 1064.0 / 1104.0
@@ -90,6 +98,9 @@ func draw_source_hud(p: BmkActorState) -> void:
 	text(Vector2(6,14),"SCORE %d" % p.score,Color("ffe1a0"),11)
 
 func draw_source_skills(p: BmkActorState, s: BmkSimulation) -> void:
+	if p.is_viesa():
+		BmkViesaHud.draw_skills(self,p,s)
+		return
 	var actions: Array[String] = ["KeyU","KeyH","KeyO","KeyP","KeyL"]
 	for i: int in range(mini(5,s.data.skills.size())):
 		var at: Vector2 = Vector2(915,145 + i * 50)

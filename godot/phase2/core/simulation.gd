@@ -40,6 +40,25 @@ var jump_phase: String = ""
 var jump_phase_ticks: int = 0
 var was_airborne: bool = false
 var landing_tick: int = -1
+var hazard_seq: int = 0
+
+func next_hazard_seq() -> int:
+	hazard_seq += 1
+	return hazard_seq
+
+## morgra-runtime.js strikeMorgraCrows(reach, behind, origin); only Stage 2 has crows.
+func strike_crows(_reach: float, _behind: float, _x: float, _y: float, _z: float, _face: int) -> void:
+	pass
+
+## game.js playerBodyHeight(): Viesa 81; Barel 90, or the low-hurt box while crouched.
+func player_body_height() -> float:
+	var p: BmkActorState = player
+	if p.is_viesa(): return 90.0 * 0.9
+	if p.st != "hurt" or p.hurt_kind != "hurt_low" or p.hurt_ends.is_empty(): return 90.0
+	return 84.919114 if [7,8,9,10,11,12][p.hurt_index()] <= 10 else 90.0
+
+func player_impact_height(low: float, high: float) -> float:
+	return (maxf(player.z,low) + minf(player.z + player_body_height(),high)) / 2.0
 
 func _init(config: BmkCombatData = null) -> void:
 	if config != null:
@@ -146,6 +165,13 @@ func observe_jump() -> void:
 func update_hazards() -> void:
 	for z: BmkProjectileState in hazards:
 		z.age += MS
+		update_wave(z)
+	for i: int in range(hazards.size() - 1, -1, -1):
+		if hazards[i].dead:
+			hazards.remove_at(i)
+
+## One Barel red wave (game.js 'pwave' hazard) after its age has advanced.
+func update_wave(z: BmkProjectileState) -> void:
 		var from: float = z.x
 		var distance: float = minf(9.0, 520.0 - z.travel)
 		z.x += z.direction * distance
@@ -158,6 +184,3 @@ func update_hazards() -> void:
 			player.sp = minf(100.0, player.sp + 4.0)
 		if z.travel >= 520.0:
 			z.dead = true
-	for i: int in range(hazards.size() - 1, -1, -1):
-		if hazards[i].dead:
-			hazards.remove_at(i)

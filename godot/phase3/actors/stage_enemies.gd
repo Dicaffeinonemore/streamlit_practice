@@ -93,7 +93,7 @@ func stage_override(sim: BmkSimulation, actor: BmkActorState) -> bool:
 					e.t = 0
 			else:
 				var dx: float = (s.player.x - e.x) * e.face
-				if not e.hit_set.has(0) and dx > -8 and dx < 40 + s.player.hw and absf(s.player.y - e.y) < 16 and absf(s.player.z - e.z) < 45 and s.combat.hurt_player(s,4,e.face,false): e.hit_set[0] = true
+				if not e.hit_set.has(0) and dx > -8 and dx < 40 + s.player.hw and absf(s.player.y - e.y) < 16 * hurt_scale(s) and absf(s.player.z - e.z) < 45 * hurt_scale(s) and s.combat.hurt_player(s,4,e.face,false): e.hit_set[0] = true
 				if e.t >= 6:
 					e.st = "rec"
 					e.t = 0
@@ -364,3 +364,7 @@ func attack_zone(sim: BmkSimulation, actor: BmkActorState) -> BmkHitZone:
 		z.active_age = e.t if z.active else -1
 		return z
 	return null
+
+## game.js playerHurtScale(): Viesa's hurt area is 90% of Barel's in reach zones.
+func hurt_scale(s: BmkSimulation) -> float:
+	return 0.9 if s.player.is_viesa() else 1.0

@@ -22,8 +22,10 @@ func zone(s: BmkSimulation, e: BmkActorState, hit: int) -> BmkHitZone:
 	result.reach = e.mv.hit_reach[hit] + s.player.hw
 	result.y = e.y
 	result.ez = e.z
-	result.depth = s.data.enemy_depth
-	result.max_height = s.data.enemy_height
+	# feel-runtime.js reachZone: depth and height scale with playerHurtScale() (Viesa .9).
+	var k: float = 0.9 if s.player.is_viesa() else 1.0
+	result.depth = s.data.enemy_depth * k
+	result.max_height = s.data.enemy_height * k
 	result.knockdown = e.mv.hit_knockdown[hit] != 0
 	var start: int = e.mv.frame_start(e.mv.hit_from[hit])
 	result.active = e.mv_f + 1 >= e.mv.hit_from[hit]

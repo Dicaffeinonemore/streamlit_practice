@@ -326,6 +326,7 @@ func update_dash_attack(s: BmkSimulation) -> void:
 		s.shake = maxf(s.shake, 3.0)
 		s.impact(p.x + p.face * d.dash_reach, p.y, d.dash_tip_height, 1)
 	if p.t >= d.dash_attack_from and p.t < d.dash_attack_to:
+		s.strike_crows(d.dash_reach, -d.dash_front, p.x, p.y, p.z, p.face)
 		for e: BmkActorState in s.enemies:
 			var dx: float = (e.x - p.x) * p.face
 			if not s.combat.can_hit(e) or p.hit_set.has(e.id) or dx + e.hw < d.dash_front or dx - e.hw > d.dash_reach or absf(e.y - p.y) >= d.dash_depth or e.z > d.dash_top or e.z + e.d.height < d.dash_bottom:
@@ -374,6 +375,7 @@ func update_skill(s: BmkSimulation) -> void:
 		"redwave":
 			if previous < a.strikes[0] and t >= a.strikes[0]:
 				var wave: BmkProjectileState = BmkProjectileState.new()
+				wave.seq = s.next_hazard_seq()
 				wave.x = p.x + p.face * 32.0
 				wave.y = p.y
 				wave.direction = p.face

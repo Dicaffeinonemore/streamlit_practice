@@ -1,0 +1,1502 @@
+{
+  "BUF_MS": 220,
+  "CHARACTERS": {
+    "barel": {
+      "available": true,
+      "description": "대검으로 전장을 가르는 흑기사",
+      "job": "흑기사",
+      "name": "바렐"
+    },
+    "viesa": {
+      "available": true,
+      "description": "흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.",
+      "job": "궁수",
+      "name": "비에사"
+    }
+  },
+  "GBOT": 500,
+  "GTOP": 340,
+  "LINK_MS": 420,
+  "MAGIC": {
+    "damage": 80,
+    "dur": 640,
+    "fire": 380,
+    "max": 3
+  },
+  "PLAYER": {
+    "hp": 80,
+    "hw": 14.4,
+    "max": 80,
+    "w": 23.400000000000002
+  },
+  "SKILLS": {
+    "leap": {
+      "cd": 8000,
+      "dur": 960
+    },
+    "redwave": {
+      "cd": 6500,
+      "dur": 720
+    },
+    "slam": {
+      "cd": 6000,
+      "dur": 820
+    },
+    "thrust": {
+      "cd": 3200,
+      "dur": 520
+    },
+    "whirl": {
+      "cd": 7000,
+      "dur": 760
+    }
+  },
+  "SKILL_KEYS": {
+    "KeyH": "slam",
+    "KeyL": "redwave",
+    "KeyO": "whirl",
+    "KeyP": "leap",
+    "KeyU": "thrust"
+  },
+  "SP_MAX": 100,
+  "VIESA": {
+    "clips": {
+      "backflip": [
+        {
+          "additive": false,
+          "tip": [
+            81.6,
+            6.132
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            47.168,
+            12.264
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            38.206,
+            133.013
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            23.433,
+            97.034
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            9.434,
+            152.824
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            32.074,
+            134.9
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            42.451,
+            13.207
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            50.47,
+            89.855
+          ]
+        }
+      ],
+      "dash_slash": [
+        {
+          "additive": false,
+          "tip": [
+            42.376,
+            72.596
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            44.809,
+            58.016
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            39.149,
+            43.394
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            19.81,
+            131.127
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            53.205,
+            110.769
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            103.769,
+            136.315
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            59.903,
+            74.053
+          ]
+        }
+      ],
+      "death": [
+        {
+          "additive": false,
+          "tip": [
+            56.773,
+            112.323
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            71.356,
+            47.811
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            93.232,
+            21.497
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            122.4,
+            35.78
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            93.753,
+            46.728
+          ]
+        }
+      ],
+      "fx_arrow": [
+        {
+          "additive": false,
+          "tip": null
+        }
+      ],
+      "fx_arrow_fade": [
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        }
+      ],
+      "fx_arrow_trail": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_charge_glow": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_dash_streak": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_giant_arrow": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_hit_spark": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_land_dust": [
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        },
+        {
+          "additive": false,
+          "tip": null
+        }
+      ],
+      "fx_moon_sigil": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_phantom_arrow": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_snipe_arrow": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_ult_explosion": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_ult_impact": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "fx_volley": [
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        },
+        {
+          "additive": true,
+          "tip": null
+        }
+      ],
+      "getup": [
+        {
+          "additive": false,
+          "tip": [
+            81.773,
+            31.772
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            58.335,
+            83.857
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            38.605,
+            60.507
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            62.502,
+            84.638
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            48.96,
+            95.836
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            55.21,
+            63.148
+          ]
+        }
+      ],
+      "hurt": [
+        {
+          "additive": false,
+          "tip": [
+            46.876,
+            117.191
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            43.231,
+            133.337
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            57.293,
+            110.681
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            55.21,
+            131.254
+          ]
+        }
+      ],
+      "idle": [
+        {
+          "additive": false,
+          "tip": [
+            43.487,
+            102.284
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            43.044,
+            94.519
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            42.6,
+            100.953
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            46.15,
+            96.516
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            45.706,
+            93.409
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            43.044,
+            97.847
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            41.269,
+            105.834
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            39.937,
+            104.947
+          ]
+        }
+      ],
+      "jump": [
+        {
+          "additive": false,
+          "tip": [
+            48.329,
+            47.19
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            48.11,
+            55.511
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            47.606,
+            70.997
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            35.923,
+            78.7
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            41.974,
+            63.067
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            44.58,
+            42.159
+          ]
+        }
+      ],
+      "jump_shot": [
+        {
+          "additive": false,
+          "tip": [
+            47.791,
+            65.046
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            53.237,
+            66.53
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            51.17,
+            66.416
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            45.858,
+            65.635
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            48.967,
+            61.386
+          ]
+        }
+      ],
+      "kick": [
+        {
+          "additive": false,
+          "tip": [
+            42.269,
+            67.9
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            26.081,
+            97.249
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            14.839,
+            68.799
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            58.475,
+            95.347
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            7.644,
+            64.527
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            48.564,
+            113.316
+          ]
+        }
+      ],
+      "knockdown": [
+        {
+          "additive": false,
+          "tip": [
+            78.127,
+            95.576
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            47.397,
+            76.825
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            74.481,
+            79.169
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            52.085,
+            60.679
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            58.439,
+            40.533
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            1.042,
+            6.771
+          ]
+        }
+      ],
+      "rapid_end": [
+        {
+          "additive": false,
+          "tip": [
+            62.476,
+            94.112
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            54.119,
+            89.734
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            74.812,
+            123.758
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            53.323,
+            93.316
+          ]
+        }
+      ],
+      "rapid_loop": [
+        {
+          "additive": false,
+          "tip": [
+            49.543,
+            31.835
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            35.018,
+            116.197
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            33.427,
+            73.419
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            36.212,
+            117.59
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            32.631,
+            73.618
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            60.884,
+            70.037
+          ]
+        }
+      ],
+      "rapid_start": [
+        {
+          "additive": false,
+          "tip": [
+            76.404,
+            20.096
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            37.406,
+            61.481
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            68.047,
+            70.236
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            71.628,
+            73.021
+          ]
+        }
+      ],
+      "run": [
+        {
+          "additive": false,
+          "tip": [
+            40.044,
+            68.799
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            35.731,
+            68.293
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            47.925,
+            84.312
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            43.931,
+            88.75
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            49.256,
+            82.094
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            33.512,
+            68.546
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            51.475,
+            88.084
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            41.712,
+            88.306
+          ]
+        }
+      ],
+      "scroll_cast": [
+        {
+          "additive": false,
+          "tip": [
+            -10.754,
+            76.713
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            10.396,
+            94.636
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            22.942,
+            98.221
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            21.15,
+            94.636
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            25.81,
+            137.653
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            15.773,
+            158.444
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            25.093,
+            158.444
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            11.83,
+            154.86
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            37.64,
+            140.521
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            23.301,
+            79.581
+          ]
+        }
+      ],
+      "shot": [
+        {
+          "additive": false,
+          "tip": [
+            21.012,
+            45.807
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            44.614,
+            78.809
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            71.863,
+            104.642
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            38.243,
+            48.749
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            30.258,
+            46.227
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            40.159,
+            76.174
+          ]
+        }
+      ],
+      "slash1": [
+        {
+          "additive": false,
+          "tip": [
+            65.202,
+            100.276
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            66.101,
+            101.625
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            71.569,
+            70.17
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            80.778,
+            88.171
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            56.658,
+            95.329
+          ]
+        }
+      ],
+      "slash2": [
+        {
+          "additive": false,
+          "tip": [
+            67.9,
+            108.594
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            43.168,
+            77.567
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            75.994,
+            151.987
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            52.161,
+            152.887
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            64.302,
+            102.974
+          ]
+        }
+      ],
+      "snipe_draw": [
+        {
+          "additive": false,
+          "tip": [
+            50.347,
+            51.116
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            40.739,
+            161.034
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            57.065,
+            93.269
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            40.355,
+            161.419
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            41.123,
+            161.419
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            58.603,
+            93.269
+          ]
+        }
+      ],
+      "snipe_release": [
+        {
+          "additive": false,
+          "tip": [
+            58.418,
+            129.135
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            48.426,
+            152.579
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            32.668,
+            149.697
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            40.739,
+            145.661
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            48.426,
+            127.79
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            54.575,
+            45.735
+          ]
+        }
+      ],
+      "ult_barrage": [
+        {
+          "additive": false,
+          "tip": [
+            66.267,
+            63.9
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            52.658,
+            23.667
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            73.367,
+            63.308
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            68.633,
+            42.6
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            57.983,
+            70.408
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            26.033,
+            82.242
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            34.317,
+            155.017
+          ]
+        }
+      ],
+      "ult_final": [
+        {
+          "additive": false,
+          "tip": [
+            89.342,
+            111.825
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            73.958,
+            113.6
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            69.225,
+            110.05
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            53.25,
+            129.575
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            51.475,
+            102.062
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            55.617,
+            85.2
+          ]
+        }
+      ],
+      "ult_leap": [
+        {
+          "additive": false,
+          "tip": [
+            77.508,
+            67.45
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            59.167,
+            98.217
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            51.475,
+            95.85
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            67.45,
+            132.237
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            56.658,
+            82.626
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            42.6,
+            89.933
+          ]
+        }
+      ],
+      "ult_summon": [
+        {
+          "additive": false,
+          "tip": [
+            69.817,
+            107.092
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            59.758,
+            99.104
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            68.633,
+            69.521
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            76.325,
+            67.45
+          ]
+        }
+      ],
+      "walk": [
+        {
+          "additive": false,
+          "tip": [
+            42.156,
+            90.747
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            47.037,
+            87.197
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            44.819,
+            96.294
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            36.565,
+            74.08
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            43.044,
+            90.303
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            44.375,
+            96.294
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            34.914,
+            73.068
+          ]
+        },
+        {
+          "additive": false,
+          "tip": [
+            41.712,
+            92.078
+          ]
+        }
+      ]
+    },
+    "scale": 0.72,
+    "worldHeight": 97.12799999999999
+  },
+  "VIESA_SKILLS": {
+    "leap": {
+      "clip": "dash_slash",
+      "key": "P",
+      "name": "돌진 → 공중 백플립"
+    },
+    "redwave": {
+      "clip": "snipe_draw",
+      "key": "L",
+      "name": "장거리 저격"
+    },
+    "slam": {
+      "clip": "slash1",
+      "key": "H",
+      "name": "근접 콤보"
+    },
+    "thrust": {
+      "clip": "rapid_start",
+      "key": "U",
+      "name": "화살 연사"
+    },
+    "whirl": {
+      "clip": "dash_slash",
+      "key": "O",
+      "name": "돌진 → 지상 백플립"
+    }
+  },
+  "VW": 640
+}

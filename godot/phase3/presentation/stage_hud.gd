@@ -37,12 +37,17 @@ func _draw() -> void:
 			text(Vector2(340,190),"GORATH",Color("ffe27a"),42)
 			text(Vector2(340,216),"THE BUTCHER",Color("e8d2cd"),16)
 		if s.boss_title > 0: text(Vector2(315,160),"RAIN OF THE SLAUGHTERHOUSE",Color("ffbcaa"),19)
+	elif s is BmkWaveSimulation and wave_boss(s as BmkWaveSimulation) != null and s.mode != "bossintro" and wave_boss(s as BmkWaveSimulation).st != "intro":
+		var legacy: BmkLegacyActor = wave_boss(s as BmkWaveSimulation)
+		draw_source_boss(legacy,str(legacy.stats.get("name","")))
+		if legacy.p2shown: text(Vector2(232,432),"II",Color("ffe5dd"),12)
 	elif game is BmkMenuGame:
 		for actor: BmkActorState in s.enemies:
 			if actor.id == s.last_hit_id and actor.st != "dead":
 				draw_source_enemy(actor)
 				break
-	if s.mode == "bossintro":
+	if s is BmkWaveSimulation: draw_wave_overlays(s as BmkWaveSimulation)
+	elif s.mode == "bossintro":
 		var n: float = s.intro_ms / s.MS
 		var total: float = float(s.stage_data.source["G2_INTRO"]["total"])
 		var height: float = round(64 * s.ease(minf(1,n / 20)) * clampf((total - n) / 12,0,1))
@@ -61,7 +66,47 @@ func _draw() -> void:
 		text(Vector2(282,243),"STAGE 1 COMPLETE",Color("ffe18b"),36)
 		text(Vector2(282,283),"SCORE %d    R: RESTART" % s.player.score,Color("e4d5ba"),18)
 
-func draw_source_boss(boss_: BmkStageActor) -> void:
+func hud_hidden() -> bool:
+	return game != null and game.session is BmkWaveSimulation and (game.session as BmkWaveSimulation).mode == "bossintro"
+
+func wave_boss(s: BmkWaveSimulation) -> BmkLegacyActor:
+	for e: BmkActorState in s.enemies:
+		if e.boss: return e as BmkLegacyActor
+	return null
+
+## Stage entry banner (scene 'intro') and the boss name card during the boss intro.
+func draw_wave_overlays(s: BmkWaveSimulation) -> void:
+	# Stage entry banner (scene 'intro').
+	if s.mode == "intro" and s.banner_t > 0:
+		var a: float = clampf(minf(s.banner_t,160 - s.banner_t) / 25.0,0,1)
+		draw_rect(Rect2(0,200,960,140),Color(0,0,0,0.6 * a))
+		outlined(Vector2(0,280),str(s.stage["name"]),56,Color(1,0.82,0.25,a),a,font)
+		outlined(Vector2(0,328),str(s.stage["title"]),28,Color(1,1,1,a),a,korean_font)
+	if s.clear_t > 20 and s.mode == "play": outlined(Vector2(0,270),"VICTORY!",64,Color(1,0.82,0.25),1.0,font)
+	# drawIntroCard(u): letterbox bars, then STAGE n / Korean name / English name and a gold rule.
+	if s.mode == "bossintro" and s.intro_boss != null:
+		var u: float = s.intro_t / float(s.wave_data.source["INTRO_MS"])
+		var bh: float = roundf(64 * BmkSimulation.ease(minf(1,u * 7)) * ((1 - (u - 0.9) * 10) if u > 0.9 else 1.0))
+		draw_rect(Rect2(0,0,960,bh),Color("05030a"))
+		draw_rect(Rect2(0,540 - bh,960,bh),Color("05030a"))
+		if u > 0.42 and u < 0.92:
+			var k: float = BmkSimulation.ease((u - 0.42) / 0.12)
+			var fade: float = maxf(0,1 - (u - 0.84) / 0.08) if u > 0.84 else 1.0
+			var off: float = roundf((1 - k) * 240)
+			var y: float = 540 - 120
+			draw_rect(Rect2(0,y - 46,960,92),Color(5 / 255.0,3 / 255.0,10 / 255.0,0.55 * fade))
+			draw_string(font,Vector2(-off,y - 18),"STAGE %d" % (s.stage_index + 1),HORIZONTAL_ALIGNMENT_CENTER,960,11,Color(1,1,1,fade))
+			outlined(Vector2(off,y + 26),str(s.intro_boss.stats.get("name","")),34,Color(1,0.89,0.48,fade),fade,korean_font,Color(0.48,0.1,0.14,fade))
+			draw_string(font,Vector2(off,y + 42),str(s.intro_boss.stats.get("en","")),HORIZONTAL_ALIGNMENT_CENTER,960,10,Color(0.95,0.82,0.42,fade))
+			var lw: float = roundf(360 * k)
+			draw_rect(Rect2(480 - lw / 2,y + 46,lw,2),Color(0.86,0.71,0.27,fade))
+
+func outlined(at: Vector2, value: String, size_: int, color: Color, alpha: float, which: Font, outline: Color = Color(0,0,0,1)) -> void:
+	outline.a = alpha
+	draw_string_outline(which,at,value,HORIZONTAL_ALIGNMENT_CENTER,960,size_,6,outline)
+	draw_string(which,at,value,HORIZONTAL_ALIGNMENT_CENTER,960,size_,color)
+
+func draw_source_boss(boss_: BmkStageActor, label: String = "") -> void:
 	if boss_atlas == null: boss_atlas = load("res://port_assets/images/boss_ui_source__29c360191ddf.png") as Texture2D
 	var scale_: float = 600.0 / 2172.0
 	var origin: Vector2 = Vector2(140,350)
@@ -74,7 +119,7 @@ func draw_source_boss(boss_: BmkStageActor) -> void:
 	var fill: float = width * clampf(boss_.hp / boss_.max_hp,0,1)
 	if fill > 0: draw_texture_rect_region(boss_atlas,Rect2(start,Vector2(fill,58) * scale_),Rect2(400,342,1000,58))
 	draw_rect(Rect2(origin + Vector2(380,416) * scale_,Vector2((1500 + extra) * scale_ * clampf(boss_.gr / boss_.gr_max,0,1),2)),Color("cfab70"))
-	draw_string(korean_font,origin + Vector2(910 + extra / 2,320) * scale_,"도살자 고라스  %d단계" % boss_.g2.phase,HORIZONTAL_ALIGNMENT_LEFT,-1,13,Color("ffe5dd"))
+	draw_string(korean_font,origin + Vector2(910 + extra / 2,320) * scale_,label if not label.is_empty() else "도살자 고라스  %d단계" % boss_.g2.phase,HORIZONTAL_ALIGNMENT_LEFT,-1,13,Color("ffe5dd"))
 
 func draw_source_enemy(actor: BmkActorState) -> void:
 	if enemy_atlas == null: enemy_atlas = load("res://port_assets/images/enemy_ui_source__92e4bd2e3ff9.png") as Texture2D
@@ -83,8 +128,15 @@ func draw_source_enemy(actor: BmkActorState) -> void:
 	draw_texture_rect_region(enemy_atlas,Rect2(origin,Vector2(1815,660) * scale_),Rect2(185,28,1815,660))
 	var portrait_center: Vector2 = origin + Vector2(480 - 185,342 - 28) * scale_
 	draw_circle(portrait_center,167 * scale_,Color("35090d"))
-	var selected: Dictionary = game.selector.enemy(game.session,actor,game.bank.catalogs["STAGE1_ENEMY_ART"].get(actor.species,{}))
-	var animation: BmkAnimationAsset = game.bank.animation(game.actor_animation_id(actor,selected))
+	var selected: Dictionary
+	var animation: BmkAnimationAsset
+	if actor is BmkLegacyActor:
+		var pose: Dictionary = (game as BmkStageGame).legacy_presenter.pose(game.session as BmkWaveSimulation,actor as BmkLegacyActor)
+		animation = pose.get("asset") as BmkAnimationAsset
+		selected = {"index":pose.get("index",0)}
+	else:
+		selected = game.selector.enemy(game.session,actor,game.bank.catalogs["STAGE1_ENEMY_ART"].get(actor.species,{}))
+		animation = game.bank.animation(game.actor_animation_id(actor,selected))
 	if animation != null:
 		var frame: int = clampi(int(selected["index"]),0,animation.sprite_frames.get_frame_count(&"source") - 1)
 		var portrait: Texture2D = animation.sprite_frames.get_frame_texture(&"source",frame)
@@ -93,4 +145,4 @@ func draw_source_enemy(actor: BmkActorState) -> void:
 	draw_rect(Rect2(start,Vector2(1168,63) * scale_),Color("21090e"))
 	var fill: float = 1168 * clampf(actor.hp / actor.max_hp,0,1)
 	if fill > 0: draw_texture_rect_region(enemy_atlas,Rect2(start,Vector2(fill,63) * scale_),Rect2(760,332,800,63))
-	draw_string(korean_font,origin + Vector2(140,36),actor.species.to_upper(),HORIZONTAL_ALIGNMENT_CENTER,120,12,Color("ffe5dd"))
+	draw_string(korean_font,origin + Vector2(140,36),str((actor as BmkLegacyActor).stats.get("name","")) if actor is BmkLegacyActor else actor.species.to_upper(),HORIZONTAL_ALIGNMENT_CENTER,120,12,Color("ffe5dd"))

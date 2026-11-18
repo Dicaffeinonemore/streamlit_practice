@@ -9,3 +9,5 @@ var travel: float = 0.0
 var damage: float = 0.0
 var dead: bool = false
 var hits: Dictionary[int, bool] = {}
+## Creation order across all hazard kinds (the browser keeps one hazards array).
+var seq: int = 0

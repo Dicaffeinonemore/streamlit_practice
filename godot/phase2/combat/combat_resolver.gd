@@ -34,7 +34,10 @@ func damage_enemy(s: BmkSimulation, e: BmkActorState, damage: float, kd: bool, k
 	s.last_hit_id = e.id
 	s.last_tier = tier.id
 	s.impact(e.x, e.y, 56.0, kind)
-	if p.st != "special":
+	if p.is_viesa():
+		# game.js playerHitSfx(): Viesa's bow and skills play their own sounds.
+		if BmkViesaController.default_hit_sound(p): s.sound("hit",kind)
+	elif p.st != "special":
 		var hit_sound: String = {"slam":"barelSlam","leap":"barelSlam","redwave":"barelWave"}.get(p.skill,"swordHit") if p.st == "skill" else "swordHit"
 		s.sound(hit_sound,kind)
 	if e.hp <= 0.0:
@@ -69,30 +72,36 @@ func damage_enemy(s: BmkSimulation, e: BmkActorState, damage: float, kd: bool, k
 		e.vx = direction * e.d.knockback * tier.knockback_multiplier
 	e.pat = ""
 
-func hurt_player(s: BmkSimulation, damage: float, direction: int, kd: bool, hit_height: float = -1.0) -> bool:
+func hurt_player(s: BmkSimulation, damage: float, direction: int, kd: bool, hit_height: float = -1.0, hitstun: float = -1.0) -> bool:
 	var p: BmkActorState = s.player
 	if p.inv > 0 or p.st in ["down", "dead", "special", "grabbed"]:
 		return false
 	damage = s.js_round(damage)
-	var height: float = p.z + 56.0 if hit_height < 0.0 else hit_height
-	p.hurt_kind = "hurt_high" if height - p.z >= 90.0 * 0.55 else "hurt_low"
-	p.hurt_duration = maxi(7, s.data.hurt_ticks)
-	var weights: PackedFloat64Array = s.data.hurt_high_weights if p.hurt_kind == "hurt_high" else s.data.hurt_low_weights
-	var sum: float = 0.0
-	for weight: float in weights:
-		sum += weight
-	p.hurt_ends.clear()
-	var end: float = 0.0
-	for weight: float in weights:
-		end += weight / sum * (p.hurt_duration - 6)
-		p.hurt_ends.append(end)
-	p.hurt_ends.append(p.hurt_duration)
+	# game.js hurtPlayer(): BarelHurt.begin() runs for Barel only; Viesa keeps her default hitstun.
+	if not p.is_viesa():
+		var height: float = p.z + 56.0 if hit_height < 0.0 else hit_height
+		p.hurt_kind = "hurt_high" if height - p.z >= 90.0 * 0.55 else "hurt_low"
+		# BarelHurt.begin(actor, height, ticks): attack-specific hitstun when the source has one.
+		p.hurt_duration = maxi(7, s.js_round(hitstun) if hitstun >= 0.0 else s.data.hurt_ticks)
+		var weights: PackedFloat64Array = s.data.hurt_high_weights if p.hurt_kind == "hurt_high" else s.data.hurt_low_weights
+		var sum: float = 0.0
+		for weight: float in weights:
+			sum += weight
+		p.hurt_ends.clear()
+		var end: float = 0.0
+		for weight: float in weights:
+			end += weight / sum * (p.hurt_duration - 6)
+			p.hurt_ends.append(end)
+		p.hurt_ends.append(p.hurt_duration)
 	s.stat_damage += minf(p.hp, damage)
 	p.hp -= damage
 	p.flash = 5
 	p.combo = 0
 	p.buf = 0.0
 	p.skill = ""
+	p.viesa_action = null
+	p.viesa_hover_grace = 0
+	p.viesa_landing = ""
 	s.chain_n = 0
 	s.hit_stop = maxi(s.hit_stop, s.data.down_stop if kd else s.data.hurt_stop)
 	s.shake = maxf(s.shake, 12.0 if kd else 7.0)
@@ -121,6 +130,7 @@ func hurt_player(s: BmkSimulation, damage: float, direction: int, kd: bool, hit_
 
 func strike(s: BmkSimulation, a: BmkAttackData) -> void:
 	var p: BmkActorState = s.player
+	s.strike_crows(a.reach, 0.0, p.x, p.y, p.z, p.face)
 	for e: BmkActorState in s.enemies:
 		if not can_hit(e) or p.hit_set.has(e.id):
 			continue
@@ -131,6 +141,7 @@ func strike(s: BmkSimulation, a: BmkAttackData) -> void:
 
 func skill_strike(s: BmkSimulation, phase: int, a: BmkAttackData) -> void:
 	var p: BmkActorState = s.player
+	s.strike_crows(a.reach, a.behind, p.x, p.y, p.z, p.face)
 	for e: BmkActorState in s.enemies:
 		var key: String = "%d:%d" % [phase, e.id]
 		if not can_hit(e) or p.skill_hits.has(key):
