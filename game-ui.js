@@ -177,8 +177,9 @@ const UX = (() => {
     AUDIO.setVolumes(options.music, options.sfx);
     document.body.classList.toggle('reduce-motion', !options.shake);
     const titleImage = document.getElementById('namedTitleImage');
-    if (titleImage) { const src = options.shake ? NAMED_ART.title : NAMED_ART.titleStill; if (titleImage.src !== src) titleImage.src = src; }
+    if (titleImage && typeof TITLE_ART_SRC === 'string' && titleImage.getAttribute('src') !== TITLE_ART_SRC) titleImage.src = TITLE_ART_SRC;
     document.body.classList.toggle('touch', options.touch);
+    if (typeof MOBILE_FULLSCREEN !== 'undefined') MOBILE_FULLSCREEN.sync();
   }
   function assignKey(code) {
     const status = document.getElementById('bindingStatus');

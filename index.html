@@ -4,7 +4,7 @@
 <link rel="icon" href="data:,">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>흑월의 기사 - BLACK MOON KNIGHT</title>
+<title>BLACK MOON KNIGHTS</title>
 <style>
   :root { --game-safe-top: env(safe-area-inset-top); --game-safe-right: env(safe-area-inset-right);
     --game-safe-bottom: env(safe-area-inset-bottom); --game-safe-left: env(safe-area-inset-left); --game-viewport-height: 100vh; }
@@ -46,8 +46,12 @@
     border: .3cqw solid #ffd23f; background: #c0392b; color: #fff; border-radius: 1cqw; font-family: inherit; }
   .btn:hover { background: #e74c3c; transform: scale(1.05); }
   .blink { animation: blink 1s steps(2) infinite; }
-  #referenceLabLink { color: #b4c9e4; font-size: 14px; }
-  #mobileLabLink { position: absolute; right: 3%; bottom: 3%; color: #b4c9e4; font-size: 1.2cqw; background: #080508c0; }
+  #mobileLabLink { position: absolute; left: 3%; bottom: 3%; color: #b4c9e4; font-size: 1.2cqw; background: #080508c0; }
+  html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+  body { touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  input, textarea, select { -webkit-user-select: auto; user-select: auto; }
+  #title .fs-toggle { position: absolute; top: 3%; left: 3%; z-index: 2; margin: 0; padding: .9cqw 1.6cqw;
+    font-size: clamp(12px, 1.5cqw, 18px); letter-spacing: 0; background: #12080cd0; border: 1px solid #8a1a24; color: #f0e6ea; }
   @keyframes blink { 50% { opacity: .25; } }
 
   .grid { display: grid; grid-template-columns: auto auto; gap: 1.2cqw 3cqw; align-items: center; text-align: left; }
@@ -261,19 +265,18 @@
   @media(max-width:700px) { #title .art-button { width: 230px; height: 68px; } }
 
   #title.named-title { background: #070509; padding: 0; overflow: hidden; }
-  #namedTitleImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+  #namedTitleImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: auto; }
   #title.named-title .logo { position: absolute; inset: 0; }
   #title.named-title .moon, #title.named-title h1, #title.named-title .en, #title.named-title .sub { display: none; }
-  #title.named-title .logo::before { content: ''; position: absolute; left: 52%; top: 60%; width: 29%; height: 31%; background: linear-gradient(90deg,transparent,#10080b 8%,#10080b 90%,transparent); }
+  #title.named-title .logo::before { content: ''; position: absolute; left: 60%; top: 44%; width: 44%; height: 40%; background: radial-gradient(ellipse at center,#0a0508b8 0%,#0a050870 45%,transparent 72%); pointer-events: none; }
   #title.named-title .actions { display: contents; }
-  #title.named-title .art-button { position: absolute; left: 47%; width: 36%; height: 10%; background-color: transparent !important; background-repeat: no-repeat; background-size: contain; background-position: center; }
-  #title.named-title #btnStart { top: 60%; }
-  #title.named-title #btnContinue { top: 69%; }
-  #title.named-title #btnTitleSettings { top: 78%; }
+  #title.named-title .art-button { position: absolute; left: 64%; width: 36%; height: 10%; background-color: transparent !important; background-repeat: no-repeat; background-size: contain; background-position: center; }
+  #title.named-title #btnStart { top: 49%; }
+  #title.named-title #btnContinue { top: 59%; }
+  #title.named-title #btnTitleSettings { top: 69%; }
   #title.named-title #recordSummary { position: absolute; bottom: 3%; right: 3%; margin: 0; font-size: 1.1cqw; }
   #title.named-title #saveStatus { position: absolute; bottom: 7%; right: 3%; margin: 0; font-size: 1.1cqw; }
   #title.named-title .logo > p:last-child { display: none; }
-  #title.named-title #referenceLabLink { position: absolute; bottom: 3%; left: 3%; font-size: 1.2cqw; background: #080508c0; }
   @media(max-width:700px) { #title.named-title { position: absolute; height: 100%; } }
 
   #skillbar { padding: .2cqw; gap: .8cqw; background: rgba(9,14,25,.86); border: 1px solid #516880; border-radius: 10px; }
@@ -369,13 +372,12 @@
   <div class="screen show" id="title">
     <div class="logo">
       <div class="moon"></div>
-      <h1>흑월의 기사</h1>
-      <p class="en">BLACK MOON KNIGHT</p>
+      <h1>BLACK MOON KNIGHTS</h1>
       <p class="sub">5 STAGES · BELT-SCROLL ACTION</p>
       <div class="actions"><button class="btn" id="btnContinue" hidden>이어하기</button><button class="btn" id="btnStart">새 게임</button></div>
       <div class="actions"><button class="btn secondary" id="btnTitleSettings">설정</button></div>
-      <p><a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a></p>
       <a id="mobileLabLink" href="mobile-lab.html" target="_blank" rel="noopener">모바일 화면 실험실 ↗</a>
+      <button class="btn secondary fs-toggle" id="btnTitleFullscreen" type="button" hidden>⛶ 전체화면</button>
       <div class="actions"><button class="btn" id="btnBossChallenge">보스챌린지</button></div><p id="recordSummary"></p><p id="saveStatus"></p>
       <p style="margin-top:12px;font-size:13px">Enter · 새 게임 / 진행은 스테이지 시작 지점에 저장됩니다</p>
     </div>
@@ -434,7 +436,7 @@
 
   <div class="screen dialog" id="pause"><h2>일시정지</h2><p id="pauseReason">ESC 또는 계속하기</p>
     <div class="actions"><button class="btn secondary" id="btnPauseBosses" hidden>보스 목록</button><button class="btn" id="btnResume">계속하기</button><button class="btn secondary" id="btnPauseHelp">조작 안내</button><button class="btn secondary" id="btnPauseSettings">설정</button></div>
-    <div class="actions"><button class="btn secondary" id="btnRestart">스테이지 다시 시작</button><button class="btn secondary" id="btnPauseTitle">타이틀로</button></div>
+    <div class="actions"><button class="btn secondary" id="btnRestart">스테이지 다시 시작</button><button class="btn secondary" id="btnPauseTitle">타이틀로</button><button class="btn secondary fs-toggle" id="btnPauseFullscreen" type="button" hidden>⛶ 전체화면</button></div>
     <p class="tips">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
   </div>
   <div class="screen dialog" id="settings"><h2>설정</h2><div class="dialog-body">
@@ -524,6 +526,7 @@
 <script src="hd_sprites.js"></script>
 <script src="legion_sprites.js"></script>
 <script src="mobile-display.js"></script>
+<script src="mobile-fullscreen.js"></script>
 <script src="game-ui.js"></script>
 <script src="release-art.js"></script>
 <script src="release.js"></script>

@@ -38,7 +38,7 @@ func _draw() -> void:
 		text(Vector2(20,46),"HP %d / 100    LIFE %d" % [p.hp,p.lives],Color("f2e9dd"),13)
 		bar(Vector2(20,53),260,p.hp / 100,Color("bd354b"))
 		bar(Vector2(20,66),260,p.sp / 100,Color("70b7ee"))
-		text(Vector2(304,27),"BLACK MOON KNIGHT",Color("e4d5ba"),19)
+		text(Vector2(304,27),"BLACK MOON KNIGHTS",Color("e4d5ba"),19)
 		text(Vector2(304,49),"STAGE 1 / OCCUPIED STREET",Color("bbb0b5"),12)
 		text(Vector2(755,25),"SCORE %06d" % p.score,Color("e4d5ba"),16)
 		text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)

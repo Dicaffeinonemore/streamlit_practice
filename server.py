@@ -77,44 +77,6 @@ def build_single_html() -> str:
         return f"<script>\n{code}\n</script>"
 
     html = re.sub(r'<script\s+src=([\"\'])([^\"\']+)\1\s*>\s*</script>', inline_script, html)
-    # Streamlit uses its own page selector; relative navigation cannot escape srcdoc.
-    html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
-    return html
-
-
-def build_reference_html() -> str:
-    """Bundle the reference viewer for Streamlit without HTTP/fetch dependencies."""
-    catalog_path = "data/reference-catalog.json"
-    catalog = json.loads((ROOT / catalog_path).read_text(encoding="utf-8"))
-    documents = {catalog_path: catalog}
-    images = {s["image"] for s in catalog["sources"]}
-    documents[catalog["effects"]] = json.loads((ROOT / catalog["effects"]).read_text(encoding="utf-8"))
-    for sample in documents[catalog["effects"]]["samples"]:
-        images.update((sample["image"], sample["original"]))
-    for char in catalog["characters"]:
-        for key in ("animations", "skills", "enemy"):
-            path = char[key]
-            documents[path] = json.loads((ROOT / path).read_text(encoding="utf-8"))
-        for anim in documents[char["animations"]]["animations"].values():
-            if anim.get("panel"):
-                images.add(anim["panel"])
-            for frame in anim["frames"]:
-                images.update((frame["image"], frame["original"]))
-    payload = {"json": documents, "images": {
-        path: "data:image/png;base64," + base64.b64encode((ROOT / path).read_bytes()).decode("ascii")
-        for path in sorted(images)
-    }}
-    # Escape '<' to keep all source strings inside the script element.
-    data = json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c")
-    html = (ROOT / "sprite-lab.html").read_text(encoding="utf-8")
-    html = html.replace('<a href="index.html">게임으로 돌아가기 ↗</a>', '')
-    html = html.replace('<link rel="stylesheet" href="src/animation/lab.css">',
-                        '<style>' + (ROOT / "src/animation/lab.css").read_text(encoding="utf-8") + '</style>')
-    html = html.replace('<script src="src/animation/player.js"></script>',
-                        '<script>window.REFERENCE_BUNDLE=' + data + ';</script>\n<script src="src/animation/player.js"></script>')
-    for name in ("src/animation/player.js", "src/combat/reference-combat.js", "src/animation/lab.js"):
-        html = html.replace(f'<script src="{name}"></script>',
-                            '<script>' + (ROOT / name).read_text(encoding="utf-8") + '</script>')
     return html
 
 
@@ -144,55 +106,33 @@ def _copy_component_file(name: str, destination: Path) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def prepare_streamlit_component(review: bool = False) -> Path:
+def prepare_streamlit_component() -> Path:
     """Publish only required files; JS/images stay out of Streamlit's WebSocket messages."""
     identity = hashlib.sha256(str(ROOT).encode("utf-8")).hexdigest()[:16]
-    destination = Path(tempfile.gettempdir()) / f"bmk-component-{identity}" / ("review" if review else "game")
+    destination = Path(tempfile.gettempdir()) / f"bmk-component-{identity}" / "game"
     destination.mkdir(parents=True, exist_ok=True)
-    entry = "sprite-lab.html" if review else "index.html"
-    html = (ROOT / entry).read_text(encoding="utf-8")
-    if review:
-        catalog_name = "data/reference-catalog.json"
-        catalog = json.loads((ROOT / catalog_name).read_text(encoding="utf-8"))
-        files = {catalog_name, catalog["effects"], "src/animation/lab.css",
-                 "src/animation/player.js", "src/combat/reference-combat.js", "src/animation/lab.js"}
-        files.update(s["image"] for s in catalog["sources"])
-        effects = json.loads((ROOT / catalog["effects"]).read_text(encoding="utf-8"))
-        for sample in effects["samples"]:
-            files.update((sample["image"], sample["original"]))
-        for character in catalog["characters"]:
-            files.update(character[key] for key in ("animations", "skills", "enemy"))
-            animations = json.loads((ROOT / character["animations"]).read_text(encoding="utf-8"))
-            for animation in animations["animations"].values():
-                if animation.get("panel"):
-                    files.add(animation["panel"])
-                for frame in animation["frames"]:
-                    files.update((frame["image"], frame["original"]))
-        html = html.replace('<a href="index.html">게임으로 돌아가기 ↗</a>', '')
-    else:
-        files = set(re.findall(r'<script\s+src=[\"\']([^\"\']+)[\"\']', html))
-        if "src/animation/barel-combo0.js" in files:
-            # Runtime fetches are relative to the component document, as locally.
-            animation_files = (
-                "assets/aseprite/barel-combo0-10/barel-combo0-10.animation.json",
-                "assets/aseprite/exports/barel-combo0-10/barel-combo0-10.json",
-                "assets/aseprite/exports/barel-combo0-10/barel-combo0-10.png",
-            )
-            files.update(name for name in animation_files if (ROOT / name).is_file())
-        if "src/animation/barel-combo1.js" in files:
-            animation_files = (
-                "assets/aseprite/barel-combo1-10/barel-combo1-10.animation.json",
-                "assets/aseprite/exports/barel-combo1-10/barel-combo1-10.json",
-                "assets/aseprite/exports/barel-combo1-10/barel-combo1-10.png",
-            )
-            files.update(name for name in animation_files if (ROOT / name).is_file())
-        html = embed_boss_bgm(html)
-        html = html.replace('<a id="referenceLabLink" href="sprite-lab.html">원본 스프라이트 검수 ↗</a>', '')
-    if not review:
-        files.update({"mobile-lab.html", "mobile-lab.css", "mobile-lab.js"})
-        manifest = ROOT / "data/runtime-assets.json"
-        if manifest.is_file():
-            files.update(json.loads(manifest.read_text(encoding="utf-8")))
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    files = set(re.findall(r'<script\s+src=[\"\']([^\"\']+)[\"\']', html))
+    if "src/animation/barel-combo0.js" in files:
+        # Runtime fetches are relative to the component document, as locally.
+        animation_files = (
+            "assets/aseprite/barel-combo0-10/barel-combo0-10.animation.json",
+            "assets/aseprite/exports/barel-combo0-10/barel-combo0-10.json",
+            "assets/aseprite/exports/barel-combo0-10/barel-combo0-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    if "src/animation/barel-combo1.js" in files:
+        animation_files = (
+            "assets/aseprite/barel-combo1-10/barel-combo1-10.animation.json",
+            "assets/aseprite/exports/barel-combo1-10/barel-combo1-10.json",
+            "assets/aseprite/exports/barel-combo1-10/barel-combo1-10.png",
+        )
+        files.update(name for name in animation_files if (ROOT / name).is_file())
+    html = embed_boss_bgm(html)
+    files.update(name for name in ("mobile-lab.html", "mobile-lab.css", "mobile-lab.js") if (ROOT / name).is_file())
+    manifest = ROOT / "data/runtime-assets.json"
+    if manifest.is_file():
+        files.update(json.loads(manifest.read_text(encoding="utf-8")))
     files.add("streamlit-bridge.js")
     if "src/animation/barel-idle.js" in files:
         animation_files = (
@@ -303,28 +243,24 @@ def prepare_streamlit_component(review: bool = False) -> Path:
 def run_streamlit():
     import streamlit as st
 
-    st.set_page_config(page_title="흑월의 기사 - BLACK MOON KNIGHT", page_icon="🌑", layout="wide")
+    st.set_page_config(page_title="BLACK MOON KNIGHTS", page_icon="🌑", layout="wide")
     # 좌우 여백 최소화: 기본 block-container 의 max-width / 좌우 padding 제거
     st.markdown(
         "<style>.block-container,.stMainBlockContainer{padding:1rem .5rem .5rem;max-width:100%}</style>",
         unsafe_allow_html=True,
     )
-    with st.container(key="game_navigation"):
-        review = st.radio("화면", ["게임", "원본 스프라이트 검수"], horizontal=True) == "원본 스프라이트 검수"
-    if not review:
-        with st.container(key="game_help"):
-            st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
-        # The parent iframe must fill the mobile browser, not just the game canvas.
-        css = (ROOT / "streamlit-game.css").read_text(encoding="utf-8")
-        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+    with st.container(key="game_help"):
+        st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
+    # The parent iframe must fill the mobile browser, not just the game canvas.
+    css = (ROOT / "streamlit-game.css").read_text(encoding="utf-8")
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     # Component files are streamed via HTTP, rather than serializing ~177 MB of HTML.
     import streamlit.components.v1 as components
 
-    directory = prepare_streamlit_component(review)
-    height = 1000 if review else 680
-    component = components.declare_component("black_moon_reference" if review else "black_moon_game", path=str(directory))
-    with st.container(key="reference_host" if review else "game_host"):
-        component(height=height, key="reference" if review else "game", default=None)
+    directory = prepare_streamlit_component()
+    component = components.declare_component("black_moon_game", path=str(directory))
+    with st.container(key="game_host"):
+        component(height=680, key="game", default=None)
     with st.container(key="game_footer"):
         st.caption("v1.67 · 타격감·가독성 개선")
 

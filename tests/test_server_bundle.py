@@ -103,7 +103,7 @@ class StreamlitBundleTests(unittest.TestCase):
 
 
 class ActualStreamlitTests(unittest.TestCase):
-    def test_game_and_reference_have_small_component_messages(self):
+    def test_game_has_small_component_message(self):
         try:
             from streamlit.testing.v1 import AppTest
         except ImportError:
@@ -113,11 +113,7 @@ class ActualStreamlitTests(unittest.TestCase):
         components = app.get("component_instance")
         self.assertEqual(len(components), 1)
         self.assertLess(components[0].proto.ByteSize(), 10000)
-        app.radio[0].set_value("원본 스프라이트 검수").run()
-        self.assertEqual(len(app.exception), 0)
-        components = app.get("component_instance")
-        self.assertEqual(len(components), 1)
-        self.assertLess(components[0].proto.ByteSize(), 10000)
+        self.assertEqual(len(app.radio), 0, "Sprite review page selector was removed")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-# 흑월의 기사 — BLACK MOON KNIGHT
+# BLACK MOON KNIGHTS
 
 ## 모바일 화면 실험실
 
@@ -181,11 +181,10 @@ node tests/regression.cjs
 
 Canvas 기반의 5스테이지 벨트스크롤 액션 게임입니다.
 
-## 원본 스프라이트 검수
+## 원본 스프라이트 자료
 
-게임 타이틀의 **원본 스프라이트 검수** 또는 `/sprite-lab.html`에서 첨부 시트의
-7종 캐릭터를 비교할 수 있습니다. Streamlit에서는 상단 화면 선택을 사용합니다.
-원본 조각과 투명 PNG 후보 139개, 원본 패널, 모션/스킬 JSON을 제공합니다.
+첨부 시트에서 추출한 7종 캐릭터의 원본 조각과 투명 PNG 후보 139개, 원본 패널,
+모션/스킬 JSON이 `data/`에 남아 있습니다. (브라우저 검수 페이지는 제거되었습니다.)
 **새 자료의 실전 적용은 보류 상태**입니다. 누락 프레임과 겹친 효과를 만들거나 다른
 공격으로 대체하지 않았으며, 투명 처리와 발 기준점도 검수가 필요합니다.
 자세한 범위는 [원본 분석 보고서](docs/sprite_reference_analysis.txt)를 참조하세요.
@@ -193,7 +192,6 @@ Canvas 기반의 5스테이지 벨트스크롤 액션 게임입니다.
 ```powershell
 python tests/reference-assets.py
 node tests/reference-runtime.cjs
-node tests/sprite-lab.cjs
 ```
 
 첫 검사는 Pillow가 필요합니다. 브라우저 검사는 Node.js, Chrome/Edge, Python을

@@ -77,7 +77,7 @@ func show_title() -> void:
 	visible = true
 	title_image.visible = true
 	clear_buttons()
-	title.text = "BLACK MOON KNIGHT"
+	title.text = "BLACK MOON KNIGHTS"
 	var records_: Dictionary = store.records() if store != null else {"bestScore":0}
 	message.text = "최고 점수  %d" % int(records_["bestScore"])
 	add_button("새 게임",show_characters)

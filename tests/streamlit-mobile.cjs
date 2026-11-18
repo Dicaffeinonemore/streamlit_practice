@@ -13,11 +13,23 @@ module.exports=async({evaluate,call,root})=>{
   assert(loaded,'actual Streamlit game iframe loaded');
   async function inspect(){return evaluate(`(()=>{
     const f=document.querySelector('.st-key-game_host iframe'),r=f.getBoundingClientRect(),w=f.contentWindow;
-    return {x:r.x,y:r.y,width:r.width,height:r.height,inner:[w.innerWidth,w.innerHeight],mini:w.document.documentElement.classList.contains('mini-landscape'),navigation:getComputedStyle(document.querySelector('.st-key-game_navigation')).display};
+    return {x:r.x,y:r.y,width:r.width,height:r.height,inner:[w.innerWidth,w.innerHeight],mini:w.document.documentElement.classList.contains('mini-landscape'),navigation:getComputedStyle(document.querySelector('.st-key-game_help')).display};
   })()`);}
   const portrait=await inspect();
   assert(Math.abs(portrait.x)<1&&Math.abs(portrait.y)<1&&Math.abs(portrait.width-375)<1&&Math.abs(portrait.height-812)<1,JSON.stringify(portrait));
   assert.equal(portrait.mini,false,'portrait phone must not receive landscape mini padding');assert.equal(portrait.navigation,'none');
+  // 모바일: 바깥 페이지 스크롤 잠금, 게임 안 터치 이동 차단, 전체화면 버튼.
+  const guard=await evaluate(`(()=>{
+    const f=document.querySelector('.st-key-game_host iframe'),w=f.contentWindow,d=w.document;
+    const move=target=>{const e=new w.TouchEvent('touchmove',{bubbles:true,cancelable:true});target.dispatchEvent(e);return e.defaultPrevented;};
+    const main=document.querySelector('[data-testid="stMain"]')||document.querySelector('[data-testid="stAppViewContainer"]');
+    return {body:getComputedStyle(document.body).overflow,main:main&&getComputedStyle(main).overflowY,
+      canvasMove:move(d.querySelector('canvas')),bodyMove:move(d.body),
+      button:!d.getElementById('btnTitleFullscreen').hidden,supported:w.eval('MOBILE_FULLSCREEN.supported')};
+  })()`);
+  assert.equal(guard.body,'hidden',JSON.stringify(guard));assert.equal(guard.main,'hidden',JSON.stringify(guard));
+  assert.equal(guard.canvasMove,true,'touch drag on the game must not scroll the page');assert.equal(guard.bodyMove,true,'touch drag on the letterbox must not scroll the page');
+  assert.equal(guard.button,guard.supported,'fullscreen button follows browser support: '+JSON.stringify(guard));
   await call('Emulation.setDeviceMetricsOverride',{width:812,height:375,screenWidth:375,screenHeight:812,deviceScaleFactor:1,mobile:true});
   await new Promise(r=>setTimeout(r,250));
   const landscape=await inspect();

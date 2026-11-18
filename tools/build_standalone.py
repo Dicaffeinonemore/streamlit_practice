@@ -164,7 +164,6 @@ def build(out: Path) -> None:
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     # 형제 파일이 필요한 개발용 링크는 단일 파일에서 깨지므로 제거한다.
     html = re.sub(r'<a id="mobileLabLink"[^>]*>.*?</a>', '', html, flags=re.S)
-    html = re.sub(r'<a id="referenceLabLink"[^>]*>.*?</a>', '', html, flags=re.S)
 
     names = [m.group(2) for m in SCRIPT_TAG.finditer(html)]
     codes = {}
