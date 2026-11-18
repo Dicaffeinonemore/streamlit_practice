@@ -1,36 +1,36 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" script_class="BmkAnimationAsset" format=3]
 
 [ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ql3xu"]
-[ext_resource type="Texture2D" path="res://port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp" id="2_ni7oc"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp" id="2_ni7oc"]
 
 [sub_resource type="AtlasTexture" id="frame_0"]
 atlas = ExtResource("2_ni7oc")
-region = Rect2(1492, 966, 217, 65)
+region = Rect2(1716, 966, 217, 65)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_1"]
 atlas = ExtResource("2_ni7oc")
-region = Rect2(1711, 966, 223, 122)
+region = Rect2(0, 1153, 223, 122)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_2"]
 atlas = ExtResource("2_ni7oc")
-region = Rect2(0, 1129, 180, 123)
+region = Rect2(225, 1153, 180, 123)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_3"]
 atlas = ExtResource("2_ni7oc")
-region = Rect2(182, 1129, 197, 145)
+region = Rect2(407, 1153, 197, 145)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_4"]
 atlas = ExtResource("2_ni7oc")
-region = Rect2(381, 1129, 162, 166)
+region = Rect2(606, 1153, 162, 166)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_5"]
 atlas = ExtResource("2_ni7oc")
-region = Rect2(545, 1129, 162, 187)
+region = Rect2(770, 1153, 162, 187)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="source_frames"]
@@ -63,7 +63,7 @@ animations = [{
 script = ExtResource("1_ql3xu")
 source_id = "stage1_enemy.blade.getup"
 sprite_frames = SubResource("source_frames")
-frame_pivots = PackedVector2Array(123, 65.4, 103.8, 121.8, 70.8, 123, 99, 145.2, 72, 166.2, 67.8, 187.2)
+frame_pivots = PackedVector2Array(108.6, 65.4, 103.8, 121.8, 70.8, 123, 99, 145.2, 72, 166.2, 67.8, 187.2)
 frame_scales = PackedFloat64Array(0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346)
 duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
 authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
@@ -77,93 +77,93 @@ metadata = {
 "getup": 0.726,
 "hurt": 0.889,
 "idle": 1.0,
-"knockdown": 1.0,
+"knockdown": 1.15,
 "walk": 0.889
 },
 "species": "blade"
 }
 source_frames = Array[Dictionary]([{
 "duration_ms": null,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
-"pivot": [123.0, 65.4],
-"rect": [1492.0, 966.0, 217.0, 65.0],
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
+"pivot": [108.6, 65.4],
+"rect": [1716.0, 966.0, 217.0, 65.0],
 "scale": 0.57346,
 "source": {
-"anchor": [123.0, 65.4],
-"atlas": [1492.0, 966.0, 217.0, 65.0],
-"back": [-64.3, 23.7],
+"anchor": [108.6, 65.4],
+"atlas": [1716.0, 966.0, 217.0, 65.0],
+"back": [-56.1, 23.7],
 "hand": null,
-"tip": [53.3, 29.6]
+"tip": [61.6, 29.6]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": null,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [103.8, 121.8],
-"rect": [1711.0, 966.0, 223.0, 122.0],
+"rect": [0.0, 1153.0, 223.0, 122.0],
 "scale": 0.57346,
 "source": {
 "anchor": [103.8, 121.8],
-"atlas": [1711.0, 966.0, 223.0, 122.0],
+"atlas": [0.0, 1153.0, 223.0, 122.0],
 "back": [-59.5, 33.0],
 "hand": [39.2, 48.5],
 "tip": [67.8, 25.5]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": null,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [70.8, 123.0],
-"rect": [0.0, 1129.0, 180.0, 123.0],
+"rect": [225.0, 1153.0, 180.0, 123.0],
 "scale": 0.57346,
 "source": {
 "anchor": [70.8, 123.0],
-"atlas": [0.0, 1129.0, 180.0, 123.0],
+"atlas": [225.0, 1153.0, 180.0, 123.0],
 "back": [-35.4, 22.4],
 "hand": [15.1, 64.0],
 "tip": [39.9, 21.7]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": null,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [99.0, 145.2],
-"rect": [182.0, 1129.0, 197.0, 145.0],
+"rect": [407.0, 1153.0, 197.0, 145.0],
 "scale": 0.57346,
 "source": {
 "anchor": [99.0, 145.2],
-"atlas": [182.0, 1129.0, 197.0, 145.0],
+"atlas": [407.0, 1153.0, 197.0, 145.0],
 "back": [-50.9, 22.0],
 "hand": [35.8, 71.6],
 "tip": [35.8, 71.6]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": null,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [72.0, 166.2],
-"rect": [381.0, 1129.0, 162.0, 166.0],
+"rect": [606.0, 1153.0, 162.0, 166.0],
 "scale": 0.57346,
 "source": {
 "anchor": [72.0, 166.2],
-"atlas": [381.0, 1129.0, 162.0, 166.0],
+"atlas": [606.0, 1153.0, 162.0, 166.0],
 "back": [-40.6, 47.8],
 "hand": [36.5, 81.9],
 "tip": [40.9, 36.5]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": null,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [67.8, 187.2],
-"rect": [545.0, 1129.0, 162.0, 187.0],
+"rect": [770.0, 1153.0, 162.0, 187.0],
 "scale": 0.57346,
 "source": {
 "anchor": [67.8, 187.2],
-"atlas": [545.0, 1129.0, 162.0, 187.0],
+"atlas": [770.0, 1153.0, 162.0, 187.0],
 "back": [-38.9, 57.5],
 "hand": [38.2, 52.3],
 "tip": [53.7, 29.2]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }])

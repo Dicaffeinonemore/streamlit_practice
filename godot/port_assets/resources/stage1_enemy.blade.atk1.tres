@@ -1,7 +1,7 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" script_class="BmkAnimationAsset" format=3]
 
 [ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_f6ngj"]
-[ext_resource type="Texture2D" path="res://port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp" id="2_o1qcg"]
+[ext_resource type="Texture2D" path="res://port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp" id="2_o1qcg"]
 
 [sub_resource type="AtlasTexture" id="frame_0"]
 atlas = ExtResource("2_o1qcg")
@@ -109,14 +109,14 @@ metadata = {
 "getup": 0.726,
 "hurt": 0.889,
 "idle": 1.0,
-"knockdown": 1.0,
+"knockdown": 1.15,
 "walk": 0.889
 },
 "species": "blade"
 }
 source_frames = Array[Dictionary]([{
 "duration_ms": 116.66666666666669,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [70.9, 153.5],
 "rect": [1078.0, 201.0, 143.0, 158.0],
 "scale": 0.57346,
@@ -127,10 +127,10 @@ source_frames = Array[Dictionary]([{
 "hand": [28.2, 57.8],
 "tip": [40.9, 38.2]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 116.66666666666669,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [84.1, 143.9],
 "rect": [1223.0, 201.0, 156.0, 149.0],
 "scale": 0.57346,
@@ -141,10 +141,10 @@ source_frames = Array[Dictionary]([{
 "hand": [31.0, 71.2],
 "tip": [40.6, 42.7]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 100.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [97.9, 148.1],
 "rect": [1381.0, 201.0, 185.0, 154.0],
 "scale": 0.57346,
@@ -155,10 +155,10 @@ source_frames = Array[Dictionary]([{
 "hand": [24.4, 75.0],
 "tip": [44.4, 37.5]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [72.4, 199.1],
 "rect": [1568.0, 201.0, 153.0, 205.0],
 "scale": 0.57346,
@@ -169,10 +169,10 @@ source_frames = Array[Dictionary]([{
 "hand": [45.6, 50.6],
 "tip": [45.6, 50.6]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [89.2, 142.7],
 "rect": [1723.0, 201.0, 172.0, 148.0],
 "scale": 0.57346,
@@ -183,10 +183,10 @@ source_frames = Array[Dictionary]([{
 "hand": [19.1, 70.5],
 "tip": [37.3, 21.7]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [68.4, 150.0],
 "rect": [0.0, 408.0, 164.0, 150.0],
 "scale": 0.57346,
@@ -197,10 +197,10 @@ source_frames = Array[Dictionary]([{
 "hand": [27.9, 74.0],
 "tip": [54.7, 22.0]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [77.7, 140.4],
 "rect": [166.0, 408.0, 170.0, 140.0],
 "scale": 0.57346,
@@ -211,10 +211,10 @@ source_frames = Array[Dictionary]([{
 "hand": [36.6, 65.0],
 "tip": [52.8, 24.4]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [81.0, 136.2],
 "rect": [338.0, 408.0, 170.0, 136.0],
 "scale": 0.57346,
@@ -225,10 +225,10 @@ source_frames = Array[Dictionary]([{
 "hand": [30.3, 64.3],
 "tip": [50.6, 22.0]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [74.1, 135.0],
 "rect": [510.0, 408.0, 170.0, 135.0],
 "scale": 0.57346,
@@ -239,10 +239,10 @@ source_frames = Array[Dictionary]([{
 "hand": [23.9, 66.8],
 "tip": [48.3, 21.7]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }, {
 "duration_ms": 50.0,
-"image": "port_assets/images/stage1_enemy_art.blade.atlas__319461abb5eb.webp",
+"image": "port_assets/images/stage1_enemy_art.blade.atlas__6cc12a5aeac8.webp",
 "pivot": [67.2, 137.4],
 "rect": [682.0, 408.0, 161.0, 137.0],
 "scale": 0.57346,
@@ -253,5 +253,5 @@ source_frames = Array[Dictionary]([{
 "hand": [30.3, 67.8],
 "tip": [48.5, 22.0]
 },
-"source_image": "assets/runtime/319461abb5ebc879e71b73b6.webp"
+"source_image": "assets/runtime/6cc12a5aeac8b5521f701dc9.webp"
 }])

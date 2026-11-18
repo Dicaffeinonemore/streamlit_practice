@@ -1,4 +1,4 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" script_class="BmkAnimationAsset" format=3]
 
 [ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_l5mni"]
 [ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_blade_getup_0.png" id="2_gr1i4"]
@@ -63,7 +63,7 @@ animations = [{
 script = ExtResource("1_l5mni")
 source_id = "stage1_presented_blade_getup"
 sprite_frames = SubResource("source_frames")
-frame_pivots = PackedVector2Array(123, 65.4, 103.8, 121.8, 70.8, 123, 99, 145.2, 72, 166.2, 67.8, 187.2)
+frame_pivots = PackedVector2Array(108.6, 65.4, 103.8, 121.8, 70.8, 123, 99, 145.2, 72, 166.2, 67.8, 187.2)
 frame_scales = PackedFloat64Array(0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346)
 duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
 authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
@@ -76,16 +76,16 @@ metadata = {
 }
 source_frames = Array[Dictionary]([{
 "duration_ms": null,
-"expected_rgba_sha256": "f114247535a986b537bf3cc6007b8cefa3efeca4d7fe7853048ef9ae9580d661",
+"expected_rgba_sha256": "34c712200f93805e78afd6e21ad30ee5bbcb6631b3da19ade0551ec5688971c4",
 "image": "port_assets/baked/stage1_presented_blade_getup_0.png",
 "page": 0.0,
-"pivot": [123.0, 65.4],
+"pivot": [108.6, 65.4],
 "rect": [1.0, 1.0, 217.0, 65.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "4cd2fea60f21543df0ae4279a6efe2f63dc890d06d6fb0f028f63f018ca45235",
+"expected_rgba_sha256": "91390fd798fa97e38e95918b398ad8de7c8543551d43095426761937b9849f55",
 "image": "port_assets/baked/stage1_presented_blade_getup_0.png",
 "page": 0.0,
 "pivot": [103.8, 121.8],
@@ -94,7 +94,7 @@ source_frames = Array[Dictionary]([{
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "726fa3aa7e36480055527f25cd84edbc5aef0f186318d650776f310d8d520cd5",
+"expected_rgba_sha256": "2ec7e89f81a8eefaab6b2df67a62eb893b3f2be17e63205bc70b4cb7bcace514",
 "image": "port_assets/baked/stage1_presented_blade_getup_0.png",
 "page": 0.0,
 "pivot": [70.8, 123.0],
@@ -103,7 +103,7 @@ source_frames = Array[Dictionary]([{
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "cf1cc982bd3838f5f749c23b8fbb03933146eb44e44a2898a405fe5dac531d49",
+"expected_rgba_sha256": "0e88fd6094af30a3ff85219bc1f194e75daba54c5c44f961e0cc6918964c8483",
 "image": "port_assets/baked/stage1_presented_blade_getup_0.png",
 "page": 0.0,
 "pivot": [99.0, 145.2],
@@ -112,7 +112,7 @@ source_frames = Array[Dictionary]([{
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "ba57a24d6a732b106e805cd404a4ce239b089ef2576828edf3ff4f5416027f71",
+"expected_rgba_sha256": "6c67b3bf42a796e8b81285daba246f1885fb5bc54823b759d16cf235f99ff422",
 "image": "port_assets/baked/stage1_presented_blade_getup_0.png",
 "page": 0.0,
 "pivot": [72.0, 166.2],
@@ -121,7 +121,7 @@ source_frames = Array[Dictionary]([{
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "9cce6118f9989ffd215e55a336c6493deb91f44630a65b0d6d24baedf5d07e43",
+"expected_rgba_sha256": "e2505e9e5e8fc189adb05c9a6bbe40707f198b9c312f0d76647da688bbdee00d",
 "image": "port_assets/baked/stage1_presented_blade_getup_0.png",
 "page": 0.0,
 "pivot": [67.8, 187.2],
