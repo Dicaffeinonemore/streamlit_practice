@@ -9,6 +9,7 @@ signal retry_game
 signal next_stage
 signal quit_game
 signal settings_changed
+signal touch_edit
 
 var panel: PanelContainer
 var title: Label
@@ -239,7 +240,35 @@ func show_settings() -> void:
 	for option: String in ["shake","flash","danger_zones"]:
 		var label: String = {"shake":"화면 흔들림", "flash":"화면 번쩍임", "danger_zones":"위험 구역 표시"}[option]
 		add_button("%s: %s" % [label,"켜짐" if settings.get(option) else "꺼짐"],func() -> void: change_toggle(option))
+	# Touch controls (index.html settings: touchEnabled, touchAlpha, touchScale, layout edit / reset).
+	add_button("모바일 조작 키: %s" % ("켜짐" if settings.touch else "꺼짐"),func() -> void: change_toggle("touch"))
+	add_button("모바일 키 투명도: %d%%" % roundi((1 - float(settings.touch_layout["alpha"])) * 100),change_touch_alpha)
+	add_button("모바일 키 크기: %d%%" % roundi(float(settings.touch_layout["scale"]) * 100),change_touch_scale)
+	add_button("모바일 키 배치 편집",func() -> void: touch_edit.emit())
+	add_button("모바일 키 초기화",reset_touch_layout)
 	add_button("뒤로",show_pause if settings_origin == "pause" else show_title)
+
+## Transparency slider 0-90% (alpha = 1 - value), in 10% steps; past 90% it wraps to 0%.
+func change_touch_alpha() -> void:
+	var value: int = roundi((1 - float(settings.touch_layout["alpha"])) * 100) + 10
+	settings.touch_layout["alpha"] = 1 - (value if value <= 90 else 0) / 100.0
+	save_settings()
+
+## Size slider 60-160%, in 10% steps.
+func change_touch_scale() -> void:
+	var value: int = roundi(float(settings.touch_layout["scale"]) * 10) + 1
+	settings.touch_layout["scale"] = (value if value <= 16 else 6) / 10.0
+	save_settings()
+
+func reset_touch_layout() -> void:
+	settings.touch_layout = BmkTouchLayout.defaults()
+	save_settings()
+
+func save_settings() -> void:
+	var error: Error = settings.save()
+	settings_changed.emit()
+	show_settings()
+	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
 
 func change_preset(id: String) -> void:
 	settings.use_preset(id)

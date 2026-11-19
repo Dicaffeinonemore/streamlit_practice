@@ -9,6 +9,8 @@ var practice_origin: float = 80
 var practice_done: Dictionary[String, bool] = {}
 var practice_chain: int = 0
 var story_entry: BmkCheckpoint
+var touch: BmkTouchControls
+var pause_button: TextureButton
 
 func _ready() -> void:
 	preferences = BmkSettings.read()
@@ -31,8 +33,57 @@ func _ready() -> void:
 	menu.next_stage.connect(continue_next_stage)
 	menu.quit_game.connect(request_close)
 	menu.settings_changed.connect(apply_preferences)
+	# index.html #playPause: the pixel-UI pause button, shown while playing.
+	var pause_layer: CanvasLayer = CanvasLayer.new()
+	pause_layer.layer = 5
+	add_child(pause_layer)
+	pause_button = TextureButton.new()
+	var pause_art: AtlasTexture = AtlasTexture.new()
+	pause_art.atlas = load("res://port_assets/images/pixel_ui_source__1d6b42ef373a.png") as Texture2D
+	pause_art.region = Rect2(1510,388,150,135)
+	pause_button.texture_normal = pause_art
+	pause_button.ignore_texture_size = true
+	pause_button.stretch_mode = TextureButton.STRETCH_SCALE
+	pause_button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	pause_button.position = Vector2(960 * (1 - 0.005 - 0.055),540 * 0.005)
+	pause_button.size = Vector2(960 * 0.055,540 * 0.09)
+	pause_button.tooltip_text = "일시정지"
+	pause_button.visible = false
+	pause_button.pressed.connect(func() -> void:
+		pause_game(true)
+		menu.show_pause())
+	pause_layer.add_child(pause_button)
+	# game-ui.js touch controls, above the menu so the layout editor can cover it.
+	var touch_layer: CanvasLayer = CanvasLayer.new()
+	touch_layer.layer = 11
+	add_child(touch_layer)
+	touch = BmkTouchControls.new()
+	touch.game = self
+	touch.settings = preferences
+	touch_layer.add_child(touch)
+	touch.edit_finished.connect(func() -> void:
+		menu.visible = true
+		menu.show_settings())
+	menu.touch_edit.connect(func() -> void:
+		menu.visible = false
+		touch.start_edit())
 	apply_preferences()
 	pause_game(true)
+
+func present() -> void:
+	super.present()
+	sync_pause_button()
+
+## #playPause is hidden unless the scene is play, intro or bossintro.
+func sync_pause_button() -> void:
+	if pause_button == null: return
+	var s: BmkStageSimulation = session as BmkStageSimulation
+	pause_button.visible = menu != null and not menu.visible and not clock.paused and s != null and s.mode in ["play","intro","bossintro"] and not touch.editing
+
+## clearInput() also forgets touch pointers (UX.clearTouch()).
+func pause_game(value: bool) -> void:
+	super.pause_game(value)
+	if touch != null: touch.clear_touch()
 
 func start_new(character: String = "barel") -> void:
 	game_mode = "story"
@@ -195,6 +246,9 @@ func _physics_process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if menu == null:
 		super._unhandled_input(event)
+		return
+	if touch != null and touch.editing:
+		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE: touch.end_edit()
 		return
 	if menu.visible:
 		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE and menu.mode == "pause": resume_from_menu()

@@ -32,7 +32,8 @@ func _draw() -> void:
 	if game is BmkMenuGame:
 		if not hud_hidden():
 			draw_source_hud(p)
-			draw_source_skills(p,s)
+			# body.touch #skillbar { display: none } - the touch pad shows the skills instead.
+			if not touch_mode(): draw_source_skills(p,s)
 	else:
 		draw_rect(Rect2(0,0,960,79),Color(0.025,0.02,0.035,0.86))
 		text(Vector2(20,25),"BAREL",Color("e4d5ba"),20)
@@ -45,6 +46,25 @@ func _draw() -> void:
 		text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)
 	if s.chain_n > 1:
 		text(Vector2(820,108),"%d HIT" % s.chain_n,Color("ffe18b"),25)
+	if not touch_mode(): draw_key_help(s,p)
+	if not game.section.locked and game.section.event_index > 0 and not game.section.complete:
+		text(Vector2(826,281),"GO  >",Color("ffe18b"),22)
+	if game.debug_view.visible:
+		draw_rect(Rect2(12,86,365,72),Color(0,0,0,0.75))
+		text(Vector2(21,104),"F9  HITBOX / F2 REFILL SP + MAGIC",Color("c1efc5"),12)
+		text(Vector2(21,123),"tick %d | hitStop %d | tier %s" % [s.tick,s.hit_stop,s.last_tier],Color("c1efc5"),12)
+		text(Vector2(21,143),"%s t=%d | x %.2f  y %.2f  z %.2f" % [p.st,p.t,p.x,p.y,p.z],Color("c1efc5"),12)
+	if game.clock.paused or game.section.complete or s.game_over:
+		draw_rect(Rect2(0,0,960,540),Color(0.015,0.01,0.025,0.7))
+		var title: String = "SECTION 1 COMPLETE" if game.section.complete else ("GAME OVER" if s.game_over else "PAUSED")
+		text(Vector2(304,251),title,Color("e4d5ba"),30)
+		text(Vector2(304,288),"R: RESTART STREET" if game.section.complete or s.game_over else "ESC: RESUME    R: RESTART",Color("ddd5dd"),16)
+
+func touch_mode() -> bool:
+	return game is BmkMenuGame and (game as BmkMenuGame).preferences != null and (game as BmkMenuGame).preferences.touch
+
+## Keyboard help line and the skill cooldown bars (not shown with touch controls).
+func draw_key_help(s: BmkSimulation, p: BmkActorState) -> void:
 	draw_rect(Rect2(0,490,960,50),Color(0.025,0.02,0.035,0.86))
 	var keys: Array[String] = []
 	for action: String in BmkPhysicalInput.ACTIONS:
@@ -61,18 +81,6 @@ func _draw() -> void:
 		if remaining > 0:
 			text(Vector2(x,472),"%s %.1f" % [skill.id,remaining / 1000.0],Color("a3a0ad"),11)
 		index += 1
-	if not game.section.locked and game.section.event_index > 0 and not game.section.complete:
-		text(Vector2(826,281),"GO  >",Color("ffe18b"),22)
-	if game.debug_view.visible:
-		draw_rect(Rect2(12,86,365,72),Color(0,0,0,0.75))
-		text(Vector2(21,104),"F9  HITBOX / F2 REFILL SP + MAGIC",Color("c1efc5"),12)
-		text(Vector2(21,123),"tick %d | hitStop %d | tier %s" % [s.tick,s.hit_stop,s.last_tier],Color("c1efc5"),12)
-		text(Vector2(21,143),"%s t=%d | x %.2f  y %.2f  z %.2f" % [p.st,p.t,p.x,p.y,p.z],Color("c1efc5"),12)
-	if game.clock.paused or game.section.complete or s.game_over:
-		draw_rect(Rect2(0,0,960,540),Color(0.015,0.01,0.025,0.7))
-		var title: String = "SECTION 1 COMPLETE" if game.section.complete else ("GAME OVER" if s.game_over else "PAUSED")
-		text(Vector2(304,251),title,Color("e4d5ba"),30)
-		text(Vector2(304,288),"R: RESTART STREET" if game.section.complete or s.game_over else "ESC: RESUME    R: RESTART",Color("ddd5dd"),16)
 
 ## game.js render(): the boss intro replaces the player HUD with its card.
 func hud_hidden() -> bool:
