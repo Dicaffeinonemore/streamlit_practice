@@ -98,6 +98,8 @@
         default:{
           const jump=jumpFrame(actor,allowLanding);
           if(jump)return jump;
+          // 달리기: 숙인 5번째 장으로 출발한 뒤 1~4장을 75ms씩 반복
+          if(actor.walk&&actor.running&&ready(clips.run)){const ms=actor.walkTime||0;return frame('run',ms<80?4:Math.floor((ms-80)/75)%4);}
           if(actor.walk)return frame('walk',1+Math.floor(((actor.walkTime||0)%900)/900*11));
           return frame('idle',Math.floor(Math.max(0,elapsedMs||0)/IDLE_FRAME_MS)%clips.idle.frames.length);
         }

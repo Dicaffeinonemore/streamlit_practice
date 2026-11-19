@@ -19,6 +19,8 @@ add('melee_link',140,{enemies:[passive('club',395)],events:[tap(2,'KeyH'),tap(36
 add('rapid_lane',150,{enemies:[passive('axe',500),passive('blade',500,470)],events:[tap(2,'KeyU'),hold(20,'KeyS'),release(70,'KeyS')]});
 add('snipe_tap',120,{enemies:[passive('axe',600),passive('heavy',700)],events:[tap(2,'KeyL')]});
 add('snipe_hold',260,{enemies:[passive('axe',600)],events:[hold(2,'KeyL'),release(180,'KeyL')]});
+add('snipe_charge_two',140,{enemies:[passive('axe',600)],events:[hold(2,'KeyL'),release(66,'KeyL')]});
+add('dash_run',90,{events:[hold(0,'KeyD'),tap(2,'ShiftLeft'),release(40,'KeyD'),hold(50,'KeyA'),tap(52,'ShiftLeft'),tap(66,'KeyD'),release(80,'KeyA')]});
 add('ground_backflip',110,{enemies:[passive('axe',450),passive('blade',520)],events:[tap(2,'KeyO')]});
 add('air_backflip_hover',210,{enemies:[passive('axe',620)],events:[tap(2,'Space'),tap(12,'KeyP'),tap(60,'KeyJ')]});
 add('air_backflip_timeout',170,{events:[tap(2,'Space'),tap(12,'KeyP')]});
@@ -37,7 +39,7 @@ add('air_knockdown',120,{events:[tap(2,'Space')],commands:[{frame:12,hurt:{dmg:1
 add('death_respawn',150,{commands:[{frame:5,hurt:{dmg:200,dir:1,kd:true}}]});
 add('pickup_potion',30,{player:{hp:40},item:'potion'});
 const fields=['x','y','z','vx','vz','face','hp','st','t','inv','flash','walk','wait','atkCd','hurtT','chainN','getup','grabCd','nextKd'];
-const pfields=['x','y','z','vx','vz','face','hp','max','lives','st','t','inv','flash','sp','mg','buff','score','combo','comboT','buf','skill','walk','walkTime','dashCd','dashGrace','castFired','atk','x0','w','hw','viesaClip','viesaFired','viesaShotQueued','viesaHoverGrace','viesaAirPUsed','viesaLanding','jumpTime'];
+const pfields=['x','y','z','vx','vz','face','hp','max','lives','st','t','inv','flash','sp','mg','buff','score','combo','comboT','buf','skill','walk','walkTime','dashCd','dashGrace','castFired','atk','x0','w','hw','viesaClip','viesaFired','viesaShotQueued','viesaHoverGrace','viesaAirPUsed','viesaLanding','jumpTime','running'];
 async function main(){const b=await openBrowser();try{
  await b.evaluate(`Promise.all([S1_GROUP.ready,g2Early.ready,g2Late.ready,BarelHurt.ready,BarelJump.ready,BarelDashAttack.ready])`);
  await b.evaluate(`globalThis.__viesaFrame=viesaFrame;globalThis.viesaFrame=function(name,index=0){globalThis.__lastPose={clip:name,index:Math.min((VIESA_ART.clips[name]||[]).length-1,Math.max(0,Math.floor(index)))};return __viesaFrame(name,index);}`);
@@ -59,7 +61,7 @@ async function main(){const b=await openBrowser();try{
    return {tick,mode:scene,hitStop,shake,flashT,stat:{...stat},chain:{...chain},
    player:{...pick(player,pfields),grab:player.grab?{kind:player.grab.bite?'bite':'heavy',presses:player.grab.presses,t:player.grab.t??0}:null,
     skillCd:{...player.skillCd},
-    action:a?{phase:a.phase,id:a.id,held:a.held,shots:a.shots,x0:a.x0,face:a.face,high:a.high,h0:a.h0,released:a.released,clock:a.clock??null,arrows:a.arrows??null,finalFired:!!a.finalFired,landed:!!a.landed}:null,
+    action:a?{phase:a.phase,id:a.id,held:a.held,shots:a.shots,x0:a.x0,face:a.face,high:a.high,h0:a.h0,released:a.released,charge:a.charge??null,clock:a.clock??null,arrows:a.arrows??null,finalFired:!!a.finalFired,landed:!!a.landed}:null,
     pose:__lastPose},
    enemies:enemies.map(e=>({...pick(e,fields),species:e.s1||e.type})),
    barrels:barrels.map(o=>({x:o.x,y:o.y,hp:o.hp,flash:o.flash})),

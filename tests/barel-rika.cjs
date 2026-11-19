@@ -13,7 +13,7 @@ const manifest=new Set(JSON.parse(fs.readFileSync(path.join(root,'data/runtime-a
 
 // 원본 시트 19장이 모두 들어 있고, 서 있는 자세 기준으로 이전 바렐(142)과 같은 키
 const expected=['idle','walk','dash','jump','air','hurt','down','combo0','combo1','combo2','cast','whirl','leap','thrust',
-  'slam','special1','special2','special3','special4','special5'];
+  'slam','special1','special2','special3','special4','special5','run'];
 assert.deepEqual(Object.keys(data).sort(),expected.slice().sort());
 for(const [name,clip] of Object.entries(data)){
   assert.ok(fs.existsSync(path.join(root,clip.path)),name+' atlas file');
@@ -80,7 +80,12 @@ is({st:'down',z:0},30,'down',6,'넉다운 누움');
 is({st:'down',z:0},54,'down',9,'기상 직전');
 const view=rika.preview(0);assert.ok(view&&view.bounds[0]<0&&view.bounds[2]>0&&view.bounds[1]<0,'선택 화면 미리보기');
 
+// 달리기(대시 뒤 방향키 유지): 숙인 5번째 장으로 출발, 1~4장 반복. 달리지 않으면 걷기
+assert.equal(data.run.frames.length,5,'달리기 5장');
+is({st:'free',walk:true,running:true,walkTime:40},0,'run',4,'달리기 출발 장');
+is({st:'free',walk:true,running:true,walkTime:80+75*5},0,'run',1,'달리기 반복 장');
+is({st:'free',walk:true,running:false,walkTime:0},0,'walk',1,'달리지 않으면 걷기');
 // 게임 코드의 흑월참 타이밍과 같은 값인지
 const game=fs.readFileSync(path.join(root,'game.js'),'utf8');
 assert.match(game,/slashFromMs: 620, slashMs: 640 \/ 3, slashHitMs: \[80, 80, 160\], finMs: 1580/);
-console.log('PASS Barel Rika motions: 20 sheets, timelines, hit frames, poke thrust, three-slash ultimate');
+console.log('PASS Barel Rika motions: 21 sheets (run added), timelines, hit frames, poke thrust, three-slash ultimate');

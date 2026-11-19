@@ -160,7 +160,7 @@ func show_characters(challenge: bool = false) -> void:
 	cards.alignment = BoxContainer.ALIGNMENT_CENTER
 	cards.add_theme_constant_override("separation",60)
 	var barel_idle: BmkAnimationAsset = load("res://port_assets/resources/barel_rika.sheet.idle.tres") as BmkAnimationAsset
-	for texture: Texture2D in [barel_idle.sprite_frames.get_frame_texture(&"source",0),load("res://port_assets/images/viesa_art.selection_portrait__f771d01fc40f.png") as Texture2D]:
+	for texture: Texture2D in [barel_idle.sprite_frames.get_frame_texture(&"source",0),load("res://port_assets/images/viesa_art.selection_portrait__420d43302e16.png") as Texture2D]:
 		var card: TextureRect = TextureRect.new()
 		card.texture = texture
 		card.custom_minimum_size = Vector2(120,150)

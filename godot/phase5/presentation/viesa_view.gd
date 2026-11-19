@@ -11,12 +11,21 @@ var additive: Layer
 class Layer:
 	extends Node2D
 	var commands: Array = []
+	## drawViesaChargePips(): [centre, filled] diamonds.
+	var pips: Array = []
 	func _draw() -> void:
 		for c: Array in commands:
 			draw_set_transform(c[1] as Vector2, float(c[2]), c[3] as Vector2)
 			var size: Vector2 = c[4] as Vector2
 			draw_texture_rect(c[0] as Texture2D, Rect2(-size / 2.0, size), false, Color(1,1,1,float(c[5])))
 		draw_set_transform(Vector2.ZERO)
+		for pip: Array in pips:
+			var c: Vector2 = pip[0] as Vector2
+			var filled: bool = bool(pip[1])
+			var points: PackedVector2Array = [c + Vector2(0,-5), c + Vector2(4,0), c + Vector2(0,5), c + Vector2(-4,0)]
+			draw_colored_polygon(points, Color("#ffd36b") if filled else Color(30 / 255.0, 18 / 255.0, 28 / 255.0, 0.75))
+			points.append(points[0])
+			draw_polyline(points, Color("#fff4c8") if filled else Color("#8a6a58"), 1.0)
 
 func _ready() -> void:
 	art = BmkViesaData.shared()
@@ -42,6 +51,7 @@ func fx(name_: String, frame: int, x: float, y: float, h: float, width: float, h
 func present(s: BmkStageSimulation) -> void:
 	session = s
 	normal.commands.clear()
+	normal.pips.clear()
 	additive.commands.clear()
 	visible = s != null and s.player.is_viesa()
 	if visible:
@@ -59,19 +69,24 @@ func draw_player_overlay(s: BmkStageSimulation) -> void:
 	var tip: Variant = art.tip(str(pose[0]), int(pose[1]))
 	var tip_x: float = p.x + p.face * (float(tip[0]) if tip != null else 42.0) * art.scale()
 	var tip_h: float = p.z + (float(tip[1]) if tip != null else 80.0) * art.scale()
-	if a.phase == "snipe_draw" and p.t >= 12: fx("charge_glow", (p.t / 4) % 6, tip_x, p.y, tip_h, 40, 40, p.face)
-	if a.phase == "dash_slash": fx("dash_streak", mini(4, p.t / 5), p.x - p.face * 28, p.y, 28, 100, 38, p.face)
+	if a.phase == "snipe_draw" and p.t >= 12: fx("charge_glow", (p.t / 4) % 6, tip_x, p.y, tip_h, 40 + 12 * a.charge, 40 + 12 * a.charge, p.face)
+	if a.phase == "snipe_draw":
+		var head: Vector2 = Vector2(p.x, p.y - p.z - art.world_height() - 12.0)
+		for i: int in range(BmkViesaController.CHARGE_MAX): normal.pips.append([head + Vector2((i - 1) * 11, 0), i < a.charge])
+	if a.phase == "dash_slash" and p.t < 16: fx("dash_streak", mini(4, p.t / 5), p.x - p.face * 28, p.y, 28, 100, 38, p.face)
 
 func draw_projectiles(s: BmkStageSimulation) -> void:
 	var length: float = art.world_height() * 0.45
 	for z: BmkViesaWorld.Arrow in s.viesa.arrows:
 		if z.dead: continue
-		var height: float = 18.0 if z.snipe else 12.0
+		var grow: float = 1.0 + 0.15 * z.charge
+		var height: float = 18.0 * grow if z.snipe else 12.0
+		var arrow_length: float = length * grow if z.snipe else length
 		if z.fading:
-			fx("arrow_fade", z.fade_age / 3, z.x, z.y, z.h, length, height, z.dir, 1.0 - z.fade_age / 15.0)
+			fx("arrow_fade", z.fade_age / 3, z.x, z.y, z.h, arrow_length, height, z.dir, 1.0 - z.fade_age / 15.0)
 			continue
 		if z.snipe:
-			fx("snipe_arrow", floori(z.age / s.MS / 2.0) % 4, z.x, z.y, z.h, length, height, z.dir)
+			fx("snipe_arrow", floori(z.age / s.MS / 2.0) % 4, z.x, z.y, z.h, arrow_length, height, z.dir)
 		else:
 			var angle: float = -atan2(z.vh, absf(z.speed)) * z.dir if z.vh != 0.0 else 0.0
 			var trail: Vector2 = Vector2(z.x, z.y - z.h) + Vector2(-z.dir * length * 0.6, 0).rotated(angle)

@@ -102,6 +102,7 @@ func start_stage(restored: bool = false) -> void:
 	p.grab = null
 	p.skill = ""
 	if p.is_viesa(): BmkViesaController.clear_viesa(p)
+	p.running = false
 	for id: String in p.skill_cd: p.skill_cd[id] = 0.0
 	p.combo = 0
 	p.combo_t = 0

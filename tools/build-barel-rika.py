@@ -34,6 +34,8 @@ SHEETS = {
     # 같은 동작의 원본 GIF(어두운 단색 배경)에서 만든다.
     'idle':   ('바렐 대기.gif', 0, 0, 'dark', {'resize': .5}),
     'walk':   ('바렐 이동 스프라이트 10f.png', 4, 3, 'alpha', {}),
+    # 달리기 5장(대시 뒤 방향키 유지): 서 있는 장이 없으므로 같은 384px 시트인 이동 시트의 키로 크기를 맞춘다.
+    'run':    ('바렐 달리기 5f.png', 4, 2, 'alpha', {'scale': 'walk'}),
     'dash':   ('바렐 대시 10f..png', 4, 3, 'alpha', {}),
     'jump':   ('바렐 점프.gif', 0, 0, 'dark', {'floating': [4, 5, 6, 7], 'resize': .5}),   # GIF 는 다른 시트의 2배 해상도
     'air':    ('바렐 점프 베기.png', 4, 2, 'alpha', {'scale': 'thrust', 'floating': 'all'}),

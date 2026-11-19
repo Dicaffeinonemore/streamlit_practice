@@ -277,7 +277,7 @@ function newPlayer(score = 0, characterId = selectedCharacterId) {
   return { characterId:archer?'viesa':'barel', x: 80, y: 420, z: 0, vx: 0, vz: 0, face: 1, w: 26*(archer ? .9 : 1), hw: 16*(archer ? .9 : 1), hp: archer?80:100, max: archer?80:100, lives: 3,
     st: 'free', t: 0, atk: null, combo: 0, comboT: 0, buf: 0, x0: 80, wave: false, hitSet: new Set(),
     hurtKind: 'hurt_high', hurtDuration: COMBAT_FRAME_DATA.player.hurt.defaultHitstunTicks, hurtFrameEnds: null,
-    inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, dashGrace: 0, mg: 0, castFired: false, tipX: 0, tipH: 0,
+    inv: 0, flash: 0, buff: 0, score, walk: false, walkTime: 0, sp: 0, dashCd: 0, dashGrace: 0, mg: 0, castFired: false, tipX: 0, tipH: 0, running: false,
     skill: null, skillCd: Object.fromEntries(Object.keys(SKILLS).map(id => [id, 0])), skillHits: new Set(), skillDest: 0,
     spTg: null, spX: 0, spY: 0, spX0: 0, spY0: 0, spHits: 0, spFin: false };
 }
@@ -300,7 +300,7 @@ function selectCharacter(id, focus = false) {
   $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
   const k = a => UX.keyName(UX.options.bindings[a]);
   $('characterSelectionKeys').textContent = id === 'viesa'
-    ? `${k('KeyJ')} 화살 · ${k('KeyH')} 근접 · ${k('KeyU')} 연사 · ${k('KeyL')} 저격 · ${k('KeyO')} 지상 백플립 · ${k('KeyP')} 공중 백플립 · ${k('KeyK')} 흑월 난사`
+    ? `${k('KeyJ')} 화살 · ${k('KeyH')} 근접 · ${k('KeyU')} 연사 · ${k('KeyL')} 모아 쏘기 · ${k('KeyO')} 지상 백플립 · ${k('KeyP')} 공중 백플립 · ${k('KeyK')} 흑월 난사`
     : `${k('KeyJ')} 3연타 · 대시 중 공격: 대시 찌르기 · ${k('KeyU')} 견제 찌르기 · ${k('KeyH')} 내려찍기 · ${k('KeyO')} 회전 베기 · ${k('KeyP')} 점프 강하 · ${k('KeyL')} 붉은 파동 · ${k('KeyK')} 흑월참 · ${k('KeyI')} 뇌격`;
   $('btnCharacterConfirm').disabled = !hero.available;
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
@@ -519,7 +519,7 @@ function startStage(i, restored = false) {
     hp: 2, flash: 0, dead: false, t: 0 }));
   const p = player;
   p.x = 80; p.y = 420; p.z = 0; p.vx = 0; p.vz = 0; p.face = 1; p.st = 'free'; p.t = 0; p.inv = 90;
-  p.grab = null; p.skill = null;p.viesaAction=null;p.viesaClip=null;p.jumpTime=0;p.viesaHoverGrace=0;p.viesaAirPUsed=false;p.viesaLanding=null; for (const id in p.skillCd) p.skillCd[id] = 0;
+  p.grab = null; p.skill = null;p.viesaAction=null;p.viesaClip=null;p.jumpTime=0;p.viesaHoverGrace=0;p.viesaAirPUsed=false;p.viesaLanding=null;p.running=false; for (const id in p.skillCd) p.skillCd[id] = 0;
   p.combo = 0; p.comboT = 0; p.buf = 0; p.atk = null; p.dashCd = 0; p.dashGrace=0; p.spTg = null;
   p.hurtKind='hurt_high';p.hurtDuration=PLAYER_DATA.hurt.defaultHitstunTicks;p.hurtFrameEnds=null;
   p.hp = Math.min(p.max, p.hp + (!restored && i > 0 ? 40 : 0));
@@ -679,6 +679,8 @@ function groundSmash(x, y) {
   impact(x, y, 8, 1, player.face);
 }
 const DASH_DATA = BAREL_COMBAT.dash;
+// 대시가 끝날 때 같은 방향키를 누르고 있으면 걷기의 이 배수로 달린다 (바렐 · 비에사)
+const RUN_SPEED_SCALE = 1.6;
 const DASH = { dist: DASH_DATA.distPx, dur: DASH_DATA.durMs, inv: DASH_DATA.invulnerableTicks, cd: DASH_DATA.cooldownTicks };   // 이동 거리(px), 길이(ms), 무적·쿨타임(틱)
 function startDash(d) {
   const p = player;
@@ -971,6 +973,7 @@ function updPlayer() {
     p.z += p.vz; p.vz=airShooting?Math.max(-1.6,p.vz-.08):p.vz-PLAYER_DATA.jump.gravityPerTick;
     if (p.z <= 0) { p.z = 0; p.vz = 0;p.jumpTime=0;if(isViesa())viesaLanding(); }
   }
+  if(p.st!=='free'&&p.st!=='dash')p.running=false;   // 달리기는 대시 직후 이동 중에만
 
   switch (p.st) {
     case 'free': {
@@ -979,7 +982,8 @@ function updPlayer() {
       if (down('ArrowRight', 'KeyD')) ax += 1;
       if (down('ArrowUp', 'KeyW')) ay -= 1;
       if (down('ArrowDown', 'KeyS')) ay += 1;
-      const MV = PLAYER_DATA.move, sp = (p.z > 0 ? MV.airPxPerTick : MV.groundPxPerTick)*(isViesa()?1.1:1);
+      if(p.running&&(p.z>0||ax!==p.face))p.running=false;   // 방향을 놓거나 바꾸거나 점프하면 달리기 끝
+      const MV = PLAYER_DATA.move, sp = (p.z > 0 ? MV.airPxPerTick : MV.groundPxPerTick)*(isViesa()?1.1:1)*(p.running?RUN_SPEED_SCALE:1);
       p.x += ax * sp; p.y += ay * sp * MV.depthRatio;
       if (ax) p.face = ax;
       p.walk = !!(ax || ay);
@@ -1026,7 +1030,8 @@ function updPlayer() {
       if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
       else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
       if (t >= DASH_DATA.attackCancelMs && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
-      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=isViesa()?0:DASH_ATTACK.graceTicks; }
+      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=isViesa()?0:DASH_ATTACK.graceTicks;
+        p.running=Number(down('ArrowRight','KeyD'))-Number(down('ArrowLeft','KeyA'))===p.face; }
       break;
     }
     case 'dash_attack':

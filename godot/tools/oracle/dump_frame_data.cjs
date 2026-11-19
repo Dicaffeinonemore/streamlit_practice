@@ -15,6 +15,8 @@ add('air_attack',100,{events:[...tap(0,'Space'),...tap(8,'KeyJ')],enemies:[{kind
 add('dash',60,{events:tap(0,'ShiftLeft')});
 add('dash_attack',100,{events:[...tap(0,'ShiftLeft'),...tap(8,'KeyJ')],enemies:[{kind:'axe',x:330,y:430,hp:500,training:true}]});
 add('double_tap_dash',60,{events:[...tap(0,'KeyD'),...tap(10,'KeyD')]});
+add('double_tap_run',90,{events:[...tap(0,'KeyD'),event(10,'KeyD'),event(60,'KeyD',false),event(70,'KeyA'),event(85,'KeyA',false)]});
+add('dash_run_attack',90,{events:[event(0,'KeyD'),...tap(1,'ShiftLeft'),...tap(40,'KeyJ'),event(70,'KeyD',false)]});
 add('dash_attack_cancel',110,{events:[...tap(0,'ShiftLeft'),...tap(8,'KeyJ'),...tap(40,'Space')]});
 for(const [name,key]of Object.entries({thrust:'KeyU',slam:'KeyH',whirl:'KeyO',leap:'KeyP',redwave:'KeyL'}))add('skill_'+name,150,{events:tap(0,key),enemies:[{kind:'club',x:290,y:430,hp:1000,training:true}]});
 add('aim_skill_before_movement',70,{player:{face:1},events:[event(0,'KeyA'),...tap(0,'KeyU'),event(2,'KeyA',false)]});
@@ -59,7 +61,7 @@ async function main(){const browser=await openBrowser();try{
     S1.on=true;S1.idx=0;S1.sec=STAGE1_SECTIONS[0];S1.fade=null;S1.lock=null;
     updStage1=()=>{};stage1Finished=()=>false;
     for(const spec of s.enemies){const e=mkEnemy(spec.kind,spec.x,spec.y);e.s1=spec.kind;e.d={...STAGE1_ET[spec.kind]};e.hp=e.max=spec.hp||e.d.hp;e.wait=20;e.atkCd=40;if(spec.training)e.training=true;enemies.push(e);}
-    const keys=['x','y','z','vx','vz','face','hp','lives','st','t','atk','combo','comboT','buf','x0','inv','flash','buff','score','walk','walkTime','sp','dashCd','dashGrace','mg','castFired','skill','skillDest','hurtKind','hurtDuration','spX','spY','spX0','spY0','spHits','spFin','spDash','dashAttackHit','dashFlash'];
+    const keys=['x','y','z','vx','vz','face','hp','lives','st','t','atk','combo','comboT','buf','x0','inv','flash','buff','score','walk','walkTime','sp','dashCd','dashGrace','mg','castFired','skill','skillDest','hurtKind','hurtDuration','spX','spY','spX0','spY0','spHits','spFin','spDash','dashAttackHit','dashFlash','running'];
     const enemyKeys=['id','s1','x','y','z','vx','vz','face','hp','st','t','inv','flash','wait','atkCd','walk','recT','hurtT','chainN','hitLow','redFlash','getup','pat','remove'];
     const snapshot=()=>({tick,hitStop,shake,flashT,chain:{...chain},stat:{...stat},pressed:{...pressed},player:Object.fromEntries(keys.map(k=>[k,player[k]??null])),skillCd:{...player.skillCd},enemies:enemies.map(e=>({...Object.fromEntries(enemyKeys.map(k=>[k,e[k]??null])),mv:e.mv?{clip:e.mv.clip,t:e.mv.t,f:e.mv.f,hit:e.mv.hit}:null})),hazards:hazards.filter(z=>z.type==='pwave').map(z=>({x:z.x,y:z.y,h:z.h,age:z.age,travel:z.travel,damage:z.damage,dead:!!z.dead})),pose:{player:(()=>{const f=BarelRika.frameFor(player,MS,tick*MS);return {clip:f.clip,index:f.index};})(),enemies:enemies.map(e=>{const [clip,index]=stage1SoldierFrame(e);return {clip,index};})}});
     const frames=[];for(let frame=0;frame<s.frames;frame++){

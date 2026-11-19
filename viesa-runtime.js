@@ -6,10 +6,14 @@ const VIESA_READY=Promise.all([...VIESA_SHEETS,VIESA_PORTRAIT].map(im=>im.decode
 const VIESA_SKILLS={
   thrust:{name:'화살 연사',clip:'rapid_start',key:'U'},
   slam:{name:'근접 콤보',clip:'slash1',key:'H'},
-  whirl:{name:'돌진 → 지상 백플립',clip:'dash_slash',key:'O'},
-  leap:{name:'돌진 → 공중 백플립',clip:'dash_slash',key:'P'},
-  redwave:{name:'장거리 저격',clip:'snipe_draw',key:'L'}
+  whirl:{name:'대시 → 지상 백플립',clip:'dash_slash',key:'O'},
+  leap:{name:'대시 → 공중 백플립',clip:'dash_slash',key:'P'},
+  redwave:{name:'모아 쏘기',clip:'snipe_draw',key:'L'}
 };
+// 모아 쏘기: frames 1-7 draw the bow (drawTicks), then frame 7 holds while charging.
+// Every levelTicks adds one level (max 3), each adding bonus damage to the piercing arrow.
+const VIESA_CHARGE={drawTicks:21,levelTicks:20,maxLevel:3,bonus:4,holdTicks:45};
+const VIESA_MELEE_ACTIVE={slash1:[2,3],slash2:[3,5],kick:[1,4]};
 let viesaEffects=[];
 let viesaUltObjects=[];
 const viesaEffectPool=[],viesaProjectilePool=[];
@@ -37,10 +41,12 @@ function resetViesaEffects(){
 }
 function viesaPose(p=player){
   const action=p.viesaAction;
-  if(p.st==='dead')return viesaFrame('death',Math.floor(p.t/5));
-  if(p.st==='down')return p.t<32?viesaFrame('knockdown',Math.floor(p.t/5)):viesaFrame('getup',Math.floor((p.t-32)/4));
-  if(p.st==='hurt'||p.st==='grabbed')return viesaFrame('hurt',Math.floor(p.t/4));
-  if(p.st==='atk')return viesaFrame(p.viesaClip,Math.floor(p.t/4));
+  if(p.st==='dead')return viesaFrame('death',Math.floor(p.t/4));
+  if(p.st==='down')return p.t<32?viesaFrame('knockdown',Math.floor(p.t*7/32)):viesaFrame('getup',Math.floor((p.t-32)/3));
+  // Ten hurt frames span the default hitstun; a grab holds the recoil (frame 5).
+  if(p.st==='hurt')return viesaFrame('hurt',Math.floor(p.t*10/PLAYER_DATA.hurt.defaultHitstunTicks));
+  if(p.st==='grabbed')return viesaFrame('hurt',Math.min(4,Math.floor(p.t/4)));
+  if(p.st==='atk')return viesaFrame(p.viesaClip,p.viesaClip==='jump_shot'?3+Math.floor(p.t/3):Math.floor(p.t/4));
   if(p.st==='cast'){
     const ms=p.t*MS;
     // The release frame starts on the same tick as the shared lightning hit.
@@ -50,16 +56,21 @@ function viesaPose(p=player){
   }
   if(p.st==='special'&&action)return viesaFrame(action.phase,action.phase==='ult_barrage'?Math.floor(p.t/3)%7:Math.floor(p.t/4));
   if(p.st==='skill'&&action){
-    if(action.phase==='snipe_draw')return viesaFrame('snipe_draw',p.t<18?Math.floor(p.t/3):4+Math.floor((p.t-18)/5)%2);
-    if(action.phase==='rapid_loop')return viesaFrame('rapid_loop',Math.floor(p.t/3)%6);
+    if(action.phase==='snipe_draw')return viesaFrame('snipe_draw',p.t<VIESA_CHARGE.drawTicks?Math.floor(p.t/3):6);
+    if(action.phase==='snipe_release')return viesaFrame('snipe_release',p.t<6?Math.floor(p.t/2):p.t<14?3:4);
+    if(action.phase==='rapid_loop'){const local=(p.t-1)%9;return viesaFrame('rapid_loop',p.t<1?0:local<3?3:local<6?1:2);}
+    if(action.phase==='rapid_end')return viesaFrame('rapid_end',Math.floor(p.t/8));
+    if(action.phase==='dash_slash')return viesaFrame('dash',p.t<16?Math.floor(p.t*3/16):3+Math.floor((p.t-16)/2));
+    if(action.phase==='backflip')return viesaFrame('backflip',Math.floor(p.t/5));
     if(action.phase==='hover')return viesaFrame('backflip',5);
-    if(action.phase==='land_backflip')return viesaFrame('backflip',6+Math.floor(p.t/4));
-    if(action.phase==='land_jump')return viesaFrame('jump',5);
+    if(action.phase==='land_backflip')return viesaFrame('backflip',6+Math.floor(p.t/3));
+    if(action.phase==='land_jump')return viesaFrame('jump',12+Math.floor(p.t/3));
     return viesaFrame(action.phase,Math.floor(p.t/4));
   }
-  if(p.st==='dash')return viesaFrame('run',Math.floor(p.t/2)%8);
-  if(p.z>0)return viesaFrame('jump',p.vz>0?Math.min(3,Math.floor((p.jumpTime||0)/6)):4);
-  return p.walk?viesaFrame('walk',Math.floor((p.walkTime||0)/80)%8):viesaFrame('idle',Math.floor(tick/6)%8);
+  if(p.st==='dash')return viesaFrame('dash',Math.floor(p.t*5/6));
+  if(p.z>0)return viesaFrame('jump',p.vz>0?3+Math.min(5,Math.floor((p.jumpTime||0)/4)):p.vz>-2?9:p.vz>-5?10:11);
+  if(p.walk&&p.running)return viesaFrame('run',Math.floor((p.walkTime||0)/60)%10);
+  return p.walk?viesaFrame('walk',Math.floor((p.walkTime||0)/50)%16):viesaFrame('idle',Math.floor(tick/5)%16);
 }
 function paintViesa(frame,actor,alpha=1){
   const im=frame&&VIESA_SHEETS[frame.sheet];if(!im?.naturalWidth)return false;
@@ -87,15 +98,26 @@ function drawViesaPlayer(){
   paintViesa(frame,p,p.st==='dead'?clamp(1-(p.t-65)/35,0,1):1);
   p.tipX=p.x+p.face*(frame.tip?.[0]??42)*VIESA_ART.scale;p.tipH=p.z+(frame.tip?.[1]??80)*VIESA_ART.scale;
   if(p.st==='skill'&&a){
-    if(a.phase==='snipe_draw'&&p.t>=12)drawViesaFx('charge_glow',Math.floor(p.t/4)%6,p.tipX,p.y,p.tipH,40,40,p.face);
-    if(a.phase==='dash_slash')drawViesaFx('dash_streak',Math.min(4,Math.floor(p.t/5)),p.x-p.face*28,p.y,28,100,38,p.face);
+    if(a.phase==='snipe_draw'&&p.t>=12){const glow=40+12*(a.charge||0);drawViesaFx('charge_glow',Math.floor(p.t/4)%6,p.tipX,p.y,p.tipH,glow,glow,p.face);}
+    if(a.phase==='snipe_draw')drawViesaChargePips(p,a.charge||0);
+    if(a.phase==='dash_slash'&&p.t<16)drawViesaFx('dash_streak',Math.min(4,Math.floor(p.t/5)),p.x-p.face*28,p.y,28,100,38,p.face);
   }
   return true;
+}
+// Three diamonds over the head: filled per 모아 쏘기 charge level.
+function drawViesaChargePips(p,level){
+  const x=p.x-camX,y=p.y-p.z-VIESA_ART.worldHeight-12;
+  ctx.save();
+  for(let i=0;i<VIESA_CHARGE.maxLevel;i++){
+    const cx=x+(i-1)*11;ctx.beginPath();ctx.moveTo(cx,y-5);ctx.lineTo(cx+4,y);ctx.lineTo(cx,y+5);ctx.lineTo(cx-4,y);ctx.closePath();
+    ctx.fillStyle=i<level?'#ffd36b':'rgba(30,18,28,.75)';ctx.fill();ctx.lineWidth=1;ctx.strokeStyle=i<level?'#fff4c8':'#8a6a58';ctx.stroke();
+  }
+  ctx.restore();
 }
 function drawViesaProjectiles(){
   for(const z of hazards){
     if(z.type!=='viesa_arrow'||z.dead)continue;
-    const length=VIESA_ART.worldHeight*.45,height=z.snipe?18:12;
+    const grow=1+.15*(z.charge||0),length=VIESA_ART.worldHeight*.45*(z.snipe?grow:1),height=z.snipe?18*grow:12;
     if(z.fading){drawViesaFx('arrow_fade',Math.floor(z.fadeAge/3),z.x,z.y,z.h,length,height,z.dir,1-z.fadeAge/15);continue;}
     if(z.snipe)drawViesaFx('snipe_arrow',Math.floor(z.age/MS/2)%4,z.x,z.y,z.h,length,height,z.dir);
     else{
@@ -124,7 +146,7 @@ function canStartViesaSkill(id){
 function viesaBeginAction(phase,{id=null,high=false}={}){
   const p=player;aimPlayerSkill();
   p.st='skill';p.t=0;p.vx=0;p.skill=id;p.combo=p.comboT=p.buf=0;p.hitSet=new Set();
-  p.viesaHoverGrace=0;p.viesaAction={phase,id,held:0,shots:0,x0:p.x,face:p.face,high,h0:p.z,released:false};
+  p.viesaHoverGrace=0;p.viesaAction={phase,id,held:0,shots:0,x0:p.x,face:p.face,high,h0:p.z,released:false,charge:0};
   reactAurelionAttack();
   return true;
 }
@@ -163,14 +185,15 @@ function startViesaMelee(n){
 function updateViesaAttack(){
   const p=player;
   if(p.viesaClip==='jump_shot'&&p.z<=0){p.st='free';p.t=0;p.viesaShotQueued=false;viesaLanding();return;}
-  const name=p.viesaClip,frame=Math.floor(p.t/4)+1,duration=VIESA_ART.clips[name].length*4;
+  // The ten-frame jump shot plays frames 4-10 in 20 ticks (viesaPose).
+  const name=p.viesaClip,frame=Math.floor(p.t/4)+1,duration=name==='jump_shot'?20:VIESA_ART.clips[name].length*4;
   const shooting=name==='shot'||name==='jump_shot';
   if(hit(shooting?'KeyJ':'KeyH')){if(shooting)p.viesaShotQueued=true;else p.buf=BUF_MS;}
   if(name==='shot'||name==='jump_shot'){
     if(frame>=4&&!p.viesaFired){p.viesaFired=true;fireViesaArrow({air:name==='jump_shot'});}
     if(p.viesaShotQueued&&frame>=5){startViesaAttack(name==='jump_shot'?'air':0);return;}
   }else{
-    const active=name==='slash2'?frame>=2&&frame<=4:frame>=3&&frame<=4;
+    const [first,last]=VIESA_MELEE_ACTIVE[name],active=frame>=first&&frame<=last;
     if(active)playerStrike({dmg:Math.round(ATK.c1.dmg*({slash1:.9,slash2:1,kick:1.2}[name])),reach:ATK.c1.reach,kd:name==='kick',fx:name==='kick'?2:1,stop:3,pushScale:name==='kick'?1.3:1,id:'viesaMelee'});
     if(p.buf>0&&p.combo<2&&p.t>=16){startViesaMelee(p.combo+1);return;}
   }
@@ -183,14 +206,14 @@ function updateViesaAttack(){
     if(name==='jump_shot'&&p.st==='free')p.viesaHoverGrace=6;
   }
 }
-function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,laneOffset=0}={}){
+function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,laneOffset=0,charge=0}={}){
   const p=player,range=snipe?VW*2:VW/3,speed=snipe?VW/5:range/24,depth=24*1.3;
   const target=enemies.filter(e=>canHit(e)&&(e.x-p.x)*p.face>0&&(e.x-p.x)*p.face<=range&&Math.abs(e.y-p.y)<=depth*2)
     .sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x))[0];
   const y=clamp(p.y+laneOffset,GTOP+1,GBOT),mul=p.buff>0?1.5:1;
   hazards.push({type:'viesa_arrow',x:p.x+p.face*26,y,h:p.z+VIESA_ART.worldHeight*.6,dir:p.face,age:0,
     speed,vh:air?-speed*Math.tan(Math.PI/6):0,range,travel:0,depth,aimY:target&&!laneOffset?target.y:y,startY:y,
-    damage:Math.round((snipe?ATK.c1.dmg*2.5:rapid?10:8)*mul),snipe,rapid,paidSpecial,hits:new Set(),auxHits:new Set(),fadeAge:0});
+    damage:Math.round((snipe?ATK.c1.dmg*2.5+VIESA_CHARGE.bonus*charge:rapid?10:8)*mul),snipe,rapid,paidSpecial,charge,hits:new Set(),auxHits:new Set(),fadeAge:0});
   sfx(snipe?'viesaSnipe':'viesaArrow');
 }
 function fadeViesaArrow(z){if(!z.fading){z.fading=true;z.fadeAge=0;}}
@@ -240,11 +263,16 @@ function updateViesaAction(){
   const phase=a.phase;
   if(a.id==='whirl')hit('KeyJ'); // O never queues a shot during its grounded sequence.
   if(phase==='snipe_draw'){
-    a.held++;
+    const C=VIESA_CHARGE;a.held++;
     if(!down('KeyL'))a.released=true;
-    if(a.held>=30&&(a.released||a.held>=120))viesaNext('snipe_release');
+    const level=Math.min(C.maxLevel,Math.max(0,Math.floor((a.held-C.drawTicks)/C.levelTicks)));
+    if(level>a.charge){
+      a.charge=level;const bow=viesaBowPosition(),size=30+12*level;
+      viesaEffect('hit_spark',bow.x,bow.y,bow.h,{width:size,height:size,life:12});
+    }
+    if(a.held>=C.drawTicks&&(a.released||a.held>=C.drawTicks+C.levelTicks*C.maxLevel+C.holdTicks))viesaNext('snipe_release');
   }else if(phase==='snipe_release'){
-    if(p.t>=4&&!a.shots){a.shots++;fireViesaArrow({snipe:true});}
+    if(p.t>=6&&!a.shots){a.shots++;fireViesaArrow({snipe:true,charge:a.charge});}
     if(p.t>=24)viesaFinish();
   }else if(phase==='rapid_start'){
     if(p.t>=16)viesaNext('rapid_loop');
@@ -366,7 +394,7 @@ function updateViesaUltimateProjectiles(){
 function playerActionLabel(action,fallback){
   const v=playerControlCharacter==='viesa';
   if(!v)return fallback;
-  return ({KeyJ:'화살 / 공중 체공 사격',KeyH:'근접 콤보',KeyU:'화살 연사',KeyL:'장거리 저격 (유지/해제)',KeyO:'돌진 → 지상 백플립',KeyP:'돌진 → 공중 백플립',KeyK:'필살기 흑월 난사'})[action]||fallback;
+  return ({KeyJ:'화살 / 공중 체공 사격',KeyH:'근접 콤보',KeyU:'화살 연사',KeyL:'모아 쏘기 (유지: 최대 3단)',KeyO:'대시 → 지상 백플립',KeyP:'대시 → 공중 백플립',KeyK:'필살기 흑월 난사'})[action]||fallback;
 }
 function syncPlayerCharacterUI(id){
   playerControlCharacter=id;

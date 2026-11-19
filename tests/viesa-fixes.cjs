@@ -83,6 +83,28 @@ module.exports=async({evaluate,call,errors,root})=>{
     check(hazards.length===6&&hazards.every(z=>z.damage===10),'U produces six arrows with 10 damage each');
     arrow=hazards[0];for(let i=0;i<30&&!arrow.dead;i++)updateViesaProjectile(arrow);
     check(e.hp===990,'Rapid arrow deals 10 on contact');
+    // 모아 쏘기: hold on draw frame 7, +4 damage per level up to three levels.
+    const charged=[];
+    for(const holdTicks of [5,45,65,85,200]){
+      clearInput();hazards=[];resetViesaEffects();player.st='free';player.z=player.vz=0;player.buff=0;player.skillCd.redwave=0;
+      pressed.KeyL=true;keys.KeyL=true;updPlayer();
+      for(let i=0;i<holdTicks&&player.viesaAction?.phase==='snipe_draw';i++){
+        if(player.t>=VIESA_CHARGE.drawTicks)check(viesaPose()===VIESA_ART.clips.snipe_draw[6],'Charging holds draw frame 7');
+        updPlayer();
+      }
+      delete keys.KeyL;for(let i=0;i<60&&player.st==='skill';i++)updPlayer();
+      charged.push(hazards.find(z=>z.snipe)?.damage);
+    }
+    clearInput();
+    check(JSON.stringify(charged)===JSON.stringify([25,29,33,37,37]),'Charge levels add 4 damage, max three: '+charged);
+    // Shift dash then keep holding the direction: run faster than walking until released.
+    player.st='free';player.z=player.vz=0;player.dashCd=0;player.x=camX+100;player.face=1;clearInput();
+    keys.ArrowRight=true;startDash(1);for(let i=0;i<14;i++)updPlayer();
+    check(player.st==='free'&&player.running&&VIESA_ART.clips.run.includes(viesaPose()),'Dash continues into a run');
+    const runX=player.x;updPlayer();
+    check(Math.abs(player.x-runX-PLAYER_DATA.move.groundPxPerTick*1.1*RUN_SPEED_SCALE)<1e-9,'Running is faster than walking');
+    delete keys.ArrowRight;updPlayer();check(!player.running,'Releasing the direction ends the run');
+    clearInput();
     const dashResults=[];
     for(const mode of ['shift','whirl','leap']){
       clearInput();player.x=camX+100;player.z=player.vz=0;player.st='free';player.inv=0;player.dashCd=0;player.viesaAirPUsed=false;
@@ -107,7 +129,7 @@ module.exports=async({evaluate,call,errors,root})=>{
     check(player.st==='hurt'&&viesaPose()===VIESA_ART.clips.hurt[0],'Damage selects the hurt animation');
     player.inv=0;hurtPlayer(player.max,-1,false);
     check(player.st==='dead'&&viesaPose()===VIESA_ART.clips.death[0],'Lethal damage selects the death animation');
-    for(const frame of [VIESA_ART.clips.hurt[3],VIESA_ART.clips.death[0]]){
+    for(const frame of [VIESA_ART.clips.hurt[2],VIESA_ART.clips.death[0]]){
       check(Math.abs(frame.atlas[3]/idle.atlas[3]-1)<.15,'Standing hurt/death body stays near idle size');
     }
     for(const frame of VIESA_ART.clips.death){
@@ -119,13 +141,15 @@ module.exports=async({evaluate,call,errors,root})=>{
     for(let i=0;i<60;i++)updPlayer();
     check(player.st==='dead'&&player.z===0&&player.vz===0,'Airborne death falls to the floor');
     check(viesaPose()===VIESA_ART.clips.death.at(-1),'Landed death holds the final grounded pose');
-    return {continuousShotHeights:heights,singleShotLanded:true,ultimatePhases:[...phases],standingHeightRatio:ratio,scrollDamage:80,normalArrowDamage:8,rapidArrowDamage:10,ultimateDamage:{phantom:4,explosion:160},invulnerableDashes:dashResults};
+    return {continuousShotHeights:heights,singleShotLanded:true,ultimatePhases:[...phases],standingHeightRatio:ratio,scrollDamage:80,normalArrowDamage:8,rapidArrowDamage:10,chargedSnipeDamage:charged,ultimateDamage:{phantom:4,explosion:160},invulnerableDashes:dashResults};
   })()`);
   await evaluate(`player.st='special';player.t=10;player.z=110;player.viesaAction={phase:'ult_barrage',clock:10};ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);render()`);
   fs.writeFileSync(path.join(out,'ultimate.png'),Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
+  await evaluate(`document.getElementById('assetLoading').hidden=true;enemies=[];hazards=[];player.hp=player.max;player.inv=0;player.flash=0;player.st='skill';player.z=0;player.t=70;player.x=camX+260;player.viesaAction={phase:'snipe_draw',held:70,charge:2,shots:0};resetViesaEffects();ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);render()`);
+  fs.writeFileSync(path.join(out,'charge.png'),Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
   await evaluate(`(()=>{
     ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);ctx.fillStyle='#17151d';ctx.fillRect(0,0,VW,VH);
-    const poses=[['idle',0],['hurt',0],['hurt',3],['knockdown',3],['getup',5],['death',0],['death',4]];
+    const poses=[['idle',0],['hurt',0],['hurt',2],['knockdown',3],['getup',5],['death',0],['death',4]];
     poses.forEach(([name,index],i)=>{
       const x=70+i*130;ctx.fillStyle='#777';ctx.fillRect(x-55,310,110,1);
       paintViesa(VIESA_ART.clips[name][index],{x:camX+x,y:310,z:0,face:1});

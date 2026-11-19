@@ -20,6 +20,7 @@ class Arrow:
 	var snipe: bool = false
 	var rapid: bool = false
 	var paid_special: bool = false
+	var charge: int = 0
 	var fading: bool = false
 	var fade_age: int = 0
 	var dead: bool = false

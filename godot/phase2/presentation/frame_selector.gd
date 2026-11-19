@@ -58,6 +58,8 @@ func player(s: BmkSimulation) -> Dictionary:
 		legacy = 9 if p.t - s.landing_tick < 4 else 10
 	if legacy > 0:
 		return {"clip":"jump","index":[3,3,4,5,5,6,6,7,7,8,9][legacy]}
+	if p.walk and p.running:
+		return {"clip":"run","index":4 if p.walk_time < 80.0 else int(floor((p.walk_time - 80.0) / 75.0)) % 4}
 	return {"clip":"walk","index":1 + int(floor(fmod(p.walk_time,900.0) / 900.0 * 11.0))} if p.walk else {"clip":"idle","index":int(floor(s.tick * s.MS / 130.0)) % 10}
 
 static func anim_index(lengths: PackedInt32Array, ticks: int) -> int:

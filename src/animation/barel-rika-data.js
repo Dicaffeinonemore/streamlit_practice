@@ -278,6 +278,73 @@ globalThis.BAREL_RIKA_DATA = {
    }
   ]
  },
+ "run": {
+  "path": "assets/runtime/360ac80cfae49d362dd806f1.png",
+  "renderScale": 0.6120689655172413,
+  "standingHeight": 232,
+  "frames": [
+   {
+    "atlas": [
+     2,
+     2,
+     254,
+     197
+    ],
+    "anchor": [
+     100.5,
+     197.0
+    ]
+   },
+   {
+    "atlas": [
+     258,
+     2,
+     215,
+     199
+    ],
+    "anchor": [
+     94.5,
+     199.0
+    ]
+   },
+   {
+    "atlas": [
+     475,
+     2,
+     197,
+     205
+    ],
+    "anchor": [
+     81.5,
+     205.0
+    ]
+   },
+   {
+    "atlas": [
+     674,
+     2,
+     243,
+     202
+    ],
+    "anchor": [
+     92.5,
+     202.0
+    ]
+   },
+   {
+    "atlas": [
+     919,
+     2,
+     262,
+     206
+    ],
+    "anchor": [
+     92.5,
+     206.0
+    ]
+   }
+  ]
+ },
  "dash": {
   "path": "assets/runtime/ebb1e9732e6b90dc6fbf1959.png",
   "renderScale": 0.6120689655172413,

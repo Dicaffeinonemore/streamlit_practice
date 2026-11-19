@@ -247,11 +247,15 @@ air_offset=raw['ult_leap'][-1]['pivotY']-raw['ult_leap'][-1]['tile'].height
 for name in ['ult_summon','ult_barrage']:
     for r in raw[name]:r['pivotY']=r['tile'].height+air_offset
 report['ultimateAirPivotOffset']=air_offset
+import viesa_remake
 for number,spec in SPEC.items():
     relative=base/measurements[number]['height'];scale=stored_body/base*relative
     report['sheets'][number]={'reference':list(REFERENCE[number]),'bodyMeasurement':measurements[number],
                             'relativeToIdle':relative,'sourceToAtlas':scale}
     for name,_ in spec:
+        # Remake sheets replace these clips; the first-generation art stays for
+        # the basic shot, the ultimate and the scroll cast.
+        if name in viesa_remake.REPLACED:continue
         clips[name]=[]
         for i,r in enumerate(raw[name]):
             tile=r['tile'];pixels=np.array(tile);rgb=pixels[:,:,:3].astype(float)
@@ -272,6 +276,11 @@ for number,spec in SPEC.items():
                 f['anchor'][1]=tile.height
                 f['tip'][1]=round(f['tip'][1]+shift,3)
             clips[name].append(f);tiles.append((f,tile))
+
+remake,remake_paths,(remake_idle,remake_measure)=viesa_remake.build(body_measure,stored_body,report)
+for path in remake_paths:report['sources'][str(path.relative_to(ROOT))]=hashlib.sha256(path.read_bytes()).hexdigest()
+for name,frames in remake.items():
+    clips[name]=[f for f,_ in frames];tiles.extend(frames)
 
 fx_path=next((SRC/'02_Basic_Effects').glob('*.png'));fx_image=Image.open(fx_path).convert('RGB');arr=np.array(fx_image)
 brightness=arr.max(2);fx_rows,_=partitions((brightness>24).sum(1),6)
@@ -315,7 +324,7 @@ pages=pack_pages(tiles,limit=2048)
 def uri(im):
     b=io.BytesIO();im.save(b,format='PNG');return 'data:image/png;base64,'+base64.b64encode(b.getvalue()).decode()
 for i,im in enumerate(pages):im.save(OUT/f'atlas-{i}.png')
-idle=raw['idle'][0]['tile'];m=measurements[5];portrait=idle.crop((max(0,int(m['bodyX']-idle.height*.25)),max(0,m['top']-8),min(idle.width,int(m['bodyX']+idle.height*.25)),int(idle.height*.62)))
+idle=remake_idle;m=remake_measure;portrait=idle.crop((max(0,int(m['bodyX']-idle.height*.25)),max(0,m['top']-8),min(idle.width,int(m['bodyX']+idle.height*.25)),int(idle.height*.62)))
 portrait.thumbnail((180,180),Image.Resampling.LANCZOS);portrait.save(OUT/'portrait.png')
 selection_portrait=idle.copy()
 selection_portrait.thumbnail((240,360),Image.Resampling.LANCZOS);selection_portrait.save(OUT/'selection-portrait.png')
@@ -323,8 +332,9 @@ data={'version':'1.41','id':'viesa','name':'비에사','scale':.72,'worldHeight'
 (ROOT/'viesa-art.js').write_text('const VIESA_ART = '+json.dumps(data,separators=(',',':'))+';\n',encoding='utf-8')
 (OUT/'frames.json').write_text(json.dumps({k:v for k,v in data.items() if k not in ['sheets','portrait','selectionPortrait']},ensure_ascii=False,indent=2),encoding='utf-8')
 (OUT/'build-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
-preview=Image.new('RGB',(1200,((len(SPEC and raw)+5)//6)*220),'#17151d');d=ImageDraw.Draw(preview)
-for i,name in enumerate(raw):
+body_clips=[k for k in clips if not k.startswith('fx_')]
+preview=Image.new('RGB',(1200,((len(body_clips)+5)//6)*220),'#17151d');d=ImageDraw.Draw(preview)
+for i,name in enumerate(body_clips):
     f=clips[name][0];sx,sy,w,h=f['atlas'];im=pages[f['sheet']].crop((sx,sy,sx+w,sy+h));im.thumbnail((190,185))
     x=(i%6)*200;y=(i//6)*220;preview.paste(im,(x+(200-im.width)//2,y),im);d.text((x+8,y+190),name,fill='white')
 preview.save(OUT/'preview.jpg',quality=95)

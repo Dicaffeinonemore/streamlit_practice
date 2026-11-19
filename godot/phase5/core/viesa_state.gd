@@ -10,6 +10,8 @@ var face: int = 1
 var high: bool = false
 var h0: float = 0.0
 var released: bool = false
+## 모아 쏘기 charge level (0-3).
+var charge: int = 0
 var clock: int = 0
 var arrows: int = 0
 var final_fired: bool = false

@@ -7,6 +7,13 @@ const MELEE: Array[String] = ["slash1","slash2","kick"]
 const SKILL_KEYS: Dictionary[String, String] = {"KeyU":"thrust","KeyH":"slam","KeyO":"whirl","KeyP":"leap","KeyL":"redwave"}
 const SKILL_CLIPS: Dictionary[String, String] = {"thrust":"rapid_start","slam":"slash1","whirl":"dash_slash","leap":"dash_slash","redwave":"snipe_draw"}
 const RAPID_SHOTS: Array[int] = [0,9,18,27,36,45]
+## VIESA_CHARGE (모아 쏘기): draw frames 1-7, then hold frame 7; +4 damage per level, max 3.
+const CHARGE_DRAW: int = 21
+const CHARGE_LEVEL: int = 20
+const CHARGE_MAX: int = 3
+const CHARGE_BONUS: float = 4.0
+const CHARGE_HOLD: int = 45
+const MELEE_ACTIVE: Dictionary[String, Vector2i] = {"slash1":Vector2i(2,3),"slash2":Vector2i(3,5),"kick":Vector2i(1,4)}
 var art: BmkViesaData
 
 func _init(data: BmkViesaData = null) -> void:
@@ -29,6 +36,7 @@ static func clear_viesa(p: BmkActorState) -> void:
 	p.viesa_hover_grace = 0
 	p.viesa_air_p_used = false
 	p.viesa_landing = ""
+	p.running = false
 	p.jump_time = 0
 
 func world(s: BmkSimulation) -> BmkViesaWorld:
@@ -85,11 +93,13 @@ func step(sim: BmkSimulation) -> void:
 			p.vz = 0.0
 			p.jump_time = 0
 			viesa_landing(s)
+	if p.st != "free" and p.st != "dash": p.running = false
 	match p.st:
 		"free":
 			var ax: int = int(input.down(["ArrowRight", "KeyD"])) - int(input.down(["ArrowLeft", "KeyA"]))
 			var ay: int = int(input.down(["ArrowDown", "KeyS"])) - int(input.down(["ArrowUp", "KeyW"]))
-			var speed: float = (d.air_speed if p.z > 0.0 else d.ground_speed) * 1.1
+			if p.running and (p.z > 0.0 or ax != p.face): p.running = false
+			var speed: float = (d.air_speed if p.z > 0.0 else d.ground_speed) * 1.1 * (RUN_SPEED if p.running else 1.0)
 			p.x += ax * speed
 			p.y += ay * speed * d.depth_ratio
 			if ax != 0: p.face = ax
@@ -118,6 +128,7 @@ func step(sim: BmkSimulation) -> void:
 				p.st = "free"
 				p.t = 0
 				p.dash_grace = 0
+				p.running = int(input.down(["ArrowRight", "KeyD"])) - int(input.down(["ArrowLeft", "KeyA"])) == p.face
 		"special":
 			p.t += 1
 			update_ultimate(s)
@@ -301,7 +312,8 @@ func update_viesa_attack(s: BmkSimulation) -> void:
 		return
 	var name_: String = p.viesa_clip
 	var frame: int = p.t / 4 + 1
-	var duration: int = art.clip_length(name_) * 4
+	# The ten-frame jump shot plays frames 4-10 in 20 ticks (pose()).
+	var duration: int = 20 if name_ == "jump_shot" else art.clip_length(name_) * 4
 	var shooting: bool = name_ == "shot" or name_ == "jump_shot"
 	var queue_key: Array[String] = ["KeyH"]
 	if shooting: queue_key = ["KeyJ"]
@@ -316,7 +328,8 @@ func update_viesa_attack(s: BmkSimulation) -> void:
 			start_viesa_attack(s, name_ == "jump_shot")
 			return
 	else:
-		var active: bool = frame >= 2 and frame <= 4 if name_ == "slash2" else frame >= 3 and frame <= 4
+		var window: Vector2i = MELEE_ACTIVE[name_]
+		var active: bool = frame >= window.x and frame <= window.y
 		if active:
 			var ratio: float = {"slash1":0.9,"slash2":1.0,"kick":1.2}[name_]
 			player_strike(s, s.js_round(c1(s).damage * ratio), c1(s).reach, name_ == "kick", 2 if name_ == "kick" else 1, 1.3 if name_ == "kick" else 1.0, "viesaMelee")
@@ -354,7 +367,7 @@ func player_strike(sim: BmkSimulation, damage: float, reach: float, kd: bool, fx
 			p.hit_set[b.id] = true
 			s.item_controller.damage_barrel(s, b)
 
-func fire_arrow(sim: BmkSimulation, air: bool = false, snipe: bool = false, rapid: bool = false, paid_special: bool = false, lane_offset: float = 0.0) -> void:
+func fire_arrow(sim: BmkSimulation, air: bool = false, snipe: bool = false, rapid: bool = false, paid_special: bool = false, lane_offset: float = 0.0, charge: int = 0) -> void:
 	var s: BmkStageSimulation = sim as BmkStageSimulation
 	var p: BmkActorState = s.player
 	var vw: float = art.view_width()
@@ -379,8 +392,9 @@ func fire_arrow(sim: BmkSimulation, air: bool = false, snipe: bool = false, rapi
 	z.depth = depth
 	z.aim_y = target.y if target != null and lane_offset == 0.0 else y
 	z.start_y = y
-	z.damage = s.js_round((c1(s).damage * 2.5 if snipe else (10.0 if rapid else 8.0)) * mul)
+	z.damage = s.js_round((c1(s).damage * 2.5 + CHARGE_BONUS * charge if snipe else (10.0 if rapid else 8.0)) * mul)
 	z.snipe = snipe
+	z.charge = charge
 	z.rapid = rapid
 	z.paid_special = paid_special
 	z.seq = s.next_hazard_seq()
@@ -489,11 +503,16 @@ func update_action(s: BmkSimulation) -> void:
 		"snipe_draw":
 			a.held += 1
 			if not s.input.down(["KeyL"]): a.released = true
-			if a.held >= 30 and (a.released or a.held >= 120): next_phase(p, "snipe_release")
+			var level: int = mini(CHARGE_MAX, maxi(0, floori(float(a.held - CHARGE_DRAW) / CHARGE_LEVEL)))
+			if level > a.charge:
+				a.charge = level
+				var bow: PackedFloat64Array = bow_position(s)
+				world(s).effect("hit_spark", bow[0], bow[1], bow[2], p.face, 30 + 12 * level, 30 + 12 * level, 12)
+			if a.held >= CHARGE_DRAW and (a.released or a.held >= CHARGE_DRAW + CHARGE_LEVEL * CHARGE_MAX + CHARGE_HOLD): next_phase(p, "snipe_release")
 		"snipe_release":
-			if p.t >= 4 and a.shots == 0:
+			if p.t >= 6 and a.shots == 0:
 				a.shots += 1
-				fire_arrow(s, false, true)
+				fire_arrow(s, false, true, false, false, 0.0, a.charge)
 			if p.t >= 24: finish(p)
 		"rapid_start":
 			if p.t >= 16: next_phase(p, "rapid_loop")
@@ -726,14 +745,17 @@ func pose(s: BmkSimulation) -> Array:
 	var clip: String
 	var index: float
 	if p.st == "dead":
-		clip = "death"; index = floori(p.t / 5.0)
+		clip = "death"; index = floori(p.t / 4.0)
 	elif p.st == "down":
-		if p.t < 32: clip = "knockdown"; index = floori(p.t / 5.0)
-		else: clip = "getup"; index = floori((p.t - 32) / 4.0)
-	elif p.st == "hurt" or p.st == "grabbed":
-		clip = "hurt"; index = floori(p.t / 4.0)
+		if p.t < 32: clip = "knockdown"; index = floori(p.t * 7 / 32.0)
+		else: clip = "getup"; index = floori((p.t - 32) / 3.0)
+	elif p.st == "hurt":
+		# Ten hurt frames span the default hitstun; a grab holds the recoil (frame 5).
+		clip = "hurt"; index = floori(p.t * 10.0 / s.data.hurt_ticks)
+	elif p.st == "grabbed":
+		clip = "hurt"; index = mini(4, floori(p.t / 4.0))
 	elif p.st == "atk":
-		clip = p.viesa_clip; index = floori(p.t / 4.0)
+		clip = p.viesa_clip; index = 3 + floori(p.t / 3.0) if p.viesa_clip == "jump_shot" else floori(p.t / 4.0)
 	elif p.st == "cast":
 		var ms: float = p.t * MS
 		var fire: float = s.data.magic_fire
@@ -745,25 +767,38 @@ func pose(s: BmkSimulation) -> Array:
 	elif p.st == "skill" and a != null:
 		match a.phase:
 			"snipe_draw":
-				clip = "snipe_draw"; index = floori(p.t / 3.0) if p.t < 18 else 4 + floori((p.t - 18) / 5.0) % 2
+				clip = "snipe_draw"; index = floori(p.t / 3.0) if p.t < CHARGE_DRAW else 6
+			"snipe_release":
+				clip = "snipe_release"; index = floori(p.t / 2.0) if p.t < 6 else (3 if p.t < 14 else 4)
 			"rapid_loop":
-				clip = "rapid_loop"; index = floori(p.t / 3.0) % 6
+				var local: int = posmod(p.t - 1, 9)
+				clip = "rapid_loop"; index = 0 if p.t < 1 else (3 if local < 3 else (1 if local < 6 else 2))
+			"rapid_end":
+				clip = "rapid_end"; index = floori(p.t / 8.0)
+			"dash_slash":
+				clip = "dash"; index = floori(p.t * 3 / 16.0) if p.t < 16 else 3 + floori((p.t - 16) / 2.0)
+			"backflip":
+				clip = "backflip"; index = floori(p.t / 5.0)
 			"hover":
 				clip = "backflip"; index = 5
 			"land_backflip":
-				clip = "backflip"; index = 6 + floori(p.t / 4.0)
+				clip = "backflip"; index = 6 + floori(p.t / 3.0)
 			"land_jump":
-				clip = "jump"; index = 5
+				clip = "jump"; index = 12 + floori(p.t / 3.0)
 			_:
 				clip = a.phase; index = floori(p.t / 4.0)
 	elif p.st == "dash":
-		clip = "run"; index = floori(p.t / 2.0) % 8
+		clip = "dash"; index = floori(p.t * 5 / 6.0)
 	elif p.z > 0.0:
-		clip = "jump"; index = mini(3, floori(p.jump_time / 6.0)) if p.vz > 0.0 else 4
+		clip = "jump"
+		if p.vz > 0.0: index = 3 + mini(5, floori(p.jump_time / 4.0))
+		else: index = 9 if p.vz > -2.0 else (10 if p.vz > -5.0 else 11)
+	elif p.walk and p.running:
+		clip = "run"; index = floori(p.walk_time / 60.0) % 10
 	elif p.walk:
-		clip = "walk"; index = floori(p.walk_time / 80.0) % 8
+		clip = "walk"; index = floori(p.walk_time / 50.0) % 16
 	else:
-		clip = "idle"; index = floori(s.tick / 6.0) % 8
+		clip = "idle"; index = floori(s.tick / 5.0) % 16
 	return [clip, art.frame_index(clip, index)]
 
 ## game.js playerAttackHasDefaultSound(): Viesa's bow and skills supply their own sounds.

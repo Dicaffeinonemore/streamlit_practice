@@ -48,10 +48,10 @@ func state(s: BmkStageSimulation) -> Dictionary:
 	var a: BmkViesaAction = p.viesa_action
 	var pose: Array = controller.pose(s)
 	var player: Dictionary = {"x":p.x,"y":p.y,"z":p.z,"vx":p.vx,"vz":p.vz,"face":p.face,"hp":p.hp,"max":p.max_hp,"lives":p.lives,"st":p.st,"t":p.t,"inv":p.inv,"flash":p.flash,"sp":p.sp,"mg":p.mg,"buff":p.buff,"score":p.score,"combo":p.combo,"comboT":p.combo_t,"buf":p.buf,"skill":p.skill,"walk":p.walk,"walkTime":p.walk_time,"dashCd":p.dash_cd,"dashGrace":p.dash_grace,"castFired":p.cast_fired,"atk":p.atk,"x0":p.x0,"w":p.w,"hw":p.hw,
-		"viesaClip":p.viesa_clip,"viesaFired":p.viesa_fired,"viesaShotQueued":p.viesa_shot_queued,"viesaHoverGrace":p.viesa_hover_grace,"viesaAirPUsed":p.viesa_air_p_used,"viesaLanding":p.viesa_landing,"jumpTime":p.jump_time,
+		"viesaClip":p.viesa_clip,"viesaFired":p.viesa_fired,"viesaShotQueued":p.viesa_shot_queued,"viesaHoverGrace":p.viesa_hover_grace,"viesaAirPUsed":p.viesa_air_p_used,"viesaLanding":p.viesa_landing,"jumpTime":p.jump_time,"running":p.running,
 		"grab":{"kind":p.grab.kind,"presses":p.grab.presses,"t":p.grab.t} if p.grab != null else null,
 		"skillCd":p.skill_cd.duplicate(),
-		"action":{"phase":a.phase,"id":a.id,"held":a.held,"shots":a.shots,"x0":a.x0,"face":a.face,"high":a.high,"h0":a.h0,"released":a.released,"clock":a.clock,"arrows":a.arrows,"finalFired":a.final_fired,"landed":a.landed} if a != null else null,
+		"action":{"phase":a.phase,"id":a.id,"held":a.held,"shots":a.shots,"x0":a.x0,"face":a.face,"high":a.high,"h0":a.h0,"released":a.released,"charge":a.charge,"clock":a.clock,"arrows":a.arrows,"finalFired":a.final_fired,"landed":a.landed} if a != null else null,
 		"pose":{"clip":pose[0],"index":pose[1]}}
 	var enemies: Array[Dictionary] = []
 	for actor: BmkActorState in s.enemies:

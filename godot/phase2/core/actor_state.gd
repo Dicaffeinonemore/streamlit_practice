@@ -80,6 +80,8 @@ var alpha: float = 1.0
 var bolted: bool = false
 # Player character (game.js newPlayer characterId) and viesa-runtime.js player fields.
 var character_id: String = "barel"
+## Running after a dash while the dash direction stays held (game.js player.running).
+var running: bool = false
 var w: float = 26.0
 var jump_time: int = 0
 var viesa_action: BmkViesaAction

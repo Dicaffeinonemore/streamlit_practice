@@ -1,36 +1,26 @@
 [gd_resource type="Resource" script_class="BmkAnimationAsset" format=3]
 
 [ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_ywsgn"]
-[ext_resource type="Texture2D" path="res://port_assets/images/viesa_art.sheets.0__621c304fb2d6.png" id="2_psexw"]
+[ext_resource type="Texture2D" path="res://port_assets/images/viesa_art.sheets.0__7049c6fdf648.png" id="2_psexw"]
 
 [sub_resource type="AtlasTexture" id="frame_0"]
 atlas = ExtResource("2_psexw")
-region = Rect2(1869, 477, 109, 120)
+region = Rect2(1804, 1066, 120, 126)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_1"]
 atlas = ExtResource("2_psexw")
-region = Rect2(0, 643, 103, 118)
+region = Rect2(1926, 1066, 119, 126)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_2"]
 atlas = ExtResource("2_psexw")
-region = Rect2(105, 643, 99, 118)
+region = Rect2(0, 1206, 119, 129)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_3"]
 atlas = ExtResource("2_psexw")
-region = Rect2(206, 643, 105, 119)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="frame_4"]
-atlas = ExtResource("2_psexw")
-region = Rect2(313, 643, 91, 118)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="frame_5"]
-atlas = ExtResource("2_psexw")
-region = Rect2(406, 643, 111, 119)
+region = Rect2(121, 1206, 164, 132)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="source_frames"]
@@ -47,12 +37,6 @@ animations = [{
 }, {
 "duration": 100.0,
 "texture": SubResource("frame_3")
-}, {
-"duration": 100.0,
-"texture": SubResource("frame_4")
-}, {
-"duration": 100.0,
-"texture": SubResource("frame_5")
 }],
 "loop": 0,
 "name": &"source",
@@ -63,10 +47,10 @@ animations = [{
 script = ExtResource("1_ywsgn")
 source_id = "viesa_art.rapid_loop"
 sprite_frames = SubResource("source_frames")
-frame_pivots = PackedVector2Array(45.564, 120.176, 44.171, 118.187, 45.763, 118.187, 44.171, 119.381, 41.385, 118.187, 40.589, 119.778)
-frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72, 0.72, 0.72)
-duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100)
-authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0)
+frame_pivots = PackedVector2Array(55.039, 125.187, 55.039, 126.266, 55.039, 128.964, 55.579, 131.662)
+frame_scales = PackedFloat64Array(0.72, 0.72, 0.72, 0.72)
+duration_ms = PackedFloat64Array(100, 100, 100, 100)
+authoritative_duration = PackedByteArray(0, 0, 0, 0)
 metadata = {
 "catalog": "VIESA_ART",
 "clip": "rapid_loop",
@@ -75,98 +59,66 @@ metadata = {
 }
 source_frames = Array[Dictionary]([{
 "duration_ms": null,
-"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
-"pivot": [45.564, 120.176],
-"rect": [1869.0, 477.0, 109.0, 120.0],
+"image": "port_assets/images/viesa_art.sheets.0__7049c6fdf648.png",
+"pivot": [55.039, 125.187],
+"rect": [1804.0, 1066.0, 120.0, 126.0],
 "scale": 0.72,
 "source": {
-"anchor": [45.564, 120.176],
-"atlas": [1869.0, 477.0, 109.0, 120.0],
-"drawing": 1.0,
-"sheet": 0.0,
-"source": [5.0, 338.0, 273.0, 302.0],
-"sourceSheet": 2.0,
-"tip": [49.543, 31.835]
-},
-"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
-}, {
-"duration_ms": null,
-"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
-"pivot": [44.171, 118.187],
-"rect": [0.0, 643.0, 103.0, 118.0],
-"scale": 0.72,
-"source": {
-"anchor": [44.171, 118.187],
-"atlas": [0.0, 643.0, 103.0, 118.0],
-"drawing": 2.0,
-"sheet": 0.0,
-"source": [274.0, 343.0, 258.0, 297.0],
-"sourceSheet": 2.0,
-"tip": [35.018, 116.197]
-},
-"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
-}, {
-"duration_ms": null,
-"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
-"pivot": [45.763, 118.187],
-"rect": [105.0, 643.0, 99.0, 118.0],
-"scale": 0.72,
-"source": {
-"anchor": [45.763, 118.187],
-"atlas": [105.0, 643.0, 99.0, 118.0],
-"drawing": 3.0,
-"sheet": 0.0,
-"source": [522.0, 343.0, 248.0, 297.0],
-"sourceSheet": 2.0,
-"tip": [33.427, 73.419]
-},
-"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
-}, {
-"duration_ms": null,
-"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
-"pivot": [44.171, 119.381],
-"rect": [206.0, 643.0, 105.0, 119.0],
-"scale": 0.72,
-"source": {
-"anchor": [44.171, 119.381],
-"atlas": [206.0, 643.0, 105.0, 119.0],
-"drawing": 4.0,
-"sheet": 0.0,
-"source": [766.0, 340.0, 264.0, 300.0],
-"sourceSheet": 2.0,
-"tip": [36.212, 117.59]
-},
-"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
-}, {
-"duration_ms": null,
-"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
-"pivot": [41.385, 118.187],
-"rect": [313.0, 643.0, 91.0, 118.0],
-"scale": 0.72,
-"source": {
-"anchor": [41.385, 118.187],
-"atlas": [313.0, 643.0, 91.0, 118.0],
+"anchor": [55.039, 125.187],
+"atlas": [1804.0, 1066.0, 120.0, 126.0],
 "drawing": 5.0,
 "sheet": 0.0,
-"source": [1026.0, 343.0, 228.0, 297.0],
-"sourceSheet": 2.0,
-"tip": [32.631, 73.618]
+"source": [80.0, 83.0, 223.0, 233.0],
+"sourceSheet": "remake-07",
+"tip": [64.752, 69.069]
 },
-"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+"source_image": "assets/runtime/7049c6fdf6489bb216468346.png"
 }, {
 "duration_ms": null,
-"image": "port_assets/images/viesa_art.sheets.0__621c304fb2d6.png",
-"pivot": [40.589, 119.778],
-"rect": [406.0, 643.0, 111.0, 119.0],
+"image": "port_assets/images/viesa_art.sheets.0__7049c6fdf648.png",
+"pivot": [55.039, 126.266],
+"rect": [1926.0, 1066.0, 119.0, 126.0],
 "scale": 0.72,
 "source": {
-"anchor": [40.589, 119.778],
-"atlas": [406.0, 643.0, 111.0, 119.0],
+"anchor": [55.039, 126.266],
+"atlas": [1926.0, 1066.0, 119.0, 126.0],
 "drawing": 6.0,
 "sheet": 0.0,
-"source": [1250.0, 339.0, 279.0, 300.0],
-"sourceSheet": 2.0,
-"tip": [60.884, 70.037]
+"source": [80.0, 81.0, 221.0, 234.0],
+"sourceSheet": "remake-07",
+"tip": [63.673, 70.148]
 },
-"source_image": "assets/runtime/621c304fb2d6b4a7231722b1.png"
+"source_image": "assets/runtime/7049c6fdf6489bb216468346.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__7049c6fdf648.png",
+"pivot": [55.039, 128.964],
+"rect": [0.0, 1206.0, 119.0, 129.0],
+"scale": 0.72,
+"source": {
+"anchor": [55.039, 128.964],
+"atlas": [0.0, 1206.0, 119.0, 129.0],
+"drawing": 7.0,
+"sheet": 0.0,
+"source": [80.0, 76.0, 221.0, 239.0],
+"sourceSheet": "remake-07",
+"tip": [63.673, 72.306]
+},
+"source_image": "assets/runtime/7049c6fdf6489bb216468346.png"
+}, {
+"duration_ms": null,
+"image": "port_assets/images/viesa_art.sheets.0__7049c6fdf648.png",
+"pivot": [55.579, 131.662],
+"rect": [121.0, 1206.0, 164.0, 132.0],
+"scale": 0.72,
+"source": {
+"anchor": [55.579, 131.662],
+"atlas": [121.0, 1206.0, 164.0, 132.0],
+"drawing": 8.0,
+"sheet": 0.0,
+"source": [79.0, 71.0, 304.0, 244.0],
+"sourceSheet": "remake-07",
+"tip": [107.92, 91.192]
+},
+"source_image": "assets/runtime/7049c6fdf6489bb216468346.png"
 }])

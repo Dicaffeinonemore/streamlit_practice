@@ -2,6 +2,8 @@ class_name BmkPlayerController
 extends RefCounted
 const MS: float = 1000.0 / 60.0
 const JUMP: Array[String] = ["Space", "ControlLeft", "ControlRight"]
+## game.js RUN_SPEED_SCALE: holding the dash direction after a dash keeps running.
+const RUN_SPEED: float = 1.6
 
 func aim(s: BmkSimulation) -> void:
 	var direction: int = int(s.input.down(["ArrowRight", "KeyD"])) - int(s.input.down(["ArrowLeft", "KeyA"]))
@@ -186,11 +188,13 @@ func step(s: BmkSimulation) -> void:
 		if p.z <= 0.0:
 			p.z = 0.0
 			p.vz = 0.0
+	if p.st != "free" and p.st != "dash": p.running = false
 	match p.st:
 		"free":
 			var ax: int = int(input.down(["ArrowRight", "KeyD"])) - int(input.down(["ArrowLeft", "KeyA"]))
 			var ay: int = int(input.down(["ArrowDown", "KeyS"])) - int(input.down(["ArrowUp", "KeyW"]))
-			var speed: float = d.air_speed if p.z > 0.0 else d.ground_speed
+			if p.running and (p.z > 0.0 or ax != p.face): p.running = false
+			var speed: float = (d.air_speed if p.z > 0.0 else d.ground_speed) * (RUN_SPEED if p.running else 1.0)
 			p.x += ax * speed
 			p.y += ay * speed * d.depth_ratio
 			if ax != 0:
@@ -260,6 +264,7 @@ func step(s: BmkSimulation) -> void:
 				p.st = "free"
 				p.t = 0
 				p.dash_grace = d.dash_grace
+				p.running = int(input.down(["ArrowRight", "KeyD"])) - int(input.down(["ArrowLeft", "KeyA"])) == p.face
 		"dash_attack":
 			update_dash_attack(s)
 		"skill":
