@@ -106,9 +106,9 @@ func play_track(id: String) -> void:
 	if music == null: return
 	music.stop()
 	track_id = id
-	victory_intro = id == "victory"
+	victory_intro = id == "victory" or id == "ending"
 	if id == "stop": return
-	var path: String = "res://port_assets/audio/original/boss.mp3" if id == "boss" else ("res://port_assets/audio/music/victory_intro.wav" if id == "victory" else "res://port_assets/audio/music/stage_%d_loop.ogg" % stage_number)
+	var path: String = "res://port_assets/audio/original/boss.mp3" if id == "boss" else ("res://port_assets/audio/music/%s_intro.wav" % id if victory_intro else "res://port_assets/audio/music/stage_%d_loop.ogg" % stage_number)
 	music.stream = load(path) as AudioStream
 	if music.stream is AudioStreamMP3: (music.stream as AudioStreamMP3).loop = true
 	if music.stream is AudioStreamOggVorbis: (music.stream as AudioStreamOggVorbis).loop = true
@@ -116,9 +116,9 @@ func play_track(id: String) -> void:
 	if DisplayServer.get_name() != "headless": music.play()
 
 func on_music_finished() -> void:
-	if track_id != "victory" or not victory_intro: return
+	if track_id not in ["victory","ending"] or not victory_intro: return
 	victory_intro = false
-	var stream: AudioStreamOggVorbis = load("res://port_assets/audio/music/victory_loop.ogg") as AudioStreamOggVorbis
+	var stream: AudioStreamOggVorbis = load("res://port_assets/audio/music/%s_loop.ogg" % track_id) as AudioStreamOggVorbis
 	stream.loop = true
 	music.stream = stream
 	if DisplayServer.get_name() != "headless": music.play()

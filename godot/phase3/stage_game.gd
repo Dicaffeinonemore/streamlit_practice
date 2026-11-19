@@ -20,6 +20,13 @@ var wave_backdrop: BmkWaveBackdrop
 var morgra_ground: BmkMorgraView.Ground
 var morgra_view: BmkMorgraView
 var legacy_presenter: BmkLegacyPresenter
+var aurelion_back: BmkAurelionView
+var aurelion_view: BmkAurelionView
+var vargul_ground: BmkVargulView
+var vargul_view: BmkVargulView
+var sovereign_ground: BmkSovereignView
+var sovereign_view: BmkSovereignView
+var rift_view: BmkRiftView
 
 ## Viesa's ultimate dims only the scenery: drawn after the backdrop, before the actors.
 class ViesaDim:
@@ -64,6 +71,37 @@ func _ready() -> void:
 	morgra_view.z_index = 3
 	world.add_child(morgra_view)
 	legacy_presenter = BmkLegacyPresenter.new(bank)
+	aurelion_back = BmkAurelionView.new()
+	aurelion_back.bank = bank
+	aurelion_back.back = true
+	world.add_child(aurelion_back)
+	world.move_child(aurelion_back,morgra_ground.get_index() + 1)
+	vargul_ground = BmkVargulView.new()
+	vargul_ground.bank = bank
+	vargul_ground.ground = true
+	world.add_child(vargul_ground)
+	world.move_child(vargul_ground,aurelion_back.get_index() + 1)
+	sovereign_ground = BmkSovereignView.new()
+	sovereign_ground.bank = bank
+	sovereign_ground.ground = true
+	world.add_child(sovereign_ground)
+	world.move_child(sovereign_ground,vargul_ground.get_index() + 1)
+	rift_view = BmkRiftView.new()
+	rift_view.bank = bank
+	world.add_child(rift_view)
+	world.move_child(rift_view,sovereign_ground.get_index() + 1)
+	sovereign_view = BmkSovereignView.new()
+	sovereign_view.bank = bank
+	sovereign_view.z_index = 3
+	world.add_child(sovereign_view)
+	vargul_view = BmkVargulView.new()
+	vargul_view.bank = bank
+	vargul_view.z_index = 3
+	world.add_child(vargul_view)
+	aurelion_view = BmkAurelionView.new()
+	aurelion_view.bank = bank
+	aurelion_view.z_index = 3
+	world.add_child(aurelion_view)
 	viesa_sigil = BmkViesaView.make_sigil()
 	player_view.add_child(viesa_sigil)
 	player_view.move_child(viesa_sigil,0)
@@ -76,8 +114,8 @@ func restart() -> void:
 	item_views.clear()
 	if stage_config == null: stage_config = load("res://phase3/generated/stage.res") as BmkStageData
 	var s: BmkStageSimulation
-	if stage_index == 1:
-		var wave: BmkWaveSimulation = BmkWaveSimulation.new(stage_config)
+	if stage_index >= 1:
+		var wave: BmkWaveSimulation = BmkWaveSimulation.new(stage_config,null,stage_index)
 		wave.use_character(character_id)
 		wave.start_stage(stage_restored)
 		if boss_challenge: wave.begin_boss_challenge()
@@ -141,6 +179,22 @@ func present() -> void:
 		morgra_view.visible = wave != null
 		morgra_view.session = wave
 		morgra_view.queue_redraw()
+		for view: BmkAurelionView in [aurelion_back,aurelion_view]:
+			view.visible = wave != null
+			view.session = wave
+			view.queue_redraw()
+		for view: BmkVargulView in [vargul_ground,vargul_view]:
+			view.visible = wave != null
+			view.session = wave
+			view.refresh()
+		for view: BmkSovereignView in [sovereign_ground,sovereign_view]:
+			view.visible = wave != null
+			view.session = wave
+			view.refresh()
+		sovereign_view.sync_fists(actors)
+		rift_view.visible = wave != null
+		rift_view.session = wave
+		rift_view.sync(actors)
 	if viesa_view != null:
 		viesa_view.present(s)
 		viesa_dim.session = s
@@ -162,8 +216,33 @@ func present_enemy(view: BmkActorView, e: BmkActorState) -> void:
 	view.present(session,e,pose["asset"] as BmkAnimationAsset,int(pose["index"]))
 	view.body.scale *= float(pose["scale"])
 	view.body.position.y -= float(pose["lift"])
-	view.body.modulate = Color(2,2,2) if e.flash > 0 and show_flash else Color.WHITE
+	# drawSovereign() lights the body with gain 1.8 (drawLit), other bosses flash white.
+	view.body.modulate = Color.WHITE * (1.8 if (e as BmkLegacyActor).type == "boss5" else 2.0) if e.flash > 0 and show_flash else (pose.get("tint",Color.WHITE) as Color if show_flash else Color.WHITE)
 	view.body.modulate.a = float(pose["alpha"])
+	var legacy: BmkLegacyActor = e as BmkLegacyActor
+	if legacy.type == "boss4": vargul_view.attach(view,legacy)
+	if legacy.type == "boss5": sovereign_view.attach(view,legacy)
+	if legacy.boss:
+		# drawEnemyOverlay(): the boss warning '!' above the head.
+		var wave: BmkWaveSimulation = session as BmkWaveSimulation
+		var warn: bool = false
+		if legacy.type == "boss3" and legacy.st == "pat" and legacy.aurelion != null and not legacy.aurelion.current.is_empty() and legacy.aurelion.guard != "guard":
+			var tele: Variant = wave.aurelion.moves[legacy.aurelion.move].get("telegraph")
+			warn = tele != null and tele.get("warning_icon_frames") != null and BmkAurelionController.within([tele["warning_icon_frames"]],float(legacy.aurelion.current["source"])) and floori(legacy.pt / 110.0) % 2 == 0
+		elif legacy.type == "boss4":
+			warn = legacy.st == "pat" and bool(legacy.vargul.current.get("warning",false)) and floori(legacy.pt / 110.0) % 2 == 0
+		elif legacy.type == "boss5":
+			warn = wave.sovereign.warning(legacy) and floori(wave.tick * BmkSimulation.MS / 110.0) % 2 == 0
+		elif legacy.type == "boss2":
+			var startup: Variant = wave.morgra.data.move(legacy.morgra_move).get("phases",{}).get("startup")
+			var tele_ms: float = (float(startup[1]) + 1) * BmkSimulation.MS if startup != null else 0.0
+			warn = legacy.st == "wind" and legacy.t > 2 or legacy.st == "pat" and legacy.pt < tele_ms and floori(legacy.pt / 110.0) % 2 == 0
+		var height: float = float(legacy.stats.get("h",legacy.d.height))
+		view.alert.visible = warn and legacy.st != "dead"
+		view.alert.text = "!"
+		view.alert.position.y = -legacy.z - height - 24 - 30
+		view.alert.add_theme_color_override("font_color",Color("ff3d3d"))
+		view.alert.add_theme_font_size_override("font_size",26)
 
 func player_pose() -> Array:
 	if session.player.is_viesa():
@@ -197,6 +276,49 @@ func _unhandled_input(event: InputEvent) -> void:
 			restart()
 			return
 		var s: BmkStageSimulation = session as BmkStageSimulation
+		if s is BmkWaveSimulation and (s as BmkWaveSimulation).vargul != null:
+			# vargulDebugKey(): F10 = phase two (F3), F11 = 35% HP for the ultimate (F4).
+			for actor: BmkActorState in s.enemies:
+				var v: BmkLegacyActor = actor as BmkLegacyActor
+				if v.type != "boss4": continue
+				var w: BmkWaveSimulation = s as BmkWaveSimulation
+				if key == KEY_F10:
+					w.enemy_controller.reset_boss_fx(v,w)
+					w.vargul.clear_hazards(w,v)
+					v.phase_t = 0
+					v.p2shown = true
+					v.max_hp = 2500
+					v.hp = 2500
+					v.next_kd = 1875
+					v.invulnerable = false
+					v.inv = 0
+					v.gr = 0
+					v.gr_t = 0
+					v.st = "chase"
+					v.attack_cd = 20
+					w.mode = "play"
+					v.vargul.ultimate_used = false
+					return
+				if key == KEY_F11 and v.p2shown:
+					v.hp = v.max_hp * 0.35
+					v.attack_cd = 0
+					v.vargul.cooldowns["ultimate"] = 0
+					return
+		if s is BmkWaveSimulation and (s as BmkWaveSimulation).sovereign != null:
+			# Debug: F10 = phase two, F11 = 35% HP so the ultimate is due (like Vargul's F3/F4).
+			var w: BmkWaveSimulation = s as BmkWaveSimulation
+			for actor: BmkActorState in s.enemies:
+				if not BmkSovereignController.is_sovereign(actor): continue
+				var v: BmkLegacyActor = actor as BmkLegacyActor
+				if key == KEY_F10 and not v.p2shown and v.st != "intro" and v.phase_t == 0:
+					w.mode = "play"
+					w.sovereign.begin_transition(w,v)
+					return
+				if key == KEY_F11 and v.p2shown:
+					v.hp = v.max_hp * 0.35
+					v.attack_cd = 0
+					w.sovereign.state(v).cooldowns["ultimate"] = 0
+					return
 		var e: BmkStageActor = s.gorath.boss(s)
 		if e != null and key == KEY_F10:
 			s.gorath.cancel(s,e)

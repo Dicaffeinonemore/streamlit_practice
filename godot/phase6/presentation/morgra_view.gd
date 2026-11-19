@@ -49,6 +49,12 @@ func _draw() -> void:
 		paint(self,fx_asset(id),floori(f / (z.life / n)) if z.visual else floori(f / 5) % n,z.x,z.y - z.h,z.face)
 	for e: BmkActorState in s.enemies:
 		var b: BmkLegacyActor = e as BmkLegacyActor
+		if b.st == "stun":
+			# drawEnemyOverlay(): four stars circling above a stunned enemy.
+			var top: float = b.y - b.z - float(b.stats.get("h",b.d.height))
+			for i: int in range(4):
+				var a: float = s.tick * 0.12 + i * PI / 2
+				draw_circle(Vector2(b.x + cos(a) * 34,top + 8 + sin(a) * 9),5,Color("ffe14d"))
 		if b.type != "boss2": continue
 		if b.st == "intro": draw_intro(b)
 		if b.st == "reviving" and b.t >= 217 and b.t < 241: paint(self,fx_asset("teleport_burst"),floori((b.t - 217) / 6.0),b.x,b.y,1)

@@ -176,6 +176,7 @@ func start_cast(s: BmkSimulation) -> void:
 	p.buf = 0.0
 	p.vx = 0.0
 	p.inv = maxi(p.inv, 48)
+	s.react_attack()
 	s.sound("mcharge")
 
 # ------------------------------------------------------------------ input and skills
@@ -218,6 +219,7 @@ func begin_action(s: BmkSimulation, phase: String, id: String = "", high: bool =
 	a.high = high
 	a.h0 = p.z
 	p.viesa_action = a
+	s.react_attack()
 
 func begin_special(s: BmkSimulation) -> bool:
 	var p: BmkActorState = s.player
@@ -279,6 +281,7 @@ func start_viesa_attack(s: BmkSimulation, air: bool) -> void:
 	p.atk = "air" if air else "c1"
 	# Repeated air shots keep falling instead of restarting a hover each shot.
 	if air: p.vz = clampf(p.vz, -1.6, -0.25)
+	s.react_attack()
 
 func start_melee(s: BmkSimulation, n: int) -> void:
 	var p: BmkActorState = s.player
@@ -336,8 +339,10 @@ func player_strike(sim: BmkSimulation, damage: float, reach: float, kd: bool, fx
 	var p: BmkActorState = s.player
 	var mul: float = 1.5 if p.buff > 0 else 1.0
 	s.strike_crows(reach, 0.0, p.x, p.y, p.z, p.face)
+	s.strike_orbs(reach, 8.0, p.hit_set, "", {"damage":s.js_round(damage * mul)})
+	var blocked: bool = s.strike_fists(reach, 8.0, p.hit_set, "", {"damage":s.js_round(damage * mul),"kd":kd})
 	for e: BmkActorState in s.enemies:
-		if not s.combat.can_hit(e) or p.hit_set.has(e.id): continue
+		if not s.combat.can_hit(e) or p.hit_set.has(e.id) or blocked and s.is_sovereign(e): continue
 		if s.combat.in_reach(p, e, reach, 24.0, 55.0):
 			p.hit_set[e.id] = true
 			s.combat.damage_enemy(s, e, s.js_round(damage * mul), kd, fx, false, id)
@@ -408,12 +413,19 @@ func update_arrow(s: BmkStageSimulation, z: BmkViesaWorld.Arrow) -> void:
 	z.h += z.vh
 	var age: int = floori(z.age / MS)
 	if age <= 8: z.y = lerpf(z.start_y, z.aim_y, minf(1.0, age / 8.0))
+	var previous: int = z.aux_hits.size()
+	s.strike_orbs(absf(z.x - from), 0.0, z.aux_hits, "", {"x":from,"y":z.y,"h":z.h - 44.0,"face":z.dir,"depth":z.depth,"damage":z.damage,"kd":z.snipe})
+	var blocked: bool = s.strike_fists(absf(z.x - from), 0.0, z.aux_hits, "", {"x":from,"y":z.y,"h":z.h - 44.0,"face":z.dir,"depth":z.depth,"damage":z.damage,"kd":z.snipe})
 	s.strike_crows(absf(z.x - from), 0.0, from, z.y, z.h - 44.0, z.dir)
+	if not z.snipe and (blocked or z.aux_hits.size() > previous):
+		z.dead = true
+		world(s).effect("hit_spark", z.x, z.y, z.h, p.face)
+		return
 	var low: float = minf(from, z.x) - 4.0
 	var high: float = maxf(from, z.x) + 4.0
 	var contacts: Array[BmkActorState] = []
 	for e: BmkActorState in s.enemies:
-		if s.combat.can_hit(e) and not z.hits.has(e.id) and absf(e.y - z.y) < z.depth and z.h >= e.z - 5.0 and z.h <= e.z + maxf(80.0, e.d.height) and e.x + e.hw >= low and e.x - e.hw <= high:
+		if s.combat.can_hit(e) and not z.hits.has(e.id) and not (blocked and s.is_sovereign(e)) and absf(e.y - z.y) < z.depth and z.h >= e.z - 5.0 and z.h <= e.z + maxf(80.0, e.d.height) and e.x + e.hw >= low and e.x - e.hw <= high:
 			contacts.append(e)
 	for b: BmkWorldItem in s.barrels:
 		if not b.gone and not z.hits.has(b.id) and absf(b.y - z.y) < z.depth and z.h < 80.0 and b.x + b.hw >= low and b.x - b.hw <= high:
@@ -454,8 +466,10 @@ func dash_strike(s: BmkSimulation, from: float, hits: Dictionary[int, bool]) -> 
 	var reach: float = absf(p.x - from) + 20.0
 	var damage: float = s.js_round(20 * (1.5 if p.buff > 0 else 1.0))
 	s.strike_crows(reach, 20.0, from, p.y, p.z, p.face)
+	s.strike_orbs(reach, 20.0, hits, "", {"x":from,"y":p.y,"h":p.z,"face":p.face,"depth":24.0,"damage":damage})
+	var blocked: bool = s.strike_fists(reach, 20.0, hits, "", {"x":from,"y":p.y,"h":p.z,"face":p.face,"depth":24.0,"damage":damage,"kd":false})
 	for e: BmkActorState in s.enemies:
-		if not s.combat.can_hit(e) or hits.has(e.id): continue
+		if not s.combat.can_hit(e) or hits.has(e.id) or blocked and s.is_sovereign(e): continue
 		var dx: float = (e.x - from) * p.face
 		if dx < -20.0 - e.hw or dx > reach + e.hw or absf(e.y - p.y) >= 24.0 or absf(e.z - p.z) >= 55.0: continue
 		hits[e.id] = true
@@ -680,15 +694,18 @@ func update_ultimate_projectiles(s: BmkStageSimulation) -> void:
 			kept.append(z)
 			continue
 		var giant: bool = z.kind == "giant"
+		var blocked: bool = false
 		if giant:
 			w.effect("ult_explosion", z.tx, z.ty, 35, s.player.face, art.world_height() * 2.5, art.world_height() * 1.5, 28)
 			s.shake = maxf(s.shake, 18.0)
 			s.sound("moon")
+			s.strike_orbs(radius, radius, {}, "", {"x":z.tx,"y":z.ty,"h":0.0,"face":1,"depth":radius,"damage":z.damage,"kd":true})
+			blocked = s.strike_fists(radius, radius, {}, "", {"x":z.tx,"y":z.ty,"h":0.0,"face":1,"depth":radius,"damage":z.damage,"kd":true})
 		elif z.impact:
 			w.effect("ult_impact", z.tx, z.ty, z.th, s.player.face, 44, 44, 12)
 		if z.kind != "volley":
 			for e: BmkActorState in s.enemies:
-				if e.st == "dead" or e.invulnerable or e.inv > 0 or e.st == "intro": continue
+				if e.st == "dead" or e.invulnerable or e.inv > 0 or e.st == "intro" or e is BmkLegacyActor and (e as BmkLegacyActor).phase_t > 0 or blocked and s.is_sovereign(e): continue
 				var inside: bool = js_hypot([e.x - z.tx, e.y - z.ty]) <= radius + e.hw if giant else absf(e.x - z.tx) <= e.hw + 12.0 and absf(e.y - z.ty) <= 24 * 1.3 and absf(e.z + 40.0 - z.th) < 65.0
 				if not inside or not giant and z.cast.hit_times.has(e.id) and s.tick - z.cast.hit_times[e.id] < 3: continue
 				z.cast.hit_times[e.id] = s.tick

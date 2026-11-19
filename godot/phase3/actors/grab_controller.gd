@@ -32,6 +32,9 @@ func step(s: BmkStageSimulation) -> void:
 	if g != null and g.kind == "gorath":
 		s.gorath.grab_step(s)
 		return
+	if g != null and g.kind == "sovereign":
+		(s as BmkWaveSimulation).sovereign.grab_step(s as BmkWaveSimulation)
+		return
 	var e: BmkStageActor = g.owner if g != null else null
 	if g == null or e == null or not s.enemies.has(e) or e.st != "grabbing":
 		release(s,"cancel")

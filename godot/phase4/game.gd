@@ -61,7 +61,7 @@ func restore_checkpoint() -> void:
 	if entry == null:
 		menu.message.text = "사용할 수 있는 저장 기록이 없습니다."
 		return
-	if entry.stage > 1:
+	if entry.stage > 4:
 		menu.message.text = "이 스테이지는 아직 준비 중입니다."
 		return
 	game_mode = "story"
@@ -89,7 +89,7 @@ func load_story_entry(entry: BmkCheckpoint) -> void:
 ## Stage clear -> btnNext: the saved next-stage entry already carries the +40 healing.
 func continue_next_stage() -> void:
 	var entry: BmkCheckpoint = save_store.checkpoint()
-	if entry == null or entry.stage > 1:
+	if entry == null or entry.stage > 4:
 		menu.message.text = "다음 스테이지는 아직 준비 중입니다."
 		return
 	game_mode = "story"
@@ -124,7 +124,7 @@ func start_challenge(character: String = "") -> void:
 	game_mode = "challenge"
 	stage_index = stage
 	stage_restored = true
-	boss_challenge = stage == 1
+	boss_challenge = stage >= 1
 	start_section = 4 if stage == 0 else 0
 	restart()
 	var s: BmkStageSimulation = session as BmkStageSimulation
@@ -176,18 +176,21 @@ func _physics_process(delta: float) -> void:
 		if game_mode == "story":
 			var error: Error = save_store.record(stage_index,s.player.score,rank,seconds)
 			if error != OK: report += "\n기록 저장에 실패했습니다."
-			var entry: BmkCheckpoint = BmkCheckpoint.new()
-			entry.stage = stage_index + 1
-			entry.character_id = character_id
-			entry.score = int(s.player.score)
-			entry.hp = mini(int(s.player.max_hp),int(s.player.hp) + 40)
-			entry.lives = int(s.player.lives)
-			entry.sp = int(s.player.sp)
-			entry.mg = int(s.player.mg)
-			entry.buff = int(s.player.buff)
+			# The final stage clears the checkpoint: UX.saveCheckpoint(null).
+			var entry: BmkCheckpoint = BmkCheckpoint.new() if stage_index + 1 < 5 else null
+			if entry != null:
+				entry.stage = stage_index + 1
+				entry.character_id = character_id
+				entry.score = int(s.player.score)
+				entry.hp = mini(int(s.player.max_hp),int(s.player.hp) + 40)
+				entry.lives = int(s.player.lives)
+				entry.sp = int(s.player.sp)
+				entry.mg = int(s.player.mg)
+				entry.buff = int(s.player.buff)
 			if save_store.save_checkpoint(entry) != OK: report += "\n이어하기 저장에 실패했습니다."
 		pause_game(true)
-		menu.show_result(report,game_mode == "challenge",stage_index,game_mode == "story" and stage_index == 0)
+		if game_mode == "story" and stage_index >= 4: menu.show_ending(report)
+		else: menu.show_result(report,game_mode == "challenge",stage_index,game_mode == "story" and stage_index < 4)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if menu == null:

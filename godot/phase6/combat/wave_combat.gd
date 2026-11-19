@@ -5,6 +5,9 @@ extends BmkStageCombat
 func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "") -> void:
 	var s: BmkWaveSimulation = sim as BmkWaveSimulation
 	var e: BmkLegacyActor = actor as BmkLegacyActor
+	if e.type == "boss4" and s.vargul.intercept(e): return
+	if e.type == "boss5" and s.sovereign.intercept(s,e): return
+	if e.type == "boss3" and s.aurelion.intercept(s,e,kd,fixed_damage): return
 	if e.phase_t > 0 or e.st == "reviving" or e.st == "dead" or e.invulnerable: return
 	var p: BmkActorState = s.player
 	var stunned: bool = e.st == "stun"
@@ -30,6 +33,7 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 	var direction: int = 1 if p.x <= e.x else -1
 	e.hr = 0
 	e.hit_direction = direction
+	e.hheavy = tier.rank >= 2
 	e.bump_active = true
 	e.bump_set.clear()
 	e.bump_damage = dmg
@@ -40,6 +44,15 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 		if e.type == "boss2" and not e.p2shown:
 			s.morgra.begin_revival(s,e)
 			return
+		if e.type == "boss4" and not e.p2shown:
+			s.vargul.begin_transition(s,e)
+			return
+		if e.type == "boss5" and not e.p2shown:
+			s.sovereign.begin_transition(s,e)
+			return
+		if e.type == "boss3" and not e.p2shown:
+			s.enemy_controller.begin_boss_phase2(s,e,true)
+			return
 		e.hp = 0
 		e.st = "dead"
 		e.t = 0
@@ -47,7 +60,7 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 		p.score += e.d.score
 		s.item_controller.enemy_drop(s,e)
 		if e.boss:
-			s.enemy_controller.reset_boss_fx(e)
+			s.enemy_controller.reset_boss_fx(e,s)
 			e.vx = 0
 			e.vz = 0
 			s.shake = 20
@@ -66,7 +79,7 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 		e.gr = minf(e.gr_max,e.gr + dmg * 0.9)
 		e.gr_t = 150
 		if e.gr >= e.gr_max:
-			s.enemy_controller.reset_boss_fx(e)
+			s.enemy_controller.reset_boss_fx(e,s)
 			e.st = "stun"
 			e.t = 0
 			e.vx = 0
@@ -79,12 +92,14 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 		if s.morgra.armored(e): return
 		if e.hp <= e.next_kd:
 			e.next_kd -= e.max_hp * 0.25
-			s.enemy_controller.reset_boss_fx(e)
+			s.enemy_controller.reset_boss_fx(e,s)
 			e.st = "down"
 			e.t = 0
 			e.vz = 5
 			e.vx = direction * 3
-		elif e.st == "chase" or e.st == "rec":
+			if e.type == "boss3": s.spawn_adds(["rogue","rogue"])
+		elif e.st == "chase" or e.st == "rec" or e.type == "boss3" and e.st == "pat" and not s.aurelion.armored(e) and e.aurelion.guard != "broken" or e.type == "boss4" and e.st == "pat" and not s.vargul.armored(e):
+			if e.type == "boss3" or e.type == "boss4": s.enemy_controller.reset_boss_fx(e,s)
 			e.st = "hurt"
 			e.t = 0
 			e.vx = direction

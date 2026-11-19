@@ -24,6 +24,7 @@ class Arrow:
 	var fade_age: int = 0
 	var dead: bool = false
 	var hits: Dictionary[int, bool] = {}
+	var aux_hits: Dictionary = {}
 	var seq: int = 0
 
 class UltObject:

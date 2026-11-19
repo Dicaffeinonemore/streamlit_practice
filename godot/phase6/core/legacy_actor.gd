@@ -18,3 +18,8 @@ var morgra_hit: bool = false
 var morgra_safe: Array[PackedFloat64Array] = []
 var moon_used: bool = false
 var morgra_cooldown: int = 0
+## e.hheavy: the last hit was heavy or stronger (Aurelion's hurt pose).
+var hheavy: bool = false
+var aurelion: BmkAurelionState
+var vargul: BmkVargulState
+var sovereign: BmkSovereignState

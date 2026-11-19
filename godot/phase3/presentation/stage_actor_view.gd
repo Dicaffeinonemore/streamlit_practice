@@ -68,4 +68,9 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO,1,Color(0,0,0,0.35))
 		draw_set_transform(Vector2.ZERO)
 	elif actor is BmkStageActor and (actor as BmkStageActor).balcony: return
+	elif BmkSovereignController.is_sovereign(actor):
+		# drawShadow(e.x, e.y, 22, e.z): 22 dots x SC 2.
+		draw_set_transform(Vector2.ZERO,0,Vector2(44 * (1 - minf(actor.z,150) / 300.0),8.4))
+		draw_circle(Vector2.ZERO,1,Color(0,0,0,0.35))
+		draw_set_transform(Vector2.ZERO)
 	else: super._draw()

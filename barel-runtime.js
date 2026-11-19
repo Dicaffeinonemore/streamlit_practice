@@ -41,6 +41,7 @@ function barelPlayerFrame() {
   if(idle)return idle;
   return p.walk?barelFrame('walk',(p.walkTime||0)/900,true):barelFrame('idle',0);
 }
+const BAREL_HURT_FILTER='brightness(1.5) sepia(1) saturate(8) hue-rotate(310deg)';
 function paintBarel(frame,actor,alpha=1) {
   const image=frame?.image || BAREL_ATLAS;
   if(!frame || !image.complete || !image.naturalWidth)return false;
@@ -51,14 +52,17 @@ function paintBarel(frame,actor,alpha=1) {
   ctx.globalAlpha=alpha;
   // Rika 모션은 고해상도 그림을 줄여 그리므로 부드럽게, 이전 도트 모션은 또렷하게
   if(frame.smooth)smoothFor(1);else ctx.imageSmoothingEnabled=false;
-  const lit=actor.flash>0 && UX.options.flash;
-  if(lit && actor.st==='hurt')ctx.filter='brightness(1.5) sepia(1) saturate(8) hue-rotate(310deg)';
+  const lit=actor.flash>0 && UX.options.flash,hurt=lit && actor.st==='hurt';
+  // 피격 붉은 번쩍임은 칸마다 한 번만 필터를 입혀 캐시한다 (매 프레임 ctx.filter는 중간 버퍼를 만든다)
+  const tinted=hurt?GameAssets.filtered(image,x,y,w,h,BAREL_HURT_FILTER):null;
   // 내려찍기 그림에 포함된 충격 기둥을 가리고 기존 충격 효과로 대체한다.
   if(frame.clip==='slam' && frame.index>=7){
     const width=frame.index===7?220:190;
     ctx.beginPath();ctx.rect(-ax,-ay,width,h);ctx.clip();
   }
-  drawLit(image,x,y,w,h,-ax,-ay,w,h,lit && actor.st!=='hurt'?1.8:1,buffTint(actor));ctx.restore();return true;
+  if(tinted)drawLit(tinted,0,0,tinted.width,tinted.height,-ax,-ay,w,h,1,buffTint(actor));
+  else drawLit(image,x,y,w,h,-ax,-ay,w,h,lit?1.8:1,buffTint(actor));
+  ctx.restore();return true;
 }
 // Shared stable framing for ordinary and boss-challenge selection previews.
 function drawBarelIdlePreview(canvas,elapsedMs){
@@ -85,7 +89,7 @@ function barelEffect(name,progress,x,y,width=180,height=150,face=player.face,alp
   const f=barelFrame(name,progress);if(!f || !BAREL_ATLAS.naturalWidth)return;
   const [sx,sy,w,h]=f.atlas;
   ctx.save();ctx.translate(x-camX,y);ctx.scale(name==='moon'||name==='wave'?-face:face,1);   // moon·wave 그림은 왼쪽을 보고 그려져 있다ctx.globalAlpha=alpha*(UX.options.lowFx?.65:1);
-  ctx.globalCompositeOperation='lighter';ctx.drawImage(BAREL_ATLAS,sx,sy,w,h,-width/2,-height,width,height);ctx.restore();
+  ctx.globalCompositeOperation='lighter';drawLit(BAREL_ATLAS,sx,sy,w,h,-width/2,-height,width,height,1);ctx.restore();   // drawLit: 큰 아틀라스는 잘라 둔 칸만 GPU에 올린다
 }
 function drawBarelPlayer() {
   const p=player,t=p.t*MS;

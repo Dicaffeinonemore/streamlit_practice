@@ -13,6 +13,9 @@ func step(sim: BmkSimulation, actor: BmkActorState) -> void:
 	var s: BmkWaveSimulation = s_of(sim)
 	var e: BmkLegacyActor = actor as BmkLegacyActor
 	var p: BmkActorState = s.player
+	if e.type == "boss4" and s.vargul.update_state(s,e): return
+	if e.type == "boss5" and s.sovereign.update_state(s,e): return
+	if e.type == "boss3" and s.aurelion.update_state(s,e): return
 	if e.st == "reviving":
 		s.morgra.update_revival(s,e)
 		return
@@ -226,13 +229,15 @@ func attack_zone(sim: BmkSimulation, actor: BmkActorState) -> BmkHitZone:
 	return swing_zone(s_of(sim),e)
 
 # ------------------------------------------------------------------ boss state (game.js)
-func reset_boss_fx(e: BmkLegacyActor) -> void:
+func reset_boss_fx(e: BmkLegacyActor, sim: BmkSimulation = null) -> void:
+	if e.type == "boss4" and sim != null: (sim as BmkWaveSimulation).vargul.reset_pattern(e)
+	if e.type == "boss3" and sim != null: (sim as BmkWaveSimulation).aurelion.reset_pattern(sim as BmkWaveSimulation,e)
 	e.pat = ""
 	e.alpha = 1
 	e.invulnerable = false
 
 func start_pat(s: BmkWaveSimulation, e: BmkLegacyActor, pat: String) -> void:
-	reset_boss_fx(e)
+	reset_boss_fx(e,s)
 	e.st = "pat"
 	e.pat = pat
 	e.pt = 0
@@ -240,27 +245,64 @@ func start_pat(s: BmkWaveSimulation, e: BmkLegacyActor, pat: String) -> void:
 	e.last = pat
 	e.face = 1 if s.player.x >= e.x else -1
 	if e.type == "boss2": s.morgra.init_pattern(e)
+	if e.type == "boss3": s.aurelion.init_pattern(s,e)
+	if e.type == "boss4": s.vargul.init_pattern(s,e)
 	s.sound("bwind")
 
 func end_pat(sim: BmkSimulation, actor: BmkActorState, next: String = "") -> void:
 	var s: BmkWaveSimulation = s_of(sim)
 	var e: BmkLegacyActor = actor as BmkLegacyActor
-	reset_boss_fx(e)
+	reset_boss_fx(e,s)
 	e.st = "chase"
 	e.t = 0
 	e.wait = 0
-	e.attack_cd = s.js_round((700 + s.rnd() * 600) * (0.8 if e.type == "boss2" and e.p2shown else 1.0) / MS)
+	e.attack_cd = s.sovereign.gap(s,e) if e.type == "boss5" else s.vargul.attack_gap(s,e) if e.type == "boss4" else s.aurelion.attack_gap(s,e) if e.type == "boss3" else s.js_round((700 + s.rnd() * 600) * (0.8 if e.type == "boss2" and e.p2shown else 1.0) / MS)
 	if not next.is_empty(): start_pat(s,e,next)
 
 func run_pat(s: BmkWaveSimulation, e: BmkLegacyActor) -> void:
 	var count: int = s.legacy_hazards.size()
 	if e.type == "boss2": s.morgra.run_pattern(s,e)
+	elif e.type == "boss3": s.aurelion.run_pattern(s,e)
+	elif e.type == "boss4": s.vargul.run_pattern(s,e)
+	elif e.type == "boss5": s.sovereign.run_pattern(s,e)
 	for i: int in range(count,s.legacy_hazards.size()):
 		var z: BmkLegacyHazard = s.legacy_hazards[i]
 		if z.owner == null: z.owner = e
 		if z.damage_scale == 0.0: z.damage_scale = (1.5 if e.type == "boss2" else 1.3) if e.p2shown else 1.0
 
+## game.js beginBossPhase2(e, refill): Aurelion refills to 2200 and transforms (242 ticks).
+func begin_boss_phase2(s: BmkWaveSimulation, e: BmkLegacyActor, refill: bool) -> void:
+	if refill:
+		e.max_hp = float(s.wave_data.source["AURELION_P2_HP"])
+		e.hp = e.max_hp
+		e.next_kd = e.max_hp * 0.75
+	e.p2shown = true
+	e.gr = 0
+	e.gr_t = 0
+	reset_boss_fx(e,s)
+	e.phase_t = 72
+	if e.type == "boss3": s.aurelion.begin_transition(e)
+	e.st = "rec"
+	e.t = 0
+	e.recovery_t = 36
+	e.z = 0
+	e.vz = 0
+	e.vx = 0
+	e.invulnerable = true
+	s.clear_boss_hazards()
+	s.player.inv = maxi(s.player.inv,90)
+	s.sound("phase2")
+
 func boss_chase(s: BmkWaveSimulation, e: BmkLegacyActor) -> void:
+	if e.type == "boss3":
+		s.aurelion.chase(s,e)
+		return
+	if e.type == "boss4":
+		s.vargul.chase(s,e)
+		return
+	if e.type == "boss5":
+		s.sovereign.chase(s,e)
+		return
 	var p: BmkActorState = s.player
 	var dx: float = p.x - e.x
 	var dy: float = p.y - e.y

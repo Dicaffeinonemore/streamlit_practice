@@ -4,6 +4,15 @@ extends BmkStageSimulation
 ## startStage(1), mkEnemy() scaling and the shared hazards array.
 var wave_data: BmkWaveData
 var morgra: BmkMorgraController
+var aurelion: BmkAurelionController
+var vargul: BmkVargulController
+## vargulRemains: Vargul's body stays on the floor after death ([x, y, face]).
+var vargul_remains: Array[PackedFloat64Array] = []
+var sovereign: BmkSovereignController
+## sovereignRemains: [x, y, face, fist0 x, y, face, fist1 x, y, face].
+var sovereign_remains: Array[PackedFloat64Array] = []
+## game.js arena: {kind, time, next, cycle} while a fire/frost/abyss wave is locked, else empty.
+var arena: Dictionary = {}
 var legacy_hazards: Array[BmkLegacyHazard] = []
 var stage_index: int = 1
 var stage: Dictionary = {}
@@ -20,11 +29,15 @@ var intro_boss: BmkLegacyActor
 var _hazard_loop: Array = []
 var _hazard_loop_open: bool = false
 
-func _init(config: BmkStageData = null, waves: BmkWaveData = null) -> void:
+func _init(config: BmkStageData = null, waves: BmkWaveData = null, index: int = 1) -> void:
 	super(config)
 	if config == null: return
-	wave_data = waves if waves != null else BmkWaveData.shared()
+	stage_index = index
+	wave_data = waves if waves != null else BmkWaveData.for_stage(index)
 	morgra = BmkMorgraController.new(wave_data)
+	if wave_data.source.has("AURELION"): aurelion = BmkAurelionController.new(wave_data)
+	if wave_data.source.has("VARGUL"): vargul = BmkVargulController.new(wave_data)
+	if wave_data.source.has("SOVEREIGN"): sovereign = BmkSovereignController.new(wave_data)
 	combat = BmkWaveCombat.new()
 	enemy_controller = BmkLegacyEnemies.new()
 	var viesa_data: BmkViesaData = BmkViesaData.shared()
@@ -50,6 +63,9 @@ func start_stage(restored: bool = false) -> void:
 	items.clear()
 	hazards.clear()
 	legacy_hazards.clear()
+	vargul_remains.clear()
+	sovereign_remains.clear()
+	arena = {}
 	fire_hazards.clear()
 	viesa.reset()
 	chain_n = 0
@@ -123,6 +139,22 @@ func begin_boss_challenge() -> void:
 func spawn(species: String, x: float, y: float) -> BmkActorState:
 	var base: Dictionary = wave_data.source["ET"][species]
 	var d: Dictionary = base.duplicate()
+	if species == "boss3":
+		d["hp"] = 1800
+		d["h"] = 240 * float(wave_data.source["AURELION"]["K"])
+	if species == "boss4":
+		d["name"] = "바르굴, 얼어붙은 묘지왕"
+		d["en"] = "VARGUL, THE FROZEN GRAVELORD"
+		d["hp"] = 2000
+		d["h"] = float(wave_data.source["VARGUL"]["worldHeight"])
+		d["hw"] = 19
+	if species == "boss5":
+		var rules: Dictionary = wave_data.source["SOVEREIGN"]["RULES"]
+		d["name"] = "흑월의 군주, 소버린"
+		d["en"] = "THE BLACK MOON SOVEREIGN"
+		d["hp"] = float(rules["hp"][0])
+		d["h"] = float(wave_data.source["SOVEREIGN"]["ART"]["bodyHeight"])
+		d["hw"] = float(rules["hw"])
 	if not bool(base.get("boss",false)):
 		d["hp"] = js_round(float(base["hp"]) * (1.2 + stage_index * 0.3))
 		d["dmg"] = js_round(float(base["dmg"]) * (1.1 + stage_index * 0.2))
@@ -163,7 +195,38 @@ func spawn(species: String, x: float, y: float) -> BmkActorState:
 	e.hr = 9999
 	e.alpha = 1
 	enemies.append(e)
+	if species == "boss3": aurelion.state(e)
+	if species == "boss4": vargul.state(e)
 	return e
+
+## game.js spawnAdds(types): one from each side of the screen.
+func spawn_adds(types: Array) -> void:
+	for i: int in range(2):
+		var side: int = [1,-1][i]
+		var x: float = cam_x + view_width + 40 if side > 0 else cam_x - 40
+		spawn(str(types[i]),x,random_between(ground_top + 20,ground_bottom))
+
+func strike_orbs(reach: float, behind: float, hit_set: Dictionary, key_prefix: String = "", options: Dictionary = {}) -> bool:
+	return vargul.strike_orbs(self,reach,behind,hit_set,key_prefix,options) if vargul != null else false
+
+func strike_fists(reach: float, behind: float, hit_set: Dictionary, key_prefix: String = "", options: Dictionary = {}) -> bool:
+	return sovereign.strike_fists(self,reach,behind,hit_set,key_prefix,options) if sovereign != null else false
+
+func is_sovereign(e: BmkActorState) -> bool:
+	return BmkSovereignController.is_sovereign(e)
+
+## game.js playerHitSfx(kind, sound): only presentation, no simulation effect.
+func hit_sound(kind: int, hit: String = "") -> void:
+	if hit == "none": return
+	var p: BmkActorState = player
+	if p.is_viesa():
+		if BmkViesaController.default_hit_sound(p): sound("hit",kind)
+		return
+	var skill_sound: String = str({"redwave":"barelWave","slam":"barelSlam","leap":"barelSlam"}.get(p.skill,"")) if p.st == "skill" else ""
+	sound(hit if not hit.is_empty() else (skill_sound if not skill_sound.is_empty() else "swordHit"),kind)
+
+func react_attack() -> void:
+	if aurelion != null: aurelion.react(self)
 
 func add_hazard(type: String, x: float, y: float, h: float) -> BmkLegacyHazard:
 	var z: BmkLegacyHazard = BmkLegacyHazard.new()
@@ -217,11 +280,13 @@ func step() -> bool:
 		enemy_controller.step(self,enemies[i])
 		i += 1
 	enemies = enemies.filter(func(e: BmkActorState) -> bool: return not e.remove)
+	update_arena()
 	update_hazards()
 	if clear_t == 0 and wave_idx >= (stage["waves"] as Array).size() and not cam_lock and enemies.is_empty():
 		clear_t = 1
 		sound("victory")
-		music_requested.emit("victory")
+		# AUDIO.victoryMusic(i, final): the last stage plays the ending score.
+		music_requested.emit("ending" if stage_index + 1 >= int(wave_data.source["STAGE_COUNT"]) else "victory")
 	if clear_t > 0:
 		clear_t += 1
 		if clear_t > 200:
@@ -245,16 +310,19 @@ func update_waves() -> void:
 		wave_idx += 1
 	if cam_lock and enemies.all(func(e: BmkActorState) -> bool: return e.st == "dead"):
 		cam_lock = false
+		arena = {}
+		legacy_hazards = legacy_hazards.filter(func(z: BmkLegacyHazard) -> bool: return not z.arena)
 		if wave_idx < waves.size(): go_t = 300
 
 func spawn_wave(w: Dictionary) -> void:
+	arena = {"kind":str(w["arena"]),"time":0.0,"next":1800.0,"cycle":0} if w.has("arena") else {}
 	for entry: Array in w["e"]:
 		var type: String = str(entry[0])
 		var side: int = int(entry[1])
 		if bool(wave_data.source["ET"][type].get("boss",false)):
 			var b: BmkLegacyActor = spawn(type,cam_x + view_width * 0.72,clampf(player.y,ground_top + 40,ground_bottom - 30)) as BmkLegacyActor
 			b.st = "intro"
-			b.z = 0
+			b.z = 360 if type == "boss3" else 0
 			b.face = -1
 			intro_boss = b
 			intro_t = 0
@@ -268,7 +336,10 @@ func spawn_wave(w: Dictionary) -> void:
 func update_intro() -> void:
 	var b: BmkLegacyActor = intro_boss
 	intro_t += MS
-	var duration: float = float(wave_data.source["INTRO_MS"])
+	var duration: float = intro_duration(b)
+	if b.type == "boss4": vargul.update_intro(self,b)
+	if b.type == "boss5": sovereign.update_intro(self,b)
+	if b.type == "boss3": aurelion.update_intro(self,b)
 	b.z = 0
 	if shake > 0: shake *= 0.85
 	if flash_t > 0: flash_t -= MS
@@ -279,6 +350,53 @@ func update_intro() -> void:
 		b.attack_cd = 40
 		player.inv = maxi(player.inv,18)
 		(player as BmkStageActor).quiet_inv_until = tick + player.inv
+
+## bossIntroDuration(e).
+func intro_duration(b: BmkLegacyActor) -> float:
+	if b.type == "boss3": return aurelion.intro_duration()
+	if b.type == "boss4": return vargul.intro_duration()
+	if b.type == "boss5": return sovereign.intro_duration()
+	return float(wave_data.source["INTRO_MS"])
+
+## game.js updArena(): while a fire/frost/abyss wave is locked, rifts cross the screen every
+## 5 s (first after 1.8 s): fire and frost mark the player's lane, abyss all but the safe lane.
+func update_arena() -> void:
+	if arena.is_empty() or not cam_lock or player.st == "dead" or enemies.all(func(e: BmkActorState) -> bool: return e.st == "dead"): return
+	arena["time"] = float(arena["time"]) + MS
+	if float(arena["time"]) < float(arena["next"]): return
+	var lanes: Array[float] = [370.0,425.0,480.0]
+	var safe: int = int(arena["cycle"]) % lanes.size()
+	var selected: Array[float] = []
+	if str(arena["kind"]) == "abyss":
+		for i: int in range(lanes.size()):
+			if i != safe: selected.append(lanes[i])
+	else:
+		var best: float = lanes[0]
+		for i: int in range(1,lanes.size()):
+			if not (absf(best - player.y) < absf(lanes[i] - player.y)): best = lanes[i]
+		selected.append(best)
+	for y: float in selected:
+		var z: BmkLegacyHazard = add_hazard("rift",cam_x,y,0)
+		z.kind = str(arena["kind"])
+		z.width = view_width
+		z.depth = 23
+		z.delay = 1200
+		z.life = 350
+		z.arena = true
+	arena["cycle"] = int(arena["cycle"]) + 1
+	arena["next"] = float(arena["next"]) + 5000
+
+## Rift: erupts after its delay, one knockdown hit (12) per rift; frost can be jumped at z >= 24.
+func update_rift(z: BmkLegacyHazard) -> void:
+	var p: BmkActorState = player
+	if z.age >= z.delay and not z.boom:
+		z.boom = true
+		sound("pillar")
+	var jump_limit: float = 24.0 if z.kind == "frost" else 90.0
+	if z.age >= z.delay and z.age <= z.delay + z.life and not z.hit and p.x >= z.x and p.x <= z.x + z.width and absf(p.y - z.y) < z.depth and p.z < jump_limit:
+		if combat.hurt_player(self,12,-1 if p.x < z.x + z.width / 2 else 1,true): z.hit = true
+	# The zone drawing (embers) fades out after the hit window.
+	if z.age > z.delay + z.life + 260: z.dead = true
 
 ## updHazards(): Viesa's ultimate first, then one array in creation order.
 func update_hazards() -> void:
@@ -305,6 +423,9 @@ func update_hazards() -> void:
 			var h: BmkLegacyHazard = z as BmkLegacyHazard
 			h.age += MS
 			if h.type == "arrow": update_arrow(h)
+			elif h.type == "rift": update_rift(h)
+			elif h.type == "aurelion": aurelion.update_hazard(self,h)
+			elif h.type == "vargul": vargul.update_hazard(self,h)
 			else: morgra.update_hazard(self,h)
 	_hazard_loop_open = false
 	_hazard_loop = []

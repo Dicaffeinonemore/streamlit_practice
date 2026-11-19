@@ -1,13 +1,15 @@
-# Black Moon Knight — native Stage 1
+# Black Moon Knight — native Godot port
 
-Open this folder's `project.godot` with Godot 4.7.2, then press **F5**. The main scene is `res://phase3/stage_game.tscn`. Reopen the project if it was already running when the installer updated its main scene.
+Open this folder's `project.godot` with Godot 4.7.2 and press **F5**. The main scene is `res://phase4/game.tscn`: title, character select (Barel or Viesa), new game, Continue, practice, boss challenge and settings. All five stages and their bosses are playable, from Gorath to the Black Moon Sovereign, and the story ends with the ALL CLEAR screen.
 
-Move with the arrow keys. Z attacks, X jumps, Shift dashes, C uses a full-SP special, A casts stocked magic. S/D/Q/W/E use thrust/slam/whirl/leap/red wave. Holding attack does not automatically chain combos; press again within the source buffer/link timing.
+To run without the editor:
 
-Escape pauses or resumes. R restarts. F1 changes to the original WASD key preset. F9 displays collision debug; F2 refills SP/magic while debug is visible. M toggles sound. Leaving the application pauses the game.
+```text
+Godot_v4.7.2-stable_win64.exe --path <this folder>
+```
 
-This approved Phase 3 version covers Barel, all five Stage 1 sections, six enemy types, barrel/items, stage gimmicks and the two-phase Gorath remake. It proceeds to Stage 1 completion. The original menus/HUD/save and later stages are separate phases. The earlier slice remains at `phase2/vertical_slice.tscn`, and the simplified prototype remains at `scenes/main.tscn`; selecting a scene and pressing F6 runs it.
+Arcade keys (default): arrows move, Z attacks, X jumps, Shift dashes, C uses the full-SP special, A casts stocked magic. Barel's skills are S/D/Q/W/E (thrust, slam, whirl, leap, red wave). Viesa's are S (rapid fire), E (snipe, hold to charge), Q (dash slash with ground backflip), W (dash slash with air backflip) and D (melee combo). Holding attack does not chain combos; press again within the source buffer/link timing. The WASD preset and custom bindings are in Settings.
 
-With F9 debug visible, 1–5 restart at a section, F10 starts Gorath phase 2 and F11 starts his ultimate. CLI: `--section=1..5 --boss-phase=2 --boss-ult=1 --debug=1 --hitbox=1 --keys=wasd`.
+Escape pauses. F9 shows collision debug. With debug visible, F10/F11 jump to a boss's phase two / ultimate where the original has such keys (Gorath, Vargul), and for the Sovereign. Saves go to `user://` (bmk_settings, bmk_checkpoint, bmk_records).
 
-See `port_docs/PHASE3_REPORT.md` and `port_docs/PHASE3_COMPARISON.html` in the installed destination for validation and differences. In the working source project these documents are in `docs/`.
+Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE9_REPORT.md`. Touch controls, audio polish, the tutorial/demo and platform exports are Phases 10–13.

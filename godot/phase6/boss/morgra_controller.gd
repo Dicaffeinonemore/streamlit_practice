@@ -241,7 +241,7 @@ func strike_crows(s: BmkWaveSimulation, reach: float, behind: float, ox: float, 
 			fx(s,"bolt_hit",h.x,h.y,h.h,h.owner,18)
 
 func begin_revival(s: BmkWaveSimulation, e: BmkLegacyActor) -> void:
-	s.enemy_controller.reset_boss_fx(e)
+	s.enemy_controller.reset_boss_fx(e,s)
 	e.hp = 0
 	e.gr = 0
 	e.gr_t = 0

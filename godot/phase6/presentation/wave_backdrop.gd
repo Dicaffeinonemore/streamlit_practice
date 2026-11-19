@@ -22,6 +22,7 @@ func backdrop_key(s: BmkWaveSimulation) -> String:
 			break
 	if boss != null and boss.p2shown and n in [2,4,5]: return "phase%d" % n
 	if boss != null: return "boss%d" % n
+	if n == 3 and s.player.x > float((s.stage["waves"] as Array)[-1]["at"]) - 350: return "approach3"
 	return "field%d" % n
 
 func image(id: String) -> Texture2D:

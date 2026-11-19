@@ -1,0 +1,4397 @@
+{
+  "ARENA": {
+    "damage": 12,
+    "delay": 1200,
+    "depth": 23,
+    "every": 5000,
+    "fade": 260,
+    "first": 1800,
+    "jump": {
+      "frost": 24,
+      "other": 90
+    },
+    "lanes": [
+      370,
+      425,
+      480
+    ],
+    "life": 350
+  },
+  "BAREL_HURT": {
+    "lowHurtboxHeight": 84.919114
+  },
+  "BOSS_VISUAL_SCALE": 0.85,
+  "CHAIN_MS": 1700,
+  "COLLIDE": {
+    "dmgMul": 0.3,
+    "dx": 30,
+    "dy": 14,
+    "kbMul": 0.6,
+    "minSpeed": 2.5
+  },
+  "ENEMIES": {
+    "archer": {
+      "activeTicks": 6,
+      "damage": 7,
+      "hp": 30,
+      "hurtTicks": 26,
+      "knockbackPx": 3,
+      "name": "망령 궁수",
+      "rangePx": 260,
+      "ranged": true,
+      "recoveryTicks": 46,
+      "speed": 1.5,
+      "windTicks": 42
+    },
+    "brute": {
+      "activeTicks": 12,
+      "armorWhileWind": true,
+      "damage": 16,
+      "hp": 100,
+      "hurtTicks": 26,
+      "knockbackPx": 6,
+      "knockdown": true,
+      "name": "흑철 중기사",
+      "rangePx": 68,
+      "recoveryTicks": 44,
+      "speed": 0.9,
+      "windTicks": 44
+    },
+    "default": {
+      "hurtTicks": 26
+    },
+    "grunt": {
+      "activeTicks": 10,
+      "damage": 8,
+      "hp": 40,
+      "hurtTicks": 26,
+      "knockbackPx": 3,
+      "name": "망령 병사",
+      "rangePx": 56,
+      "recoveryTicks": 30,
+      "speed": 1.2,
+      "windTicks": 28
+    },
+    "hit": {
+      "activeGraceTicks": 2,
+      "depthPx": 20,
+      "heightPx": 55,
+      "reachPadPx": 8
+    },
+    "rogue": {
+      "activeTicks": 8,
+      "damage": 6,
+      "hp": 28,
+      "hurtTicks": 26,
+      "knockbackPx": 2,
+      "name": "흑창병",
+      "rangePx": 78,
+      "recoveryTicks": 22,
+      "speed": 2,
+      "windTicks": 20
+    }
+  },
+  "ET": {
+    "archer": {
+      "act": 6,
+      "dmg": 7,
+      "h": 96,
+      "hp": 30,
+      "hw": 18,
+      "kb": 3,
+      "name": "망령 궁수",
+      "range": 260,
+      "ranged": true,
+      "rec": 46,
+      "s": 1,
+      "score": 200,
+      "spd": 1.5,
+      "sprite": "archer",
+      "wind": 42
+    },
+    "boss5": {
+      "boss": true,
+      "kd": true,
+      "range": 78,
+      "s": 1,
+      "score": 12000,
+      "spd": 1.2,
+      "sprite": "boss5"
+    },
+    "brute": {
+      "act": 12,
+      "dmg": 16,
+      "h": 100,
+      "hp": 100,
+      "hw": 22,
+      "kb": 6,
+      "kd": true,
+      "name": "흑철 중기사",
+      "range": 68,
+      "rec": 44,
+      "s": 1,
+      "score": 300,
+      "spd": 0.9,
+      "sprite": "knight",
+      "wind": 44
+    },
+    "grunt": {
+      "act": 10,
+      "dmg": 8,
+      "h": 96,
+      "hp": 40,
+      "hw": 18,
+      "kb": 3,
+      "name": "망령 병사",
+      "range": 56,
+      "rec": 30,
+      "s": 1,
+      "score": 100,
+      "spd": 1.2,
+      "sprite": "infantry",
+      "wind": 28
+    },
+    "rogue": {
+      "act": 8,
+      "dmg": 6,
+      "h": 96,
+      "hp": 28,
+      "hw": 18,
+      "kb": 2,
+      "name": "흑창병",
+      "range": 78,
+      "rec": 22,
+      "s": 1,
+      "score": 150,
+      "spd": 2,
+      "sprite": "spearman",
+      "wind": 20
+    }
+  },
+  "GORATH_ESCAPE_KEYS": [
+    "KeyJ",
+    "KeyZ",
+    "KeyA",
+    "KeyD",
+    "KeyW",
+    "KeyS",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "ArrowDown"
+  ],
+  "GORATH_GRAB": {
+    "depth": 14,
+    "hold": 50,
+    "offset": 54,
+    "presses": 4,
+    "pullSpeed": 6,
+    "reach": 236
+  },
+  "GROGGY_TICKS": 300,
+  "INTRO_MS": 2000,
+  "MORGRA": {
+    "clips": {
+      "aerial_slash": 7,
+      "cackle": 5,
+      "crow_rush": 6,
+      "curtain": 7,
+      "death": 7,
+      "fx_bolt": 4,
+      "fx_bolt_hit": 3,
+      "fx_crow_dive": 2,
+      "fx_crow_fly": 4,
+      "fx_dark_pillar": 5,
+      "fx_feather_shot": 2,
+      "fx_giant_raven": 4,
+      "fx_loose_feather": 3,
+      "fx_moon": 3,
+      "fx_moon_beam": 4,
+      "fx_safe_zone": 2,
+      "fx_staff_arc": 4,
+      "fx_teleport_burst": 4,
+      "fx_warning_circle": 3,
+      "hurt": 5,
+      "idle": 6,
+      "intro": 6,
+      "knockdown": 10,
+      "magic_bolt": 7,
+      "moon": 7,
+      "p2_death": 6,
+      "p2_hurt": 7,
+      "p2_idle": 6,
+      "revive": 7,
+      "staff_swing": 7,
+      "summon": 7,
+      "teleport": 6,
+      "walk": 8
+    },
+    "hd": 1.8181818181818181,
+    "idleHeight": 121,
+    "projectiles": {
+      "bolt": {
+        "blend": "add",
+        "damage": 9,
+        "depth": 14,
+        "hitbox": [
+          -38,
+          -15,
+          74,
+          30
+        ],
+        "hitstun": 20,
+        "knockdown": false,
+        "lifetime": 110,
+        "notes": [
+          "오브 높이로 직진. 깊이 판정 14로 좁음 → 줄을 바꾸면 피한다"
+        ],
+        "on_hit": "fx/bolt_hit_add.png",
+        "speed": 7,
+        "sprite": "fx/bolt_add.png"
+      },
+      "crow": {
+        "damage": 6,
+        "depth": 16,
+        "dive_speed": 7,
+        "dive_when_dx": 120,
+        "hitbox": [
+          -28,
+          -24,
+          55,
+          49
+        ],
+        "hitstun": 16,
+        "hp": 1,
+        "knockdown": false,
+        "lifetime": 360,
+        "notes": [
+          "플레이어 줄로 천천히 날아온 뒤 가로 120px 안에 들어오면 급강하. 한 대에 사라짐"
+        ],
+        "on_killed": {
+          "boss_groggy_add": 8
+        },
+        "speed": 3.5,
+        "sprite": "fx/crow_fly.png",
+        "sprite_dive": "fx/crow_dive.png"
+      },
+      "dark_pillar": {
+        "active_frames": [
+          6,
+          23
+        ],
+        "blend": "add",
+        "damage": 14,
+        "depth": 20,
+        "frame_duration": 6,
+        "hitbox": [
+          -76,
+          0,
+          153,
+          308
+        ],
+        "hitstun": 34,
+        "knockdown": true,
+        "notes": [
+          "판정 폭 = 경고 원 폭의 90%. 경고 원 밖으로 반 발만 나가도 안전"
+        ],
+        "sprite": "fx/dark_pillar_add.png"
+      },
+      "feather_shot": {
+        "damage": 7,
+        "depth": 14,
+        "hitbox": [
+          -38,
+          -8,
+          74,
+          17
+        ],
+        "hitstun": 16,
+        "knockdown": false,
+        "lifetime": 100,
+        "notes": [
+          "2페이즈 마법탄 대신 쓰는 깃털 3발 부채꼴 (z 0, ±18)"
+        ],
+        "speed": 8,
+        "sprite": "fx/feather_shot.png"
+      },
+      "giant_raven": {
+        "damage": 16,
+        "depth": 20,
+        "frame_duration": 5,
+        "hitbox": [
+          -130,
+          -103,
+          259,
+          207
+        ],
+        "hitstun": 34,
+        "knockdown": true,
+        "notes": [
+          "까마귀 돌진 2번에서 맞춘 줄로만 날아감. 판정은 그림보다 30% 작게 (날개 끝은 판정 없음)"
+        ],
+        "speed": 11,
+        "sprite": "fx/giant_raven.png",
+        "travel": "screen_edge_to_edge"
+      },
+      "loose_feather": {
+        "count": 12,
+        "fall_speed": 1.2,
+        "lifetime": 90,
+        "sprite": "fx/loose_feather.png",
+        "sway": 0.8,
+        "visual_only": true
+      },
+      "moon": {
+        "blend": "add",
+        "frame_duration": 20,
+        "position": "screen top centre",
+        "sprite": "fx/moon_add.png",
+        "visual_only": true
+      },
+      "moon_beam": {
+        "active_frames": [
+          6,
+          17
+        ],
+        "area": "arena except safe zones",
+        "blend": "add",
+        "damage": 22,
+        "frame_duration": 6,
+        "hitstun": 40,
+        "knockdown": true,
+        "spacing": 128,
+        "sprite": "fx/moon_beam_add.png"
+      },
+      "safe_zone": {
+        "blend": "add",
+        "count": 2,
+        "depth": 22,
+        "frame_duration": 15,
+        "notes": [
+          "은백색. 이 타원 안(x ±radius_x, z ±depth)에 서 있으면 월광을 맞지 않음"
+        ],
+        "placement": "1곳은 플레이어에게서 120~220px, 1곳은 반대쪽. 두 곳은 300px 이상 떨어짐",
+        "radius_x": 75,
+        "sprite": "fx/safe_zone_add.png"
+      },
+      "staff_arc": {
+        "blend": "add",
+        "frame_duration": 3,
+        "sprite": "fx/staff_arc_add.png",
+        "visual_only": true
+      },
+      "teleport_burst": {
+        "blend": "add",
+        "frame_duration": 5,
+        "sprite": "fx/teleport_burst_add.png",
+        "visual_only": true
+      },
+      "units": "frames@60fps; px in sprites_220; x forward, y up; box=[x,y,w,h] relative to the projectile pivot",
+      "warning_circle": {
+        "blend": "add",
+        "delay_to_pillar": {
+          "phase1": 45,
+          "phase2": 36
+        },
+        "frame_duration": 15,
+        "notes": [
+          "플레이어 발밑(시전 순간 위치)에 고정. 따라오지 않음"
+        ],
+        "sprite": "fx/warning_circle_add.png",
+        "visual_only": true
+      }
+    },
+    "scale": 0.55
+  },
+  "MORGRA_MOVES": {
+    "aerial_slash": {
+      "attack": {
+        "damage": 14,
+        "depth": 18,
+        "hitstop": 7,
+        "hitstun": 30,
+        "knockback": [
+          8,
+          6
+        ],
+        "knockdown": true
+      },
+      "cell": [
+        417,
+        336
+      ],
+      "drawings": [
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 10
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -4,
+              0,
+              88,
+              204
+            ]
+          ],
+          "index": 3,
+          "phase": "S",
+          "start": 22
+        },
+        {
+          "duration": 4,
+          "hitboxes": [
+            {
+              "box": [
+                79,
+                29,
+                145,
+                174
+              ],
+              "depth": 18
+            }
+          ],
+          "hurtboxes": [
+            [
+              -5,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 4,
+          "phase": "A",
+          "start": 28
+        },
+        {
+          "duration": 5,
+          "hitboxes": [
+            {
+              "box": [
+                80,
+                44,
+                117,
+                181
+              ],
+              "depth": 18
+            }
+          ],
+          "hurtboxes": [
+            [
+              -3,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 5,
+          "phase": "A",
+          "start": 32
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -17,
+              0,
+              88,
+              204
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 37
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 7,
+          "phase": "R",
+          "start": 51
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "wings_beat",
+          "type": "sfx"
+        },
+        {
+          "frame": 22,
+          "id": "dive",
+          "type": "sfx"
+        },
+        {
+          "at": "orb",
+          "frame": 28,
+          "id": "staff_arc",
+          "offset": [
+            221,
+            90
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 28,
+          "strength": 5,
+          "type": "shake"
+        }
+      ],
+      "id": "aerial_slash",
+      "loop": false,
+      "move": {
+        "hover": {
+          "at_drawing": 3,
+          "back_at": 7,
+          "to": 0,
+          "value": 40
+        },
+        "per_drawing": {
+          "3": 9,
+          "4": 6,
+          "5": 3
+        }
+      },
+      "name": "공중 까마귀 베기",
+      "notes": [
+        "2페이즈 주력 근접기. 흰 깜빡임 = 3~5번 슈퍼아머 (못 끊음)",
+        "급강하하며 고도 0까지 내려온다 → 6·7번 26f 동안 지상 공격이 닿는 반격 틈"
+      ],
+      "phases": {
+        "active": [
+          28,
+          36
+        ],
+        "recovery": [
+          37,
+          62
+        ],
+        "startup": [
+          0,
+          27
+        ]
+      },
+      "pivot": [
+        177,
+        313
+      ],
+      "punish_window": {
+        "frames": [
+          37,
+          62
+        ],
+        "length": 26
+      },
+      "sprite": "aerial_slash.png",
+      "super_armor": [
+        [
+          22,
+          36
+        ]
+      ],
+      "telegraph": {
+        "flash": "white",
+        "flash_frames": [
+          0,
+          21
+        ],
+        "warning_icon_frames": [
+          0,
+          21
+        ]
+      },
+      "total_frames": 63,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "cackle": {
+      "cell": [
+        254,
+        238
+      ],
+      "drawings": [
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              195
+            ]
+          ],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              164
+            ]
+          ],
+          "index": 2,
+          "phase": "N",
+          "start": 14
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              175
+            ]
+          ],
+          "index": 3,
+          "phase": "N",
+          "start": 28
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -9,
+              0,
+              88,
+              176
+            ]
+          ],
+          "index": 4,
+          "phase": "N",
+          "start": 40
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              187
+            ]
+          ],
+          "index": 5,
+          "phase": "N",
+          "start": 54
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "witch_cackle",
+          "type": "sfx"
+        }
+      ],
+      "id": "cackle",
+      "loop": false,
+      "name": "웃음 도발",
+      "notes": [
+        "슈퍼아머 없음. 64f 동안 공짜로 때릴 수 있는 시간 (맞으면 끊김)",
+        "조건: 순간이동 직후 50%(1페이즈), 플레이어를 넉다운시켰을 때 70%"
+      ],
+      "pivot": [
+        115,
+        228
+      ],
+      "punish_window": {
+        "frames": [
+          0,
+          63
+        ],
+        "length": 64
+      },
+      "sprite": "cackle.png",
+      "total_frames": 64,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "crow_rush": {
+      "cell": [
+        343,
+        309
+      ],
+      "drawings": [
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -11,
+              0,
+              88,
+              203
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 18,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -40,
+              0,
+              88,
+              198
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 12
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "A",
+          "start": 30
+        },
+        {
+          "duration": 16,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 4,
+          "phase": "R",
+          "start": 36
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 5,
+          "phase": "R",
+          "start": 52
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 62
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "wings_fold",
+          "type": "sfx"
+        },
+        {
+          "frame": 12,
+          "id": "player_lane",
+          "type": "align"
+        },
+        {
+          "at": "body",
+          "frame": 30,
+          "id": "giant_raven",
+          "offset": [
+            2,
+            145
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 30,
+          "id": "self",
+          "type": "hide"
+        },
+        {
+          "frame": 36,
+          "id": "reappear_180px_past_player",
+          "type": "move"
+        }
+      ],
+      "id": "crow_rush",
+      "invulnerable": [
+        [
+          30,
+          35
+        ]
+      ],
+      "loop": false,
+      "name": "까마귀 돌진 (변신)",
+      "notes": [
+        "2번에서 플레이어 줄(z)로 맞춘 뒤 3번에 거대 까마귀로 변신해 화면을 가로지름 (본체는 숨김·무적)",
+        "까마귀가 플레이어를 지나 180px 뒤에서 4~6번으로 다시 나타남 → 36f 반격 틈 (대시 한 번 + 공격)",
+        "정답: 2번 웅크림(18f)을 보고 줄을 바꾼다"
+      ],
+      "phases": {
+        "active": [
+          30,
+          35
+        ],
+        "recovery": [
+          36,
+          71
+        ],
+        "startup": [
+          0,
+          29
+        ]
+      },
+      "pivot": [
+        171,
+        282
+      ],
+      "punish_window": {
+        "frames": [
+          36,
+          71
+        ],
+        "length": 36
+      },
+      "sprite": "crow_rush.png",
+      "telegraph": {
+        "flash": "white",
+        "flash_frames": [
+          12,
+          29
+        ],
+        "warning_icon_frames": null
+      },
+      "total_frames": 72,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "curtain": {
+      "cell": [
+        260,
+        258
+      ],
+      "drawings": [
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              176
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -46,
+              0,
+              88,
+              220
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 8
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -42,
+              0,
+              88,
+              220
+            ]
+          ],
+          "index": 3,
+          "phase": "S",
+          "start": 22
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -11,
+              0,
+              88,
+              162
+            ]
+          ],
+          "index": 4,
+          "phase": "A",
+          "start": 36
+        },
+        {
+          "duration": 30,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -12,
+              0,
+              88,
+              118
+            ]
+          ],
+          "index": 5,
+          "phase": "R",
+          "start": 42
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -12,
+              0,
+              88,
+              161
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 72
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              179
+            ]
+          ],
+          "index": 7,
+          "phase": "R",
+          "start": 82
+        }
+      ],
+      "events": [
+        {
+          "frame": 8,
+          "id": "chant",
+          "type": "sfx"
+        },
+        {
+          "at": "player",
+          "frame": 36,
+          "id": "warning_circle",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 36,
+          "strength": 3,
+          "type": "shake"
+        }
+      ],
+      "id": "curtain",
+      "loop": false,
+      "name": "어둠의 장막 시전",
+      "notes": [
+        "빨간 깜빡임 = 장막. 4번에 플레이어 발밑에 경고 원 → 45f 뒤 같은 자리에 빛기둥",
+        "경고 원에서 나오면 안전. 모르그라는 5번(무릎 꿇음)부터 48f 동안 반격 틈",
+        "2페이즈 변형: 경고 원 3개 (플레이어 자리 + 위아래 줄)"
+      ],
+      "phases": {
+        "active": [
+          36,
+          41
+        ],
+        "recovery": [
+          42,
+          89
+        ],
+        "startup": [
+          0,
+          35
+        ]
+      },
+      "pivot": [
+        106,
+        248
+      ],
+      "punish_window": {
+        "frames": [
+          42,
+          89
+        ],
+        "length": 48
+      },
+      "sprite": "curtain.png",
+      "telegraph": {
+        "flash": "red",
+        "flash_frames": [
+          8,
+          35
+        ],
+        "warning_icon_frames": null
+      },
+      "total_frames": 90,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "death": {
+      "cell": [
+        335,
+        241
+      ],
+      "drawings": [
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 2,
+          "phase": "N",
+          "start": 12
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "N",
+          "start": 26
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 4,
+          "phase": "N",
+          "start": 38
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 5,
+          "phase": "N",
+          "start": 50
+        },
+        {
+          "duration": 16,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 6,
+          "phase": "N",
+          "start": 64
+        },
+        {
+          "duration": 30,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 7,
+          "phase": "N",
+          "start": 80
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "frames": 30,
+          "type": "slowmo"
+        },
+        {
+          "frame": 50,
+          "strength": 6,
+          "type": "shake"
+        },
+        {
+          "frame": 50,
+          "id": "body_fall",
+          "type": "sfx"
+        }
+      ],
+      "id": "death",
+      "invulnerable": [
+        [
+          0,
+          109
+        ]
+      ],
+      "loop": false,
+      "name": "쓰러짐·사망",
+      "notes": [
+        "1페이즈 끝(체력 50%)에 재생하는 쓰러짐. 바로 부활(revive)로 이어진다. 전 구간 무적"
+      ],
+      "pivot": [
+        157,
+        231
+      ],
+      "sprite": "death.png",
+      "total_frames": 110,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "hurt": {
+      "cell": [
+        240,
+        239
+      ],
+      "drawings": [
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -4,
+              0,
+              88,
+              190
+            ]
+          ],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              185
+            ]
+          ],
+          "index": 2,
+          "phase": "N",
+          "start": 12
+        },
+        {
+          "duration": 4,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              154
+            ]
+          ],
+          "index": 3,
+          "phase": "N",
+          "start": 20
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              165
+            ]
+          ],
+          "index": 4,
+          "phase": "N",
+          "start": 24
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              182
+            ]
+          ],
+          "index": 5,
+          "phase": "N",
+          "start": 34
+        }
+      ],
+      "events": [],
+      "id": "hurt",
+      "loop": false,
+      "name": "피격",
+      "notes": [
+        "상단 피격 1~2 (20f), 몸통 피격 3~5 (22f)"
+      ],
+      "pivot": [
+        83,
+        229
+      ],
+      "segments": {
+        "hurt_high": [
+          1,
+          2
+        ],
+        "hurt_low": [
+          3,
+          4,
+          5
+        ]
+      },
+      "sprite": "hurt.png",
+      "total_frames": 42,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "idle": {
+      "cell": [
+        195,
+        237
+      ],
+      "drawings": [
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              186
+            ]
+          ],
+          "index": 1,
+          "phase": "L",
+          "start": 0
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              187
+            ]
+          ],
+          "index": 2,
+          "phase": "L",
+          "start": 8
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              185
+            ]
+          ],
+          "index": 3,
+          "phase": "L",
+          "start": 16
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              187
+            ]
+          ],
+          "index": 4,
+          "phase": "L",
+          "start": 24
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              186
+            ]
+          ],
+          "index": 5,
+          "phase": "L",
+          "start": 32
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              185
+            ]
+          ],
+          "index": 6,
+          "phase": "L",
+          "start": 40
+        }
+      ],
+      "events": [],
+      "id": "idle",
+      "loop": true,
+      "name": "대기",
+      "notes": [],
+      "pivot": [
+        86,
+        226
+      ],
+      "sprite": "idle.png",
+      "total_frames": 48,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "intro": {
+      "cell": [
+        337,
+        237
+      ],
+      "drawings": [
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 2,
+          "phase": "N",
+          "start": 10
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "N",
+          "start": 24
+        },
+        {
+          "duration": 16,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 4,
+          "phase": "N",
+          "start": 38
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 5,
+          "phase": "N",
+          "start": 54
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 6,
+          "phase": "N",
+          "start": 66
+        }
+      ],
+      "events": [
+        {
+          "at": "feet",
+          "frame": 0,
+          "id": "teleport_burst",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 38,
+          "id": "witch_cackle",
+          "type": "sfx"
+        },
+        {
+          "frame": 66,
+          "id": "boss_bar_in",
+          "type": "ui"
+        }
+      ],
+      "id": "intro",
+      "invulnerable": [
+        [
+          0,
+          73
+        ]
+      ],
+      "loop": false,
+      "name": "등장",
+      "notes": [
+        "깃털 더미에서 일어나 웃음 → 74f"
+      ],
+      "pivot": [
+        154,
+        227
+      ],
+      "sprite": "intro.png",
+      "total_frames": 74,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "knockdown": {
+      "cell": [
+        329,
+        234
+      ],
+      "drawings": [
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -60,
+              0,
+              88,
+              185
+            ]
+          ],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -93,
+              0,
+              88,
+              158
+            ]
+          ],
+          "index": 2,
+          "phase": "N",
+          "start": 6
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "N",
+          "start": 14
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 4,
+          "phase": "N",
+          "start": 20
+        },
+        {
+          "duration": 20,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 5,
+          "phase": "N",
+          "start": 26
+        },
+        {
+          "duration": 30,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 6,
+          "phase": "N",
+          "start": 46
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 7,
+          "phase": "N",
+          "start": 76
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 8,
+          "phase": "N",
+          "start": 86
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -9,
+              0,
+              88,
+              174
+            ]
+          ],
+          "index": 9,
+          "phase": "N",
+          "start": 96
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              185
+            ]
+          ],
+          "index": 10,
+          "phase": "N",
+          "start": 104
+        }
+      ],
+      "events": [
+        {
+          "frame": 14,
+          "strength": 6,
+          "type": "shake"
+        },
+        {
+          "frame": 14,
+          "id": "body_fall",
+          "type": "sfx"
+        }
+      ],
+      "id": "knockdown",
+      "invulnerable": [
+        [
+          14,
+          95
+        ]
+      ],
+      "loop": false,
+      "name": "넉다운·기상",
+      "notes": [
+        "1·2번 공중: 저글 가능, 공중 피격 2회 후 강제 낙하",
+        "3~8번 무적, 9·10번 기상 슈퍼아머",
+        "기상 직후 40% 확률로 순간이동 (구석에 몰리지 않게)"
+      ],
+      "pivot": [
+        161,
+        224
+      ],
+      "sprite": "knockdown.png",
+      "super_armor": [
+        [
+          96,
+          109
+        ]
+      ],
+      "total_frames": 110,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "magic_bolt": {
+      "cell": [
+        289,
+        237
+      ],
+      "drawings": [
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              179
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              176
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 8
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              173
+            ]
+          ],
+          "index": 3,
+          "phase": "S",
+          "start": 16
+        },
+        {
+          "duration": 4,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -17,
+              0,
+              88,
+              172
+            ]
+          ],
+          "index": 4,
+          "phase": "A",
+          "start": 28
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -9,
+              0,
+              88,
+              174
+            ]
+          ],
+          "index": 5,
+          "phase": "R",
+          "start": 32
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              188
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 42
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              188
+            ]
+          ],
+          "index": 7,
+          "phase": "R",
+          "start": 50
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "orb_hum",
+          "type": "sfx"
+        },
+        {
+          "at": "orb",
+          "frame": 28,
+          "id": "bolt",
+          "offset": [
+            161,
+            176
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 28,
+          "id": "bolt_fire",
+          "type": "sfx"
+        }
+      ],
+      "id": "magic_bolt",
+      "loop": false,
+      "name": "마법탄",
+      "notes": [
+        "주력 견제기. 마법탄은 줄(z) 판정이 좁아 줄을 바꾸면 피한다",
+        "멀리서 쏘므로 후딜 26f로는 반격이 어렵다 → '피하면서 다가가는' 시간"
+      ],
+      "phases": {
+        "active": [
+          28,
+          31
+        ],
+        "recovery": [
+          32,
+          57
+        ],
+        "startup": [
+          0,
+          27
+        ]
+      },
+      "pivot": [
+        118,
+        227
+      ],
+      "sprite": "magic_bolt.png",
+      "telegraph": {
+        "flash": null,
+        "flash_frames": null,
+        "warning_icon_frames": [
+          8,
+          27
+        ]
+      },
+      "total_frames": 58,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "moon": {
+      "cell": [
+        334,
+        397
+      ],
+      "drawings": [
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 16,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              200
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 12
+        },
+        {
+          "duration": 16,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 3,
+          "phase": "S",
+          "start": 28
+        },
+        {
+          "duration": 40,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -5,
+              0,
+              88,
+              204
+            ]
+          ],
+          "index": 4,
+          "phase": "S",
+          "start": 44
+        },
+        {
+          "duration": 40,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              204
+            ]
+          ],
+          "index": 5,
+          "phase": "S",
+          "start": 84
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -14,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 6,
+          "phase": "A",
+          "start": 124
+        },
+        {
+          "duration": 40,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              203
+            ]
+          ],
+          "index": 7,
+          "phase": "R",
+          "start": 134
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "moon_rise",
+          "type": "sfx"
+        },
+        {
+          "at": "sky",
+          "frame": 12,
+          "id": "moon",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "at": "arena",
+          "frame": 28,
+          "id": "safe_zone",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 44,
+          "id": "chant_long",
+          "type": "sfx"
+        },
+        {
+          "at": "arena",
+          "frame": 124,
+          "id": "moon_beam",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 124,
+          "strength": 14,
+          "type": "shake"
+        },
+        {
+          "frame": 134,
+          "id": "hover_down_slow",
+          "type": "move"
+        }
+      ],
+      "id": "moon",
+      "loop": false,
+      "name": "달의 심판",
+      "notes": [
+        "2페이즈 필살 패턴 '달의 심판'. 체력 35% 이하에서 처음 1회, 이후 쿨타임 900f",
+        "3번에 은백색 안전지대 2곳 표시 → 6번에 안전지대 밖 모든 곳에 월광 (피할 수 없는 공격 금지 규칙 준수)",
+        "준비 124f 동안 슈퍼아머 (맞지만 안 끊김). 끝나면 7번 40f 동안 지쳐서 내려옴 = 반격 틈"
+      ],
+      "phases": {
+        "active": [
+          124,
+          133
+        ],
+        "recovery": [
+          134,
+          173
+        ],
+        "startup": [
+          0,
+          123
+        ]
+      },
+      "pivot": [
+        178,
+        305
+      ],
+      "punish_window": {
+        "frames": [
+          134,
+          173
+        ],
+        "length": 40
+      },
+      "sprite": "moon.png",
+      "super_armor": [
+        [
+          12,
+          133
+        ]
+      ],
+      "telegraph": {
+        "flash": "white",
+        "flash_frames": [
+          12,
+          123
+        ],
+        "warning_icon_frames": [
+          0,
+          123
+        ]
+      },
+      "total_frames": 174,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "p2_bolt": {
+      "drawings": [
+        {
+          "clip": "moon",
+          "duration": 10,
+          "hitboxes": [],
+          "index": 2,
+          "start": 0
+        },
+        {
+          "clip": "moon",
+          "duration": 10,
+          "hitboxes": [],
+          "index": 3,
+          "start": 10
+        },
+        {
+          "clip": "moon",
+          "duration": 4,
+          "hitboxes": [],
+          "index": 6,
+          "start": 20
+        },
+        {
+          "clip": "p2_idle",
+          "duration": 30,
+          "hitboxes": [],
+          "index": 1,
+          "start": 24
+        }
+      ],
+      "events": [
+        {
+          "count": 3,
+          "dz": [
+            -18,
+            0,
+            18
+          ],
+          "frame": 20,
+          "id": "feather_shot",
+          "type": "spawn"
+        }
+      ],
+      "id": "p2_bolt",
+      "invulnerable": [],
+      "name": "깃털 부채꼴",
+      "phases": {
+        "startup": [
+          0,
+          19
+        ]
+      },
+      "total_frames": 54
+    },
+    "p2_curtain": {
+      "drawings": [
+        {
+          "clip": "moon",
+          "duration": 10,
+          "hitboxes": [],
+          "index": 2,
+          "start": 0
+        },
+        {
+          "clip": "moon",
+          "duration": 18,
+          "hitboxes": [],
+          "index": 3,
+          "start": 10
+        },
+        {
+          "clip": "moon",
+          "duration": 6,
+          "hitboxes": [],
+          "index": 6,
+          "start": 28
+        },
+        {
+          "clip": "p2_idle",
+          "duration": 30,
+          "hitboxes": [],
+          "index": 1,
+          "start": 34
+        }
+      ],
+      "events": [
+        {
+          "count": 3,
+          "frame": 28,
+          "id": "warning_circle",
+          "type": "spawn"
+        }
+      ],
+      "id": "p2_curtain",
+      "invulnerable": [],
+      "name": "어둠의 장막(3개)",
+      "phases": {
+        "startup": [
+          0,
+          27
+        ]
+      },
+      "total_frames": 64
+    },
+    "p2_death": {
+      "cell": [
+        383,
+        330
+      ],
+      "drawings": [
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 2,
+          "phase": "N",
+          "start": 12
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "N",
+          "start": 26
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 4,
+          "phase": "N",
+          "start": 40
+        },
+        {
+          "duration": 20,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 5,
+          "phase": "N",
+          "start": 54
+        },
+        {
+          "duration": 1,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 6,
+          "phase": "N",
+          "start": 74
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "frames": 60,
+          "type": "slowmo"
+        },
+        {
+          "at": "body",
+          "frame": 0,
+          "id": "loose_feather",
+          "offset": [
+            22,
+            112
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 26,
+          "strength": 10,
+          "type": "shake"
+        },
+        {
+          "frame": 26,
+          "id": "body_fall",
+          "type": "sfx"
+        }
+      ],
+      "hold_last_drawing": true,
+      "id": "p2_death",
+      "invulnerable": [
+        [
+          0,
+          74
+        ]
+      ],
+      "loop": false,
+      "name": "최종 사망",
+      "notes": [
+        "최종 사망. 1번에서 흩날리는 깃털(loose_feather)을 뿌린다. 마지막 그림 유지"
+      ],
+      "pivot": [
+        179,
+        267
+      ],
+      "sprite": "p2_death.png",
+      "total_frames": 75,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "p2_hurt": {
+      "cell": [
+        264,
+        273
+      ],
+      "drawings": [
+        {
+          "duration": 4,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 2,
+          "phase": "N",
+          "start": 4
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 3,
+          "phase": "N",
+          "start": 12
+        },
+        {
+          "duration": 4,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 4,
+          "phase": "N",
+          "start": 20
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -3,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 5,
+          "phase": "N",
+          "start": 24
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 6,
+          "phase": "N",
+          "start": 32
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 7,
+          "phase": "N",
+          "start": 40
+        }
+      ],
+      "events": [],
+      "id": "p2_hurt",
+      "loop": false,
+      "name": "2페이즈 피격",
+      "notes": [
+        "상단 피격 1~3 (20f), 몸통 피격 4~7 (26f)"
+      ],
+      "pivot": [
+        116,
+        265
+      ],
+      "segments": {
+        "hurt_high": [
+          1,
+          2,
+          3
+        ],
+        "hurt_low": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "sprite": "p2_hurt.png",
+      "total_frames": 46,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "p2_idle": {
+      "cell": [
+        320,
+        292
+      ],
+      "drawings": [
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 1,
+          "phase": "L",
+          "start": 0
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 2,
+          "phase": "L",
+          "start": 7
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -9,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 3,
+          "phase": "L",
+          "start": 14
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              206
+            ]
+          ],
+          "index": 4,
+          "phase": "L",
+          "start": 21
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              207
+            ]
+          ],
+          "index": 5,
+          "phase": "L",
+          "start": 28
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              205
+            ]
+          ],
+          "index": 6,
+          "phase": "L",
+          "start": 35
+        }
+      ],
+      "events": [],
+      "id": "p2_idle",
+      "loop": true,
+      "move": {
+        "hover": 40,
+        "vx": 2,
+        "vz": 1.2
+      },
+      "name": "2페이즈 공중 대기",
+      "notes": [],
+      "pivot": [
+        157,
+        272
+      ],
+      "sprite": "p2_idle.png",
+      "total_frames": 42,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "p2_summon": {
+      "drawings": [
+        {
+          "clip": "moon",
+          "duration": 12,
+          "hitboxes": [],
+          "index": 2,
+          "start": 0
+        },
+        {
+          "clip": "moon",
+          "duration": 14,
+          "hitboxes": [],
+          "index": 3,
+          "start": 12
+        },
+        {
+          "clip": "moon",
+          "duration": 4,
+          "hitboxes": [],
+          "index": 6,
+          "start": 26
+        },
+        {
+          "clip": "p2_idle",
+          "duration": 40,
+          "hitboxes": [],
+          "index": 1,
+          "start": 30
+        }
+      ],
+      "events": [
+        {
+          "count": 5,
+          "frame": 26,
+          "id": "crow",
+          "type": "spawn"
+        }
+      ],
+      "id": "p2_summon",
+      "invulnerable": [],
+      "name": "까마귀 소환(공중)",
+      "phases": {
+        "startup": [
+          0,
+          25
+        ]
+      },
+      "total_frames": 70
+    },
+    "p2_teleport": {
+      "drawings": [
+        {
+          "clip": "crow_rush",
+          "duration": 10,
+          "hitboxes": [],
+          "index": 1,
+          "start": 0
+        },
+        {
+          "clip": "crow_rush",
+          "duration": 8,
+          "hitboxes": [],
+          "index": 2,
+          "start": 10
+        },
+        {
+          "clip": "hidden",
+          "duration": 16,
+          "hitboxes": [],
+          "index": 0,
+          "start": 18
+        },
+        {
+          "clip": "crow_rush",
+          "duration": 8,
+          "hitboxes": [],
+          "index": 4,
+          "start": 34
+        },
+        {
+          "clip": "crow_rush",
+          "duration": 8,
+          "hitboxes": [],
+          "index": 5,
+          "start": 42
+        },
+        {
+          "clip": "crow_rush",
+          "duration": 20,
+          "hitboxes": [],
+          "index": 6,
+          "start": 50
+        }
+      ],
+      "events": [
+        {
+          "frame": 18,
+          "id": "teleport_burst",
+          "type": "spawn"
+        },
+        {
+          "frame": 18,
+          "id": "teleport",
+          "type": "move"
+        }
+      ],
+      "id": "p2_teleport",
+      "invulnerable": [
+        [
+          18,
+          33
+        ]
+      ],
+      "name": "날개 순간이동",
+      "phases": {
+        "startup": [
+          0,
+          0
+        ]
+      },
+      "total_frames": 70
+    },
+    "revive": {
+      "cell": [
+        299,
+        266
+      ],
+      "drawings": [
+        {
+          "duration": 20,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 1,
+          "phase": "N",
+          "start": 0
+        },
+        {
+          "duration": 16,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 2,
+          "phase": "N",
+          "start": 20
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "N",
+          "start": 36
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 4,
+          "phase": "N",
+          "start": 50
+        },
+        {
+          "duration": 20,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 5,
+          "phase": "N",
+          "start": 62
+        },
+        {
+          "duration": 14,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 6,
+          "phase": "N",
+          "start": 82
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 7,
+          "phase": "N",
+          "start": 96
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "dark_pulse",
+          "type": "sfx"
+        },
+        {
+          "frame": 50,
+          "id": "wings_sprout",
+          "type": "sfx"
+        },
+        {
+          "frame": 62,
+          "strength": 10,
+          "type": "shake"
+        },
+        {
+          "at": "feet",
+          "frame": 62,
+          "id": "teleport_burst",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 62,
+          "id": "phase2_banner",
+          "type": "ui"
+        },
+        {
+          "frame": 82,
+          "id": "hover_up",
+          "type": "move"
+        }
+      ],
+      "id": "revive",
+      "invulnerable": [
+        [
+          0,
+          105
+        ]
+      ],
+      "loop": false,
+      "name": "부활 (2페이즈 전환)",
+      "notes": [
+        "베어너클4 Y 쌍둥이의 메카 탑승처럼 극적인 전환. 전 구간 무적",
+        "5번(날개 펼침)에 부하 소환, 6번부터 공중 (게임에서 공중 높이 0 → 40px)"
+      ],
+      "pivot": [
+        150,
+        254
+      ],
+      "sprite": "revive.png",
+      "total_frames": 106,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "staff_swing": {
+      "attack": {
+        "damage": 10,
+        "depth": 18,
+        "hitstop": 5,
+        "hitstun": 22,
+        "knockback": [
+          14,
+          2
+        ],
+        "knockdown": false
+      },
+      "cell": [
+        308,
+        243
+      ],
+      "drawings": [
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              180
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              176
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 8
+        },
+        {
+          "duration": 3,
+          "hitboxes": [
+            {
+              "box": [
+                79,
+                72,
+                120,
+                98
+              ],
+              "depth": 18
+            }
+          ],
+          "hurtboxes": [
+            [
+              -4,
+              0,
+              88,
+              156
+            ]
+          ],
+          "index": 3,
+          "phase": "A",
+          "start": 18
+        },
+        {
+          "duration": 4,
+          "hitboxes": [
+            {
+              "box": [
+                72,
+                74,
+                125,
+                103
+              ],
+              "depth": 18
+            }
+          ],
+          "hurtboxes": [
+            [
+              -12,
+              0,
+              88,
+              168
+            ]
+          ],
+          "index": 4,
+          "phase": "A",
+          "start": 21
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -9,
+              0,
+              88,
+              168
+            ]
+          ],
+          "index": 5,
+          "phase": "R",
+          "start": 25
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              182
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 35
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              186
+            ]
+          ],
+          "index": 7,
+          "phase": "R",
+          "start": 45
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "staff_whoosh",
+          "type": "sfx"
+        },
+        {
+          "at": "orb",
+          "frame": 18,
+          "id": "staff_arc",
+          "offset": [
+            204,
+            139
+          ],
+          "type": "spawn"
+        }
+      ],
+      "id": "staff_swing",
+      "loop": false,
+      "name": "지팡이 휘두르기",
+      "notes": [
+        "가까이 붙은 플레이어를 밀어내는 유일한 근접기. 넉다운 없이 멀리 밀기만 한다 (거리 두기용)",
+        "시동 18f: 예고를 보고 뒤로 빠지거나, 먼저 때려 끊을 수 있다 (슈퍼아머 없음)",
+        "후딜 28f가 근접 반격 틈"
+      ],
+      "phases": {
+        "active": [
+          18,
+          24
+        ],
+        "recovery": [
+          25,
+          52
+        ],
+        "startup": [
+          0,
+          17
+        ]
+      },
+      "pivot": [
+        95,
+        233
+      ],
+      "sprite": "staff_swing.png",
+      "telegraph": {
+        "flash": null,
+        "flash_frames": null,
+        "warning_icon_frames": [
+          0,
+          17
+        ]
+      },
+      "total_frames": 53,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "summon": {
+      "cell": [
+        330,
+        285
+      ],
+      "drawings": [
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              172
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              184
+            ]
+          ],
+          "index": 2,
+          "phase": "S",
+          "start": 10
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              163
+            ]
+          ],
+          "index": 3,
+          "phase": "S",
+          "start": 22
+        },
+        {
+          "duration": 4,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -15,
+              0,
+              88,
+              175
+            ]
+          ],
+          "index": 4,
+          "phase": "A",
+          "start": 32
+        },
+        {
+          "duration": 12,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -12,
+              0,
+              88,
+              174
+            ]
+          ],
+          "index": 5,
+          "phase": "R",
+          "start": 36
+        },
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              186
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 48
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -10,
+              0,
+              88,
+              186
+            ]
+          ],
+          "index": 7,
+          "phase": "R",
+          "start": 58
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "crow_call",
+          "type": "sfx"
+        },
+        {
+          "at": "orb",
+          "frame": 32,
+          "id": "crow",
+          "offset": [
+            200,
+            182
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 32,
+          "id": "crow_burst",
+          "type": "sfx"
+        }
+      ],
+      "id": "summon",
+      "loop": false,
+      "name": "까마귀 소환",
+      "notes": [
+        "까마귀 3마리(2페이즈 5마리). 한 대 맞으면 사라진다",
+        "까마귀는 플레이어 줄로 날아온 뒤 급강하. 처치하면 모르그라 그로기 +8"
+      ],
+      "phases": {
+        "active": [
+          32,
+          35
+        ],
+        "recovery": [
+          36,
+          65
+        ],
+        "startup": [
+          0,
+          31
+        ]
+      },
+      "pivot": [
+        118,
+        275
+      ],
+      "punish_window": {
+        "frames": [
+          36,
+          65
+        ],
+        "length": 30
+      },
+      "sprite": "summon.png",
+      "telegraph": {
+        "flash": null,
+        "flash_frames": null,
+        "warning_icon_frames": [
+          10,
+          31
+        ]
+      },
+      "total_frames": 66,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "teleport": {
+      "cell": [
+        250,
+        236
+      ],
+      "drawings": [
+        {
+          "duration": 10,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              153
+            ]
+          ],
+          "index": 1,
+          "phase": "S",
+          "start": 0
+        },
+        {
+          "duration": 20,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 2,
+          "phase": "N",
+          "start": 10
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [],
+          "index": 3,
+          "phase": "N",
+          "start": 30
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -14,
+              0,
+              88,
+              164
+            ]
+          ],
+          "index": 4,
+          "phase": "R",
+          "start": 38
+        },
+        {
+          "duration": 8,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -9,
+              0,
+              88,
+              176
+            ]
+          ],
+          "index": 5,
+          "phase": "R",
+          "start": 46
+        },
+        {
+          "duration": 6,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              186
+            ]
+          ],
+          "index": 6,
+          "phase": "R",
+          "start": 54
+        }
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "id": "feather_rustle",
+          "type": "sfx"
+        },
+        {
+          "at": "feet",
+          "frame": 10,
+          "id": "teleport_burst",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        },
+        {
+          "frame": 10,
+          "id": "teleport",
+          "type": "move"
+        },
+        {
+          "at": "feet",
+          "frame": 30,
+          "id": "teleport_burst",
+          "offset": [
+            0,
+            0
+          ],
+          "type": "spawn"
+        }
+      ],
+      "id": "teleport",
+      "invulnerable": [
+        [
+          10,
+          37
+        ]
+      ],
+      "loop": false,
+      "name": "그림자 순간이동",
+      "notes": [
+        "2번 시작에 사라지고 새 위치로 이동, 3번에서 나타난다 (2~3번 무적)",
+        "도착 위치: 플레이어 반대편, 플레이어에게서 240~320px",
+        "1페이즈 순간이동은 도주기: 멀리 나타나 22f로는 못 닿는다. 대신 50% 확률로 웃음 도발(64f)로 이어지는 게 보상"
+      ],
+      "phases": {
+        "active": null,
+        "recovery": [
+          38,
+          59
+        ],
+        "startup": null
+      },
+      "pivot": [
+        106,
+        227
+      ],
+      "punish_window": {
+        "frames": [
+          38,
+          59
+        ],
+        "length": 22
+      },
+      "sprite": "teleport.png",
+      "total_frames": 60,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    },
+    "walk": {
+      "cell": [
+        313,
+        236
+      ],
+      "drawings": [
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              181
+            ]
+          ],
+          "index": 1,
+          "phase": "L",
+          "start": 0
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -6,
+              0,
+              88,
+              182
+            ]
+          ],
+          "index": 2,
+          "phase": "L",
+          "start": 7
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              169
+            ]
+          ],
+          "index": 3,
+          "phase": "L",
+          "start": 14
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              168
+            ]
+          ],
+          "index": 4,
+          "phase": "L",
+          "start": 21
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -8,
+              0,
+              88,
+              169
+            ]
+          ],
+          "index": 5,
+          "phase": "L",
+          "start": 28
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              171
+            ]
+          ],
+          "index": 6,
+          "phase": "L",
+          "start": 35
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              171
+            ]
+          ],
+          "index": 7,
+          "phase": "L",
+          "start": 42
+        },
+        {
+          "duration": 7,
+          "hitboxes": [],
+          "hurtboxes": [
+            [
+              -7,
+              0,
+              88,
+              174
+            ]
+          ],
+          "index": 8,
+          "phase": "L",
+          "start": 49
+        }
+      ],
+      "events": [],
+      "id": "walk",
+      "loop": true,
+      "move": {
+        "vx": 1.6,
+        "vz": 1
+      },
+      "name": "걷기",
+      "notes": [],
+      "pivot": [
+        171,
+        226
+      ],
+      "sprite": "walk.png",
+      "total_frames": 56,
+      "units": "frames@60fps; px in sprites_220 (idle 220px incl. hat); x forward, y up (phase 2: from toe tips); box=[x,y,w,h]"
+    }
+  },
+  "MORGRA_REVIVE": {
+    "death": 110,
+    "groggy": 240,
+    "hp": 1200,
+    "rise": 106,
+    "wait": 45
+  },
+  "SHADOW": 16,
+  "SOVEREIGN": {
+    "ART": {
+      "bodyHeight": 138,
+      "clips": {
+        "awaken": 16,
+        "beam": 16,
+        "beam_p2": 16,
+        "command": 16,
+        "command_p2": 16,
+        "death": 16,
+        "fallen_p1": 3,
+        "fallen_p2": 4,
+        "fist_p1": 12,
+        "fist_p2": 12,
+        "fx_eruption": 10,
+        "fx_fist_impact": 8,
+        "fx_fist_shatter": 10,
+        "fx_ground_wave": 10,
+        "fx_helm_beam": 10,
+        "fx_mark_alt": 11,
+        "fx_punch_trail": 8,
+        "fx_reform": 10,
+        "fx_slam_mark": 10,
+        "hurt": 18,
+        "hurt_p2": 16,
+        "idle": 16,
+        "idle_p2": 16,
+        "intro": 16,
+        "kneel": 16,
+        "kneel_p2": 16,
+        "mask_awaken": 16,
+        "mask_beam_p2": 16,
+        "mask_command_p2": 16,
+        "mask_death": 16,
+        "mask_hurt_p2": 16,
+        "mask_idle_p2": 16,
+        "mask_kneel_p2": 16,
+        "mask_walk_p2": 16,
+        "walk": 16,
+        "walk_p2": 16
+      },
+      "cores": {
+        "fallen_p1": [
+          [
+            -26.05,
+            -1.62
+          ],
+          [
+            -29,
+            -2.17
+          ],
+          [
+            -21.34,
+            -2.99
+          ]
+        ],
+        "fallen_p2": [
+          [
+            5.28,
+            -29.14
+          ],
+          [
+            2.9,
+            -30.69
+          ],
+          [
+            1.26,
+            -28.7
+          ],
+          [
+            -1.16,
+            -32.13
+          ]
+        ],
+        "fist_p1": [
+          [
+            -26.05,
+            -1.62
+          ],
+          [
+            -0.5,
+            -30.59
+          ],
+          [
+            -27.43,
+            0.12
+          ],
+          [
+            -29.42,
+            -0.22
+          ],
+          [
+            -29.93,
+            -2.14
+          ],
+          [
+            -29,
+            -2.17
+          ],
+          [
+            -21.34,
+            -2.99
+          ],
+          [
+            -8.75,
+            -0.47
+          ],
+          [
+            -29.01,
+            2.05
+          ],
+          [
+            -18.11,
+            -0.78
+          ],
+          [
+            -10,
+            25.3
+          ],
+          [
+            -32.65,
+            -1.04
+          ]
+        ],
+        "fist_p2": [
+          [
+            -2.79,
+            0.01
+          ],
+          [
+            7.3,
+            -6.98
+          ],
+          [
+            -15.7,
+            3.09
+          ],
+          [
+            -9.05,
+            3.3
+          ],
+          [
+            -13.57,
+            1.42
+          ],
+          [
+            -16.44,
+            3.21
+          ],
+          [
+            -14.44,
+            2.8
+          ],
+          [
+            -13.69,
+            2.61
+          ],
+          [
+            -1.48,
+            -3.05
+          ],
+          [
+            -1.73,
+            -20
+          ],
+          [
+            -2.68,
+            7.75
+          ],
+          [
+            -30.73,
+            4.35
+          ]
+        ]
+      },
+      "fistHeight": 39.51,
+      "fistLength": 57.59,
+      "maskPrefix": "mask_",
+      "maskPulseTicks": 90,
+      "ppw": 1.5
+    },
+    "ATTACKS": [
+      "direct",
+      "slam",
+      "hammer",
+      "grab",
+      "clap",
+      "wave",
+      "wall",
+      "whirl",
+      "backhand",
+      "meteor",
+      "ultimate",
+      "beam"
+    ],
+    "FIRST_HIT": [
+      {
+        "backhand": 10,
+        "beam": 30,
+        "clap": 54,
+        "direct": 24,
+        "grab": 30,
+        "hammer": 42,
+        "meteor": 58,
+        "slam": 104,
+        "ultimate": 90,
+        "wall": -1,
+        "wave": 30,
+        "whirl": 24
+      },
+      {
+        "backhand": 10,
+        "beam": 30,
+        "clap": 54,
+        "direct": 24,
+        "grab": 30,
+        "hammer": 42,
+        "meteor": 58,
+        "slam": 90,
+        "ultimate": 90,
+        "wall": -1,
+        "wave": 30,
+        "whirl": 24
+      }
+    ],
+    "FIRST_STAGE": {
+      "backhand": "warn",
+      "beam": "charge",
+      "clap": "move",
+      "direct": "wind",
+      "grab": "wind",
+      "hammer": "rise",
+      "meteor": "rise",
+      "slam": "rise",
+      "ultimate": "channel",
+      "wall": "move",
+      "wave": "rise",
+      "whirl": "warn"
+    },
+    "FIST": {
+      "h": 39.51,
+      "hh": 17.7795,
+      "hw": 25.9155,
+      "len": 57.59
+    },
+    "RULES": {
+      "afterimage": {
+        "alpha": 0.22,
+        "interval": 3,
+        "life": 18,
+        "max": 6,
+        "minDistance": 2
+      },
+      "attackDelay": 90,
+      "awaken": 210,
+      "awakenShakeDrawing": 7,
+      "backhand": {
+        "damage": 10,
+        "push": 9,
+        "swing": 12,
+        "warn": 10
+      },
+      "bands": {
+        "mid": 260,
+        "near": 110
+      },
+      "beam": {
+        "charge": 30,
+        "damage": 14,
+        "depth": 14,
+        "fire": [
+          40,
+          50
+        ],
+        "high": 120,
+        "lock": 20,
+        "low": 40,
+        "neckHalfHeight": 3,
+        "neckLength": 20,
+        "recovery": 36
+      },
+      "bodyBound": [
+        "wall",
+        "whirl",
+        "ultimate",
+        "beam"
+      ],
+      "clap": {
+        "close": 8,
+        "damage": 16,
+        "height": 80,
+        "high": 170,
+        "low": 20,
+        "move": 30,
+        "offset": 110,
+        "stuck": 40,
+        "warn": 24
+      },
+      "command": 24,
+      "cooldowns": {
+        "backhand": 0,
+        "beam": 300,
+        "clap": 300,
+        "direct": 120,
+        "grab": 300,
+        "hammer": 360,
+        "meteor": 900,
+        "slam": 180,
+        "ultimate": 900,
+        "wall": 600,
+        "wave": 360,
+        "whirl": 420
+      },
+      "dangerGap": 20,
+      "death": 110,
+      "deathHold": 60,
+      "direct": {
+        "back": 7,
+        "backDamage": 8,
+        "damage": 14,
+        "lock": 16,
+        "range": 420,
+        "speed": 9,
+        "wind": 24
+      },
+      "fallen": [
+        480,
+        360
+      ],
+      "fistDrops": {
+        "potion": 0.25,
+        "scroll": 0.15
+      },
+      "fistGroggy": 40,
+      "fistHp": [
+        140,
+        180
+      ],
+      "fistSpeed": [
+        1,
+        1.2
+      ],
+      "fists": {
+        "backhand": 1,
+        "beam": 0,
+        "clap": 2,
+        "direct": 1,
+        "grab": 1,
+        "hammer": 1,
+        "meteor": 2,
+        "slam": 1,
+        "ultimate": 2,
+        "wall": 2,
+        "wave": 2,
+        "whirl": 2
+      },
+      "floor": [
+        "slam",
+        "hammer",
+        "meteor"
+      ],
+      "gaps": [
+        [
+          30,
+          50
+        ],
+        [
+          14,
+          28
+        ]
+      ],
+      "grab": {
+        "backhand": 10,
+        "escapeDamage": 30,
+        "lock": 22,
+        "range": 420,
+        "speed": 8,
+        "squeeze": 18,
+        "stagger": 60,
+        "wind": 30
+      },
+      "hammer": {
+        "active": 4,
+        "count": 3,
+        "damage": [
+          12,
+          12,
+          14
+        ],
+        "delay": 30,
+        "fall": 6,
+        "height": 150,
+        "rise": 12,
+        "rx": 45,
+        "ry": 18,
+        "stuck": 40
+      },
+      "home": {
+        "back": [
+          -80,
+          100
+        ],
+        "bob": 3,
+        "front": [
+          75,
+          85
+        ],
+        "period": 180,
+        "speed": 4
+      },
+      "hp": [
+        2400,
+        3000
+      ],
+      "hw": 24,
+      "intro": 200,
+      "introFistDrawing": 13,
+      "introFistDrop": 40,
+      "kdFistMul": 1.5,
+      "kneelDown": 40,
+      "maxJobs": [
+        1,
+        2
+      ],
+      "meteor": {
+        "active": 4,
+        "count": 4,
+        "damage": 16,
+        "delay": 36,
+        "fall": 8,
+        "height": 420,
+        "interval": 20,
+        "rise": 30,
+        "rx": 45,
+        "ry": 20,
+        "stuck": 60
+      },
+      "names": {
+        "backhand": "손등 치기",
+        "beam": "투구 광선",
+        "clap": "협공",
+        "direct": "직격",
+        "grab": "붙잡기",
+        "hammer": "망치질",
+        "meteor": "유성 낙하",
+        "slam": "추적 내려찍기",
+        "ultimate": "적월마광포",
+        "wall": "철벽",
+        "wave": "지면 파동",
+        "whirl": "회오리"
+      },
+      "pendingTicks": 90,
+      "pressure": [
+        3,
+        2
+      ],
+      "pressureDecay": 120,
+      "recover": [
+        40,
+        30
+      ],
+      "rise": 30,
+      "slam": {
+        "active": 6,
+        "damage": 16,
+        "dx": 2.5,
+        "dy": 1.5,
+        "fall": 6,
+        "height": 200,
+        "lock": [
+          24,
+          20
+        ],
+        "rise": 20,
+        "rx": 45,
+        "ry": 18,
+        "stuck": 50,
+        "track": [
+          60,
+          50
+        ]
+      },
+      "together": [
+        "clap",
+        "wave",
+        "whirl",
+        "meteor",
+        "ultimate"
+      ],
+      "ultimate": {
+        "chargedMs": 200,
+        "count": [
+          10,
+          13
+        ],
+        "damage": 23,
+        "debug": false,
+        "fadeMs": 200,
+        "handOrigin": [
+          220,
+          120
+        ],
+        "handScale": 0.45,
+        "laserEnds": [
+          252,
+          287,
+          291,
+          297,
+          351,
+          373,
+          384,
+          365,
+          383,
+          379,
+          384,
+          366,
+          383,
+          379,
+          384,
+          357,
+          369,
+          368,
+          384,
+          335
+        ],
+        "laserFps": 16,
+        "laserHeight": 94,
+        "laserOrigins": [
+          [
+            88,
+            110
+          ],
+          [
+            80,
+            110
+          ],
+          [
+            77,
+            110
+          ],
+          [
+            75,
+            110
+          ],
+          [
+            68,
+            110
+          ],
+          [
+            59,
+            110
+          ],
+          [
+            47,
+            110
+          ],
+          [
+            42,
+            110
+          ],
+          [
+            55,
+            112
+          ],
+          [
+            53,
+            112
+          ],
+          [
+            48,
+            112
+          ],
+          [
+            43,
+            112
+          ],
+          [
+            53,
+            112
+          ],
+          [
+            50,
+            112
+          ],
+          [
+            48,
+            112
+          ],
+          [
+            44,
+            112
+          ],
+          [
+            50,
+            112
+          ],
+          [
+            48,
+            112
+          ],
+          [
+            45,
+            112
+          ],
+          [
+            42,
+            112
+          ]
+        ],
+        "laserThickness": 22,
+        "margin": 20,
+        "minYGap": 65,
+        "telegraphMs": 600
+      },
+      "ultimateAt": 0.35,
+      "ultimateLater": 15,
+      "walk": [
+        [
+          0.75,
+          0.45
+        ],
+        [
+          1.05,
+          0.6
+        ]
+      ],
+      "wall": {
+        "guard": 90,
+        "move": 16,
+        "open": 40
+      },
+      "wave": {
+        "damage": 12,
+        "fall": 6,
+        "height": 220,
+        "rise": 30,
+        "speed": 6,
+        "stuck": 40,
+        "top": 20
+      },
+      "weights": [
+        {
+          "far": {
+            "beam": 25,
+            "direct": 30,
+            "slam": 30,
+            "wave": 15
+          },
+          "mid": {
+            "beam": 15,
+            "direct": 30,
+            "grab": 15,
+            "hammer": 15,
+            "slam": 25
+          },
+          "near": {
+            "beam": 15,
+            "clap": 20,
+            "direct": 15,
+            "grab": 20,
+            "wall": 15,
+            "whirl": 15
+          }
+        },
+        {
+          "far": {
+            "beam": 20,
+            "direct": 25,
+            "meteor": 20,
+            "slam": 20,
+            "wave": 15
+          },
+          "mid": {
+            "beam": 15,
+            "direct": 25,
+            "hammer": 15,
+            "meteor": 15,
+            "slam": 20,
+            "wave": 10
+          },
+          "near": {
+            "beam": 10,
+            "clap": 20,
+            "grab": 15,
+            "hammer": 15,
+            "meteor": 10,
+            "wall": 10,
+            "whirl": 20
+          }
+        }
+      ],
+      "whirl": {
+        "damage": 12,
+        "dazed": 50,
+        "height": 70,
+        "high": 160,
+        "low": 30,
+        "push": 7,
+        "rx": 130,
+        "ry": 30,
+        "spin": 120,
+        "turns": 2,
+        "warn": 24
+      }
+    },
+    "SWORD": [
+      25,
+      90
+    ],
+    "WEIGHT_ORDER": [
+      {
+        "far": [
+          "direct",
+          "slam",
+          "beam",
+          "wave"
+        ],
+        "mid": [
+          "direct",
+          "slam",
+          "grab",
+          "hammer",
+          "beam"
+        ],
+        "near": [
+          "clap",
+          "grab",
+          "whirl",
+          "wall",
+          "direct",
+          "beam"
+        ]
+      },
+      {
+        "far": [
+          "direct",
+          "slam",
+          "meteor",
+          "beam",
+          "wave"
+        ],
+        "mid": [
+          "direct",
+          "slam",
+          "hammer",
+          "meteor",
+          "beam",
+          "wave"
+        ],
+        "near": [
+          "clap",
+          "whirl",
+          "grab",
+          "wall",
+          "hammer",
+          "beam",
+          "meteor"
+        ]
+      }
+    ]
+  },
+  "STAGE": {
+    "barrels": [
+      480,
+      1000,
+      1600,
+      2200,
+      2800,
+      3300
+    ],
+    "boss": "boss5",
+    "len": 4400,
+    "name": "STAGE 5",
+    "theme": "stage5",
+    "title": "검은 월식의 심연",
+    "waves": [
+      {
+        "at": 400,
+        "e": [
+          [
+            "brute",
+            1
+          ],
+          [
+            "archer",
+            1
+          ],
+          [
+            "grunt",
+            -1
+          ],
+          [
+            "grunt",
+            -1
+          ]
+        ]
+      },
+      {
+        "at": 850,
+        "e": [
+          [
+            "rogue",
+            1
+          ],
+          [
+            "rogue",
+            1
+          ],
+          [
+            "archer",
+            -1
+          ],
+          [
+            "archer",
+            1
+          ]
+        ]
+      },
+      {
+        "arena": "abyss",
+        "at": 1300,
+        "e": [
+          [
+            "brute",
+            1
+          ],
+          [
+            "brute",
+            -1
+          ],
+          [
+            "archer",
+            1
+          ],
+          [
+            "archer",
+            -1
+          ]
+        ]
+      },
+      {
+        "at": 1800,
+        "e": [
+          [
+            "grunt",
+            1
+          ],
+          [
+            "grunt",
+            1
+          ],
+          [
+            "grunt",
+            -1
+          ],
+          [
+            "rogue",
+            -1
+          ]
+        ]
+      },
+      {
+        "at": 2300,
+        "e": [
+          [
+            "brute",
+            1
+          ],
+          [
+            "brute",
+            -1
+          ],
+          [
+            "rogue",
+            1
+          ],
+          [
+            "rogue",
+            -1
+          ]
+        ]
+      },
+      {
+        "arena": "abyss",
+        "at": 2800,
+        "e": [
+          [
+            "archer",
+            1
+          ],
+          [
+            "archer",
+            1
+          ],
+          [
+            "archer",
+            -1
+          ],
+          [
+            "brute",
+            -1
+          ]
+        ]
+      },
+      {
+        "at": 3300,
+        "e": [
+          [
+            "rogue",
+            1
+          ],
+          [
+            "rogue",
+            -1
+          ],
+          [
+            "grunt",
+            1
+          ],
+          [
+            "grunt",
+            -1
+          ]
+        ]
+      },
+      {
+        "at": 3640,
+        "boss": true,
+        "e": [
+          [
+            "boss5",
+            1
+          ]
+        ]
+      }
+    ]
+  },
+  "STAGE_COUNT": 5,
+  "STAGE_INDEX": 4,
+  "VIEW": {
+    "OY": 146,
+    "VH": 360,
+    "VW": 640
+  }
+}

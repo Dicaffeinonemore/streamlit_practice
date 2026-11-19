@@ -78,21 +78,7 @@ func hurt_player(s: BmkSimulation, damage: float, direction: int, kd: bool, hit_
 		return false
 	damage = s.js_round(damage)
 	# game.js hurtPlayer(): BarelHurt.begin() runs for Barel only; Viesa keeps her default hitstun.
-	if not p.is_viesa():
-		var height: float = p.z + 56.0 if hit_height < 0.0 else hit_height
-		p.hurt_kind = "hurt_high" if height - p.z >= 90.0 * 0.55 else "hurt_low"
-		# BarelHurt.begin(actor, height, ticks): attack-specific hitstun when the source has one.
-		p.hurt_duration = maxi(7, s.js_round(hitstun) if hitstun >= 0.0 else s.data.hurt_ticks)
-		var weights: PackedFloat64Array = s.data.hurt_high_weights if p.hurt_kind == "hurt_high" else s.data.hurt_low_weights
-		var sum: float = 0.0
-		for weight: float in weights:
-			sum += weight
-		p.hurt_ends.clear()
-		var end: float = 0.0
-		for weight: float in weights:
-			end += weight / sum * (p.hurt_duration - 6)
-			p.hurt_ends.append(end)
-		p.hurt_ends.append(p.hurt_duration)
+	if not p.is_viesa(): begin_barel_hurt(s,p.z + 56.0 if hit_height < 0.0 else hit_height,hitstun if hitstun >= 0.0 else float(s.data.hurt_ticks))
 	s.stat_damage += minf(p.hp, damage)
 	p.hp -= damage
 	p.flash = 5
@@ -128,11 +114,29 @@ func hurt_player(s: BmkSimulation, damage: float, direction: int, kd: bool, hit_
 		p.inv = s.data.hurt_inv
 	return true
 
+## BarelHurt.begin(actor, worldHeight, totalTicks): hurt high/low pose and its frame ends.
+func begin_barel_hurt(s: BmkSimulation, height: float, ticks: float) -> void:
+	var p: BmkActorState = s.player
+	p.hurt_kind = "hurt_high" if height - p.z >= 90.0 * 0.55 else "hurt_low"
+	p.hurt_duration = maxi(7, s.js_round(ticks))
+	var weights: PackedFloat64Array = s.data.hurt_high_weights if p.hurt_kind == "hurt_high" else s.data.hurt_low_weights
+	var sum: float = 0.0
+	for weight: float in weights:
+		sum += weight
+	p.hurt_ends.clear()
+	var end: float = 0.0
+	for weight: float in weights:
+		end += weight / sum * (p.hurt_duration - 6)
+		p.hurt_ends.append(end)
+	p.hurt_ends.append(p.hurt_duration)
+
 func strike(s: BmkSimulation, a: BmkAttackData) -> void:
 	var p: BmkActorState = s.player
 	s.strike_crows(a.reach, 0.0, p.x, p.y, p.z, p.face)
+	s.strike_orbs(a.reach, 8.0, p.hit_set, "", {"damage":s.js_round(a.damage * (1.5 if p.buff > 0 else 1.0))})
+	var blocked: bool = s.strike_fists(a.reach, 8.0, p.hit_set, "", {"damage":s.js_round(a.damage * (1.5 if p.buff > 0 else 1.0)),"kd":a.knockdown})
 	for e: BmkActorState in s.enemies:
-		if not can_hit(e) or p.hit_set.has(e.id):
+		if not can_hit(e) or p.hit_set.has(e.id) or blocked and s.is_sovereign(e):
 			continue
 		if in_reach(p, e, a.reach, 24.0, 55.0):
 			p.hit_set[e.id] = true
@@ -142,9 +146,11 @@ func strike(s: BmkSimulation, a: BmkAttackData) -> void:
 func skill_strike(s: BmkSimulation, phase: int, a: BmkAttackData) -> void:
 	var p: BmkActorState = s.player
 	s.strike_crows(a.reach, a.behind, p.x, p.y, p.z, p.face)
+	s.strike_orbs(a.reach, a.behind, p.skill_hits, "%d:o" % phase, {"depth":38.0,"damage":s.js_round(a.damage * (1.5 if p.buff > 0 else 1.0))})
+	var blocked: bool = s.strike_fists(a.reach, a.behind, p.skill_hits, "%d:o" % phase, {"depth":38.0,"damage":s.js_round(a.damage * (1.5 if p.buff > 0 else 1.0)),"kd":a.knockdown})
 	for e: BmkActorState in s.enemies:
 		var key: String = "%d:%d" % [phase, e.id]
-		if not can_hit(e) or p.skill_hits.has(key):
+		if not can_hit(e) or p.skill_hits.has(key) or blocked and s.is_sovereign(e):
 			continue
 		var dx: float = (e.x - p.x) * p.face
 		if dx > -a.behind - e.hw and dx < a.reach + e.hw and absf(e.y - p.y) < 38.0 and absf(e.z - p.z) < 85.0:

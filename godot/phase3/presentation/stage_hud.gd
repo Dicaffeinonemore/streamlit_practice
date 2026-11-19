@@ -61,7 +61,8 @@ func _draw() -> void:
 		draw_rect(Rect2(0,0,960,540),Color(0,0,0,alpha))
 	if game.show_flash and s.boss_white > 0: draw_rect(Rect2(0,0,960,540),Color(1,1,1,0.6))
 	if game.debug_view.visible: text(Vector2(405,102),"1-5 SECTION   F10 PHASE 2   F11 ULTIMATE",Color("c1efc5"),12)
-	if s.mode == "clear":
+	# Standalone Stage 1 scene only; the menu game shows its own result / ending panel.
+	if s.mode == "clear" and game is not BmkMenuGame:
 		draw_rect(Rect2(0,0,960,540),Color(0.01,0.005,0.02,0.72))
 		text(Vector2(282,243),"STAGE 1 COMPLETE",Color("ffe18b"),36)
 		text(Vector2(282,283),"SCORE %d    R: RESTART" % s.player.score,Color("e4d5ba"),18)
@@ -76,6 +77,10 @@ func wave_boss(s: BmkWaveSimulation) -> BmkLegacyActor:
 
 ## Stage entry banner (scene 'intro') and the boss name card during the boss intro.
 func draw_wave_overlays(s: BmkWaveSimulation) -> void:
+	# Arena help line while a fire / frost / abyss wave is locked.
+	if not s.arena.is_empty() and s.cam_lock:
+		var help: Dictionary = {"fire":"화염 지대 · 표식이 없는 줄로 이동하세요","frost":"서리 지대 · 표식을 벗어나거나 점프로 피하세요","abyss":"심연 지대 · 표식이 없는 줄이 안전합니다"}
+		outlined(Vector2(0,540 - 111),str(help.get(s.arena["kind"],"")),15,Color("ffe27a"),1.0,korean_font)
 	# Stage entry banner (scene 'intro').
 	if s.mode == "intro" and s.banner_t > 0:
 		var a: float = clampf(minf(s.banner_t,160 - s.banner_t) / 25.0,0,1)
@@ -85,7 +90,7 @@ func draw_wave_overlays(s: BmkWaveSimulation) -> void:
 	if s.clear_t > 20 and s.mode == "play": outlined(Vector2(0,270),"VICTORY!",64,Color(1,0.82,0.25),1.0,font)
 	# drawIntroCard(u): letterbox bars, then STAGE n / Korean name / English name and a gold rule.
 	if s.mode == "bossintro" and s.intro_boss != null:
-		var u: float = s.intro_t / float(s.wave_data.source["INTRO_MS"])
+		var u: float = s.intro_t / s.intro_duration(s.intro_boss)
 		var bh: float = roundf(64 * BmkSimulation.ease(minf(1,u * 7)) * ((1 - (u - 0.9) * 10) if u > 0.9 else 1.0))
 		draw_rect(Rect2(0,0,960,bh),Color("05030a"))
 		draw_rect(Rect2(0,540 - bh,960,bh),Color("05030a"))

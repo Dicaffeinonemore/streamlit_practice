@@ -11,6 +11,9 @@ func _init(asset_bank: BmkAssetBank) -> void:
 ## {asset, index, scale, lift, alpha, visible}
 func pose(s: BmkWaveSimulation, e: BmkLegacyActor) -> Dictionary:
 	if e.type == "boss2": return morgra_pose(s,e)
+	if e.type == "boss3": return aurelion_pose(s,e)
+	if e.type == "boss4": return vargul_pose(s,e)
+	if e.type == "boss5": return sovereign_pose(s,e)
 	return soldier_pose(s,e)
 
 func clip_asset(role: String, action: String) -> BmkAnimationAsset:
@@ -77,3 +80,43 @@ func morgra_pose(s: BmkWaveSimulation, e: BmkLegacyActor) -> Dictionary:
 	var asset: BmkAnimationAsset = bank.animation("morgra_art." + clip)
 	return {"asset":asset,"index":int(d["index"]) - 1,"scale":1.0,"lift":s.morgra.hover(e),
 		"alpha":clampf(1 - (e.t - 65) / 55.0,0,1) if e.st == "dead" else e.alpha,"visible":e.st != "intro"}
+
+## drawAurelion(): pose frame, death fade and the telegraph flash (gold / red / white blink).
+func aurelion_pose(s: BmkWaveSimulation, e: BmkLegacyActor) -> Dictionary:
+	var pose_: Array = s.aurelion.pose(s,e)
+	var id: String = str(pose_[0])
+	var d: Dictionary = s.aurelion.drawing(id,float(pose_[1]))
+	var asset: BmkAnimationAsset = bank.animation("aurelion_art." + id)
+	var death_total: float = float(s.aurelion.moves["death"]["total_frames"])
+	var tint: Color = Color.WHITE
+	var a: BmkAurelionState = e.aurelion
+	if e.st == "pat" and a != null and not a.current.is_empty() and floori(e.pt / 90.0) % 2 == 0:
+		var f: float = float(a.current["source"])
+		var tele: Variant = s.aurelion.moves[a.move].get("telegraph")
+		var flash: String = ""
+		if a.guard == "guard": flash = "gold"
+		elif tele != null and tele.get("flash") != null and tele.get("flash_frames") != null and BmkAurelionController.within([tele["flash_frames"]],f): flash = str(tele["flash"])
+		tint = {"white":Color(2,2,2),"red":Color(1.6,0.45,0.45),"gold":Color(1.6,1.3,0.55)}.get(flash,Color.WHITE)
+	return {"asset":asset,"index":int(d["index"]) - 1,"scale":1.0,"lift":0.0,"tint":tint,
+		"alpha":clampf(1 - (e.t - death_total) / 50.0,0,1) if e.st == "dead" else 1.0,"visible":true}
+
+## drawSovereign(): the body pose (ghosts, mask and helm glow are drawn by BmkSovereignView).
+func sovereign_pose(s: BmkWaveSimulation, e: BmkLegacyActor) -> Dictionary:
+	var pose_: Array = s.sovereign.pose(s,e)
+	return {"asset":bank.animation("sovereign_art." + str(pose_[0])),"index":int(pose_[1]) - 1,"scale":1.0,"lift":0.0,"alpha":1.0,"visible":true}
+
+## drawVargul(): pose drawing with its visual scale, the white telegraph blink and the
+## cross-fade into phase two (the incoming idle is drawn by BmkVargulView).
+func vargul_pose(s: BmkWaveSimulation, e: BmkLegacyActor) -> Dictionary:
+	var pose_: Array = s.vargul.pose(s,e)
+	if pose_.size() > 2 and bool(pose_[2]): return {"visible":false}
+	var clip: String = str(pose_[0])
+	var drawing: int = floori(float(pose_[1]))
+	# The extracted body clips already include VARGUL_VISUAL_SCALES in their frame scales.
+	var factor: float = 1.0
+	var a: BmkVargulState = e.vargul
+	var tint: Color = Color(2,2,2) if e.st == "pat" and bool(a.current.get("white",false)) and floori(e.pt / 90.0) % 2 == 0 else Color.WHITE
+	var alpha: float = 1.0
+	var rules: Dictionary = s.vargul.rules
+	if e.phase_t > 0 and a.transition_age >= int(rules["down"]) + int(rules["awaken"]): alpha = 1 - (a.transition_age - float(rules["down"]) - float(rules["awaken"])) / 8.0
+	return {"asset":bank.animation("vargul_art." + clip),"index":drawing - 1,"scale":factor,"lift":0.0,"tint":tint,"alpha":alpha,"visible":true}

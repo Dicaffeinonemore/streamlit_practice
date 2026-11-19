@@ -182,14 +182,13 @@ func show_challenges() -> void:
 	title.text = "보스 도전"
 	message.text = "본편의 스테이지를 클리어하면 해금됩니다."
 	var records_: Array = store.records()["stages"]
-	var names: Array[String] = ["도살자 고라스","까마귀 마녀 모르그라"]
+	var names: Array[String] = ["도살자 고라스","까마귀 마녀 모르그라","황금왕 아우렐리온","얼어붙은 묘지왕 바르굴","흑월의 군주, 소버린"]
 	for i: int in range(names.size()):
 		var unlocked: bool = records_.size() > i and records_[i] != null
 		var stage: int = i
 		add_button("스테이지 %d / %s" % [i + 1,names[i]],func() -> void:
 			challenge_stage = stage
 			show_characters(true),not unlocked)
-	for i: int in range(3,6): add_button("스테이지 %d / 추후 추가" % i,func() -> void: pass,true)
 	add_button("뒤로",show_title)
 
 func show_pause() -> void:
@@ -209,10 +208,20 @@ func show_result(value: String, challenge: bool, stage: int = 0, has_next: bool 
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "%s 격파!" % ["고라스","모르그라"][stage] if challenge else "스테이지 %d 클리어!" % (stage + 1)
+	title.text = "%s 격파!" % ["고라스","모르그라","아우렐리온","바르굴","소버린"][stage] if challenge else "스테이지 %d 클리어!" % (stage + 1)
 	message.text = value
 	if has_next: add_button("다음 스테이지",func() -> void: next_stage.emit())
 	add_button("다시 시작",func() -> void: retry_game.emit())
+	add_button("타이틀로",show_title)
+
+## index.html #ending: shown after the final stage clear of the story (finishStage()).
+func show_ending(value: String) -> void:
+	mode = "ending"
+	visible = true
+	title_image.visible = false
+	clear_buttons()
+	title.text = "ALL CLEAR!"
+	message.text = "모든 스테이지를 클리어했습니다. 축하합니다!\n" + value
 	add_button("타이틀로",show_title)
 
 func show_settings() -> void:

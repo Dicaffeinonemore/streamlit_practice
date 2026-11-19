@@ -23,3 +23,30 @@ var visual: bool = false
 var owner: BmkLegacyActor
 var safe: Array[PackedFloat64Array] = []
 var seq: int = 0
+var cast_token: int = 0
+# Vargul hazards (sword/cross marks, orbs, shards, ultimate, ice waves, fx).
+var wait: float = 0.0
+var active: float = 0.0
+var boom: bool = false
+var hp: float = 0.0
+var max_hp: float = 0.0
+var inv: int = 0
+var flash: int = 0
+var vh: float = 0.0
+var ai: String = ""
+var shot_cooldown: float = 0.0
+var shot_pending: bool = false
+var index: int = 0
+var caster_index: int = 0
+var stage: String = ""
+var impact_age: int = 0
+var waves_emitted: int = 0
+var wave_radius: float = 0.0
+var wave_ticks: int = 0
+var pulse: int = 0
+var width: float = 0.0
+var height: float = 0.0
+var born_elapsed: int = 0
+# Arena rifts (game.js updArena): lane half depth and the arena flag.
+var depth: float = 0.0
+var arena: bool = false
