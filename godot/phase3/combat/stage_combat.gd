@@ -52,12 +52,12 @@ func strike(sim: BmkSimulation, a: BmkAttackData) -> void:
 			s.player.hit_set[b.id] = true
 			s.item_controller.damage_barrel(s,b)
 
-func hurt_player(sim: BmkSimulation, damage: float, direction: int, kd: bool, hit_height: float = -1.0) -> bool:
+func hurt_player(sim: BmkSimulation, damage: float, direction: int, kd: bool, hit_height: float = -1.0, hitstun: float = -1.0) -> bool:
 	var s: BmkStageSimulation = sim as BmkStageSimulation
 	var p: BmkStageActor = s.player as BmkStageActor
 	if p.st == "grabbed" and p.grab != null and p.grab.kind == "bite" and p.inv <= 0:
 		s.grabs.release(s,"hit")
-	return super.hurt_player(s,damage,direction,kd,hit_height)
+	return super.hurt_player(s,damage,direction,kd,hit_height,hitstun)
 
 func enemy_collision(sim: BmkSimulation, actor: BmkActorState) -> void:
 	var e: BmkStageActor = actor as BmkStageActor

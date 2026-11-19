@@ -23,6 +23,7 @@ var boss_title: int = 0
 var remains: Array[BmkStageActor] = []
 var clear_t: int = 0
 var progression_enabled: bool = true
+var viesa: BmkViesaWorld = BmkViesaWorld.new()
 
 func _init(config: BmkStageData = null) -> void:
 	if config == null: return
@@ -99,6 +100,22 @@ func step() -> bool:
 			mode = "clear"
 			player.score += int(player.hp * 10)
 	item_controller.step(self)
+	viesa.update_effects()
 	input.age_processed_step()
 	step_completed.emit()
 	return true
+
+## game.js newPlayer(score, characterId): select the playable character's controller.
+func use_character(id: String) -> void:
+	player.character_id = id
+	viesa.reset()
+	if id == "viesa":
+		player_controller = BmkViesaController.new()
+		BmkViesaController.configure_player(player, BmkViesaData.shared())
+	else:
+		player_controller = BmkStagePlayer.new()
+
+## updHazards(): Viesa's ultimate and arrows are updated before the other hazards.
+func update_hazards() -> void:
+	if player_controller is BmkViesaController: (player_controller as BmkViesaController).update_projectiles(self)
+	super.update_hazards()

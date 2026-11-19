@@ -26,6 +26,7 @@ func start_attack(s: BmkSimulation, combo: int, air: bool = false) -> void:
 	else:
 		p.combo = combo
 		p.atk = ["c1", "c2", "c3"][combo]
+	s.react_attack()
 	s.sound("swordSwing", 2 if air else combo)
 
 func start_dash(s: BmkSimulation, direction: int) -> void:
@@ -58,6 +59,7 @@ func start_dash_attack(s: BmkSimulation) -> void:
 	p.dash_flash = false
 	p.vx = 0.0
 	p.vz = 0.0
+	s.react_attack()
 	s.sound("swing", 2)
 
 func can_start_skill(s: BmkSimulation, id: String) -> bool:
@@ -97,6 +99,7 @@ func start_skill(s: BmkSimulation, a: BmkAttackData) -> void:
 			nearest = e
 	var distance: float = maxf(0.0, (nearest.x - p.x) * p.face - 44.0) if nearest != null else 160.0
 	p.skill_dest = clampf(p.x + p.face * distance, s.cam_x + 24.0, minf(s.cam_x + 616.0, s.stage_length - 24.0))
+	s.react_attack()
 	s.sound("spdash" if a.id == "leap" else "swing", 2 if a.id == "slam" else 1)
 
 func start_special(s: BmkSimulation) -> void:
@@ -111,6 +114,7 @@ func start_special(s: BmkSimulation) -> void:
 	p.sp_hits = 0
 	p.sp_fin = false
 	p.sp_dash = false
+	s.react_attack()
 	var nearest: BmkActorState
 	var best: float = 1e9
 	for e: BmkActorState in s.enemies:
@@ -211,6 +215,7 @@ func step(s: BmkSimulation) -> void:
 				p.vx = 0.0
 				p.inv = maxi(p.inv, 48)
 				aim(s)
+				s.react_attack()
 				s.sound("mcharge")
 			elif input.hit(["KeyJ", "KeyZ"]):
 				start_attack(s, p.combo + 1 if p.combo_t > 0 and p.combo < 2 else 0, p.z > 0.0)
@@ -326,9 +331,12 @@ func update_dash_attack(s: BmkSimulation) -> void:
 		s.shake = maxf(s.shake, 3.0)
 		s.impact(p.x + p.face * d.dash_reach, p.y, d.dash_tip_height, 1)
 	if p.t >= d.dash_attack_from and p.t < d.dash_attack_to:
+		s.strike_crows(d.dash_reach, -d.dash_front, p.x, p.y, p.z, p.face)
+		s.strike_orbs(d.dash_reach, -d.dash_front, p.hit_set, "", {"depth":d.dash_depth,"damage":s.js_round(d.attack("c1").damage * d.dash_damage_ratio * (1.5 if p.buff > 0 else 1.0))})
+		var blocked: bool = s.strike_fists(d.dash_reach, -d.dash_front, p.hit_set, "", {"depth":d.dash_depth,"damage":s.js_round(d.attack("c1").damage * d.dash_damage_ratio * (1.5 if p.buff > 0 else 1.0)),"kd":true})
 		for e: BmkActorState in s.enemies:
 			var dx: float = (e.x - p.x) * p.face
-			if not s.combat.can_hit(e) or p.hit_set.has(e.id) or dx + e.hw < d.dash_front or dx - e.hw > d.dash_reach or absf(e.y - p.y) >= d.dash_depth or e.z > d.dash_top or e.z + e.d.height < d.dash_bottom:
+			if not s.combat.can_hit(e) or p.hit_set.has(e.id) or blocked and s.is_sovereign(e) or dx + e.hw < d.dash_front or dx - e.hw > d.dash_reach or absf(e.y - p.y) >= d.dash_depth or e.z > d.dash_top or e.z + e.d.height < d.dash_bottom:
 				continue
 			var hp: float = e.hp
 			p.hit_set[e.id] = true
@@ -374,6 +382,7 @@ func update_skill(s: BmkSimulation) -> void:
 		"redwave":
 			if previous < a.strikes[0] and t >= a.strikes[0]:
 				var wave: BmkProjectileState = BmkProjectileState.new()
+				wave.seq = s.next_hazard_seq()
 				wave.x = p.x + p.face * 32.0
 				wave.y = p.y
 				wave.direction = p.face
@@ -435,8 +444,10 @@ func special_hit(s: BmkSimulation, last: bool) -> void:
 	var damage: float = s.js_round((s.data.special_finisher if last else s.data.special_slash) * (1.5 if p.buff > 0 else 1.0))
 	var rx: float = 110.0 if last else 80.0
 	var ry: float = 60.0 if last else 44.0
+	s.strike_orbs(rx, rx, {}, "", {"x":p.sp_x,"y":p.sp_y,"h":0.0,"depth":ry,"damage":damage,"hitSound":"barelFinalHit" if last else "none"})
+	var blocked: bool = s.strike_fists(rx, rx, {}, "", {"x":p.sp_x,"y":p.sp_y,"h":0.0,"depth":ry,"damage":damage,"kd":true,"hitSound":"barelFinalHit" if last else "none"})
 	for e: BmkActorState in s.enemies:
-		if s.combat.can_hit(e) and absf(e.x - p.sp_x) < rx + e.hw and absf(e.y - p.sp_y) < ry:
+		if s.combat.can_hit(e) and not (blocked and s.is_sovereign(e)) and absf(e.x - p.sp_x) < rx + e.hw and absf(e.y - p.sp_y) < ry:
 			s.combat.damage_enemy(s, e, damage, last, 2 if last else 1, false, "special" if last else "specialSlash")
 	if last:
 		s.flash_t = 240.0
@@ -452,6 +463,8 @@ func fire_magic(s: BmkSimulation) -> void:
 	s.flash_t = 200.0
 	s.shake = maxf(s.shake, 22.0)
 	s.hit_stop = maxi(s.hit_stop, 4)
+	s.strike_orbs(0.0, 0.0, {}, "", {"global":true,"damage":s.data.magic_damage})
+	s.strike_fists(0.0, 0.0, {}, "", {"global":true,"damage":s.data.magic_damage})
 	for e: BmkActorState in s.enemies:
 		if e.st in ["dead", "intro"] or e.x < s.cam_x - 20.0 or e.x > s.cam_x + 660.0:
 			continue

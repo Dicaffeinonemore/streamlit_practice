@@ -99,8 +99,8 @@ func present() -> void:
 	# Cosmetic shake uses its own RNG; it cannot perturb combat spawn randomness.
 	if show_shake and session.shake > 0.5 and not clock.paused and not capture_mode:
 		world.position += Vector2(visual_rng.randf_range(-1,1),visual_rng.randf_range(-1,1)) * session.shake * 0.6
-	var pose: Dictionary = selector.player(session)
-	player_view.present(session,session.player,bank.animation("barel_rika.sheet." + str(pose["clip"])),int(pose["index"]),true)
+	var pose: Array = player_pose()
+	player_view.present(session,session.player,pose[0] as BmkAnimationAsset,int(pose[1]),true)
 	player_view.z_index = 2 if session.player.st == "special" else 0
 	var alive: Dictionary[int, bool] = {}
 	for e: BmkActorState in session.enemies:
@@ -109,8 +109,7 @@ func present() -> void:
 			var view: BmkActorView = make_actor_view()
 			actors.add_child(view)
 			enemy_views[e.id] = view
-		var selected: Dictionary = selector.enemy(session,e,bank.catalogs["STAGE1_ENEMY_ART"].get(e.species,{}))
-		enemy_views[e.id].present(session,e,bank.animation(actor_animation_id(e,selected)),int(selected["index"]))
+		present_enemy(enemy_views[e.id],e)
 	for id: int in enemy_views.keys():
 		if not alive.has(id):
 			enemy_views[id].queue_free()
@@ -158,6 +157,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and clock != null and not capture_mode:
 		pause_game(true)
+
+func present_enemy(view: BmkActorView, e: BmkActorState) -> void:
+	var selected: Dictionary = selector.enemy(session,e,bank.catalogs["STAGE1_ENEMY_ART"].get(e.species,{}))
+	view.present(session,e,bank.animation(actor_animation_id(e,selected)),int(selected["index"]))
+
+## [animation, frame] for the player body.
+func player_pose() -> Array:
+	var pose: Dictionary = selector.player(session)
+	return [bank.animation("barel_rika.sheet." + str(pose["clip"])),int(pose["index"])]
 
 func make_selector() -> BmkFrameSelector:
 	return BmkFrameSelector.new(bank.catalogs["barel_timelines"])

@@ -1,7 +1,7 @@
 'use strict';
 // Bounded scenery caches: source images stay unmodified; combat coordinates stay fixed.
 const GameAssets = (() => {
-  const images = new Map(), tiles = new Map(), sprites = new Map(), frames = new Map();
+  const images = new Map(), tiles = new Map(), sprites = new Map(), frames = new Map(), filtered = new Map();
   const pixels = new Map(), ids = new WeakMap();
   let nextId = 0;
   function prime(im) {
@@ -86,11 +86,11 @@ const GameAssets = (() => {
     }
     return result;
   }
-  function tile(im, sx, sy, sw, sh, width, height, smoothing = false, pool = tiles, limit = 8) {
+  function tile(im, sx, sy, sw, sh, width, height, smoothing = false, pool = tiles, limit = 8, filter = 'none') {
     if (!(im?.naturalWidth || im?.width)) return null;
     const w = Math.ceil(width), h = Math.ceil(height);
     if (!ids.has(im)) ids.set(im, ++nextId);
-    const key = [ids.get(im), sx, sy, sw, sh, w, h, smoothing].join('|');
+    const key = [ids.get(im), sx, sy, sw, sh, w, h, smoothing, filter].join('|');
     let canvas = pool.get(key);
     if (canvas) { pool.delete(key); pool.set(key, canvas); return canvas; }
     canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
@@ -99,6 +99,8 @@ const GameAssets = (() => {
     const c = canvas.getContext('2d', { willReadFrequently: true }); c.imageSmoothingEnabled = smoothing;
     c.imageSmoothingQuality = 'high';
     const source = pixels.get(im);
+    // A color filter is applied once here; per-draw ctx.filter allocates a layer every time.
+    if (filter !== 'none') c.filter = filter;
     c.drawImage(source || im, sx, sy, sw, sh, 0, 0, w, h);
     c.getImageData(0, 0, 1, 1);
     pool.set(key, canvas);
@@ -112,9 +114,10 @@ const GameAssets = (() => {
   return { lazy, tile, group, prepareStage, get loading() { return loading; }, get stageReady() { return stageReady; },
     sprite: (im, x, y, w, h, dw, dh) => tile(im, x, y, w, h, dw, dh, true, sprites, 48),
     frame: (im, x, y, w, h) => tile(im, x, y, w, h, w, h, false, frames, 96),
+    filtered: (im, x, y, w, h, filter) => tile(im, x, y, w, h, w, h, false, filtered, 96, filter),
     get revision() { return revision; },
-    get cacheSize() { return { images: images.size, tiles: tiles.size, sprites: sprites.size, frames: frames.size,
-      bytes: (tiles.bytes || 0) + (sprites.bytes || 0) + (frames.bytes || 0),
+    get cacheSize() { return { images: images.size, tiles: tiles.size, sprites: sprites.size, frames: frames.size, filtered: filtered.size,
+      bytes: (tiles.bytes || 0) + (sprites.bytes || 0) + (frames.bytes || 0) + (filtered.bytes || 0),
       sourceBytes: [...pixels.values()].reduce((n, canvas) => n + canvas.width * canvas.height * 4, 0) }; } };
 })();
 

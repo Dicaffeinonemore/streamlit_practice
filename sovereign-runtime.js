@@ -707,9 +707,14 @@ function sovDrawAfterimages(o,s){
 function sovPaint(frame,x,y,o={}){
   const im=frame&&SOV_SHEETS[frame.sheet];if(!im?.naturalWidth)return false;
   const [sx,sy,w,h]=frame.atlas,[ax,ay]=frame.anchor,k=(o.scale??1)/SOV_A.ppw;
+  // Filtered drawings (afterimages, dimmed/cracked fists) come pre-tinted from a bounded cache:
+  // setting ctx.filter per draw allocated an offscreen layer each time and caused frame drops.
+  const src=o.filter?GameAssets.filtered(im,sx,sy,w,h,o.filter):null;
   ctx.save();ctx.translate(x-camX,y);ctx.scale(o.face??1,1);if(o.angle)ctx.rotate(o.angle);ctx.globalAlpha*=o.alpha??1;smoothFor(k);
-  if(o.add)ctx.globalCompositeOperation='lighter';if(o.filter)ctx.filter=o.filter;
-  drawLit(im,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k,o.gain??1);ctx.restore();return true;
+  if(o.add)ctx.globalCompositeOperation='lighter';
+  if(src)drawLit(src,0,0,src.width,src.height,-ax*k,-ay*k,w*k,h*k,o.gain??1);
+  else drawLit(im,sx,sy,w,h,-ax*k,-ay*k,w*k,h*k,o.gain??1);
+  ctx.restore();return true;
 }
 // Effect drawings are additive RGB on black; drawn stretched to w x h around their anchor.
 function sovFxDraw(id,u,x,y,w,h,o={}){
@@ -718,7 +723,7 @@ function sovFxDraw(id,u,x,y,w,h,o={}){
   const [sx,sy,fw,fh]=f.atlas,[ax,ay]=f.anchor,kx=w/fw,ky=h/fh;
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha*=o.alpha??1;ctx.translate(x-camX,y);ctx.scale(o.face??1,1);
   if(o.angle)ctx.rotate(o.angle);smoothFor(ky);
-  ctx.drawImage(im,sx,sy,fw,fh,-ax*kx,-ay*ky,fw*kx,fh*ky);ctx.restore();
+  drawLit(im,sx,sy,fw,fh,-ax*kx,-ay*ky,fw*kx,fh*ky,1);ctx.restore();   // 큰 시트 전체를 GPU에 올리지 않게 칸만 잘라 그린다
 }
 function sovPose(e){
   const s=sovData(e),R=SOV_R,clip=n=>sovClip(e,n),len=c=>SOV_A.clips[c].length;

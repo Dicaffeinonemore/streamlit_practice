@@ -78,6 +78,20 @@ var enter_to: float = 0.0
 var enter_speed: float = 1.0
 var alpha: float = 1.0
 var bolted: bool = false
+# Player character (game.js newPlayer characterId) and viesa-runtime.js player fields.
+var character_id: String = "barel"
+var w: float = 26.0
+var jump_time: int = 0
+var viesa_action: BmkViesaAction
+var viesa_clip: String = ""
+var viesa_fired: bool = false
+var viesa_shot_queued: bool = false
+var viesa_hover_grace: int = 0
+var viesa_air_p_used: bool = false
+var viesa_landing: String = ""
+
+func is_viesa() -> bool:
+	return character_id == "viesa"
 
 func hurt_index() -> int:
 	for i: int in range(hurt_ends.size()):

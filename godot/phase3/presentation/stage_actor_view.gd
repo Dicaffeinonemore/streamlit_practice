@@ -23,6 +23,9 @@ func present(s: BmkSimulation, a: BmkActorState, asset: BmkAnimationAsset, frame
 		if (s as BmkStageSimulation).mode == "bossintro" or s.tick < e.quiet_inv_until: body.visible = true
 		return
 	if e.balcony: body.modulate *= Color(0.62,0.62,0.62)
+	if e.boss and e.g2 == null:
+		for glow: Sprite2D in guard_glows: glow.visible = false
+		return
 	if e.boss:
 		var offsets: Array[Vector2] = [Vector2(-3,0),Vector2(3,0),Vector2(0,-3),Vector2(0,2)]
 		for i: int in range(guard_glows.size()):
@@ -59,10 +62,15 @@ func present(s: BmkSimulation, a: BmkActorState, asset: BmkAnimationAsset, frame
 			alert.add_theme_color_override("font_color",Color("ff3d3d") if e.t >= 22 else Color("ffd23f"))
 
 func _draw() -> void:
-	if actor is BmkStageActor and (actor as BmkStageActor).boss:
+	if actor is BmkStageActor and (actor as BmkStageActor).boss and (actor as BmkStageActor).g2 != null:
 		if (actor as BmkStageActor).g2.clip == "intro_chop": return
 		draw_set_transform(Vector2.ZERO,0,Vector2(52,8.4))
 		draw_circle(Vector2.ZERO,1,Color(0,0,0,0.35))
 		draw_set_transform(Vector2.ZERO)
 	elif actor is BmkStageActor and (actor as BmkStageActor).balcony: return
+	elif BmkSovereignController.is_sovereign(actor):
+		# drawShadow(e.x, e.y, 22, e.z): 22 dots x SC 2.
+		draw_set_transform(Vector2.ZERO,0,Vector2(44 * (1 - minf(actor.z,150) / 300.0),8.4))
+		draw_circle(Vector2.ZERO,1,Color(0,0,0,0.35))
+		draw_set_transform(Vector2.ZERO)
 	else: super._draw()

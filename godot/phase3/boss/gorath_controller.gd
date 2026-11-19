@@ -4,7 +4,8 @@ var actions: BmkGorathActions = BmkGorathActions.new()
 
 func boss(s: BmkStageSimulation) -> BmkStageActor:
 	for actor: BmkActorState in s.enemies:
-		if (actor as BmkStageActor).boss: return actor as BmkStageActor
+		# Only the Gorath remake carries g2 state; Stage 2's Morgra is a legacy boss.
+		if (actor as BmkStageActor).boss and (actor as BmkStageActor).g2 != null: return actor as BmkStageActor
 	return null
 
 func prepare(s: BmkStageSimulation) -> BmkStageActor:

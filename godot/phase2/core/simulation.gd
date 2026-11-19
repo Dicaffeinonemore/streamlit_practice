@@ -40,6 +40,43 @@ var jump_phase: String = ""
 var jump_phase_ticks: int = 0
 var was_airborne: bool = false
 var landing_tick: int = -1
+var hazard_seq: int = 0
+
+func next_hazard_seq() -> int:
+	hazard_seq += 1
+	return hazard_seq
+
+## aurelion-runtime.js reactAurelionAttack(): called when the player starts an attack.
+func react_attack() -> void:
+	pass
+
+## vargul-runtime.js strikeVargulOrbs(reach, behind, hitSet, options); only Stage 4 has orbs.
+## hit_set keys are ints (-100000 - orb seq) or key_prefix + seq for String-keyed sets.
+func strike_orbs(_reach: float, _behind: float, _hit_set: Dictionary, _key_prefix: String = "", _options: Dictionary = {}) -> bool:
+	return false
+
+## sovereign-runtime.js strikeSovereignFists(reach, behind, hitSet, options); only Stage 5 has fists.
+## true = a fist in front of the body (or the iron wall) took the strike; the body is skipped.
+func strike_fists(_reach: float, _behind: float, _hit_set: Dictionary, _key_prefix: String = "", _options: Dictionary = {}) -> bool:
+	return false
+
+## isSovereign(e): strikes blocked by a fist skip the Sovereign's body.
+func is_sovereign(_e: BmkActorState) -> bool:
+	return false
+
+## morgra-runtime.js strikeMorgraCrows(reach, behind, origin); only Stage 2 has crows.
+func strike_crows(_reach: float, _behind: float, _x: float, _y: float, _z: float, _face: int) -> void:
+	pass
+
+## game.js playerBodyHeight(): Viesa 81; Barel 90, or the low-hurt box while crouched.
+func player_body_height() -> float:
+	var p: BmkActorState = player
+	if p.is_viesa(): return 90.0 * 0.9
+	if p.st != "hurt" or p.hurt_kind != "hurt_low" or p.hurt_ends.is_empty(): return 90.0
+	return 84.919114 if [7,8,9,10,11,12][p.hurt_index()] <= 10 else 90.0
+
+func player_impact_height(low: float, high: float) -> float:
+	return (maxf(player.z,low) + minf(player.z + player_body_height(),high)) / 2.0
 
 func _init(config: BmkCombatData = null) -> void:
 	if config != null:
@@ -146,18 +183,24 @@ func observe_jump() -> void:
 func update_hazards() -> void:
 	for z: BmkProjectileState in hazards:
 		z.age += MS
+		update_wave(z)
+	for i: int in range(hazards.size() - 1, -1, -1):
+		if hazards[i].dead:
+			hazards.remove_at(i)
+
+## One Barel red wave (game.js 'pwave' hazard) after its age has advanced.
+func update_wave(z: BmkProjectileState) -> void:
+		strike_orbs(23.0, 23.0, z.orb_hits, "", {"x":z.x,"y":z.y,"h":z.height - 44.0,"face":z.direction,"depth":26.0,"damage":z.damage,"hitSound":"barelWave"})
+		var blocked: bool = strike_fists(23.0, 23.0, z.orb_hits, "", {"x":z.x,"y":z.y,"h":z.height - 44.0,"face":z.direction,"depth":26.0,"damage":z.damage,"hitSound":"barelWave"})
 		var from: float = z.x
 		var distance: float = minf(9.0, 520.0 - z.travel)
 		z.x += z.direction * distance
 		z.travel += distance
 		for e: BmkActorState in enemies:
-			if not combat.can_hit(e) or z.hits.has(e.id) or absf(e.y - z.y) >= 26.0 or absf(e.z + 44.0 - z.height) >= 38.0 or e.x + e.hw < minf(from, z.x) - 14.0 or e.x - e.hw > maxf(from, z.x) + 14.0:
+			if not combat.can_hit(e) or z.hits.has(e.id) or blocked and is_sovereign(e) or absf(e.y - z.y) >= 26.0 or absf(e.z + 44.0 - z.height) >= 38.0 or e.x + e.hw < minf(from, z.x) - 14.0 or e.x - e.hw > maxf(from, z.x) + 14.0:
 				continue
 			z.hits[e.id] = true
 			combat.damage_enemy(self, e, z.damage, false, 1, false, "redwave")
 			player.sp = minf(100.0, player.sp + 4.0)
 		if z.travel >= 520.0:
 			z.dead = true
-	for i: int in range(hazards.size() - 1, -1, -1):
-		if hazards[i].dead:
-			hazards.remove_at(i)

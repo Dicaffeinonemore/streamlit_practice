@@ -10,6 +10,8 @@ var gains: Array[float] = []
 var music: AudioStreamPlayer
 var enabled: bool = true
 var track_id: String = "stage"
+## Stage music loop number (stage_N_loop.ogg) used by the "stage" track.
+var stage_number: int = 1
 var victory_intro: bool = false
 var music_level: float = 0.7
 var sfx_level: float = 0.8
@@ -17,10 +19,11 @@ var sfx_level: float = 0.8
 func _ready() -> void:
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://port_assets/catalogs/audio.json")) as Dictionary
 	for entry: Dictionary in catalog["embedded"]:
-		if entry["namespace"] in ["barel","death","gorath"]:
+		if entry["namespace"] in ["barel","death","gorath","viesa"]:
 			var id: String = str(entry["key"])
 			streams[id] = load("res://" + str(entry["file"])) as AudioStream
-			offsets[id] = float(entry["leading_silence_offset"])
+			# audio.js playViesaSkill() starts Viesa's samples at 0 on the plain SFX bus.
+			if entry["namespace"] != "viesa": offsets[id] = float(entry["leading_silence_offset"])
 	for entry: Dictionary in catalog["synthesized"]:
 		var id: String = "%s_%d" % [entry["key"],entry["variant"]]
 		streams[id] = load("res://" + str(entry["file"])) as AudioStream
@@ -103,9 +106,9 @@ func play_track(id: String) -> void:
 	if music == null: return
 	music.stop()
 	track_id = id
-	victory_intro = id == "victory"
+	victory_intro = id == "victory" or id == "ending"
 	if id == "stop": return
-	var path: String = "res://port_assets/audio/original/boss.mp3" if id == "boss" else ("res://port_assets/audio/music/victory_intro.wav" if id == "victory" else "res://port_assets/audio/music/stage_1_loop.ogg")
+	var path: String = "res://port_assets/audio/original/boss.mp3" if id == "boss" else ("res://port_assets/audio/music/%s_intro.wav" % id if victory_intro else "res://port_assets/audio/music/stage_%d_loop.ogg" % stage_number)
 	music.stream = load(path) as AudioStream
 	if music.stream is AudioStreamMP3: (music.stream as AudioStreamMP3).loop = true
 	if music.stream is AudioStreamOggVorbis: (music.stream as AudioStreamOggVorbis).loop = true
@@ -113,9 +116,9 @@ func play_track(id: String) -> void:
 	if DisplayServer.get_name() != "headless": music.play()
 
 func on_music_finished() -> void:
-	if track_id != "victory" or not victory_intro: return
+	if track_id not in ["victory","ending"] or not victory_intro: return
 	victory_intro = false
-	var stream: AudioStreamOggVorbis = load("res://port_assets/audio/music/victory_loop.ogg") as AudioStreamOggVorbis
+	var stream: AudioStreamOggVorbis = load("res://port_assets/audio/music/%s_loop.ogg" % track_id) as AudioStreamOggVorbis
 	stream.loop = true
 	music.stream = stream
 	if DisplayServer.get_name() != "headless": music.play()

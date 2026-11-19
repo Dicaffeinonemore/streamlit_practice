@@ -1,56 +1,56 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" script_class="BmkAnimationAsset" format=3]
 
 [ext_resource type="Script" path="res://port_tools/animation_asset.gd" id="1_svrj3"]
 [ext_resource type="Texture2D" path="res://port_assets/baked/stage1_presented_blade_knockdown_0.png" id="2_27ic2"]
 
 [sub_resource type="AtlasTexture" id="frame_0"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(1, 1, 132, 155)
+region = Rect2(1, 1, 152, 178)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_1"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(135, 1, 137, 149)
+region = Rect2(155, 1, 158, 172)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_2"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(274, 1, 181, 142)
+region = Rect2(315, 1, 209, 163)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_3"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(457, 1, 192, 115)
+region = Rect2(526, 1, 221, 133)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_4"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(651, 1, 184, 120)
+region = Rect2(749, 1, 211, 139)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_5"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(837, 1, 185, 122)
+region = Rect2(962, 1, 213, 141)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_6"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(1024, 1, 180, 119)
+region = Rect2(1177, 1, 208, 137)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_7"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(1206, 1, 187, 158)
+region = Rect2(1387, 1, 215, 182)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_8"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(1395, 1, 185, 161)
+region = Rect2(1604, 1, 213, 185)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="frame_9"]
 atlas = ExtResource("2_27ic2")
-region = Rect2(1582, 1, 182, 76)
+region = Rect2(1819, 1, 210, 88)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="source_frames"]
@@ -95,7 +95,7 @@ animations = [{
 script = ExtResource("1_svrj3")
 source_id = "stage1_presented_blade_knockdown"
 sprite_frames = SubResource("source_frames")
-frame_pivots = PackedVector2Array(65.4, 154.8, 69.6, 148.8, 73.8, 141.6, 70.2, 115.2, 68.4, 120, 132, 122.4, 132, 118.8, 81.6, 158.4, 86.4, 160.8, 88.2, 75.6)
+frame_pivots = PackedVector2Array(76.2, 178.2, 79.8, 171.6, 85.2, 163.2, 81, 132.6, 78.6, 138.6, 151.2, 141, 152.4, 137.4, 94.2, 182.4, 99.6, 185.4, 101.4, 87.6)
 frame_scales = PackedFloat64Array(0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346, 0.57346)
 duration_ms = PackedFloat64Array(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
 authoritative_duration = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -108,92 +108,92 @@ metadata = {
 }
 source_frames = Array[Dictionary]([{
 "duration_ms": null,
-"expected_rgba_sha256": "671b12a5eaa453ec75a2318208458f285b2f0b6d2abd5ef4c7174010b860504e",
+"expected_rgba_sha256": "6a7a7796bd4074249ee0b885e3c3ae5f3e1358a40053d31f8dafe079a0a309aa",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [65.4, 154.8],
-"rect": [1.0, 1.0, 132.0, 155.0],
+"pivot": [76.2, 178.2],
+"rect": [1.0, 1.0, 152.0, 178.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "e11f88c0634f0f19477dec17ab3bf0fa24ff226305d7d9c63c37c1dfcdd8a3f9",
+"expected_rgba_sha256": "2faaf7a0f44c0df555e73cf74926372b088a26f411be50f5bfaa10c865e8ff4e",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [69.6, 148.8],
-"rect": [135.0, 1.0, 137.0, 149.0],
+"pivot": [79.8, 171.6],
+"rect": [155.0, 1.0, 158.0, 172.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "1ddb1a51dc9a7d5acad06df5be5b91522c1d210cf5c288f7580b213a27a5d3eb",
+"expected_rgba_sha256": "f1bae4d91df5540c331fe8bb221d47faa71b3d09c91716d8f35d355fd71b9177",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [73.8, 141.6],
-"rect": [274.0, 1.0, 181.0, 142.0],
+"pivot": [85.2, 163.2],
+"rect": [315.0, 1.0, 209.0, 163.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "1eacb990f269e90fd57076f99965143f2aa041aaeb44a09088f124b43b767035",
+"expected_rgba_sha256": "24b43e94fd45ea6a0f9367146106c7d647f33eda36fd28b6217322975d2ca51a",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [70.2, 115.2],
-"rect": [457.0, 1.0, 192.0, 115.0],
+"pivot": [81.0, 132.6],
+"rect": [526.0, 1.0, 221.0, 133.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "cfce973e909b4a4283f3c92718298fc161d62c4905e7f509e2c1d2044f1e1b97",
+"expected_rgba_sha256": "59ef615d9c32393f90133b1fe0ec8d10ff2bf25dc5f23f1290705fe8cb260e51",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [68.4, 120.0],
-"rect": [651.0, 1.0, 184.0, 120.0],
+"pivot": [78.6, 138.6],
+"rect": [749.0, 1.0, 211.0, 139.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "362d5a6dd3a99ea9863c3d38c147a7b2d4f957f53595f20a41d3a4b4a48cd26d",
+"expected_rgba_sha256": "53802ba1c3ae900200dc424a379bff984f759bc7c0e78a6cd19eb725ee17c9a4",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [132.0, 122.4],
-"rect": [837.0, 1.0, 185.0, 122.0],
+"pivot": [151.2, 141.0],
+"rect": [962.0, 1.0, 213.0, 141.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "0321c5bd7270e1fe2f0d54c3babd274ac5d3de86cb249ee54eff2e13ec5c4c73",
+"expected_rgba_sha256": "093bf763531aac6716560c52f7e574aabc4c3ae5f5583f80da08be08ced269b0",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [132.0, 118.8],
-"rect": [1024.0, 1.0, 180.0, 119.0],
+"pivot": [152.4, 137.4],
+"rect": [1177.0, 1.0, 208.0, 137.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "1695650be15026b1560d24296950d5dc69db42ab4df2b2678353fb3bd3088b08",
+"expected_rgba_sha256": "5a9c2fd00950ee10dd6891735797392d48c537ebc6aa5bc558f7017bb54cb106",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [81.6, 158.4],
-"rect": [1206.0, 1.0, 187.0, 158.0],
+"pivot": [94.2, 182.4],
+"rect": [1387.0, 1.0, 215.0, 182.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "712b70cb9a944089a99d069311d583bb82174d51c5bb2638fc9e453375e46e16",
+"expected_rgba_sha256": "b6bf5eb5c75967e83592dc9af8166a4844ebf8ae39a03b8da833cf734d7b19bc",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [86.4, 160.8],
-"rect": [1395.0, 1.0, 185.0, 161.0],
+"pivot": [99.6, 185.4],
+"rect": [1604.0, 1.0, 213.0, 185.0],
 "scale": 0.57346,
 "source": {}
 }, {
 "duration_ms": null,
-"expected_rgba_sha256": "a2a4f316caf7f199ad34bbe5e09bca9e53c9501ad064466b047bf33655c7f1fd",
+"expected_rgba_sha256": "968980ef1e11f0aacbdb27e4a7caa63363b33947fb9c38cb640beae9e522f63d",
 "image": "port_assets/baked/stage1_presented_blade_knockdown_0.png",
 "page": 0.0,
-"pivot": [88.2, 75.6],
-"rect": [1582.0, 1.0, 182.0, 76.0],
+"pivot": [101.4, 87.6],
+"rect": [1819.0, 1.0, 210.0, 88.0],
 "scale": 0.57346,
 "source": {}
 }])

@@ -8,4 +8,6 @@ var presses: int = 0
 var t: int = 0
 var squeezes: int = 0
 var hold: float = 0.0
+## The grab job of the Sovereign (sovereign-runtime.js p.grab.job).
+var job: RefCounted
 
