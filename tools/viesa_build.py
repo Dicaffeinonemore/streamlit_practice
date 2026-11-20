@@ -286,7 +286,7 @@ for name,frames in remake.items():
 groups={}
 for i,(f,tile) in enumerate(tiles):groups.setdefault(str(f['sourceSheet']),[]).append(i)
 reference=[tiles[i][1] for i in groups[viesa_tone.REFERENCE_SHEET]]
-matched,report['toneMatch']=viesa_tone.match_groups({k:[tiles[i][1] for i in v] for k,v in groups.items() if k!=viesa_tone.REFERENCE_SHEET},reference)
+matched,report['toneMatch']=viesa_tone.match_groups({k:[tiles[i][1] for i in v] for k,v in groups.items() if k!=viesa_tone.REFERENCE_SHEET and k not in viesa_tone.TONE_SKIP},reference)
 for k,images in matched.items():
     for i,im in zip(groups[k],images):tiles[i]=(tiles[i][0],im)
 

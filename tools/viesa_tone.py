@@ -13,9 +13,10 @@ import numpy as np
 from PIL import Image
 
 # Remake sheet number -> size factor against the shared idle-based scale.
-# 02 melee · 12 charge shot · 14 basic shot: head/torso ~78% of idle.
+# 12 charge shot · 14 basic shot: head/torso ~78% of idle.
 # 07 rapid fire: head ~20% larger than idle.
-REMAKE_SCALE = {2: 1.1, 12: 1.1, 14: 1.1, 7: 0.9}
+# 02 melee is left as drawn (1.71 rollback, see TONE_SKIP).
+REMAKE_SCALE = {12: 1.1, 14: 1.1, 7: 0.9}
 # First-generation sheet number -> size factor. The ultimate (4) and the
 # lightning scroll end standing and hand over to idle, so they keep matching
 # idle's height (their heads are ~20% larger; shrinking them makes the
@@ -23,6 +24,10 @@ REMAKE_SCALE = {2: 1.1, 12: 1.1, 14: 1.1, 7: 0.9}
 FIRST_GEN_SCALE = {}
 SCROLL_SCALE = 1.0
 REFERENCE_SHEET = 'remake-03'
+# Sheets left untouched by tone matching. The melee sheet's large white slash
+# arcs take the bright end of its histogram, so matching pressed the skin to a
+# dark brown (1.70); it keeps its drawn colours.
+TONE_SKIP = {'remake-02'}
 _WEIGHTS = np.array([.299, .587, .114])
 _SOLID = 160
 # Near-white, low-saturation pixels (melee slash arcs) keep their brightness.
