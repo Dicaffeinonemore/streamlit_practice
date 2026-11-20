@@ -112,6 +112,25 @@ module.exports=async({evaluate,call,errors,root})=>{
     check(player.running&&player.face===1&&Math.abs(player.x-turnX-PLAYER_DATA.move.groundPxPerTick*1.1*RUN_SPEED_SCALE)<1e-9,'Run continues at run speed after turning back');
     delete keys.ArrowRight;for(let i=0;i<RUN_TURN_GRACE_TICKS;i++)updPlayer();check(!player.running,'Releasing the direction ends the run');
     clearInput();
+    // Melee (H) while running: dash thrust on the shared timeline, struck with the melee finisher (kick) frames.
+    player.st='free';player.z=player.vz=0;player.running=true;player.runGrace=RUN_TURN_GRACE_TICKS;player.face=1;player.x=camX+100;player.inv=0;
+    e=target();e.x=player.x+150;keys.ArrowRight=true;pressed.KeyH=BUF_MS;updPlayer();
+    check(player.st==='dash_attack','Melee while running starts the dash thrust');
+    const thrustX=player.x,strikeFrames=new Set();let thrustHit=-1;
+    while(player.st==='dash_attack'&&player.t<60){
+      const t=player.t;updPlayer();if(player.st!=='dash_attack')break;
+      if(t>=DASH_ATTACK.strikeTicks[0]&&t<DASH_ATTACK.strikeTicks[1])strikeFrames.add(viesaPose());
+      if(thrustHit<0&&e.hp<1000)thrustHit=t;
+    }
+    check(strikeFrames.size===1&&strikeFrames.has(VIESA_ART.clips.kick[3]),'Strike ticks show the melee finisher thrust frame');
+    check(thrustHit===DASH_ATTACK.strikeTicks[0]&&e.hp===1000-ATK.c1.dmg*DASH_ATTACK.damageRatioOfC1,'Dash thrust hits once on its first strike tick: '+thrustHit+' '+e.hp);
+    check(player.x>thrustX+40&&player.st==='free','Dash thrust lunges forward and returns to free');
+    clearInput();
+    // Barel: attack (J) while running is the dash thrust too.
+    const viesaPlayer=player;player=newPlayer(0,'barel');player.x=camX+100;player.running=true;player.runGrace=RUN_TURN_GRACE_TICKS;
+    keys.ArrowRight=true;pressed.KeyJ=BUF_MS;updPlayer();
+    check(player.st==='dash_attack','Barel attack while running starts the dash thrust');
+    player=viesaPlayer;clearInput();
     const dashResults=[];
     for(const mode of ['shift','whirl','leap']){
       clearInput();player.x=camX+100;player.z=player.vz=0;player.st='free';player.inv=0;player.dashCd=0;player.viesaAirPUsed=false;

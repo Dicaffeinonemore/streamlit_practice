@@ -14,13 +14,16 @@ const VIESA_SKILLS={
 // Every levelTicks adds one level (max 3), each adding bonus damage to the piercing arrow.
 const VIESA_CHARGE={drawTicks:21,levelTicks:20,maxLevel:3,bonus:4,holdTicks:45};
 const VIESA_MELEE_ACTIVE={slash1:[2,3],slash2:[3,5],kick:[1,4]};
+// 대시 찌르기 (1.71): 바렐과 같은 시간표 · 이동 · 피해(DASH_ATTACK)로 돌진해 근접 3타(kick)의
+// 찌르기 장으로 찌른다. 판정 거리는 근접 기본(80)보다 뻗은 활대만큼 길게.
+const VIESA_DASH_ATTACK={reach:90};
 let viesaEffects=[];
 let viesaUltObjects=[];
 const viesaEffectPool=[],viesaProjectilePool=[];
 let playerControlCharacter='barel';
 function isViesa(p=player){return p?.characterId==='viesa';}
 function playerAttackHasDefaultSound(){
-  return !isViesa()||player.st==='cast'||player.st==='special'||
+  return !isViesa()||player.st==='cast'||player.st==='special'||player.st==='dash_attack'||
     player.st==='atk'&&['slash1','slash2','kick'].includes(player.viesaClip);
 }
 function playerHurtScale(){return isViesa() ? .9 : 1;}
@@ -51,6 +54,9 @@ function viesaPose(p=player){
   // The air shot draws frames 5-9 by the fire tick (t=12), releases on 11 and
   // follows through on 12. Frame 10 (arrow pushed past the bow) is skipped.
   if(p.st==='atk')return viesaFrame(p.viesaClip,p.viesaClip==='jump_shot'?(p.t<12?4+Math.floor(p.t*5/12):p.t<15?10:11):p.viesaClip==='shot'?(p.t<12?Math.floor(p.t/3):p.t<16?4:5):Math.floor(p.t/4));
+  // 대시 찌르기: 돌진(대시 1-2) → 근접 3타 3(당김) · 4(찌르기) · 5-6(뻗은 채 여운).
+  // 판정 틱 14-22 뒤에 그리는 p.t는 15-23이라 찌르기 장은 p.t 24 전까지.
+  if(p.st==='dash_attack')return p.t<7?viesaFrame('dash',p.t<3?0:1):viesaFrame('kick',p.t<14?2:p.t<24?3:p.t<35?4:5);
   if(p.st==='cast'){
     const ms=p.t*MS;
     // The release frame starts on the same tick as the shared lightning hit.
@@ -152,6 +158,7 @@ function canStartViesaSkill(id){
   const p=player;if(!VIESA_SKILLS[id]||!p||id!=='slam'&&p.skillCd[id]>0||scene!=='play')return false;
   if(p.z>0&&(id!=='leap'||p.viesaAirPUsed))return false;
   if(id==='slam'&&p.st==='atk'&&['slash1','slash2','kick'].includes(p.viesaClip))return true;
+  if(p.st==='dash_attack')return p.dashAttackHit&&p.t>=DASH_ATTACK.skillCancelOnHitTick;
   return p.st==='free'||p.st==='dash'&&p.t*MS>=110||p.st==='atk'&&p.t>=16||id==='leap'&&p.st==='skill'&&p.viesaAction?.phase==='hover';
 }
 function viesaBeginAction(phase,{id=null,high=false}={}){
@@ -216,6 +223,11 @@ function updateViesaAttack(){
     else if(p.combo===2)p.combo=0;
     if(name==='jump_shot'&&p.st==='free')p.viesaHoverGrace=6;
   }
+}
+function viesaDashAttackStrike(){
+  const p=player,before=p.hitSet.size;
+  playerStrike({dmg:Math.round(ATK.c1.dmg*DASH_ATTACK.damageRatioOfC1),reach:VIESA_DASH_ATTACK.reach,kd:DASH_ATTACK.knockdown,fx:2,id:'dashAttack'});
+  if(p.hitSet.size>before)p.dashAttackHit=true;
 }
 function fireViesaArrow({air=false,snipe=false,rapid=false,paidSpecial=false,laneOffset=0,charge=0}={}){
   const p=player,range=snipe?VW*2:VW/3,speed=snipe?VW/5:range/24,depth=24*1.3;
@@ -339,6 +351,8 @@ function viesaInput(){
   for(const code of ['KeyU','KeyL','KeyO','KeyP']){
     const id=SKILL_KEYS[code];if(canStartViesaSkill(id)&&hit(code))return startViesaSkill(id);
   }
+  // 대시 중 · 대시 직후 · 달리는 중 근접: 대시 찌르기
+  if(p.z===0&&(p.st==='dash'||p.st==='free'&&(p.running||p.dashGrace>0))&&hit('KeyH'))return startDashAttack();
   if(p.z===0&&!(p.st==='atk'&&['slash1','slash2','kick'].includes(p.viesaClip))&&canStartViesaSkill('slam')&&hit('KeyH'))return startViesaSkill('slam');
   return false;
 }

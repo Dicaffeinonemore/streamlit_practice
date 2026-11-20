@@ -248,6 +248,7 @@ function toggleHitboxDebug() { hitboxDebug = !hitboxDebug; }
 function playerAttackBox() {
   const p = player; if (!p) return null;
   if (p.st === 'atk' && typeof ATK !== 'undefined' && ATK[p.atk]) return { back: -8, reach: ATK[p.atk].reach, depth: 24, label: p.atk };
+  if (p.st === 'dash_attack' && typeof isViesa === 'function' && isViesa()) return { back: -8, reach: VIESA_DASH_ATTACK.reach, depth: 24, label: 'dash' };
   if (p.st === 'dash_attack' && globalThis.BarelDashAttack?.data?.hitbox) { const b = BarelDashAttack.data.hitbox; return { back: b.front, reach: b.reach, depth: b.depth, label: 'dash' }; }
   if (p.st === 'skill' && p.skill && BAREL_COMBAT.skills[p.skill]?.reachPx) { const s = BAREL_COMBAT.skills[p.skill]; return { back: -s.behindPx, reach: s.reachPx, depth: 38, label: p.skill }; }
   return null;

@@ -300,8 +300,8 @@ function selectCharacter(id, focus = false) {
   $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
   const k = a => UX.keyName(UX.options.bindings[a]);
   $('characterSelectionKeys').textContent = id === 'viesa'
-    ? `${k('KeyJ')} 화살 · ${k('KeyH')} 근접 · ${k('KeyU')} 연사 · ${k('KeyL')} 모아 쏘기 · ${k('KeyO')} 지상 백플립 · ${k('KeyP')} 공중 백플립 · ${k('KeyK')} 흑월 난사`
-    : `${k('KeyJ')} 3연타 · 대시 중 공격: 대시 찌르기 · ${k('KeyU')} 견제 찌르기 · ${k('KeyH')} 내려찍기 · ${k('KeyO')} 회전 베기 · ${k('KeyP')} 점프 강하 · ${k('KeyL')} 붉은 파동 · ${k('KeyK')} 흑월참 · ${k('KeyI')} 뇌격`;
+    ? `${k('KeyJ')} 화살 · ${k('KeyH')} 근접 · 대시·달리기 중 근접: 대시 찌르기 · ${k('KeyU')} 연사 · ${k('KeyL')} 모아 쏘기 · ${k('KeyO')} 지상 백플립 · ${k('KeyP')} 공중 백플립 · ${k('KeyK')} 흑월 난사`
+    : `${k('KeyJ')} 3연타 · 대시·달리기 중 공격: 대시 찌르기 · ${k('KeyU')} 견제 찌르기 · ${k('KeyH')} 내려찍기 · ${k('KeyO')} 회전 베기 · ${k('KeyP')} 점프 강하 · ${k('KeyL')} 붉은 파동 · ${k('KeyK')} 흑월참 · ${k('KeyI')} 뇌격`;
   $('btnCharacterConfirm').disabled = !hero.available;
   $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
 }
@@ -415,7 +415,7 @@ function updatePractice() {
   if (!enemies.length || enemies[0].st === 'dead') { enemies = [mkEnemy('grunt', clamp(player.x + 110, 100, 550), player.y)]; enemies[0].training = true; }
   const label = code => UX.keyName(UX.options.bindings[code]);
   const steps = [['move', `이동: ${['KeyA','KeyD','KeyW','KeyS'].map(label).join(' ')} 또는 이동 버튼으로 허수아비에게 접근하세요`], ['attack', `공격: ${label('KeyJ')} / 공격 버튼으로 같은 줄의 적을 맞히세요`],
-    ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 방향키 두 번 · 대시 중 공격: 대시 찌르기`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
+    ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 방향키 두 번 · 대시·달리기 중 공격: 대시 찌르기`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
   const next = steps.find(([id]) => !practiceDone.has(id));
   $('practiceText').textContent = next ? `연습 ${practiceDone.size}/5 · ${next[1]}` : '연습 완료! 실전에서 공격 예고를 보고 피하세요.';
 }
@@ -697,12 +697,13 @@ function startDash(d) {
 // One clock in simulation ticks: F1..F10 = 3/4/4/3/3/6/6/6/6/6.
 function startDashAttack() {
   const p=player;
-  if(isViesa()||p.z!==0)return false;
+  if(p.z!==0)return false;
   const direction=Number(down('ArrowRight','KeyD'))-Number(down('ArrowLeft','KeyA'));
   if(direction)p.face=direction;
   p.st='dash_attack';p.t=0;p.inv=0;p.buf=0;p.combo=p.comboT=0;p.atk=null;
   p.dashGrace=0;p.hitSet=new Set();p.dashAttackHit=false;p.dashFlash=false;
-  p.vx=p.vz=0;p.wave=false;
+  p.vx=p.vz=0;p.wave=false;p.running=false;
+  if(isViesa()){p.viesaAction=null;p.viesaClip=null;p.skill=null;p.viesaHoverGrace=0;}
   reactAurelionAttack();sfx('swing',2);return true;
 }
 function dashAttackStrike() {
@@ -730,17 +731,17 @@ function dashAttackStrike() {
 }
 function updDashAttack(){
   const p=player,t=p.t;
-  const height=BarelDashAttack.data?.bodyHeight||93.54;
+  const height=isViesa()?VIESA_ART.worldHeight:(BarelDashAttack.data?.bodyHeight||93.54);
   const step=DASH_ATTACK.move.find(m=>t>=m.fromTick&&t<m.toTick);
   if(step)p.x+=p.face*height*step.bodyRatioPerTick;
   if(t>=3&&t<14&&t%2===1)ghost(p.x,p.y,0,'player',p.face,'#9E1A1F',150);
   const [strikeFrom,strikeTo]=DASH_ATTACK.strikeTicks;
   if(t===strikeFrom&&!p.dashFlash){
-    p.dashFlash=true;const box=BarelDashAttack.data?.hitbox;
-    const x=p.x+p.face*(box?.reach||104),h=BarelDashAttack.data?.bladeTip[1]||56;
+    p.dashFlash=true;const box=BarelDashAttack.data?.hitbox,tip=isViesa()?viesaBowPosition():null;
+    const x=tip?tip.x:p.x+p.face*(box?.reach||104),h=tip?tip.h:BarelDashAttack.data?.bladeTip[1]||56;
     impact(x,p.y,h,1,p.face);burst(x,p.y,h,['#ffffff','#ff9aa6','#ff3a4a']);shake=Math.max(shake,3);
   }
-  if(t>=strikeFrom&&t<strikeTo)dashAttackStrike();
+  if(t>=strikeFrom&&t<strikeTo){if(isViesa())viesaDashAttackStrike();else dashAttackStrike();}
   if(hit('KeyJ','KeyZ'))p.buf=BUF_MS;
   if(t>=DASH_ATTACK.cancelTick){
     if(hit(...JUMP_KEYS)){p.st='free';p.t=0;p.vz=PLAYER_DATA.jump.initialVz;sfx('jump');return;}
@@ -964,7 +965,8 @@ function updPlayer() {
     const d = dashReq; dashReq = 0;
     if (p.dashCd <= 0 && p.z === 0 && dashCancelable) startDash(d);
   }
-  if(!isViesa()&&p.z===0&&(p.st==='dash'||p.st==='free'&&p.dashGrace>0)&&hit('KeyJ','KeyZ')){
+  // 대시 중 · 대시 직후 · 달리는 중 공격: 대시 찌르기 (비에사는 viesaInput 에서 근접 키로)
+  if(!isViesa()&&p.z===0&&(p.st==='dash'||p.st==='free'&&(p.dashGrace>0||p.running))&&hit('KeyJ','KeyZ')){
     startDashAttack();return;
   }
 
@@ -1042,7 +1044,7 @@ function updPlayer() {
       if(p.characterId==='barel'&&globalThis.BarelDashFx)BarelDashFx.capture(p,MS);
       else if (every(t, 30)) ghost(p.x, p.y, p.z, 'player', p.face, '#9cc3ff', 240);
       if (t >= DASH_DATA.attackCancelMs && (isViesa()?hit('KeyJ'):hit('KeyJ', 'KeyZ'))) { startAtk(0); break; }
-      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=isViesa()?0:DASH_ATTACK.graceTicks;
+      if (t >= DASH.dur) { p.st = 'free'; p.t = 0;p.dashGrace=DASH_ATTACK.graceTicks;
         p.running=Number(down('ArrowRight','KeyD'))-Number(down('ArrowLeft','KeyA'))===p.face;p.runGrace=RUN_TURN_GRACE_TICKS; }
       break;
     }
