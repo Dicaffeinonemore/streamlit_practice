@@ -1,6 +1,9 @@
 const {fs,path,root,project,read,hash,write,json,python,cp}=require('./common.cjs');
-const audioSources=['score.js','audio.js','death-sfx.js','barel-sfx.js','viesa-sfx.js','gorath-hook-sfx.js','gorath-charge-sfx.js'];
-const sourceKey=browser=>hash(audioSources.map(read).join('\n')+'\n'+browser.version.product+'\n48000/pcm16/soundfile-0.13.1/libsndfile-1.2.2');
+const audioSources=['score.js','audio.js','death-sfx.js','barel-sfx.js','viesa-sfx.js','aurelion-sfx.js','gorath-hook-sfx.js','gorath-charge-sfx.js'];
+// Phase 11: synthesized effects are captured at the SFX bus input (sfxB gain = SYNTH_RENDER_GAIN), before the
+// master gain and compressor, which the native mix bus applies once to the whole mix like the browser.
+const SYNTH_RENDER_GAIN=.5;
+const sourceKey=browser=>hash(audioSources.map(read).join('\n')+'\n'+browser.version.product+'\n48000/pcm16/soundfile-0.13.1/libsndfile-1.2.2/synth-pre-master-'+SYNTH_RENDER_GAIN);
 function sealAudioCache(browser) {
   const manifest=JSON.parse(fs.readFileSync(path.join(project,'port_assets/catalogs/audio.json'),'utf8'));
   const recorded=JSON.parse(fs.readFileSync(path.join(project,'port_assets/catalogs/toolchain.json'),'utf8'));
@@ -38,8 +41,8 @@ async function extractAudio(browser) {
       console.log('Audio: verified source-keyed canonical PCM/OGG cache');return previous;
     }
   }
-  const embedded=await browser.evaluate(`({death:{mobdie:ENEMY_DEATH_SFX_URL},barel:BAREL_SFX_URLS,viesa:VIESA_SFX_URLS,gorath:{g2hook:GORATH_HOOK_SFX_URL,g2charge:GORATH_CHARGE_SFX_URL}})`);
-  const manifest={schema:1,source_cache_key:cacheKey,sample_rate:48000,embedded:[],synthesized:[],music:[],priority:['custom_boss_file','original/boss.mp3','synthesized_boss_track'],sample_playback_source:read('audio.js').slice(read('audio.js').indexOf('  const GORATH_SAMPLE_FALLBACK'),read('audio.js').indexOf('  async function renderPreview'))};
+  const embedded=await browser.evaluate(`({death:{mobdie:ENEMY_DEATH_SFX_URL},barel:BAREL_SFX_URLS,viesa:VIESA_SFX_URLS,aurelion:AURELION_SFX_URLS,gorath:{g2hook:GORATH_HOOK_SFX_URL,g2charge:GORATH_CHARGE_SFX_URL}})`);
+  const manifest={schema:1,synth_render_gain:SYNTH_RENDER_GAIN,mix:'browser: voices -> sfxB(.9 x sfx volume) -> master .8 -> DynamicsCompressor; music -> engine bus -> musB(.34 x music volume) -> master. Synthesized WAVs stop at the sfxB input (scaled by synth_render_gain); music OGGs include .34 x bus 2.5; samples are raw.',source_cache_key:cacheKey,sample_rate:48000,embedded:[],synthesized:[],music:[],priority:['custom_boss_file','original/boss.mp3','synthesized_boss_track'],sample_playback_source:read('audio.js').slice(read('audio.js').indexOf('  const GORATH_SAMPLE_FALLBACK'),read('audio.js').indexOf('  async function renderPreview'))};
   for(const[group,values]of Object.entries(embedded))for(const[key,uri]of Object.entries(values)){
     const match=uri.match(/^data:audio\/mpeg;base64,(.+)$/);if(!match)throw Error('Unsupported embedded audio');
     const bytes=Buffer.from(match[1],'base64');const file=write(`audio/original/${group}/${key}.mp3`,bytes);
@@ -48,11 +51,11 @@ async function extractAudio(browser) {
   }
   const keys=await browser.evaluate('Object.keys(__BMK_OFFLINE.SFX)');
   for(const key of keys)for(const variant of [0,1,2]) {
-    const audio=await bufferFromBrowser(browser,`(async()=>{let seed=11939;Math.random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);const c=new OfflineAudioContext(2,48000*4,48000);__BMK_OFFLINE.setup(c);__BMK_OFFLINE.AU.gm=__BMK_OFFLINE.GAIN[${JSON.stringify(key)}]||1;__BMK_OFFLINE.SFX[${JSON.stringify(key)}](${variant});return await c.startRendering();})()`);
+    const audio=await bufferFromBrowser(browser,`(async()=>{let seed=11939;Math.random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);const c=new OfflineAudioContext(2,48000*4,48000);__BMK_OFFLINE.setup(c);const A=__BMK_OFFLINE.AU;A.sfxB.disconnect();A.sfxB.gain.value=${SYNTH_RENDER_GAIN};A.sfxB.connect(c.destination);A.gm=__BMK_OFFLINE.GAIN[${JSON.stringify(key)}]||1;__BMK_OFFLINE.SFX[${JSON.stringify(key)}](${variant});return await c.startRendering();})()`);
     let end=audio.length;while(end>1&&audio.channels.every(ch=>Math.abs(ch[end-1])<0.00003))end--;
     end=Math.min(audio.length,end+480);const channels=audio.channels.map(c=>c.slice(0,end));
     const file=write(`audio/sfx/${key}_${variant}.wav`,pcmWav(channels,audio.rate));
-    manifest.synthesized.push({key,variant,file,samples:end,sample_rate:audio.rate,source:'audio.js SFX / source setup and gain'});
+    manifest.synthesized.push({key,variant,file,samples:end,sample_rate:audio.rate,source:'audio.js SFX at the sfxB input x synth_render_gain (GAIN table applied, no master/compressor)'});
   }
   const tracks=await browser.evaluate('SCORE.tracks.map((t,i)=>({...t,id:(i<5?"stage_":"boss_")+(i%5+1),index:i}))');
   const victory=await browser.evaluate('SCORE.victory');

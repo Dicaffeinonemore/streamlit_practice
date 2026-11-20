@@ -31,7 +31,7 @@ func run() -> void:
 	root.add_child(game)
 	game.set_physics_process(false)
 	game.capture_mode = true
-	game.audio.toggle()
+	game.audio.enable(false) # mute for capture without changing the saved preference
 	await capture("street")
 	for idx: int in range(1,4):
 		game.start_section = idx

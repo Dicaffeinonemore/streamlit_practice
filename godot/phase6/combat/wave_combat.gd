@@ -2,7 +2,7 @@ class_name BmkWaveCombat
 extends BmkStageCombat
 ## game.js damageEnemy() for the wave stages' soldiers and bosses.
 
-func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "") -> void:
+func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "", hit: String = "") -> void:
 	var s: BmkWaveSimulation = sim as BmkWaveSimulation
 	var e: BmkLegacyActor = actor as BmkLegacyActor
 	if e.type == "boss4" and s.vargul.intercept(e): return
@@ -26,10 +26,7 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 	var stop: int = move.hitstop if move != null else (s.data.dash_attack_stop if attack_id == "dashAttack" else 0)
 	s.hit_stop = maxi(s.hit_stop,maxi(tier.hitstop,stop))
 	if tier.shake > 0: s.shake = maxf(s.shake,tier.shake)
-	if p.is_viesa():
-		if BmkViesaController.default_hit_sound(p): s.sound("hit",kind)
-	else:
-		s.sound({"redwave":"barelWave","slam":"barelSlam","leap":"barelSlam"}.get(p.skill,"swordHit") if p.st == "skill" else "swordHit",kind)
+	s.player_hit_sound(kind, hit)
 	var direction: int = 1 if p.x <= e.x else -1
 	e.hr = 0
 	e.hit_direction = direction

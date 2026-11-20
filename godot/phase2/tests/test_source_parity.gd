@@ -6,6 +6,7 @@ func test_all_source_frame_traces() -> void:
 	for trace: Dictionary in fixture["traces"]:
 		var scenario: Dictionary = trace["scenario"]
 		var s: BmkSimulation = setup_scenario(scenario)
+		s.take_audio() # the oracle clears its AUDIO log after scenario setup
 		var before: int = mismatch_count
 		for i: int in range(trace["frames"].size()):
 			commands(s, scenario, i)

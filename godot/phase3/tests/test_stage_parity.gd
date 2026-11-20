@@ -66,7 +66,7 @@ func state(s: BmkStageSimulation, progression: bool) -> Dictionary:
 	var barrels_: Array[Dictionary] = []
 	for b: BmkWorldItem in s.barrels: barrels_.append({"x":b.x,"y":b.y,"hp":b.hp,"flash":b.flash})
 	for z: BmkFireHazard in s.fire_hazards: hazards_.append({"type":z.type,"x":z.x,"y":z.y,"h":z.h,"age":z.age,"dead":z.dead})
-	return {"pose":poses,"barrels":barrels_,"tick":s.tick,"mode":s.mode,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},"player":{"x":p.x,"y":p.y,"z":p.z,"vx":p.vx,"vz":p.vz,"hp":p.hp,"lives":p.lives,"st":p.st,"t":p.t,"inv":p.inv,"flash":p.flash,"score":p.score,"sp":p.sp,"mg":p.mg,"buff":p.buff,"grab":{"kind":p.grab.kind,"presses":p.grab.presses,"t":p.grab.t,"hold":p.grab.hold,"squeezes":p.grab.squeezes} if p.grab != null else null},"section":{"idx":s.sections.idx,"event":s.sections.event_index,"locked":s.sections.locked,"cam":s.cam_x,"fade":s.sections.fade_t,"wall":s.sections.wall_t,"broken":s.sections.wall_broken,"gate":s.sections.gate_t} if progression else null,"enemies":entities,"items":items_,"hazards":hazards_}
+	return {"audio":s.take_audio(),"pose":poses,"barrels":barrels_,"tick":s.tick,"mode":s.mode,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},"player":{"x":p.x,"y":p.y,"z":p.z,"vx":p.vx,"vz":p.vz,"hp":p.hp,"lives":p.lives,"st":p.st,"t":p.t,"inv":p.inv,"flash":p.flash,"score":p.score,"sp":p.sp,"mg":p.mg,"buff":p.buff,"grab":{"kind":p.grab.kind,"presses":p.grab.presses,"t":p.grab.t,"hold":p.grab.hold,"squeezes":p.grab.squeezes} if p.grab != null else null},"section":{"idx":s.sections.idx,"event":s.sections.event_index,"locked":s.sections.locked,"cam":s.cam_x,"fade":s.sections.fade_t,"wall":s.sections.wall_t,"broken":s.sections.wall_broken,"gate":s.sections.gate_t} if progression else null,"enemies":entities,"items":items_,"hazards":hazards_}
 
 func test_full_stage_source_traces() -> void:
 	var fixture: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://phase3/fixtures/traces.json")) as Dictionary
@@ -76,6 +76,7 @@ func test_full_stage_source_traces() -> void:
 		mismatch_lines.clear()
 		var spec: Dictionary = trace["spec"]
 		var s: BmkStageSimulation = make_session(spec)
+		s.take_audio() # the oracle clears its AUDIO log after scenario setup
 		var before: int = mismatch_count
 		for frame: int in range((trace["frames"] as Array).size()):
 			for event: Dictionary in spec["events"]:

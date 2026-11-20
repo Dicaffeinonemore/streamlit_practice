@@ -24,11 +24,12 @@ func enemy_drop(s: BmkStageSimulation, e: BmkStageActor) -> void:
 	if not type.is_empty():
 		drop(s,type,e.x,e.y)
 
-func damage_barrel(s: BmkStageSimulation, b: BmkWorldItem) -> void:
+## game.js damageBarrel(b, hitSound): playerHitSfx(0, hitSound) decides the hit sound.
+func damage_barrel(s: BmkStageSimulation, b: BmkWorldItem, hit: String = "") -> void:
 	b.hp -= 1
 	b.flash = 6
 	s.hit_stop = maxi(s.hit_stop,2)
-	s.sound("swordHit")
+	s.player_hit_sound(0, hit)
 	if b.hp > 0:
 		return
 	b.gone = true

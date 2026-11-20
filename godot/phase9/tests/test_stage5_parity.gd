@@ -135,7 +135,7 @@ func state(s: BmkWaveSimulation) -> Dictionary:
 	var items_: Array[Dictionary] = []
 	for item: BmkWorldItem in s.items: items_.append({"type":item.type,"x":item.x,"y":item.y,"z":item.z,"t":item.t,"life":item.life})
 	var arena: Variant = [s.arena["kind"],s.arena["time"],s.arena["next"],s.arena["cycle"]] if not s.arena.is_empty() else null
-	return {"tick":s.tick,"mode":s.mode,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"slowT":s.slow_request,"camX":s.cam_x,"camLock":s.cam_lock,"waveIdx":s.wave_idx,"clearT":s.clear_t,"introT":s.intro_t if s.mode == "bossintro" else null,"bannerT":s.banner_t,
+	return {"audio":s.take_audio(),"tick":s.tick,"mode":s.mode,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"slowT":s.slow_request,"camX":s.cam_x,"camLock":s.cam_lock,"waveIdx":s.wave_idx,"clearT":s.clear_t,"introT":s.intro_t if s.mode == "bossintro" else null,"bannerT":s.banner_t,
 		"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},
 		"player":player,"remains":s.sovereign_remains.map(func(r: PackedFloat64Array) -> Array: return Array(r)) if s.sovereign != null else [],"arena":arena,"enemies":enemies,"hazards":hazards,"barrels":barrels_,"items":items_}
 
@@ -149,6 +149,7 @@ func test_stage5_source_traces() -> void:
 		if not only.is_empty() and str(spec["id"]) != only: continue
 		mismatch_lines.clear()
 		var s: BmkWaveSimulation = make_session(spec)
+		s.take_audio() # the oracle clears its AUDIO log after scenario setup
 		var before: int = mismatch_count
 		var first_bad: int = -1
 		for frame: int in range((trace["frames"] as Array).size()):

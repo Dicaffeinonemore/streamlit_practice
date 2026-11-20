@@ -23,6 +23,7 @@ func _ready() -> void:
 	menu = BmkMenuShell.new()
 	menu.settings = preferences
 	menu.store = save_store
+	menu.audio = audio
 	layer.add_child(menu)
 	menu.new_game.connect(start_new)
 	menu.continue_game.connect(restore_checkpoint)
@@ -244,6 +245,11 @@ func _physics_process(delta: float) -> void:
 		else: menu.show_result(report,game_mode == "challenge",stage_index,game_mode == "story" and stage_index < 4)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# game.js keydown: M toggles sound on every screen (AUDIO.toggle()).
+	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_M and not (touch != null and touch.editing) and not (menu != null and menu.mode == "bindings"):
+		audio.toggle()
+		if menu != null and menu.visible and menu.mode == "settings": menu.show_settings()
+		return
 	if menu == null:
 		super._unhandled_input(event)
 		return

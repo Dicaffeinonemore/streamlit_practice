@@ -23,7 +23,7 @@ func begin_intro(s: BmkStageSimulation) -> void:
 	var e: BmkStageActor = boss(s)
 	if e == null: e = prepare(s)
 	if s.boss_phase_debug == 2 or s.boss_ult_debug:
-		s.music_requested.emit("boss")
+		s.music("boss")
 		s.player.x = s.cam_x + 448
 		phase_two(s,e)
 		if s.boss_ult_debug: e.g2.ult_queue = 1
@@ -57,7 +57,7 @@ func intro(s: BmkStageSimulation) -> void:
 		g.intro_i += 1
 		var step_: Dictionary = timeline[g.intro_i]
 		match str(step_.get("ev","")):
-			"hush": s.music_requested.emit("stop")
+			"hush": s.music("stop", 0.15)
 			"chop":
 				s.sound("g2chop")
 				s.shake = maxf(s.shake,1)
@@ -66,7 +66,7 @@ func intro(s: BmkStageSimulation) -> void:
 				s.shake = maxf(s.shake,10)
 			"roar":
 				s.sound("g2roar")
-				s.music_requested.emit("boss")
+				s.music("boss")
 				g.card_t = 1
 	g.clip = str(timeline[maxi(0,g.intro_i)]["clip"])
 	g.fi = int(timeline[maxi(0,g.intro_i)]["fi"])
@@ -308,7 +308,7 @@ func reset_stagger(e: BmkStageActor) -> void:
 	e.hr = 9999
 	e.flash = 0
 
-func damage(s: BmkStageSimulation, e: BmkStageActor, value: float, kd: bool, kind: int, fixed_damage: bool, attack: String) -> void:
+func damage(s: BmkStageSimulation, e: BmkStageActor, value: float, kd: bool, kind: int, fixed_damage: bool, attack: String, hit: String = "") -> void:
 	var g: BmkGorathState = e.g2
 	if g.guard or e.st == "intro":
 		if g.guard and s.tick - g.block_t > 5:
@@ -344,7 +344,7 @@ func damage(s: BmkStageSimulation, e: BmkStageActor, value: float, kd: bool, kin
 	s.last_tier = tier.id
 	e.hit_low = not (s.player.z > 20 or s.player.st == "special") and (attack == "c2" or s.player.st == "dash" or s.player.st == "skill" and s.player.skill == "thrust")
 	s.impact(e.x - dir * e.hw * 0.6,e.y,70,kind)
-	if s.player.st != "special": s.sound("swordHit",kind)
+	s.player_hit_sound(kind, hit)
 	if threshold >= 0:
 		g.ult[threshold] = true
 		cancel(s,e)
@@ -368,6 +368,7 @@ func damage(s: BmkStageSimulation, e: BmkStageActor, value: float, kd: bool, kin
 			s.hit_stop = maxi(s.hit_stop,12)
 			s.shake = maxf(s.shake,8)
 			g.bar_blink = 30
+			s.sound("hit",2)
 			if down: g.pending_t = true
 			else: start_transform(s,e)
 		else:
@@ -392,6 +393,7 @@ func damage(s: BmkStageSimulation, e: BmkStageActor, value: float, kd: bool, kin
 			s.shake = maxf(s.shake,12)
 			s.fire_hazards.clear()
 			s.sound("bossdie")
+			s.sound("slam")
 		return
 	if stunned: return
 	e.gr = minf(e.gr_max,e.gr + damage_ * 0.9)

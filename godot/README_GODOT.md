@@ -12,4 +12,6 @@ Arcade keys (default): arrows move, Z attacks, X jumps, Shift dashes, C uses the
 
 Escape or the pause button (top right) pauses. On touch screens, turn on Settings → 모바일 조작 키 for the on-screen lever and buttons; their transparency, size and layout are adjustable (배치 편집). F9 shows collision debug. With debug visible, F10/F11 jump to a boss's phase two / ultimate where the original has such keys (Gorath, Vargul), and for the Sovereign. Saves go to `user://` (bmk_settings, bmk_checkpoint, bmk_records).
 
-Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE10_REPORT.md`. Audio polish, the tutorial/demo and platform exports are Phases 11–13.
+M toggles sound on every screen; Settings also has the sound switch and the boss-fight music file (MP3/OGG/WAV, at most 30 MB, remembered between runs).
+
+Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE11_REPORT.md`. The tutorial/demo and platform exports are Phases 12–13.

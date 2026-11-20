@@ -45,7 +45,7 @@ async function main(){const b=await openBrowser();try{
  await b.evaluate(`globalThis.__viesaFrame=viesaFrame;globalThis.viesaFrame=function(name,index=0){globalThis.__lastPose={clip:name,index:Math.min((VIESA_ART.clips[name]||[]).length-1,Math.max(0,Math.floor(index)))};return __viesaFrame(name,index);}`);
  const traces=[];
  for(const spec of scenarios){const trace=await b.evaluate(`(()=>{
-  const spec=${JSON.stringify(spec)},fields=${JSON.stringify(fields)},pfields=${JSON.stringify(pfields)};Math.random=()=>.5;UX.saveCheckpoint=()=>{};
+  const spec=${JSON.stringify(spec)},fields=${JSON.stringify(fields)},pfields=${JSON.stringify(pfields)};Math.random=()=>.5;${require('./audio_log.cjs').hook}UX.saveCheckpoint=()=>{};
   selectedCharacterId='viesa';player=newPlayer(0,'viesa');startStage(0);tick=0;nextId=1;scene='play';hitStop=0;shake=0;flashT=0;slowT=0;clearT=0;enemies=[];barrels=[];items=[];hazards=[];resetGorath2();resetViesaEffects();clearInput();
   stat.ticks=stat.damage=stat.deaths=stat.kills=0;chain.n=chain.t=chain.max=0;Object.assign(player,{x:350,y:430,inv:0},spec.player);
   updStage1=()=>{};stage1Finished=()=>false;
@@ -69,11 +69,11 @@ async function main(){const b=await openBrowser();try{
    arrows:hazards.filter(z=>z.type==='viesa_arrow').map(z=>({x:z.x,y:z.y,h:z.h,dir:z.dir,age:z.age,speed:z.speed,vh:z.vh,range:z.range,travel:z.travel,depth:z.depth,aimY:z.aimY,startY:z.startY,damage:z.damage,snipe:z.snipe,rapid:z.rapid,paidSpecial:z.paidSpecial,fading:!!z.fading,fadeAge:z.fadeAge,dead:!!z.dead,hits:z.hits.size})),
    ult:viesaUltObjects.map(z=>({kind:z.kind,x:z.x,y:z.y,h:z.h,sx:z.sx,sy:z.sy,sh:z.sh,tx:z.tx,ty:z.ty,th:z.th,face:z.face,age:z.age,life:z.life,variant:z.variant,impact:z.impact,damage:z.damage})),
    effects:viesaEffects.map(f=>({name:f.name,x:f.x,y:f.y,h:f.h,age:f.age,life:f.life,width:f.width,height:f.height,face:f.face}))};};
-  const frames=[];for(let frame=0;frame<spec.steps;frame++){
+  const frames=[];__audioLog.length=0;for(let frame=0;frame<spec.steps;frame++){
    for(const event of spec.events)if(frame===event.frame){if(!event.up)inputDown(event.key);if(!event.down)inputUp(event.key);}
    for(const command of spec.commands)if(frame===command.frame&&command.hurt)hurtPlayer(command.hurt.dmg,command.hurt.dir,command.hurt.kd);
    const processed=update();if(processed)for(const k in pressed){pressed[k]-=MS;if(pressed[k]<=0)delete pressed[k];}
-   frames.push(snapshot());
+   frames.push({...snapshot(),audio:__audioLog.splice(0)});
   }return {spec,frames};})()`);traces.push(trace);console.log(spec.id+': '+trace.frames.length);}
  fs.writeFileSync(path.join(root,'godot/phase5/fixtures/traces.json'),JSON.stringify(canonical({traces}))+'\n');
  console.log('PHASE 5 ORACLE: '+traces.length+' scenarios, '+traces.reduce((n,t)=>n+t.frames.length,0)+' source steps');

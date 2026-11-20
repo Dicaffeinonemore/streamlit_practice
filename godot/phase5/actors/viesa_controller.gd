@@ -172,6 +172,9 @@ func step(sim: BmkSimulation) -> void:
 					p.y = 420.0
 				else:
 					s.game_over = true
+					# game.js: scene = "over"; AUDIO.stop(0.3); sfx("defeat")
+					s.music("stop", 0.3)
+					s.sound("defeat")
 	p.x = clampf(p.x, s.cam_x + 20.0, minf(s.cam_x + 620.0, s.stage_length - 20.0))
 	p.y = clampf(p.y, s.walk_top + 10.0, 500.0)
 	collect_items(s)

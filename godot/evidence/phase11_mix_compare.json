@@ -1,0 +1,122 @@
+{
+ "browserRate": 48000,
+ "godotRate": 48000,
+ "alignmentLagMs": -5.0,
+ "envelopeCorrelation": 0.9105,
+ "peakDb": {
+  "browser": -1.4,
+  "godot": -1.65
+ },
+ "maxEffectDeltaDb": 0.46,
+ "maxMusicDeltaDb": 0.09,
+ "effects": [
+  {
+   "t": 1.0,
+   "sound": "swordSwing",
+   "browserDb": -29.38,
+   "godotDb": -29.39,
+   "deltaDb": -0.0
+  },
+  {
+   "t": 1.5,
+   "sound": "swordHit",
+   "browserDb": -22.14,
+   "godotDb": -22.14,
+   "deltaDb": 0.0
+  },
+  {
+   "t": 2.0,
+   "sound": "hurtH",
+   "browserDb": -19.7,
+   "godotDb": -19.53,
+   "deltaDb": 0.17
+  },
+  {
+   "t": 2.5,
+   "sound": "swing",
+   "browserDb": -29.93,
+   "godotDb": -29.68,
+   "deltaDb": 0.26
+  },
+  {
+   "t": 3.0,
+   "sound": "viesaArrow",
+   "browserDb": -20.63,
+   "godotDb": -20.53,
+   "deltaDb": 0.1
+  },
+  {
+   "t": 3.5,
+   "sound": "mobdie",
+   "browserDb": -17.12,
+   "godotDb": -16.93,
+   "deltaDb": 0.19
+  },
+  {
+   "t": 4.0,
+   "sound": "hit",
+   "browserDb": -22.8,
+   "godotDb": -22.78,
+   "deltaDb": 0.03
+  },
+  {
+   "t": 4.5,
+   "sound": "aurelionExplosion",
+   "browserDb": -15.33,
+   "godotDb": -15.13,
+   "deltaDb": 0.2
+  },
+  {
+   "t": 5.0,
+   "sound": "bolt",
+   "browserDb": -15.47,
+   "godotDb": -15.0,
+   "deltaDb": 0.46
+  },
+  {
+   "t": 5.5,
+   "sound": "barelCombo",
+   "browserDb": -15.45,
+   "godotDb": -15.33,
+   "deltaDb": 0.11
+  }
+ ],
+ "music": [
+  {
+   "section": "stage fade-in (0.2-0.5 s)",
+   "browserDb": -36.34,
+   "godotDb": -36.33,
+   "deltaDb": 0.01
+  },
+  {
+   "section": "stage music (0.85-0.98 s)",
+   "browserDb": -28.52,
+   "godotDb": -28.47,
+   "deltaDb": 0.04
+  },
+  {
+   "section": "stage music under fade-out (6.6-6.9 s)",
+   "browserDb": -33.91,
+   "godotDb": -34.0,
+   "deltaDb": -0.09
+  },
+  {
+   "section": "boss music (7.5-8.9 s)",
+   "browserDb": -34.33,
+   "godotDb": -34.25,
+   "deltaDb": 0.07
+  },
+  {
+   "section": "victory fanfare (9.1-10.5 s)",
+   "browserDb": -27.17,
+   "godotDb": -27.15,
+   "deltaDb": 0.02
+  },
+  {
+   "section": "victory loop (11.0-11.9 s)",
+   "browserDb": -24.75,
+   "godotDb": -24.73,
+   "deltaDb": 0.02
+  }
+ ]
+}

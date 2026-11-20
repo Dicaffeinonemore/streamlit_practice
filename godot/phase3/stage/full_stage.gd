@@ -78,6 +78,7 @@ func step() -> void:
 			wall_broken = true
 			s.shake = 14
 			s.hit_stop = maxi(s.hit_stop,4)
+			s.sound("land")
 			s.sound("barrel")
 	if gate_t >= 0 and gate_t < 40:
 		gate_t += 1
@@ -85,6 +86,7 @@ func step() -> void:
 			s.sound("slam")
 			s.shake = maxf(s.shake,6)
 			go_ticks = 300
+		elif gate_t % 10 == 0: s.sound("barrel")
 	var events: Array = section["events"]
 	var event: Dictionary = events[event_index] if event_index < events.size() else {}
 	var fixed: bool = bool(section.get("fixedCam",false))

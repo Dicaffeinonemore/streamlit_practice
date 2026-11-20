@@ -1,12 +1,12 @@
 class_name BmkStageCombat
 extends BmkCombatResolver
 
-func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "") -> void:
+func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "", hit: String = "") -> void:
 	var s: BmkStageSimulation = sim as BmkStageSimulation
 	var e: BmkStageActor = actor as BmkStageActor
 	if e.st == "dead" or e.invulnerable: return
 	if e.boss:
-		s.gorath.damage(s,e,damage,kd,kind,fixed_damage,attack_id)
+		s.gorath.damage(s,e,damage,kd,kind,fixed_damage,attack_id,hit)
 		return
 	var before: String = e.st
 	var armor: bool = false
@@ -28,8 +28,7 @@ func damage_enemy(sim: BmkSimulation, actor: BmkActorState, damage: float, kd: b
 	var old_chain: int = e.chain_n
 	var old_pat: String = e.pat
 	var old_hurt: int = e.hurt_t
-	if damage > 0: s.sound("hurt")
-	super.damage_enemy(s,e,damage,kd,kind,fixed_damage,attack_id)
+	super.damage_enemy(s,e,damage,kd,kind,fixed_damage,attack_id,hit)
 	if e.st == "dead" and before != "dead": s.item_controller.enemy_drop(s,e)
 	elif armor and not e.invulnerable:
 		e.st = before
@@ -73,6 +72,7 @@ func enemy_collision(sim: BmkSimulation, actor: BmkActorState) -> void:
 		if o.st == "hurt":
 			o.vx = dir * o.d.knockback * 0.6
 			o.hit_direction = dir
+		sim.sound("hit")
 
 func skill_strike(sim: BmkSimulation, phase: int, a: BmkAttackData) -> void:
 	super.skill_strike(sim,phase,a)

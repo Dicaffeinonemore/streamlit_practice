@@ -12,7 +12,7 @@ func special_hit(sim: BmkSimulation, last: bool) -> void:
 	var s: BmkStageSimulation = sim as BmkStageSimulation
 	for b: BmkWorldItem in s.barrels:
 		if not b.gone and absf(b.x - s.player.sp_x) < (110 if last else 80) and absf(b.y - s.player.sp_y) < (60 if last else 44):
-			s.item_controller.damage_barrel(s,b)
+			s.item_controller.damage_barrel(s,b,"barelFinalHit" if last else "none")
 
 func update_dash_attack(sim: BmkSimulation) -> void:
 	var t: int = sim.player.t

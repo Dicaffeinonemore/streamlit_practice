@@ -25,7 +25,7 @@ async function main(){const b=await openBrowser();try{
  await b.evaluate(`globalThis.__stageUpdate=updStage1;globalThis.__stageFinished=stage1Finished`);
  const traces=[];
  for(const spec of scenarios){const trace=await b.evaluate(`(()=>{
-  const spec=${JSON.stringify(spec)},fields=${JSON.stringify(fields)};Math.random=()=>.5;UX.saveCheckpoint=()=>{};
+  const spec=${JSON.stringify(spec)},fields=${JSON.stringify(fields)};Math.random=()=>.5;${require('./audio_log.cjs').hook}UX.saveCheckpoint=()=>{};
   player=newPlayer(0,'barel');startStage(0);tick=0;nextId=1;scene='play';hitStop=0;shake=0;flashT=0;slowT=0;clearT=0;enemies=[];barrels=[];items=[];hazards=[];resetGorath2();clearInput();
   stat.ticks=stat.damage=stat.deaths=stat.kills=0;chain.n=chain.t=chain.max=0;Object.assign(player,{x:350,y:430,inv:0});
   updStage1=spec.progression?__stageUpdate:()=>{};stage1Finished=spec.progression?__stageFinished:()=>false;
@@ -47,12 +47,12 @@ async function main(){const b=await openBrowser();try{
    pose:enemies.map(e=>{if(e.g2)return {clip:e.g2.clip,index:e.g2.fi};const[clip,index]=stage1SoldierFrame(e);return {clip,index};}),
    barrels:barrels.map(b=>({x:b.x,y:b.y,hp:b.hp,flash:b.flash})),
    items:items.map(i=>({type:i.type,x:i.x,y:i.y,z:i.z,vx:i.vx,vz:i.vz,t:i.t,life:i.life})),hazards:hazards.filter(z=>['fire','firemark','molotov'].includes(z.type)).map(z=>({type:z.type,x:z.x,y:z.y,h:z.h??0,age:z.age,dead:!!z.dead}))});
-  const frames=[];for(let frame=0;frame<spec.steps;frame++){
+  const frames=[];__audioLog.length=0;for(let frame=0;frame<spec.steps;frame++){
    for(const event of spec.events)if(frame===event.frame){inputDown(event.key);inputUp(event.key);}
    for(const command of spec.commands)if(frame===command.frame){if(command.barrel)damageBarrel(barrels[0]);else damageEnemy(e,command.damage,false,0,false,'c1');}
    if(spec.progression){player.inv=10000;if(S1.lock&&frame%90===0)for(const o of enemies){o.st='dead';o.t=0;o.hp=0;o.mv=null;o.dv=null;}if(!camLock&&!S1.fade)player.x=Math.min(player.x+6,stage.len-50);}
    const processed=update();if(processed)for(const k in pressed){pressed[k]-=MS;if(pressed[k]<=0)delete pressed[k];}
-   frames.push(snapshot());if(spec.progression&&S1.idx===4&&scene==='bossintro')break;
+   frames.push({...snapshot(),audio:__audioLog.splice(0)});if(spec.progression&&S1.idx===4&&scene==='bossintro')break;
   }return {spec,frames};})()`);traces.push(trace);console.log(spec.id+': '+trace.frames.length);}
  fs.writeFileSync(path.join(root,'godot/phase3/fixtures/traces.json'),JSON.stringify(canonical({traces}))+'\n');
  console.log('PHASE 3 ORACLE: '+traces.reduce((n,t)=>n+t.frames.length,0)+' source steps');

@@ -1,6 +1,5 @@
 class_name BmkStageSimulation
 extends BmkSimulation
-signal music_requested(track: String)
 var stage_data: BmkStageData
 var sections: BmkFullStage
 var gorath: BmkGorathController = BmkGorathController.new()
@@ -92,8 +91,7 @@ func step() -> bool:
 	hazard_controller.step(self)
 	if clear_t == 0 and sections.idx == 4 and sections.event_index >= 1 and not sections.locked and enemies.is_empty():
 		clear_t = 1
-		sound("victory")
-		music_requested.emit("victory")
+		music("victory")
 	if clear_t > 0:
 		clear_t += 1
 		if clear_t > 200:

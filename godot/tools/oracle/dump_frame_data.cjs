@@ -52,7 +52,7 @@ async function main(){const browser=await openBrowser();try{
   const traces=[];
   for(const scenario of scenarios){const trace=await browser.evaluate(`(()=>{
     const s=${JSON.stringify(scenario)};
-    Math.random=()=>.5;
+    Math.random=()=>.5;${require('./audio_log.cjs').hook}
     UX.saveCheckpoint=()=>{};dropFrom=()=>{};dropFromBarrel=()=>{};
     player=newPlayer(0,'barel');startStage(0);scene='play';introBoss=null;introT=0;tick=0;
     Object.assign(player,{x:200,y:430,inv:0},s.player||{});nextId=1;enemies=[];barrels=[];items=[];
@@ -64,11 +64,11 @@ async function main(){const browser=await openBrowser();try{
     const keys=['x','y','z','vx','vz','face','hp','lives','st','t','atk','combo','comboT','buf','x0','inv','flash','buff','score','walk','walkTime','sp','dashCd','dashGrace','mg','castFired','skill','skillDest','hurtKind','hurtDuration','spX','spY','spX0','spY0','spHits','spFin','spDash','dashAttackHit','dashFlash','running'];
     const enemyKeys=['id','s1','x','y','z','vx','vz','face','hp','st','t','inv','flash','wait','atkCd','walk','recT','hurtT','chainN','hitLow','redFlash','getup','pat','remove'];
     const snapshot=()=>({tick,hitStop,shake,flashT,chain:{...chain},stat:{...stat},pressed:{...pressed},player:Object.fromEntries(keys.map(k=>[k,player[k]??null])),skillCd:{...player.skillCd},enemies:enemies.map(e=>({...Object.fromEntries(enemyKeys.map(k=>[k,e[k]??null])),mv:e.mv?{clip:e.mv.clip,t:e.mv.t,f:e.mv.f,hit:e.mv.hit}:null})),hazards:hazards.filter(z=>z.type==='pwave').map(z=>({x:z.x,y:z.y,h:z.h,age:z.age,travel:z.travel,damage:z.damage,dead:!!z.dead})),pose:{player:(()=>{const f=BarelRika.frameFor(player,MS,tick*MS);return {clip:f.clip,index:f.index};})(),enemies:enemies.map(e=>{const [clip,index]=stage1SoldierFrame(e);return {clip,index};})}});
-    const frames=[];for(let frame=0;frame<s.frames;frame++){
+    const frames=[];__audioLog.length=0;for(let frame=0;frame<s.frames;frame++){
       for(const ev of s.events)if(ev.frame===frame)ev.down?inputDown(ev.key):inputUp(ev.key);
       for(const c of s.commands||[])if(c.frame===frame){if(c.op==='damage_enemy')damageEnemy(enemies[c.index],c.damage,c.kd,c.kind,false,c.attack);else if(c.op==='hurt_player')hurtPlayer(c.damage,c.dir,c.kd,null,c.height?{hitHeight:c.height}:null);else if(c.op==='enemy_move')beginStage1Move(enemies[c.index],c.clip);}
       const processed=update();if(processed)for(const k in pressed){pressed[k]-=MS;if(pressed[k]<=0)delete pressed[k];}
-      frames.push(snapshot());
+      frames.push({...snapshot(),audio:__audioLog.splice(0)});
     }return {scenario:s,frames};})()`);traces.push(trace);console.log('Oracle: '+scenario.id+' '+trace.frames.length+' frames');}
   const tables=await browser.evaluate(`({grades:Object.fromEntries(FEEL.tierOrder.map(name=>[name,FEEL.tiers[name]])),attacks:Object.fromEntries(Object.entries(BAREL_COMBAT.combo.moves).map(([id,m])=>[id,{wind:m.windMs,active:m.actMs,recovery:m.recMs,damage:m.damage,reach:m.reachPx,hurt:enemyHitstun({type:'axe'},id)}])),zones:['axe','blade','club'].flatMap(id=>Object.entries(S1_MOVES[id]).flatMap(([clip,m])=>(m.hits||[]).map(h=>({id,clip,hit:h,box:stage1HitBox(id,clip,h)}))))})`);
   const sources=Object.fromEntries(['game.js','combat-data.js','stage1-runtime.js','feel-runtime.js','src/animation/barel-hurt.js','src/animation/barel-dash-attack.js'].map(f=>[f,hash(read(f))]));

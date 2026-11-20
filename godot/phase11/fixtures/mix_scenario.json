@@ -1,0 +1,22 @@
+{
+ "description": "Phase 11 mix comparison: the same requests rendered by the browser chain (tools/oracle/phase11_mix_reference.cjs) and by Godot's Movie Maker (phase11/tools/render_mix.tscn). Times are seconds; music 0.7, effects 0.8 (the defaults).",
+ "seconds": 12.0,
+ "music_volume": 0.7,
+ "sfx_volume": 0.8,
+ "stage": 1,
+ "events": [
+  {"t": 0.0, "music": "stage"},
+  {"t": 1.0, "sfx": "swordSwing", "variant": 0},
+  {"t": 1.5, "sfx": "swordHit", "variant": 0},
+  {"t": 2.0, "sfx": "hurtH", "variant": 0},
+  {"t": 2.5, "sfx": "swing", "variant": 1},
+  {"t": 3.0, "sfx": "viesaArrow", "variant": 0},
+  {"t": 3.5, "sfx": "mobdie", "variant": 0},
+  {"t": 4.0, "sfx": "hit", "variant": 2},
+  {"t": 4.5, "sfx": "aurelionExplosion", "variant": 0},
+  {"t": 5.0, "sfx": "bolt", "variant": 0},
+  {"t": 5.5, "sfx": "barelCombo", "variant": 0},
+  {"t": 6.5, "music": "boss"},
+  {"t": 9.0, "music": "victory"}
+ ]
+}

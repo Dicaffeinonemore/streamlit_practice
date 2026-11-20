@@ -16,6 +16,9 @@ var title: Label
 var buttons: VBoxContainer
 var settings: BmkSettings
 var store: BmkSaveStore
+## audio.js AUDIO: silence on the title/boss list, the select click, mute and the boss file.
+var audio: BmkGameAudio
+var boss_dialog: FileDialog
 var mode: String = "title"
 var settings_origin: String = "title"
 var character_challenge: bool = false
@@ -130,6 +133,10 @@ func add_button(label: String, callback: Callable, disabled: bool = false) -> vo
 func show_title() -> void:
 	mode = "title"
 	visible = true
+	# game.js toTitle(): AUDIO.silence(); AUDIO.pause(false)
+	if audio != null:
+		audio.silence()
+		audio.pause_audio(false)
 	title_image.visible = true
 	clear_buttons()
 	title.text = "BLACK MOON KNIGHTS"
@@ -146,6 +153,7 @@ func show_title() -> void:
 func show_characters(challenge: bool = false) -> void:
 	mode = "characters"
 	character_challenge = challenge
+	if audio != null: audio.play("click")
 	clear_buttons()
 	title.text = "캐릭터 선택"
 	var roster: Dictionary = BmkViesaData.shared().source["CHARACTERS"]
@@ -179,6 +187,10 @@ func show_characters(challenge: bool = false) -> void:
 
 func show_challenges() -> void:
 	mode = "challenge"
+	# game.js openBossChallenge(): AUDIO.silence(); AUDIO.pause(false)
+	if audio != null:
+		audio.silence()
+		audio.pause_audio(false)
 	clear_buttons()
 	title.text = "보스 도전"
 	message.text = "본편의 스테이지를 클리어하면 해금됩니다."
@@ -237,6 +249,16 @@ func show_settings() -> void:
 	add_button("키 직접 설정",show_bindings)
 	add_button("배경 음악: %d%%" % roundi(settings.music_volume * 100),func() -> void: change_volume("music_volume"))
 	add_button("효과음: %d%%" % roundi(settings.sfx_volume * 100),func() -> void: change_volume("sfx_volume"))
+	if audio != null:
+		add_button("소리: %s (M)" % ("켜짐" if audio.enabled else "꺼짐"),func() -> void:
+			audio.toggle()
+			show_settings())
+		# game-ui.js showBgm(): custom file > game default mp3 > synthesized score; the clear button
+		# is only enabled for a custom file.
+		add_button("보스전 음악: %s" % boss_status(),choose_boss_file)
+		add_button("보스전 음악 기본값으로",func() -> void:
+			audio.clear_boss_file()
+			show_settings(),audio.boss_info()["source"] != "custom")
 	for option: String in ["shake","flash","danger_zones"]:
 		var label: String = {"shake":"화면 흔들림", "flash":"화면 번쩍임", "danger_zones":"위험 구역 표시"}[option]
 		add_button("%s: %s" % [label,"켜짐" if settings.get(option) else "꺼짐"],func() -> void: change_toggle(option))
@@ -247,6 +269,28 @@ func show_settings() -> void:
 	add_button("모바일 키 배치 편집",func() -> void: touch_edit.emit())
 	add_button("모바일 키 초기화",reset_touch_layout)
 	add_button("뒤로",show_pause if settings_origin == "pause" else show_title)
+
+func boss_status() -> String:
+	var info: Dictionary = audio.boss_info()
+	return "내 파일: %s" % info["name"] if info["source"] == "custom" else ("게임 기본 mp3" if info["source"] == "default" else "기본 합성 BGM")
+
+## index.html #bossBgmFile: pick an audio file (mp3, ogg or wav, at most 30 MB).
+func choose_boss_file() -> void:
+	if boss_dialog == null:
+		boss_dialog = FileDialog.new()
+		boss_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+		boss_dialog.access = FileDialog.ACCESS_FILESYSTEM
+		boss_dialog.use_native_dialog = true
+		boss_dialog.filters = PackedStringArray(["*.mp3, *.ogg, *.wav ; 오디오 파일"])
+		boss_dialog.title = "보스전 음악 파일"
+		boss_dialog.file_selected.connect(func(path: String) -> void:
+			message.text = "불러오는 중…"
+			var result: Dictionary = audio.set_boss_file(path)
+			show_settings()
+			if not bool(result["ok"]): message.text = str(result["message"])
+			elif not bool(result.get("saved",true)): message.text = "내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name)
+		add_child(boss_dialog)
+	boss_dialog.popup_centered(Vector2i(720,480))
 
 ## Transparency slider 0-90% (alpha = 1 - value), in 10% steps; past 90% it wraps to 0%.
 func change_touch_alpha() -> void:

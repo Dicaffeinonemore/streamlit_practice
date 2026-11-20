@@ -19,6 +19,7 @@ func advance(real_ms: float) -> int:
 		slow_t -= real
 	var count: int = 0
 	while accumulator >= MS:
+		session.audio_log.clear()
 		session.step()
 		if session.slow_request > 0.0:
 			slow_t = session.slow_request

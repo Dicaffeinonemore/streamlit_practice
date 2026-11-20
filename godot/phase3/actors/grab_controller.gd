@@ -127,6 +127,7 @@ func release(s: BmkStageSimulation, result: String) -> void:
 			e.vx = 0
 			e.hr = 0
 			s.impact(e.x,e.y,70,1)
+			s.sound("hit")
 	elif result == "throw":
 		p.inv = 0
 		s.combat.hurt_player(s,6,e.face if e != null else 1,true)

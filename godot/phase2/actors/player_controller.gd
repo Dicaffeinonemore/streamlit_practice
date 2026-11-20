@@ -102,7 +102,8 @@ func start_skill(s: BmkSimulation, a: BmkAttackData) -> void:
 	var distance: float = maxf(0.0, (nearest.x - p.x) * p.face - 44.0) if nearest != null else 160.0
 	p.skill_dest = clampf(p.x + p.face * distance, s.cam_x + 24.0, minf(s.cam_x + 616.0, s.stage_length - 24.0))
 	s.react_attack()
-	s.sound("spdash" if a.id == "leap" else "swing", 2 if a.id == "slam" else 1)
+	if a.id == "leap": s.sound("spdash")
+	else: s.sound("swing", 2 if a.id == "slam" else 1)
 
 func start_special(s: BmkSimulation) -> void:
 	var p: BmkActorState = s.player
@@ -314,6 +315,9 @@ func step(s: BmkSimulation) -> void:
 					p.y = 420.0
 				else:
 					s.game_over = true
+					# game.js: scene = "over"; AUDIO.stop(0.3); sfx("defeat")
+					s.music("stop", 0.3)
+					s.sound("defeat")
 	p.x = clampf(p.x, s.cam_x + 20.0, minf(s.cam_x + 620.0, s.stage_length - 20.0))
 	p.y = clampf(p.y, s.walk_top + 10.0, 500.0)
 	collect_items(s)
@@ -356,6 +360,7 @@ func update_dash_attack(s: BmkSimulation) -> void:
 			p.st = "free"
 			p.t = 0
 			p.vz = d.jump_velocity
+			s.sound("jump")
 			return
 		if p.buf > 0.0:
 			start_attack(s, 0)
@@ -374,6 +379,7 @@ func update_skill(s: BmkSimulation) -> void:
 		"thrust":
 			if t >= a.strikes[0] and t < a.strikes[1]:
 				s.combat.skill_strike(s, 0, a)
+			if previous < a.strikes[0] and t >= a.strikes[0]: s.sound("swing", 1)
 		"slam":
 			if previous < a.strikes[0] and t >= a.strikes[0]:
 				s.combat.skill_strike(s, 0, a)
@@ -384,6 +390,7 @@ func update_skill(s: BmkSimulation) -> void:
 			for i: int in range(a.strikes.size()):
 				if previous < a.strikes[i] and t >= a.strikes[i]:
 					s.combat.skill_strike(s, i, a)
+					s.sound("swing", 2 if i == 1 else 1)
 		"redwave":
 			if previous < a.strikes[0] and t >= a.strikes[0]:
 				var wave: BmkProjectileState = BmkProjectileState.new()
@@ -453,21 +460,21 @@ func special_hit(s: BmkSimulation, last: bool) -> void:
 	var blocked: bool = s.strike_fists(rx, rx, {}, "", {"x":p.sp_x,"y":p.sp_y,"h":0.0,"depth":ry,"damage":damage,"kd":true,"hitSound":"barelFinalHit" if last else "none"})
 	for e: BmkActorState in s.enemies:
 		if s.combat.can_hit(e) and not (blocked and s.is_sovereign(e)) and absf(e.x - p.sp_x) < rx + e.hw and absf(e.y - p.sp_y) < ry:
-			s.combat.damage_enemy(s, e, damage, last, 2 if last else 1, false, "special" if last else "specialSlash")
+			s.combat.damage_enemy(s, e, damage, last, 2 if last else 1, false, "special" if last else "specialSlash", "barelFinalHit" if last else "none")
 	if last:
 		s.flash_t = 240.0
 		s.shake = maxf(s.shake, 18.0)
-		s.sound("barelFinalHit")
+		s.player_hit_sound(2, "barelFinalHit")
 	else:
 		s.shake = maxf(s.shake, 6.0)
 
 func fire_magic(s: BmkSimulation) -> void:
 	var p: BmkActorState = s.player
-	s.sound("bolt")
 	p.cast_fired = true
 	s.flash_t = 200.0
 	s.shake = maxf(s.shake, 22.0)
 	s.hit_stop = maxi(s.hit_stop, 4)
+	s.player_hit_sound(2)
 	s.strike_orbs(0.0, 0.0, {}, "", {"global":true,"damage":s.data.magic_damage})
 	s.strike_fists(0.0, 0.0, {}, "", {"global":true,"damage":s.data.magic_damage})
 	for e: BmkActorState in s.enemies:

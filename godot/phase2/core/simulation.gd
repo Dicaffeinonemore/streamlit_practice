@@ -3,6 +3,8 @@ extends RefCounted
 signal sound_requested(key: String, variant: int)
 signal impact_requested(x: float, y: float, height: float, kind: int)
 signal step_completed
+## AUDIO.music / bossMusic / victoryMusic ('stage', 'boss', 'victory', 'ending') or AUDIO.stop(fade) as 'stop'.
+signal music_requested(track: String, fade: float)
 const MS: float = 1000.0 / 60.0
 var data: BmkCombatData
 var input: BmkInputRouter = BmkInputRouter.new()
@@ -31,6 +33,9 @@ var next_id: int = 1
 var last_hit_id: int = 0
 var last_tier: String = ""
 var lane_flash_ticks: int = 0
+## Phase 11: sound and music requests in source order, as the oracles log AUDIO calls:
+## ['sfx', key, variant], ['music', track], ['stop', fade]. The clock clears it before each step.
+var audio_log: Array = []
 var lane_flash_ids: Dictionary[int, bool] = {}
 var sp_full: bool = false
 var fixed_random: bool = false
@@ -118,7 +123,30 @@ func spawn(species: String, x: float, y: float) -> BmkActorState:
 	return e
 
 func sound(key: String, variant: int = 0) -> void:
+	audio_log.append(["sfx", key, variant])
 	sound_requested.emit(key, variant)
+
+## game.js playerHitSfx(kind, sound): 'none' is silent. Viesa plays 'hit' only where her
+## attack has no sound of its own; Barel plays the given sound, his skill sample or swordHit.
+func player_hit_sound(kind: int, hit: String = "") -> void:
+	if hit == "none": return
+	var p: BmkActorState = player
+	if p.is_viesa():
+		if BmkViesaController.default_hit_sound(p): sound("hit", kind)
+		return
+	var skill_sound: String = str({"redwave":"barelWave","slam":"barelSlam","leap":"barelSlam"}.get(p.skill, "")) if p.st == "skill" else ""
+	sound(hit if not hit.is_empty() else (skill_sound if not skill_sound.is_empty() else "swordHit"), kind)
+
+## AUDIO.music(i) = 'stage', bossMusic = 'boss', victoryMusic = 'victory' / 'ending', AUDIO.stop(fade) = 'stop'.
+func music(track: String, fade: float = 0.0) -> void:
+	audio_log.append(["stop", fade] if track == "stop" else ["music", track])
+	music_requested.emit(track, fade)
+
+## Returns and clears the requests logged since the last call (parity tests).
+func take_audio() -> Array:
+	var out: Array = audio_log
+	audio_log = []
+	return out
 
 func impact(x: float, y: float, height: float, kind: int = 0) -> void:
 	impact_requested.emit(x, y, height, kind)
@@ -126,7 +154,7 @@ func impact(x: float, y: float, height: float, kind: int = 0) -> void:
 func ground_smash(x: float, y: float) -> void:
 	shake = maxf(shake, 10.0)
 	impact(x, y, 8.0, 2)
-	sound("swordHit", 2)
+	player_hit_sound(2)
 
 func step() -> bool:
 	# Source update(): statistics and screen flash advance even during hitstop.

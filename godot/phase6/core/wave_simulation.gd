@@ -218,13 +218,7 @@ func is_sovereign(e: BmkActorState) -> bool:
 
 ## game.js playerHitSfx(kind, sound): only presentation, no simulation effect.
 func hit_sound(kind: int, hit: String = "") -> void:
-	if hit == "none": return
-	var p: BmkActorState = player
-	if p.is_viesa():
-		if BmkViesaController.default_hit_sound(p): sound("hit",kind)
-		return
-	var skill_sound: String = str({"redwave":"barelWave","slam":"barelSlam","leap":"barelSlam"}.get(p.skill,"")) if p.st == "skill" else ""
-	sound(hit if not hit.is_empty() else (skill_sound if not skill_sound.is_empty() else "swordHit"),kind)
+	player_hit_sound(kind, hit)
 
 func react_attack() -> void:
 	if aurelion != null: aurelion.react(self)
@@ -285,9 +279,8 @@ func step() -> bool:
 	update_hazards()
 	if clear_t == 0 and wave_idx >= (stage["waves"] as Array).size() and not cam_lock and enemies.is_empty():
 		clear_t = 1
-		sound("victory")
 		# AUDIO.victoryMusic(i, final): the last stage plays the ending score.
-		music_requested.emit("ending" if stage_index + 1 >= int(wave_data.source["STAGE_COUNT"]) else "victory")
+		music("ending" if stage_index + 1 >= int(wave_data.source["STAGE_COUNT"]) else "victory")
 	if clear_t > 0:
 		clear_t += 1
 		if clear_t > 200:
@@ -328,7 +321,7 @@ func spawn_wave(w: Dictionary) -> void:
 			intro_boss = b
 			intro_t = 0
 			mode = "bossintro"
-			music_requested.emit("boss")
+			music("boss")
 			continue
 		var x: float = cam_x + view_width + random_between(30,110) if side > 0 else cam_x - random_between(30,110)
 		spawn(type,x,random_between(ground_top + 20,ground_bottom))

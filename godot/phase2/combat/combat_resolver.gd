@@ -8,7 +8,7 @@ func in_reach(a: BmkActorState, target: BmkActorState, reach: float, depth: floa
 	var dx: float = (target.x - a.x) * a.face
 	return dx > -8.0 and dx < reach + target.hw and absf(target.y - a.y) < depth and absf(target.z - a.z) < height
 
-func damage_enemy(s: BmkSimulation, e: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "") -> void:
+func damage_enemy(s: BmkSimulation, e: BmkActorState, damage: float, kd: bool, kind: int = 0, fixed_damage: bool = false, attack_id: String = "", hit: String = "") -> void:
 	if e.st == "dead" or e.invulnerable:
 		return
 	var p: BmkActorState = s.player
@@ -20,6 +20,7 @@ func damage_enemy(s: BmkSimulation, e: BmkActorState, damage: float, kd: bool, k
 		tier = s.data.grade("special", true, 2)
 	e.hp -= damage
 	e.flash = tier.flash
+	if damage > 0: s.sound("hurt")
 	var move: BmkAttackData = s.data.attack(attack_id)
 	var stop: int = move.hitstop if move != null else (s.data.dash_attack_stop if attack_id == "dashAttack" else 0)
 	s.hit_stop = maxi(s.hit_stop, maxi(tier.hitstop, stop))
@@ -34,12 +35,7 @@ func damage_enemy(s: BmkSimulation, e: BmkActorState, damage: float, kd: bool, k
 	s.last_hit_id = e.id
 	s.last_tier = tier.id
 	s.impact(e.x, e.y, 56.0, kind)
-	if p.is_viesa():
-		# game.js playerHitSfx(): Viesa's bow and skills play their own sounds.
-		if BmkViesaController.default_hit_sound(p): s.sound("hit",kind)
-	elif p.st != "special":
-		var hit_sound: String = {"slam":"barelSlam","leap":"barelSlam","redwave":"barelWave"}.get(p.skill,"swordHit") if p.st == "skill" else "swordHit"
-		s.sound(hit_sound,kind)
+	s.player_hit_sound(kind, hit)
 	if e.hp <= 0.0:
 		e.hp = 0.0
 		e.st = "dead"
@@ -101,6 +97,7 @@ func hurt_player(s: BmkSimulation, damage: float, direction: int, kd: bool, hit_
 		p.t = 0
 		p.vz = 6.0
 		p.vx = direction * 4.0
+		s.sound("pdie")
 		return true
 	if kd or p.z > 0.0:
 		p.st = "down"
@@ -171,3 +168,4 @@ func enemy_collision(s: BmkSimulation, e: BmkActorState) -> void:
 		damage_enemy(s, other, maxi(1, s.js_round((e.bump_damage if e.bump_damage != 0.0 else 1.0) * s.data.bump_damage)), false, 1, false, "bump")
 		if other.st == "hurt":
 			other.vx = direction * other.d.knockback * s.data.bump_knockback
+		s.sound("hit")

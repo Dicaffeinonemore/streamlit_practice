@@ -51,10 +51,14 @@ func snapshot(s: BmkSimulation) -> Dictionary:
 	var poses: Array[Dictionary] = []
 	for e: BmkActorState in s.enemies:
 		poses.append(selector.enemy(s,e,source_catalogs["STAGE1_ENEMY_ART"][e.species]))
-	return {"tick":s.tick,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"pressed":s.input.pressed.duplicate(),"player":player,"skillCd":p.skill_cd.duplicate(),"enemies":enemies,"hazards":hazards,"pose":{"player":selector.player(s),"enemies":poses}}
+	return {"audio":s.take_audio(),"tick":s.tick,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"pressed":s.input.pressed.duplicate(),"player":player,"skillCd":p.skill_cd.duplicate(),"enemies":enemies,"hazards":hazards,"pose":{"player":selector.player(s),"enemies":poses}}
 
 func compare_value(actual: Variant, expected: Variant, path: String) -> void:
 	comparisons += 1
+	# Phase 11 audio requests: report the whole step's request list once, in order.
+	if path.ends_with(".audio") and expected is Array and actual is Array:
+		if audio_text(actual) != audio_text(expected): mismatch(path, audio_text(actual), audio_text(expected))
+		return
 	if expected is Dictionary and actual is Dictionary:
 		if actual.size() != expected.size():
 			mismatch(path + " dictionary size", actual.size(), expected.size())
@@ -82,8 +86,17 @@ func compare_value(actual: Variant, expected: Variant, path: String) -> void:
 	elif actual != expected:
 		mismatch(path, actual, expected)
 
+## ['sfx', key, variant] / ['music', track] / ['stop', fade] as one comparable line; numbers use 4 decimals.
+static func audio_text(requests: Array) -> String:
+	var parts: PackedStringArray = []
+	for r: Array in requests:
+		var fields: PackedStringArray = []
+		for v: Variant in r: fields.append(("%.4f" % float(v)) if v is float or v is int else str(v))
+		parts.append(":".join(fields))
+	return "[" + ", ".join(parts) + "]"
+
 func mismatch(path: String, actual: Variant, expected: Variant) -> void:
 	mismatch_count += 1
-	if mismatch_lines.size() < 60:
+	if mismatch_lines.size() < 400:
 		mismatch_lines.append("%s: native=%s source=%s" % [path,str(actual),str(expected)])
 

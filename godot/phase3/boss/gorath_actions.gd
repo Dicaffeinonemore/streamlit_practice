@@ -247,15 +247,19 @@ func transform(s: BmkStageSimulation, e: BmkStageActor, a: BmkGorathAction) -> v
 		e.hp = minf(e.max_hp,e.max_hp * (a.t - int(t["repeatFrom"]) * int(t["tpf"])) / ((int(t["burst"]) - int(t["repeatFrom"])) * int(t["tpf"])))
 	if step_ != a.step:
 		a.step = step_
-		if rep >= 0 and (step_ - int(t["repeatFrom"])) % 2 == 0: s.shake = maxf(s.shake,float(t["repeatShake"][rep]))
+		if rep >= 0 and (step_ - int(t["repeatFrom"])) % 2 == 0:
+			s.shake = maxf(s.shake,float(t["repeatShake"][rep]))
+			s.sound("g2creak")
 		if step_ == int(t["burst"]):
 			s.shake = maxf(s.shake,14)
 			s.boss_white = 2
 			e.hp = e.max_hp
 			s.gorath.reset_stagger(e)
+			s.sound("slam")
 			s.sound("g2block")
 		if step_ == int(t["roar"]):
 			s.sound("g2roar")
+			s.sound("phase2")
 			s.boss_red_to = 1
 
 func start_ult(s: BmkStageSimulation, e: BmkStageActor) -> void:

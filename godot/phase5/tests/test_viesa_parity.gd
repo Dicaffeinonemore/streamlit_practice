@@ -70,7 +70,7 @@ func state(s: BmkStageSimulation) -> Dictionary:
 	var effects: Array[Dictionary] = []
 	for f: BmkViesaWorld.Effect in s.viesa.effects:
 		effects.append({"name":f.name,"x":f.x,"y":f.y,"h":f.h,"age":f.age,"life":f.life,"width":f.width,"height":f.height,"face":f.face})
-	return {"tick":s.tick,"mode":s.mode,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},
+	return {"audio":s.take_audio(),"tick":s.tick,"mode":s.mode,"hitStop":s.hit_stop,"shake":s.shake,"flashT":s.flash_t,"stat":{"ticks":s.stat_ticks,"damage":s.stat_damage,"deaths":s.stat_deaths,"kills":s.stat_kills},"chain":{"n":s.chain_n,"t":s.chain_t,"max":s.chain_max},
 		"player":player,"enemies":enemies,"barrels":barrels_,"items":items_,"arrows":arrows,"ult":ult,"effects":effects}
 
 func test_viesa_source_traces() -> void:
@@ -81,6 +81,7 @@ func test_viesa_source_traces() -> void:
 		mismatch_lines.clear()
 		var spec: Dictionary = trace["spec"]
 		var s: BmkStageSimulation = make_session(spec)
+		s.take_audio() # the oracle clears its AUDIO log after scenario setup
 		var before: int = mismatch_count
 		for frame: int in range((trace["frames"] as Array).size()):
 			for event: Dictionary in spec["events"]:
