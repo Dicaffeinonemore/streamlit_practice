@@ -103,7 +103,14 @@ module.exports=async({evaluate,call,errors,root})=>{
     check(player.st==='free'&&player.running&&VIESA_ART.clips.run.includes(viesaPose()),'Dash continues into a run');
     const runX=player.x;updPlayer();
     check(Math.abs(player.x-runX-PLAYER_DATA.move.groundPxPerTick*1.1*RUN_SPEED_SCALE)<1e-9,'Running is faster than walking');
-    delete keys.ArrowRight;updPlayer();check(!player.running,'Releasing the direction ends the run');
+    // Turning around keeps the run: overlap (newer key wins) and a short gap between keys.
+    const beforeTurn=player.x;keys.ArrowLeft=true;pressed.ArrowLeft=BUF_MS;updPlayer();
+    check(player.running&&player.face===-1&&player.x<beforeTurn,'Pressing the other way over the held key turns the run');
+    delete keys.ArrowLeft;for(let i=0;i<RUN_TURN_GRACE_TICKS-1;i++)updPlayer();
+    check(player.running,'A brief gap while switching keys keeps the run');
+    keys.ArrowRight=true;updPlayer();const turnX=player.x;updPlayer();
+    check(player.running&&player.face===1&&Math.abs(player.x-turnX-PLAYER_DATA.move.groundPxPerTick*1.1*RUN_SPEED_SCALE)<1e-9,'Run continues at run speed after turning back');
+    delete keys.ArrowRight;for(let i=0;i<RUN_TURN_GRACE_TICKS;i++)updPlayer();check(!player.running,'Releasing the direction ends the run');
     clearInput();
     const dashResults=[];
     for(const mode of ['shift','whirl','leap']){

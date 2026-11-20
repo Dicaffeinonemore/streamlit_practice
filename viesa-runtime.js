@@ -48,7 +48,9 @@ function viesaPose(p=player){
   if(p.st==='grabbed')return viesaFrame('hurt',Math.min(4,Math.floor(p.t/4)));
   // The ground shot draws in 12 ticks (3 per frame) so its release frame 5
   // starts on the arrow's fire tick (t=12); the follow-through holds to t=24.
-  if(p.st==='atk')return viesaFrame(p.viesaClip,p.viesaClip==='jump_shot'?3+Math.floor(p.t/3):p.viesaClip==='shot'?(p.t<12?Math.floor(p.t/3):p.t<16?4:5):Math.floor(p.t/4));
+  // The air shot draws frames 5-9 by the fire tick (t=12), releases on 11 and
+  // follows through on 12. Frame 10 (arrow pushed past the bow) is skipped.
+  if(p.st==='atk')return viesaFrame(p.viesaClip,p.viesaClip==='jump_shot'?(p.t<12?4+Math.floor(p.t*5/12):p.t<15?10:11):p.viesaClip==='shot'?(p.t<12?Math.floor(p.t/3):p.t<16?4:5):Math.floor(p.t/4));
   if(p.st==='cast'){
     const ms=p.t*MS;
     // The release frame starts on the same tick as the shared lightning hit.
@@ -60,17 +62,24 @@ function viesaPose(p=player){
   if(p.st==='skill'&&action){
     if(action.phase==='snipe_draw')return viesaFrame('snipe_draw',p.t<VIESA_CHARGE.drawTicks?Math.floor(p.t/3):6);
     if(action.phase==='snipe_release')return viesaFrame('snipe_release',p.t<6?Math.floor(p.t/2):p.t<14?3:4);
-    if(action.phase==='rapid_loop'){const local=(p.t-1)%9;return viesaFrame('rapid_loop',p.t<1?0:local<3?3:local<6?1:2);}
-    if(action.phase==='rapid_end')return viesaFrame('rapid_end',Math.floor(p.t/8));
+    // rapid_loop = sheet frames 4-7. Each 9-tick shot releases (6, 7) on its
+    // fire tick, then nocks (4) and draws (5) the next arrow.
+    if(action.phase==='rapid_loop'){const local=(p.t-1)%9;return viesaFrame('rapid_loop',p.t<1?1:local<2?2:local<4?3:local<6?0:1);}
+    // rapid_end = sheet frames 1-2, played back as 2 then 1 (bow coming down).
+    if(action.phase==='rapid_end')return viesaFrame('rapid_end',p.t<8?1:0);
     if(action.phase==='dash_slash')return viesaFrame('dash',p.t<16?Math.floor(p.t*3/16):3+Math.floor((p.t-16)/2));
     if(action.phase==='backflip')return viesaFrame('backflip',Math.floor(p.t/5));
     if(action.phase==='hover')return viesaFrame('backflip',5);
     if(action.phase==='land_backflip')return viesaFrame('backflip',6+Math.floor(p.t/3));
-    if(action.phase==='land_jump')return viesaFrame('jump',12+Math.floor(p.t/3));
+    // Landing absorbs through the jump's crouch (9) and lean (4) back to standing.
+    if(action.phase==='land_jump')return viesaFrame('jump',[8,3,1][Math.min(2,Math.floor(p.t/3))]);
     return viesaFrame(action.phase,Math.floor(p.t/4));
   }
   if(p.st==='dash')return viesaFrame('dash',Math.floor(p.t*5/6));
-  if(p.z>0)return viesaFrame('jump',p.vz>0?3+Math.min(5,Math.floor((p.jumpTime||0)/4)):p.vz>-2?9:p.vz>-5?10:11);
+  // After an air shot the bow comes down (jump-shot 13-15) before the fall.
+  if(p.z>0&&p.viesaHoverGrace>0)return viesaFrame('jump_shot',12+Math.min(2,Math.floor((6-p.viesaHoverGrace)/2)));
+  // Jump 9 push-off, 10-11 rise, 12 apex, 13-15 fall, 16 just before touchdown.
+  if(p.z>0)return viesaFrame('jump',p.vz>8?8:p.vz>4?9:p.vz>1.5?10:p.vz>-1.5?11:p.z<14?15:p.vz>-4?12:p.vz>-6.5?13:14);
   if(p.walk&&p.running)return viesaFrame('run',Math.floor((p.walkTime||0)/60)%10);
   return p.walk?viesaFrame('walk',Math.floor((p.walkTime||0)/50)%16):viesaFrame('idle',Math.floor(tick/5)%16);
 }

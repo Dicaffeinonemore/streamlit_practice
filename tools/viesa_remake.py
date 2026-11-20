@@ -24,24 +24,35 @@ SHEETS = {
     4: (10, 9),   # dash
     5: (10, 9),   # backflip
     6: (16, 0),   # death
-    7: (10, 0),   # rapid fire, kneeling
-    8: (15, 0),   # jump
-    9: (10, 4),   # jump shot
+    7: (7, 0),    # rapid fire, kneeling (1.71: 7 frames, kneels from frame 1)
+    8: (16, 0),   # jump (1.71: 16 frames)
+    9: (16, 0),   # jump shot (1.71: 16 frames, same standing frame 1 as jump)
     10: (16, 15), # knockdown / get up
     11: (10, 0),  # run loop
     12: (12, 11), # charge shot (hold on frame 7)
     13: (10, 0),  # hurt
     14: (6, 0),   # basic shot (J)
 }
+# The game only shows the jump shot in the air, handed over from and back to
+# the jump's airborne frames. Its head sits ~15px behind the jump's (frames 5-13
+# lean ~7px ahead of standing, the jump's 10-15 ~23px) and ~3px under the
+# middle of the jump's arc, so the sheet moves by that much instead of popping
+# back and forth on every air shot. (dx forward, dy up), source px.
+SHEET_SHIFT = {9: (15, 3)}
 # Every jump-shot pose is airborne; use the jump sheet's ground line.
-GROUND = {9: 319.0}
+GROUND = {9: 319.0 + SHEET_SHIFT[9][1]}
+# Jump-shot frames 10-11 draw the released arrow far past the bow; the game
+# spawns its own arrow at the bow tip.
+# Rapid-fire 6-7 likewise draw the released arrow leaving the bow.
+ARROW_TRIM = {9: (9, 10), 7: (5, 6)}
 # clip -> (sheet, first frame, frame count)
 CLIPS = {
     'idle': (3, 0, 16), 'walk': (1, 0, 16), 'run': (11, 0, 10), 'dash': (4, 0, 10),
     'slash1': (2, 0, 4), 'slash2': (2, 4, 6), 'kick': (2, 10, 6),
-    'jump': (8, 0, 15), 'jump_shot': (9, 0, 10),
+    'jump': (8, 0, 16), 'jump_shot': (9, 0, 16),
     'snipe_draw': (12, 0, 7), 'snipe_release': (12, 7, 5),
-    'rapid_start': (7, 0, 4), 'rapid_loop': (7, 4, 4), 'rapid_end': (7, 8, 2),
+    # Rapid fire: raise and draw 1-4, loop over 4-7, lower back through 2 to 1.
+    'rapid_start': (7, 0, 4), 'rapid_loop': (7, 3, 4), 'rapid_end': (7, 0, 2),
     'backflip': (5, 0, 10),
     'shot': (14, 0, 6),
     'hurt': (13, 0, 10), 'knockdown': (10, 1, 7), 'getup': (10, 8, 8), 'death': (6, 0, 16),
@@ -93,6 +104,17 @@ def drop_detached_right(tile, gap=10):
     return Image.fromarray(a)
 
 
+def trim_arrow_past_bow(tile):
+    """Erase a thin arrow sticking out past the bow (it is joined to the bow)."""
+    a = np.array(tile)
+    rows = np.flatnonzero((a[:, :, 3] > 0).any(1))
+    right = np.array([np.flatnonzero(a[y, :, 3] > 0).max() for y in rows])
+    # The arrow is a few rows tall; the bow's edge bounds every other row.
+    edge = int(np.percentile(right, 96)) + 2
+    a[:, edge + 1:] = 0
+    return Image.fromarray(a)
+
+
 def bow_tip(tile, pivot_x, ground_y, box):
     a = np.array(tile)[:, :, 3] > 96
     h = a.shape[0]
@@ -115,6 +137,8 @@ def build(body_measure, stored_body, report):
         if number == 14:
             # The release pose draws its own flying arrow; the game spawns one.
             frames = [(drop_detached_right(tile), origin) for tile, origin in frames]
+        for i in ARROW_TRIM.get(number, ()):
+            frames[i] = (trim_arrow_past_bow(frames[i][0]), frames[i][1])
         cells = []
         for tile, (ox, oy) in frames:
             box = tile.getbbox()
@@ -123,7 +147,7 @@ def build(body_measure, stored_body, report):
         bottoms = sorted(c['box'][3] for c in cells)
         ground = GROUND.get(number, float(np.median(bottoms[len(bottoms) // 2:])))
         m = body_measure(cells[ref], wide_stance=True)
-        pivot = cells[ref]['box'][0] + m['bodyX']
+        pivot = cells[ref]['box'][0] + m['bodyX'] - SHEET_SHIFT.get(number, (0, 0))[0]
         sheets[number] = {'cells': cells, 'ground': ground, 'pivot': pivot, 'path': path, 'measure': m}
     idle = sheets[3]
     scale = stored_body / idle['measure']['height']

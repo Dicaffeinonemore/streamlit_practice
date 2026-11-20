@@ -14,9 +14,9 @@ from PIL import Image
 
 # Remake sheet number -> size factor against the shared idle-based scale.
 # 12 charge shot · 14 basic shot: head/torso ~78% of idle.
-# 07 rapid fire: head ~20% larger than idle.
+# 07 rapid fire: the 1.71 kneeling sheet matches idle (head ~1.03-1.07x).
 # 02 melee is left as drawn (1.71 rollback, see TONE_SKIP).
-REMAKE_SCALE = {12: 1.1, 14: 1.1, 7: 0.9}
+REMAKE_SCALE = {12: 1.1, 14: 1.1}
 # First-generation sheet number -> size factor. The ultimate (4) and the
 # lightning scroll end standing and hand over to idle, so they keep matching
 # idle's height (their heads are ~20% larger; shrinking them makes the
