@@ -46,7 +46,9 @@ function viesaPose(p=player){
   // Ten hurt frames span the default hitstun; a grab holds the recoil (frame 5).
   if(p.st==='hurt')return viesaFrame('hurt',Math.floor(p.t*10/PLAYER_DATA.hurt.defaultHitstunTicks));
   if(p.st==='grabbed')return viesaFrame('hurt',Math.min(4,Math.floor(p.t/4)));
-  if(p.st==='atk')return viesaFrame(p.viesaClip,p.viesaClip==='jump_shot'?3+Math.floor(p.t/3):Math.floor(p.t/4));
+  // The ground shot draws in 12 ticks (3 per frame) so its release frame 5
+  // starts on the arrow's fire tick (t=12); the follow-through holds to t=24.
+  if(p.st==='atk')return viesaFrame(p.viesaClip,p.viesaClip==='jump_shot'?3+Math.floor(p.t/3):p.viesaClip==='shot'?(p.t<12?Math.floor(p.t/3):p.t<16?4:5):Math.floor(p.t/4));
   if(p.st==='cast'){
     const ms=p.t*MS;
     // The release frame starts on the same tick as the shared lightning hit.

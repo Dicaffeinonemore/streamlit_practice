@@ -30,6 +30,7 @@ SHEETS = {
     11: (10, 0),  # run loop
     12: (12, 11), # charge shot (hold on frame 7)
     13: (10, 0),  # hurt
+    14: (6, 0),   # basic shot (J)
 }
 # Every jump-shot pose is airborne; use the jump sheet's ground line.
 GROUND = {9: 319.0}
@@ -41,6 +42,7 @@ CLIPS = {
     'snipe_draw': (12, 0, 7), 'snipe_release': (12, 7, 5),
     'rapid_start': (7, 0, 4), 'rapid_loop': (7, 4, 4), 'rapid_end': (7, 8, 2),
     'backflip': (5, 0, 10),
+    'shot': (14, 0, 6),
     'hurt': (13, 0, 10), 'knockdown': (10, 1, 7), 'getup': (10, 8, 8), 'death': (6, 0, 16),
 }
 REPLACED = set(CLIPS) | {'dash_slash'}
@@ -109,6 +111,9 @@ def build(body_measure, stored_body, report):
         if number == 12:
             tile, origin = frames[10]
             frames[10] = (drop_detached_right(tile), origin)
+        if number == 14:
+            # The release pose draws its own flying arrow; the game spawns one.
+            frames = [(drop_detached_right(tile), origin) for tile, origin in frames]
         cells = []
         for tile, (ox, oy) in frames:
             box = tile.getbbox()
@@ -141,4 +146,8 @@ def build(body_measure, stored_body, report):
                 frame['anchor'][1] = tile.height
                 frame['tip'][1] = round(frame['tip'][1] + shift, 3)
             out[name].append((frame, tile))
+    # After the release the bow tip detector finds the upper limb; keep the
+    # arrow line of the full-draw pose for the follow-through frames.
+    for frame, _ in out['shot'][4:]:
+        frame['tip'] = list(out['shot'][3][0]['tip'])
     return out, [s['path'] for s in sheets.values()], (idle['cells'][0]['tile'], idle['measure'])
