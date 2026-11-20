@@ -6,6 +6,7 @@ from pathlib import Path
 import hashlib
 import json
 from PIL import Image
+import viesa_tone
 
 ROOT = Path(__file__).resolve().parents[1]
 source = Image.open(ROOT / 'assets_src/viesa/lightning-scroll/source-10.png').convert('RGBA')
@@ -18,7 +19,7 @@ cols = 5
 ch = source.height // 2
 edges = [[0,342,642,930,1220,1536], [0,308,640,956,1275,1536]]
 cw = max(b-a for row in edges for a,b in zip(row,row[1:]))
-scale = (art['worldHeight'] / art['scale']) / (ch * .735)
+scale = (art['worldHeight'] / art['scale']) / (ch * .735) * viesa_tone.SCROLL_SCALE
 tw, th = round(cw * scale), round(ch * scale)
 atlas = Image.new('RGBA', (tw * cols, th * 2))
 frames = []
@@ -55,17 +56,24 @@ def extract_sprite(tile, tip):
     tile.putalpha(mask)
     return tile
 
+tiles = []
 for i, (foot, tip) in enumerate(zip(feet, tips)):
     row, col = divmod(i, cols)
     x, right = edges[row][col:col+2]
     y = row * ch
     tile = extract_sprite(source.crop((x,y,right,y+ch)), (tip[0]-x,tip[1]-y))
     tile = tile.resize((round((right-x)*scale), th), Image.Resampling.LANCZOS)
-    atlas.paste(tile, (i % cols * tw, i // cols * th))
+    tiles.append(tile)
     ax, ay = (foot[0]-x)*scale, (foot[1]-y)*scale
     frames.append({'atlas': [i % cols * tw, i // cols * th, tw, th],
                    'anchor': [round(ax, 3), round(ay, 3)], 'sheet': sheet,
                    'tip': [round((tip[0]-foot[0])*scale, 3), round((foot[1]-tip[1])*scale, 3)]})
+# Tone-match the body to the idle sheet; the lightning keeps its glow.
+reference = viesa_tone.idle_tiles(art, ROOT)
+source_q = viesa_tone.quantiles(tiles)
+reference_q = viesa_tone.quantiles(reference)
+for i, tile in enumerate(tiles):
+    atlas.paste(viesa_tone.match(tile, source_q, reference_q), (i % cols * tw, i // cols * th))
 out = ROOT / 'assets/viesa/lightning-scroll.png'
 atlas.save(out)
 digest = hashlib.sha256(out.read_bytes()).hexdigest()[:24]

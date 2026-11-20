@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 from scipy import ndimage
+from viesa_tone import REMAKE_SCALE
 
 CELL = 384
 SRC = Path(__file__).resolve().parents[1] / 'assets_src/viesa/Viesa_Remake'
@@ -126,20 +127,21 @@ def build(body_measure, stored_body, report):
         sheets[number] = {'cells': cells, 'ground': ground, 'pivot': pivot, 'path': path, 'measure': m}
     idle = sheets[3]
     scale = stored_body / idle['measure']['height']
-    report['remake'] = {'source': str(SRC.name), 'cell': CELL, 'sourceToAtlas': scale,
+    report['remake'] = {'source': str(SRC.name), 'cell': CELL, 'sourceToAtlas': scale, 'sheetScale': REMAKE_SCALE,
                         'idleHeight': idle['measure']['height'],
                         'sheets': {s['path'].name: {'ground': s['ground'], 'pivotX': s['pivot']} for s in sheets.values()}}
     out = {}
     for name, (number, first, count) in CLIPS.items():
         s = sheets[number]; out[name] = []
+        sheet_scale = scale * REMAKE_SCALE.get(number, 1.0)
         for i in range(first, first + count):
             c = s['cells'][i]; box = c['box']
             tip = bow_tip(c['tile'], s['pivot'], s['ground'], box)
-            tile = c['tile'].resize((max(1, round(c['tile'].width * scale)), max(1, round(c['tile'].height * scale))), Image.Resampling.LANCZOS)
+            tile = c['tile'].resize((max(1, round(c['tile'].width * sheet_scale)), max(1, round(c['tile'].height * sheet_scale))), Image.Resampling.LANCZOS)
             frame = {'atlas': [0, 0, tile.width, tile.height],
-                     'anchor': [round((s['pivot'] - box[0]) * scale, 3), round((s['ground'] - box[1]) * scale, 3)],
+                     'anchor': [round((s['pivot'] - box[0]) * sheet_scale, 3), round((s['ground'] - box[1]) * sheet_scale, 3)],
                      'source': [box[0], box[1], box[2] - box[0], box[3] - box[1]], 'sourceSheet': f'remake-{number:02d}',
-                     'drawing': i + 1, 'tip': [round(tip[0] * scale, 3), round(tip[1] * scale, 3)]}
+                     'drawing': i + 1, 'tip': [round(tip[0] * sheet_scale, 3), round(tip[1] * sheet_scale, 3)]}
             if name == 'death':
                 # Every collapse pose rests on the floor once z reaches 0.
                 shift = tile.height - frame['anchor'][1]

@@ -247,9 +247,9 @@ air_offset=raw['ult_leap'][-1]['pivotY']-raw['ult_leap'][-1]['tile'].height
 for name in ['ult_summon','ult_barrage']:
     for r in raw[name]:r['pivotY']=r['tile'].height+air_offset
 report['ultimateAirPivotOffset']=air_offset
-import viesa_remake
+import viesa_remake, viesa_tone
 for number,spec in SPEC.items():
-    relative=base/measurements[number]['height'];scale=stored_body/base*relative
+    relative=base/measurements[number]['height'];scale=stored_body/base*relative*viesa_tone.FIRST_GEN_SCALE.get(number,1.0)
     report['sheets'][number]={'reference':list(REFERENCE[number]),'bodyMeasurement':measurements[number],
                             'relativeToIdle':relative,'sourceToAtlas':scale}
     for name,_ in spec:
@@ -281,6 +281,14 @@ remake,remake_paths,(remake_idle,remake_measure)=viesa_remake.build(body_measure
 for path in remake_paths:report['sources'][str(path.relative_to(ROOT))]=hashlib.sha256(path.read_bytes()).hexdigest()
 for name,frames in remake.items():
     clips[name]=[f for f,_ in frames];tiles.extend(frames)
+
+# Match every body sheet's luminance distribution to the idle sheet.
+groups={}
+for i,(f,tile) in enumerate(tiles):groups.setdefault(str(f['sourceSheet']),[]).append(i)
+reference=[tiles[i][1] for i in groups[viesa_tone.REFERENCE_SHEET]]
+matched,report['toneMatch']=viesa_tone.match_groups({k:[tiles[i][1] for i in v] for k,v in groups.items() if k!=viesa_tone.REFERENCE_SHEET},reference)
+for k,images in matched.items():
+    for i,im in zip(groups[k],images):tiles[i]=(tiles[i][0],im)
 
 fx_path=next((SRC/'02_Basic_Effects').glob('*.png'));fx_image=Image.open(fx_path).convert('RGB');arr=np.array(fx_image)
 brightness=arr.max(2);fx_rows,_=partitions((brightness>24).sum(1),6)
