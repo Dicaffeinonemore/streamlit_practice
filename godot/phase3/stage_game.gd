@@ -144,6 +144,22 @@ func restart() -> void:
 	audio.play_track("boss" if s.mode == "bossintro" else "stage")
 	if wave_backdrop != null: wave_backdrop.reset()
 
+## Phase 12: point every view at another session without touching either simulation (the
+## tutorial demo session, then the live run again). Signals are connected by the caller.
+func use_session(s: BmkStageSimulation, c: BmkSimulationClock) -> void:
+	for view: BmkActorView in enemy_views.values(): view.queue_free()
+	enemy_views.clear()
+	for view: BmkItemView in item_views.values(): view.queue_free()
+	item_views.clear()
+	session = s
+	clock = c
+	section = s.sections
+	street_view.session = s
+	street_view.section = section
+	effects.session = s
+	special_dim.session = s
+	debug_view.session = s
+
 func present() -> void:
 	super.present()
 	var s: BmkStageSimulation = session as BmkStageSimulation
@@ -166,6 +182,8 @@ func present() -> void:
 			item_views.erase(item)
 	actors.move_child(player_view,actors.get_child_count() - 1)
 	var wave: BmkWaveSimulation = s as BmkWaveSimulation
+	# The Stage 1 tutorial demo is a wave session drawn with the Stage 1 street.
+	if wave != null and wave.stage1_view: wave = null
 	street_view.visible = wave == null
 	if top_view != null: top_view.visible = wave == null
 	if wave_backdrop != null:

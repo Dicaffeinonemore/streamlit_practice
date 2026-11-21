@@ -11,6 +11,14 @@ var practice_chain: int = 0
 var story_entry: BmkCheckpoint
 var touch: BmkTouchControls
 var pause_button: TextureButton
+## Phase 12 tutorial demonstration (demo-runtime.js). While it runs, the world and HUD render into
+## demo_port (the #demoView copy) and every view points at the demo session; demo_saved keeps the
+## live session, clock and in-flight impacts, which are put back untouched when it closes.
+var demo: BmkDemoController = BmkDemoController.new()
+var demo_saved: Dictionary = {}
+var demo_port: SubViewport
+## #practiceGuide buttons: 실전 시작 (btnPracticeGo) and 조작 안내 (btnPracticeHelp).
+var practice_buttons: HBoxContainer
 
 func _ready() -> void:
 	preferences = BmkSettings.read()
@@ -34,6 +42,14 @@ func _ready() -> void:
 	menu.next_stage.connect(continue_next_stage)
 	menu.quit_game.connect(request_close)
 	menu.settings_changed.connect(apply_preferences)
+	menu.tutorial_requested.connect(open_tutorial)
+	menu.tutorial_left.connect(close_tutorial)
+	demo_port = SubViewport.new()
+	demo_port.size = Vector2i(960,540)
+	demo_port.disable_3d = true
+	demo_port.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+	demo_port.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	add_child(demo_port)
 	# index.html #playPause: the pixel-UI pause button, shown while playing.
 	var pause_layer: CanvasLayer = CanvasLayer.new()
 	pause_layer.layer = 5
@@ -54,6 +70,22 @@ func _ready() -> void:
 		pause_game(true)
 		menu.show_pause())
 	pause_layer.add_child(pause_button)
+	practice_buttons = HBoxContainer.new()
+	practice_buttons.theme = menu.tutorial.theme
+	practice_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	practice_buttons.add_theme_constant_override("separation",8)
+	practice_buttons.position = Vector2(0,120)
+	practice_buttons.size = Vector2(960,34)
+	practice_buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	practice_buttons.visible = false
+	for spec: Array in [["실전 시작",practice_go],["조작 안내",practice_help]]:
+		var b: Button = Button.new()
+		b.text = spec[0]
+		b.focus_mode = Control.FOCUS_NONE
+		b.add_theme_font_size_override("font_size",15)
+		b.pressed.connect(spec[1])
+		practice_buttons.add_child(b)
+	pause_layer.add_child(practice_buttons)
 	# game-ui.js touch controls, above the menu so the layout editor can cover it.
 	var touch_layer: CanvasLayer = CanvasLayer.new()
 	touch_layer.layer = 11
@@ -80,13 +112,66 @@ func sync_pause_button() -> void:
 	if pause_button == null: return
 	var s: BmkStageSimulation = session as BmkStageSimulation
 	pause_button.visible = menu != null and not menu.visible and not clock.paused and s != null and s.mode in ["play","intro","bossintro"] and not touch.editing
+	# $('practiceGuide').hidden = !practice || scene !== 'play'
+	practice_buttons.visible = game_mode == "practice" and menu != null and not menu.visible and not clock.paused and s != null and s.mode == "play" and not touch.editing
+
+## btnPracticeGo: beginGame(true) - the opening, then the story with the practised character.
+func practice_go() -> void:
+	pause_game(true)
+	menu.show_opening()
+
+## btnPracticeHelp: pauseGame(); toTutorial('pause').
+func practice_help() -> void:
+	pause_game(true)
+	menu.show_tutorial("pause")
 
 ## clearInput() also forgets touch pointers (UX.clearTouch()).
 func pause_game(value: bool) -> void:
 	super.pause_game(value)
 	if touch != null: touch.clear_touch()
 
+## toTutorial(from) -> demoStart(from): the paused run's character from pause, else the selection.
+## The demo's backdrop is the session left in place (the paused stage, or the last stage played;
+## at launch Stage 1, section 1, as the browser's fresh STAGES[0]).
+func open_tutorial(origin: String) -> void:
+	close_tutorial()
+	var live: BmkStageSimulation = session as BmkStageSimulation
+	var character: String = live.player.character_id if origin == "pause" else menu.selected_character
+	# The title leaves the AudioContext running (AUDIO.pause(false)); from pause it stays suspended.
+	if origin != "pause": audio.pause_audio(false)
+	demo_saved = {"session":session,"clock":clock,"impacts":effects.impacts.duplicate(true)}
+	demo.stage_config = stage_config
+	var s: BmkWaveSimulation = demo.start(character,live)
+	# Never advanced (demo.tick() steps the demo); unpaused so the view shows no pause overlay and
+	# keeps the screen shake, as the browser renders the demo frame.
+	var demo_clock: BmkSimulationClock = BmkSimulationClock.new(s)
+	s.sound_requested.connect(audio.play)
+	s.impact_requested.connect(effects.impact)
+	s.step_completed.connect(effects.advance)
+	effects.impacts.clear()
+	use_session(s,demo_clock)
+	world.reparent(demo_port,false)
+	hud.get_parent().reparent(demo_port,false)
+	demo_port.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	present()
+	menu.tutorial.open(demo,demo_port.get_texture(),origin)
+
+## demoStop(): put the live session, its views and the in-flight effects back.
+func close_tutorial() -> void:
+	if not demo.on: return
+	demo.stop()
+	world.reparent(self,false)
+	move_child(world,0)
+	hud.get_parent().reparent(self,false)
+	demo_port.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	use_session(demo_saved["session"],demo_saved["clock"])
+	effects.impacts = demo_saved["impacts"]
+	demo_saved = {}
+	if menu != null: menu.tutorial.visible = false
+	present()
+
 func start_new(character: String = "barel") -> void:
+	close_tutorial()
 	game_mode = "story"
 	character_id = character
 	stage_index = 0
@@ -120,6 +205,7 @@ func restore_checkpoint() -> void:
 	load_story_entry(entry)
 
 func load_story_entry(entry: BmkCheckpoint) -> void:
+	close_tutorial()
 	story_entry = entry
 	character_id = entry.character_id
 	stage_index = entry.stage
@@ -148,6 +234,8 @@ func continue_next_stage() -> void:
 	load_story_entry(entry)
 
 func start_practice() -> void:
+	close_tutorial()
+	character_id = menu.selected_character if menu != null else character_id
 	game_mode = "practice"
 	stage_index = 0
 	boss_challenge = false
@@ -173,6 +261,7 @@ func start_challenge(character: String = "") -> void:
 	var stages: Array = save_store.records()["stages"]
 	if stages.size() <= stage or stages[stage] == null: return
 	if not character.is_empty(): character_id = character
+	close_tutorial()
 	game_mode = "challenge"
 	stage_index = stage
 	stage_restored = true
@@ -207,6 +296,11 @@ func resume_from_menu() -> void:
 	pause_game(false)
 
 func _physics_process(delta: float) -> void:
+	# scene 'tutorial': update() is demoUpdate(); the live run does not advance.
+	if demo.on:
+		demo.tick()
+		present()
+		return
 	super._physics_process(delta)
 	var s: BmkStageSimulation = session as BmkStageSimulation
 	if game_mode == "practice" and not clock.paused:
@@ -257,6 +351,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE: touch.end_edit()
 		return
 	if menu.visible:
+		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and menu.tutorial_key((event as InputEventKey).keycode): return
 		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE and menu.mode == "pause": resume_from_menu()
 		return
 	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE:

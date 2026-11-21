@@ -1,6 +1,6 @@
 # Black Moon Knight — native Godot port
 
-Open this folder's `project.godot` with Godot 4.7.2 and press **F5**. The main scene is `res://phase4/game.tscn`: title, character select (Barel or Viesa), new game, Continue, practice, boss challenge and settings. All five stages and their bosses are playable, from Gorath to the Black Moon Sovereign, and the story ends with the ALL CLEAR screen.
+Open this folder's `project.godot` with Godot 4.7.2 and press **F5**. The main scene is `res://phase4/game.tscn`: title, character select (Barel or Viesa), new game, Continue, practice, boss challenge and settings. A new game goes through 조작 안내 (a live demonstration of every move for the chosen character) and the opening (skip with Enter, Space or Esc); 조작 안내 is also in the pause menu and under the practice prompt. All five stages and their bosses are playable, from Gorath to the Black Moon Sovereign, and the story ends with the ALL CLEAR screen.
 
 To run without the editor:
 
@@ -14,4 +14,4 @@ Escape or the pause button (top right) pauses. On touch screens, turn on Setting
 
 M toggles sound on every screen; Settings also has the sound switch and the boss-fight music file (MP3/OGG/WAV, at most 30 MB, remembered between runs).
 
-Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE11_REPORT.md`. The tutorial/demo and platform exports are Phases 12–13.
+Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE12_REPORT.md`. Platform exports are Phase 13.

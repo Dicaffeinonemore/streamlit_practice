@@ -33,7 +33,7 @@ func _draw() -> void:
 		if not hud_hidden():
 			draw_source_hud(p)
 			# body.touch #skillbar { display: none } - the touch pad shows the skills instead.
-			if not touch_mode(): draw_source_skills(p,s)
+			if not page_controls_hidden(): draw_source_skills(p,s)
 	else:
 		draw_rect(Rect2(0,0,960,79),Color(0.025,0.02,0.035,0.86))
 		text(Vector2(20,25),"BAREL",Color("e4d5ba"),20)
@@ -46,7 +46,7 @@ func _draw() -> void:
 		text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)
 	if s.chain_n > 1:
 		text(Vector2(820,108),"%d HIT" % s.chain_n,Color("ffe18b"),25)
-	if not touch_mode(): draw_key_help(s,p)
+	if not page_controls_hidden(): draw_key_help(s,p)
 	if not game.section.locked and game.section.event_index > 0 and not game.section.complete:
 		text(Vector2(826,281),"GO  >",Color("ffe18b"),22)
 	if game.debug_view.visible:
@@ -59,6 +59,11 @@ func _draw() -> void:
 		var title: String = "SECTION 1 COMPLETE" if game.section.complete else ("GAME OVER" if s.game_over else "PAUSED")
 		text(Vector2(304,251),title,Color("e4d5ba"),30)
 		text(Vector2(304,288),"R: RESTART STREET" if game.section.complete or s.game_over else "ESC: RESUME    R: RESTART",Color("ddd5dd"),16)
+
+## #skillbar and the key help are page elements, shown only in play: hidden with touch controls,
+## and in the tutorial demo view (the browser copies only the canvas into #demoView).
+func page_controls_hidden() -> bool:
+	return touch_mode() or game is BmkMenuGame and (game as BmkMenuGame).demo.on
 
 func touch_mode() -> bool:
 	return game is BmkMenuGame and (game as BmkMenuGame).preferences != null and (game as BmkMenuGame).preferences.touch

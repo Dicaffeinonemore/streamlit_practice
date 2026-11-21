@@ -181,6 +181,12 @@ func run() -> void:
 	# Story start: hidden during the stage banner, shown in play, pause button present.
 	await click_button("새 게임")
 	await click_button("바렐로 시작")
+	# Phase 12: the character opens the tutorial; 게임 시작 plays the opening, skipped here.
+	check(game.menu.mode == "tutorial" and game.demo.on,"The character opens the tutorial")
+	game.menu.tutorial.start_button.pressed.emit()
+	check(game.menu.mode == "opening","게임 시작 opens the opening")
+	game.menu.opening.finish()
+	await process_frame
 	await process_frame
 	check(game.touch.visible == ((game.session as BmkStageSimulation).mode == "play"),"Hidden while the stage banner/intro runs")
 	var guard: int = 0

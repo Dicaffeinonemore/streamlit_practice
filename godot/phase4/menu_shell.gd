@@ -10,6 +10,9 @@ signal next_stage
 signal quit_game
 signal settings_changed
 signal touch_edit
+## Phase 12: toTutorial(from) asks the game to start the demonstration; leaving the screen stops it.
+signal tutorial_requested(origin: String)
+signal tutorial_left
 
 var panel: PanelContainer
 var title: Label
@@ -32,6 +35,11 @@ var title_shade: TextureRect
 var backdrop: ColorRect
 var scroll: ScrollContainer
 var button_size: Vector2 = Vector2(410,34)
+## game.js selectedCharacterId (story start, tutorial, practice).
+var selected_character: String = "barel"
+## index.html #tutorial and the release.js opening.
+var tutorial: BmkTutorialScreen
+var opening: BmkOpeningScreen
 
 # Same key art as named-runtime.js TITLE_ART_SRC (assets/runtime/7b79aad0ddf5c47ddf77fa60.webp).
 const TITLE_ART_PATH: String = "res://port_assets/images/runtime_unreferenced__7b79aad0ddf5.webp"
@@ -92,6 +100,17 @@ func _ready() -> void:
 	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	buttons.add_child(message)
+	tutorial = BmkTutorialScreen.new()
+	tutorial.settings = settings
+	tutorial.visible = false
+	add_child(tutorial)
+	tutorial.back_pressed.connect(tutorial_back)
+	tutorial.start_pressed.connect(show_opening)
+	tutorial.practice_pressed.connect(func() -> void: practice_game.emit())
+	opening = BmkOpeningScreen.new()
+	add_child(opening)
+	opening.finished.connect(func() -> void:
+		if mode == "opening": new_game.emit(selected_character))
 	show_title()
 
 func clear_buttons() -> void:
@@ -106,10 +125,19 @@ func clear_buttons() -> void:
 # centered panel over a darkened backdrop.
 func apply_layout() -> void:
 	var art_title: bool = mode == "title"
+	var overlay: bool = mode in ["tutorial","opening"]
 	title_backing.visible = title_image.visible
 	title_shade.visible = art_title and title_image.visible
-	backdrop.visible = not art_title
+	backdrop.visible = not art_title and not overlay
+	panel.visible = not overlay
 	title.visible = not art_title
+	# showScreen(id !== 'tutorial') -> demoStop()
+	if tutorial != null and tutorial.visible and mode != "tutorial":
+		tutorial.visible = false
+		tutorial_left.emit()
+	if opening != null and opening.running and mode != "opening":
+		opening.running = false
+		opening.visible = false
 	if art_title:
 		panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
 		button_size = Vector2(320,30)
@@ -180,8 +208,9 @@ func show_characters(challenge: bool = false) -> void:
 	for id: String in ["barel","viesa"]:
 		var hero: Dictionary = roster[id]
 		var pick: Callable = func() -> void:
+			selected_character = id
 			if character_challenge: challenge_game.emit(id)
-			else: new_game.emit(id)
+			else: show_tutorial("characterSelect")
 		add_button("%s로 시작" % hero["name"] if bool(hero["available"]) else "곧 추가",pick,not bool(hero["available"]))
 	add_button("보스 목록" if challenge else "뒤로",show_challenges if challenge else show_title)
 
@@ -213,6 +242,7 @@ func show_pause() -> void:
 	message.text = ""
 	add_button("계속하기",func() -> void: resume_game.emit())
 	add_button("다시 시작",func() -> void: retry_game.emit())
+	add_button("조작 안내",func() -> void: show_tutorial("pause"))
 	add_button("설정",show_settings)
 	add_button("타이틀로",show_title)
 
@@ -226,6 +256,45 @@ func show_result(value: String, challenge: bool, stage: int = 0, has_next: bool 
 	if has_next: add_button("다음 스테이지",func() -> void: next_stage.emit())
 	add_button("다시 시작",func() -> void: retry_game.emit())
 	add_button("타이틀로",show_title)
+
+## game.js toTutorial(from): the demonstration screen, from character select or pause.
+func show_tutorial(origin: String) -> void:
+	mode = "tutorial"
+	visible = true
+	title_image.visible = false
+	clear_buttons()
+	title.text = "조작 안내"
+	message.text = ""
+	# The game resumes the sound first (except from pause), then sfx('click').
+	tutorial_requested.emit(origin)
+	if audio != null: audio.play("click")
+
+## btnHelpBack / Esc: back to where the tutorial was opened.
+func tutorial_back() -> void:
+	match tutorial.origin:
+		"pause": show_pause()
+		"characterSelect": show_characters(false)
+		_: show_title()
+
+## release.js startOpening(): AUDIO.silence(), then 18 s of opening panels.
+func show_opening() -> void:
+	mode = "opening"
+	visible = true
+	title_image.visible = false
+	clear_buttons()
+	if audio != null: audio.silence()
+	opening.start(settings == null or settings.shake)
+
+## onKeyOnce() while the tutorial is shown: Enter starts the game (not from pause), Esc goes back.
+func tutorial_key(key: Key) -> bool:
+	if mode != "tutorial": return false
+	if key in [KEY_ENTER,KEY_KP_ENTER] and tutorial.origin != "pause":
+		show_opening()
+		return true
+	if key == KEY_ESCAPE:
+		tutorial_back()
+		return true
+	return false
 
 ## index.html #ending: shown after the final stage clear of the story (finishStage()).
 func show_ending(value: String) -> void:

@@ -228,7 +228,8 @@ func update_wave(z: BmkProjectileState) -> void:
 			if not combat.can_hit(e) or z.hits.has(e.id) or blocked and is_sovereign(e) or absf(e.y - z.y) >= 26.0 or absf(e.z + 44.0 - z.height) >= 38.0 or e.x + e.hw < minf(from, z.x) - 14.0 or e.x - e.hw > maxf(from, z.x) + 14.0:
 				continue
 			z.hits[e.id] = true
-			combat.damage_enemy(self, e, z.damage, false, 1, false, "redwave")
+			# game.js: damageEnemy(e, z.damage, false, 1, false, 'redwave', 'barelWave'), also after the skill ends.
+			combat.damage_enemy(self, e, z.damage, false, 1, false, "redwave", "barelWave")
 			player.sp = minf(100.0, player.sp + 4.0)
 		if z.travel >= 520.0:
 			z.dead = true

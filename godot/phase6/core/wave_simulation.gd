@@ -26,6 +26,8 @@ var go_t: int = 0
 var banner_t: int = 0
 var intro_t: float = 0.0
 var intro_boss: BmkLegacyActor
+## Phase 12 tutorial demo over Stage 1: a wave session drawn with the Stage 1 street and sections.
+var stage1_view: bool = false
 var _hazard_loop: Array = []
 var _hazard_loop_open: bool = false
 

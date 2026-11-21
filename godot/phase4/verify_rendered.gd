@@ -56,6 +56,12 @@ func run() -> void:
 	await click_button("새 게임")
 	check(game.menu.mode == "characters","Mouse opens character selection")
 	await click_button("바렐로 시작")
+	# Phase 12: the character opens the tutorial; 게임 시작 plays the opening, skipped here.
+	check(game.menu.mode == "tutorial" and game.demo.on,"The character opens the tutorial")
+	game.menu.tutorial.start_button.pressed.emit()
+	check(game.menu.mode == "opening","게임 시작 opens the opening")
+	game.menu.opening.finish()
+	await process_frame
 	check(not game.menu.visible and not game.clock.paused,"Mouse starts game")
 	game.present()
 	await process_frame
