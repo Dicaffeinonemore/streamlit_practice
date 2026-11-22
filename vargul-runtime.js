@@ -462,37 +462,82 @@ function paintVargulCrossWarning(progress,z,alpha){
   ctx.save();ctx.beginPath();ctx.rect(0,z.y-height/2,VW,height/2-depth);ctx.rect(0,z.y+depth,VW,height/2-depth);ctx.clip();
   paintVargulFx('cross_warning',progress,z.x,z.y+height/2,480*.5112,height,alpha);ctx.restore();
 }
-const VARGUL_CROSS_FX={spread:12,frameTicks:1.5,life:42,scale:.48};
+// Supplied VFXSmith "Ice spikes" sheet (source: assets/vargul/fx/ice-spikes.png + .json).
+// 7 columns of 264×112, 91 frames at 30 fps. Pivot (24,96) is the left ground point; spikes grow to the right.
+// Frames: 2–13 rise, 14–41 hold, 42 white flash, 43–90 shatter and fade.
+const VARGUL_ICE_SPIKES={src:'assets/runtime/c1b641ef65e66d3ad3168ea3.webp',fw:264,fh:112,columns:7,frames:91,pivot:[24,96],
+  rise:[2,13],hold:[14,41],shatter:[42,90],column:[99,171],feather:16};
+let VARGUL_ICE_COLUMNS=null;
+const VARGUL_ICE_SPIKES_IMAGE=GameAssets.group(3,[VARGUL_ICE_SPIKES.src],()=>{VARGUL_ICE_COLUMNS=buildVargulIceColumns();}).images[0];
+// The vertical arm only uses the tallest middle cluster, feathered at both sides,
+// so its width follows the narrow damage column instead of the full spike row.
+function buildVargulIceColumns(){
+  const s=VARGUL_ICE_SPIKES,im=VARGUL_ICE_SPIKES_IMAGE,cw=s.column[1]-s.column[0],rows=Math.ceil(s.frames/s.columns);
+  const canvas=document.createElement('canvas');canvas.width=cw*s.columns;canvas.height=s.fh*rows;
+  const c=canvas.getContext('2d');
+  for(let f=0;f<s.frames;f++)c.drawImage(im,(f%s.columns)*s.fw+s.column[0],Math.floor(f/s.columns)*s.fh,cw,s.fh,(f%s.columns)*cw,Math.floor(f/s.columns)*s.fh,cw,s.fh);
+  // destination-in clears everything outside the drawn shape, so apply one full-width mask strip once.
+  const mask=document.createElement('canvas');mask.width=canvas.width;mask.height=1;
+  const m=mask.getContext('2d'),k=s.feather/cw;
+  for(let col=0;col<s.columns;col++){
+    const x=col*cw,g=m.createLinearGradient(x,0,x+cw,0);
+    g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(k,'#000');g.addColorStop(1-k,'#000');g.addColorStop(1,'rgba(0,0,0,0)');
+    m.fillStyle=g;m.fillRect(x,0,cw,1);
+  }
+  c.globalCompositeOperation='destination-in';c.drawImage(mask,0,0,canvas.width,canvas.height);
+  return canvas;
+}
+// The spikes rise and hold for the 18 damage ticks, then every tile shatters together
+// when the damage ends, so a visible spike is always a dangerous one.
+const VARGUL_CROSS_FX={spread:8,riseTicks:6,holdFrameTicks:2,shatterTicks:30,life:48,scale:.62,step:100,rowStep:16};
+function vargulIceSpikeFrame(local,age,active){
+  const s=VARGUL_ICE_SPIKES,fx=VARGUL_CROSS_FX,[r0,r1]=s.rise,[h0,h1]=s.hold,[s0,s1]=s.shatter;
+  if(age>=active){const k=(age-active)/fx.shatterTicks;return k>=1?-1:s0+Math.floor(k*(s1-s0+1));}
+  if(local<0)return -1;
+  if(local<fx.riseTicks)return r0+Math.floor(local/fx.riseTicks*(r1-r0+1));
+  return h0+Math.floor((local-fx.riseTicks)/fx.holdFrameTicks)%(h1-h0+1);
+}
+function paintVargulIceSpike(frame,x,y,flip,column){
+  const s=VARGUL_ICE_SPIKES,k=VARGUL_CROSS_FX.scale,col=frame%s.columns,sy=Math.floor(frame/s.columns)*s.fh;
+  const src=column?VARGUL_ICE_COLUMNS:VARGUL_ICE_SPIKES_IMAGE,sw=column?s.column[1]-s.column[0]:s.fw;
+  const ax=column?sw/2:s.pivot[0];
+  ctx.save();ctx.translate(x-camX,y);if(flip)ctx.scale(-1,1);
+  ctx.drawImage(src,col*sw,sy,sw,s.fh,-ax*k,-s.pivot[1]*k,sw*k,s.fh*k);ctx.restore();
+}
 function paintVargulCrossEruption(z,age){
-  const d=VARGUL_RULES.cross,fx=VARGUL_CROSS_FX,art=ZONE_ART.frost,im=ZONE_IMAGES.frost,x=z.x-camX;
+  const d=VARGUL_RULES.cross,fx=VARGUL_CROSS_FX,s=VARGUL_ICE_SPIKES,x=z.x-camX;
   ctx.save();
   // Keep the entire damaging footprint readable while the eruption travels.
   if(age<z.active){
     ctx.fillStyle=`rgba(91,193,231,${.22*(1-age/z.active)})`;ctx.beginPath();
     ctx.rect(0,z.y-d.depth,VW,d.depth*2);ctx.rect(x-d.column,GTOP,d.column*2,GBOT-GTOP);ctx.fill();
   }
-  if(!im?.complete||!im.naturalWidth||!art){ctx.restore();return;}
+  if(!VARGUL_ICE_SPIKES_IMAGE.naturalWidth||!VARGUL_ICE_COLUMNS){ctx.restore();return;}
   // Stable world positions prevent the wave from restarting when the camera moves.
   z.crossViewLeft??=camX;z.crossViewWidth??=VW;
-  const w=art.fw*fx.scale,h=art.h*fx.scale,step=(art.fw-art.feather)*fx.scale,tiles=[];
+  const step=fx.step,reach=(s.fw-s.pivot[0])*fx.scale,tiles=[];
   const horizontalReach=Math.max(step,Math.abs(z.x-z.crossViewLeft),Math.abs(z.crossViewLeft+z.crossViewWidth-z.x));
   const verticalReach=Math.max(20,Math.abs(z.y-GTOP),Math.abs(GBOT-z.y));
-  for(let i=Math.floor((camX-z.x-w/2)/step);i<=Math.ceil((camX+VW-z.x+w/2)/step);i++){
-    tiles.push({x:z.x+i*step,y:z.y+5,delay:Math.min(1,Math.abs(i*step)/horizontalReach)*fx.spread,flip:i<0});
+  // Horizontal arm: two staggered rows inside the ±depth band, both running outward
+  // from the cross centre. Left tiles are mirrored so their spikes also grow outward.
+  for(const [dy,offset] of [[-d.depth*.55,.5],[d.depth*.5,0]])for(const dir of [1,-1]){
+    for(let i=0;;i++){
+      const dist=(i+offset)*step,px=z.x+dir*dist;
+      if(dir>0?px>camX+VW:px<camX)break;
+      if(dir>0?px+reach<camX:px-reach>camX+VW)continue;
+      tiles.push({x:px,y:z.y+dy,flip:dir<0,delay:Math.min(1,dist/horizontalReach)*fx.spread});
+    }
   }
-  for(let i=Math.floor((GTOP-z.y)/20);i<=Math.ceil((GBOT-z.y)/20);i++){
-    const y=z.y+i*20;if(!i||y<GTOP||y>GBOT)continue;
-    tiles.push({x:z.x,y,delay:Math.abs(i*20)/verticalReach*fx.spread,flip:i<0});
+  // Vertical arm: narrow feathered clusters stacked through the full stage depth.
+  for(let i=Math.floor((GTOP-z.y)/fx.rowStep);i<=Math.ceil((GBOT-z.y)/fx.rowStep);i++){
+    const y=z.y+i*fx.rowStep;if(!i||y<GTOP||y>GBOT)continue;
+    tiles.push({x:z.x,y,flip:i%2!==0,column:true,delay:Math.abs(i*fx.rowStep)/verticalReach*fx.spread});
   }
   ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
   tiles.sort((a,b)=>a.y-b.y);
   for(const tile of tiles){
-    const local=age-tile.delay;if(local<0||local>=20*fx.frameTicks)continue;
-    // Play the middle row's eruption and decay (frames 5–24), never its labels.
-    const frame=4+Math.min(19,Math.floor(local/fx.frameTicks));
-    ctx.save();ctx.globalAlpha*=Math.min(1,(local+1)/2,(20*fx.frameTicks-local)/5);
-    drawZoneTile(im,art,frame,tile.x-camX-w/2,tile.y-art.ground*fx.scale,w,h,tile.flip);
-    ctx.restore();
+    const frame=vargulIceSpikeFrame(age-tile.delay,age,z.active);
+    if(frame>=0)paintVargulIceSpike(frame,tile.x,tile.y,tile.flip,tile.column);
   }
   ctx.restore();
 }

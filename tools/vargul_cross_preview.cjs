@@ -1,4 +1,4 @@
-// Render the staggered cross frost in the actual game for visual review.
+// Render the staggered cross ice spikes in the actual game for visual review.
 const fs=require('fs'),path=require('path'),http=require('http'),os=require('os');
 const {spawn}=require('child_process');
 const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts/vargul-cross-frost');fs.mkdirSync(out,{recursive:true});
@@ -35,11 +35,12 @@ async function screenshot(name){const r=await call('Page.captureScreenshot',{for
     globalThis.crossPreview=spawnVargul(crossBoss,'cross',camX+VW*.5,420,0,{wait:60,active:18});
     crossPreview.boom=true;
   `);
+  await evaluate('VARGUL_ICE_SPIKES_IMAGE.decode().then(()=>!!VARGUL_ICE_COLUMNS)');
   for(let frame=0;frame<=54;frame++){
     await evaluate(`crossPreview.age=(crossPreview.wait+${frame})*MS;ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);render()`);
     await screenshot('frame-'+String(frame).padStart(3,'0'));
   }
-  const state=await evaluate(`({scene,frostReady:ZONE_IMAGES.frost.naturalWidth>0,damageTicks:crossPreview.active,visualTicks:VARGUL_CROSS_FX.life,spreadTicks:VARGUL_CROSS_FX.spread})`);
+  const state=await evaluate(`({scene,iceSpikesReady:VARGUL_ICE_SPIKES_IMAGE.naturalWidth>0&&!!VARGUL_ICE_COLUMNS,damageTicks:crossPreview.active,visualTicks:VARGUL_CROSS_FX.life,spreadTicks:VARGUL_CROSS_FX.spread})`);
   if(errors.length)throw Error(errors.join('\n'));
   fs.writeFileSync(path.join(out,'preview.json'),JSON.stringify({...state,errors},null,2));console.log(JSON.stringify(state));
 
