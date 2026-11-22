@@ -29,6 +29,16 @@ class StreamlitBundleTests(unittest.TestCase):
         scripts = re.findall(r'<script\s+src="([^"]+)"', html)
         self.assertLess(sum((ROOT / name).stat().st_size for name in scripts), 10 * 1024 * 1024)
 
+    def test_every_runtime_image_used_by_scripts_is_in_manifest(self):
+        # Streamlit only copies manifest entries; a hand-written path missing here is a 404 in deployment.
+        assets = set(json.loads((ROOT / "data/runtime-assets.json").read_text(encoding="utf-8")))
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        used = set()
+        for name in re.findall(r'<script\s+src="([^"]+)"', html):
+            code = (ROOT / name).read_text(encoding="utf-8")
+            used.update(re.findall(r"assets/runtime/[a-f0-9]+\.(?:png|webp|gif|jpg)", code))
+        self.assertEqual(sorted(used - assets), [], "node tools/externalize-art.cjs 를 실행하세요")
+
     def test_component_embeds_mp3_bytes_before_audio_engine(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
