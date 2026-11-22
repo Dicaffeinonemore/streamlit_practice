@@ -279,7 +279,7 @@ globalThis.BAREL_RIKA_DATA = {
   ]
  },
  "run": {
-  "path": "assets/runtime/360ac80cfae49d362dd806f1.png",
+  "path": "assets/runtime/e382c9ac86c74697564fdd62.png",
   "renderScale": 0.6120689655172413,
   "standingHeight": 232,
   "frames": [

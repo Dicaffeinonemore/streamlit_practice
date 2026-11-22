@@ -101,7 +101,9 @@ function pickVargulPattern(e,dx,dy){
   if(['combo','sweep'].includes(id)&&dy>26)return null;
   return id;
 }
-function vargulFloorBusy(e){return vargulHazards(e).some(z=>['sword','cross'].includes(z.kind)&&z.age/MS<z.wait+z.active);}
+// Same tick rounding as updateVargulHazard: accumulated age drifts below whole ticks,
+// and sword/cross hazards now outlive their damage window for their visual tails.
+function vargulFloorBusy(e){return vargulHazards(e).some(z=>['sword','cross'].includes(z.kind)&&Math.floor(z.age/MS+1e-6)<z.wait+z.active);}
 function vargulCrossHorizontalBounds(){return [camX,camX+VW];}
 function chaseVargul(e){
   const a=vargulData(e),p=player,dx=p.x-e.x,dy=p.y-e.y;
@@ -384,8 +386,8 @@ function updateVargulHazard(z){
         ((p.x>=camX&&p.x<=camX+VW&&Math.abs(p.y-z.y)<=d.depth)||Math.abs(p.x-z.x)<=d.column)&&p.z<=d.height;
       if(inside&&vargulHurt(e,{damage:d.damage,knockdown:z.kind==='cross'},z))z.hit=true;
     }
-    // Cross frost keeps a harmless visual tail after the original damage window.
-    if(t>=z.wait+(z.kind==='cross'?Math.max(z.active,VARGUL_CROSS_FX.life):z.active))z.dead=true;
+    // Cross frost and the falling sword keep a harmless visual tail after the original damage window.
+    if(t>=z.wait+Math.max(z.active,z.kind==='cross'?VARGUL_CROSS_FX.life:VARGUL_SWORD_FX.after))z.dead=true;
   }else if(z.kind==='orb'){
     const r=VARGUL_RULES.orb;
     moveVargulOrb(z,t);
@@ -503,6 +505,28 @@ function paintVargulIceSpike(frame,x,y,flip,column){
   const ax=column?sw/2:s.pivot[0];
   ctx.save();ctx.translate(x-camX,y);if(flip)ctx.scale(-1,1);
   ctx.drawImage(src,col*sw,sy,sw,s.fh,-ax*k,-s.pivot[1]*k,sw*k,s.fh*k);ctx.restore();
+}
+// Supplied pixelfx "Frost spear fall" sheet (source: assets/vargul/fx/frost-spear-fall.png + .json).
+// 9 columns of 240×220, 88 frames at 30 fps, pivot (120,190) on the ground.
+// Frames: 0–8 frost gathers, 9–26 the sword forms and hovers, 27–31 it falls, 32 impact flash, 33–87 ring, shards, fade.
+const VARGUL_FROST_SPEAR={src:'assets/runtime/0938cba313db9ffad408f4d2.webp',fw:240,fh:220,columns:9,frames:88,pivot:[120,190],impact:32};
+const VARGUL_FROST_SPEAR_IMAGE=GameAssets.group(3,[VARGUL_FROST_SPEAR.src]).images[0];
+// The sword gathers and falls during the mark's wait so frame 32 lands on the first damage tick.
+// The ring and shards after it are a harmless visual tail; damage still lasts only `active` ticks.
+const VARGUL_SWORD_FX={after:42,scale:.6};
+function vargulFrostSpearFrame(z,t){
+  const s=VARGUL_FROST_SPEAR,fx=VARGUL_SWORD_FX;
+  if(t<z.wait)return Math.min(s.impact-1,Math.floor(t*s.impact/z.wait));
+  const k=(t-z.wait)/fx.after;return k>=1?-1:s.impact+Math.floor(k*(s.frames-s.impact));
+}
+function paintVargulSwordFall(z,t){
+  const s=VARGUL_FROST_SPEAR,im=VARGUL_FROST_SPEAR_IMAGE,k=VARGUL_SWORD_FX.scale,frame=vargulFrostSpearFrame(z,t);
+  if(frame<0||!im.naturalWidth)return;
+  // The sheet's low-alpha halo is near black; additive blending keeps only the light.
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  ctx.drawImage(im,(frame%s.columns)*s.fw,Math.floor(frame/s.columns)*s.fh,s.fw,s.fh,
+    z.x-camX-s.pivot[0]*k,z.y-s.pivot[1]*k,s.fw*k,s.fh*k);
+  ctx.restore();
 }
 function paintVargulCrossEruption(z,age){
   const d=VARGUL_RULES.cross,fx=VARGUL_CROSS_FX,s=VARGUL_ICE_SPIKES,x=z.x-camX;
@@ -650,6 +674,8 @@ function drawVargulHazards(ground=false){
   for(const z of hazards){
     if(z.type!=='vargul'||z.dead)continue;
     const t=Math.max(0,z.age/MS),floor=['sword','cross','ultimate'].includes(z.kind),waiting=z.kind==='ice_wave'||floor&&!z.boom&&z.stage!=='impact';
+    // The hovering sword is drawn above actors while its red mark stays on the ground pass.
+    if(!ground&&z.kind==='sword'&&!z.boom)paintVargulSwordFall(z,t);
     if(ground!==!!waiting)continue;
     if(z.kind==='fx')paintVargulFx(z.fx,t/z.life,z.x,z.y-z.h+(z.height||80)/2,z.width||100,z.height||80,1-t/z.life*.65,z.face);
     else if(z.kind==='sword'||z.kind==='cross'){
@@ -664,7 +690,7 @@ function drawVargulHazards(ground=false){
           ctx.fillRect(0,z.y-d.depth,VW,d.depth*2);
           ctx.fillRect(z.x-camX-d.column,GTOP,d.column*2,GBOT-GTOP);ctx.restore();
         }
-      }else if(z.kind==='sword')paintVargulFx('sword_fall',(t-z.wait)/6,z.x,z.y+12,76,155);
+      }else if(z.kind==='sword')paintVargulSwordFall(z,t);
       else{
         paintVargulCrossEruption(z,t-z.wait);
       }
