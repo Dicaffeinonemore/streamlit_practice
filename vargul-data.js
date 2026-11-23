@@ -11,7 +11,7 @@ const VARGUL_VISUAL_SCALES = {"p1_idle":[1,1,1,0.999632,1,1,0.989367,0.993354,0.
 // Combat time is independent of the frozen sprite atlas. All ticks are 60 Hz.
 const VARGUL_RULES = {
   scale:.5112, depthScale:1, hp:[2000,2500], groggy:150,
-  names:{combo:'빙창 3연격',dash:'쾌속 돌진',sword:'빙검 소환',cross:'십자 빙결',orb:'얼음 구슬',sweep:'창 휘두르기',taunt:'냉소',ultimate:'빙결 강타'},
+  names:{combo:'빙창 3연격',dash:'쾌속 돌진',sword:'스피어 폴',cross:'십자 빙결',orb:'얼음 구슬',sweep:'창 휘두르기',taunt:'냉소',ultimate:'빙결 강타'},
   cooldowns:{combo:0,dash:240,sword:300,cross:300,orb:720,sweep:180,taunt:900,ultimate:900},
   gaps:[[26,50],[16,34]], walk:[[2,1.2],[2.6,1.5]],
   weights:[{

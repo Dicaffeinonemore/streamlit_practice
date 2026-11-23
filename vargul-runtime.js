@@ -507,13 +507,14 @@ function paintVargulIceSpike(frame,x,y,flip,column){
   ctx.drawImage(src,col*sw,sy,sw,s.fh,-ax*k,-s.pivot[1]*k,sw*k,s.fh*k);ctx.restore();
 }
 // Supplied pixelfx "Frost spear fall" sheet (source: assets/vargul/fx/frost-spear-fall.png + .json).
-// 9 columns of 240×220, 88 frames at 30 fps, pivot (120,190) on the ground.
+// 10 columns of 280×304, 88 frames at 30 fps, pivot (140,266) on the ground.
 // Frames: 0–8 frost gathers, 9–26 the sword forms and hovers, 27–31 it falls, 32 impact flash, 33–87 ring, shards, fade.
-const VARGUL_FROST_SPEAR={src:'assets/runtime/0938cba313db9ffad408f4d2.webp',fw:240,fh:220,columns:9,frames:88,pivot:[120,190],impact:32};
+const VARGUL_FROST_SPEAR={src:'assets/runtime/79721015e05bd1080692e605.webp',fw:280,fh:304,columns:10,frames:88,pivot:[140,266],impact:32};
 const VARGUL_FROST_SPEAR_IMAGE=GameAssets.group(3,[VARGUL_FROST_SPEAR.src]).images[0];
 // The sword gathers and falls during the mark's wait so frame 32 lands on the first damage tick.
 // The ring and shards after it are a harmless visual tail; damage still lasts only `active` ticks.
-const VARGUL_SWORD_FX={after:42,scale:.6};
+// This sheet draws the sword ~1.3× larger than the previous 240×220 one; .46 keeps the same on-screen size.
+const VARGUL_SWORD_FX={after:42,scale:.7};
 function vargulFrostSpearFrame(z,t){
   const s=VARGUL_FROST_SPEAR,fx=VARGUL_SWORD_FX;
   if(t<z.wait)return Math.min(s.impact-1,Math.floor(t*s.impact/z.wait));

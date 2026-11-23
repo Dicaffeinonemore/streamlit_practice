@@ -647,7 +647,6 @@ function drawGorath2Ground() {
       ctx.save();
       ctx.fillStyle = `rgba(255,30,30,${((.12 + .38 * u) * blink).toFixed(3)})`;
       ctx.beginPath(); ctx.ellipse(x, m.y, M.r * k, M.r * .3 * k, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = `rgba(255,90,70,${((.35 + .6 * u) * blink).toFixed(3)})`; ctx.lineWidth = 1.5; ctx.stroke();
       ctx.fillStyle = `rgba(0,0,0,${(.25 + .35 * u).toFixed(3)})`;               // 고기 그림자: 가까워질수록 커진다
       ctx.beginPath(); ctx.ellipse(x, m.y, M.r * .55 * u, M.r * .16 * u, 0, 0, Math.PI * 2); ctx.fill();
       ctx.restore();

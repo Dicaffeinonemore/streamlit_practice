@@ -134,12 +134,10 @@ function drawDangerZone(z) {
   const flash = z.active && z.activeAge <= Zc.activeFlashTicks;
   if (z.active && !flash) return;
   ctx.save();
-  if (!z.active) for (const m of z.more || []) {     // 이어지는 판정: 테두리만
-    ctx.lineWidth = m.kd ? Zc.kdLineWidth : Zc.lineWidth; ctx.strokeStyle = m.kd ? Zc.kdStroke : Zc.stroke;
-    ctx.setLineDash([4, 3]); ctx.strokeRect(m.x0 - camX, m.yC - m.depth, m.x1 - m.x0, m.depth * 2); ctx.setLineDash([]);
+  if (!z.active) for (const m of z.more || []) {     // 이어지는 판정: 테두리 없이 옅게 채운다
+    ctx.globalAlpha = Zc.moreAlpha; ctx.fillStyle = m.kd ? Zc.kdFill : Zc.fill;
+    ctx.fillRect(m.x0 - camX, m.yC - m.depth, m.x1 - m.x0, m.depth * 2); ctx.globalAlpha = 1;
   }
-  ctx.lineWidth = z.kd ? Zc.kdLineWidth : Zc.lineWidth;
-  ctx.strokeStyle = z.kd ? Zc.kdStroke : Zc.stroke;
   ctx.fillStyle = flash ? Zc.activeFill : z.kd ? Zc.kdFill : Zc.fill;
   if (flash) ctx.fillRect(x0, y0, w, h);
   else if (z.shape === 'ring') {                    // 회전: 적 몸에서 양쪽으로 차오른다
@@ -149,9 +147,8 @@ function drawDangerZone(z) {
     const fw = w * z.progress;
     ctx.fillRect(z.face > 0 ? x0 : x1 - fw, y0, fw, h);
   }
-  ctx.strokeRect(x0, y0, w, h);
-  if (z.shape === 'ring') { feelEllipse(z.ex - camX, z.yC, Math.min(z.ex - z.x0, z.x1 - z.ex) * .55, z.depth * .55); ctx.stroke(); }
-  if (z.land != null) { feelEllipse(z.land - camX, z.yC, 20, z.depth); ctx.stroke(); }
+  // 테두리는 그리지 않는다. 착지 지점만 같은 색 타원을 한 번 더 채워 진하게 보인다.
+  if (z.land != null) { feelEllipse(z.land - camX, z.yC, 20, z.depth); ctx.fill(); }
   ctx.restore();
 }
 function drawFeelGround() {

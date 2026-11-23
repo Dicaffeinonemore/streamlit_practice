@@ -219,7 +219,6 @@ function drawMorgraHazards(ground=false) {
       drawJudgmentField(z);
     } else if(z.kind==='pillar') {
       paintMorgra(morgraFxFrame(f<z.delay?'warning_circle':'dark_pillar',f<z.delay?Math.floor(f/15)%3:(f-z.delay)/6),z.x,z.y);
-      if(f<z.delay){ctx.save();ctx.strokeStyle='#c48cff';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(z.x-camX,z.y,44,22,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
     }
     else {
       const id=z.fx|| (z.kind==='crow'?(z.diving?'crow_dive':'crow_fly'):z.kind);

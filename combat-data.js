@@ -127,8 +127,8 @@ const COMBAT_FRAME_DATA = {
     hitJitterPx: { normal: 2, heavy: 3 },
     damageTextScaleHeavy: 1.3,
     hurtAnimRatio: 0.7,                              // 1스테이지 적 피격 그림: 경직의 앞 70% 에 모든 칸을 돌리고 나머지는 마지막 칸
-    zone: { stroke: 'rgba(255,60,60,.75)', fill: 'rgba(255,40,40,.28)', kdStroke: '#ff2050', kdFill: 'rgba(220,16,64,.32)',
-            activeFill: 'rgba(255,235,235,.55)', lineWidth: 1.2, kdLineWidth: 2.6, activeFlashTicks: 2 },
+    zone: { fill: 'rgba(255,40,40,.28)', kdFill: 'rgba(220,16,64,.32)',
+            activeFill: 'rgba(255,235,235,.55)', moreAlpha: .5, activeFlashTicks: 2 },
     lane: { stroke: 'rgba(255,70,70,.85)', playerPulse: 'rgba(255,50,50,', attackFlashTicks: 12, playerDepthPx: 24 },
     readability: { minWindTicks: 20, alertLateTicks: 8, alertPopTicks: 4, alertPopScale: 1.4 },
     signals: { spFullFlashTicks: 3, skillReadyTicks: 30 },
