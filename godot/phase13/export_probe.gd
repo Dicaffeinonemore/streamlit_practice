@@ -44,7 +44,7 @@ func click_at(point: Vector2) -> void:
 	await frames(2)
 
 func find_button(label: String) -> Button:
-	for child: Node in game.menu.buttons.find_children("*","Button",true,false):
+	for child: Node in game.menu.find_children("*","Button",true,false):
 		var b: Button = child as Button
 		if b.text == label and b.is_visible_in_tree(): return b
 	return null
@@ -54,7 +54,7 @@ func click_button(label: String) -> void:
 	var b: Button = find_button(label)
 	check(b != null,"Button exists: " + label)
 	if b == null: return
-	if game.menu.scroll != null:
+	if game.menu.scroll.is_ancestor_of(b):
 		game.menu.scroll.ensure_control_visible(b)
 		await frames(2)
 	await click_at(b.get_global_rect().get_center())
@@ -71,7 +71,7 @@ func key(code: Key) -> void:
 func record_layout(screen: String) -> void:
 	await frames(2)
 	var centres: Dictionary = {}
-	for child: Node in game.menu.buttons.find_children("*","Button",true,false):
+	for child: Node in game.menu.find_children("*","Button",true,false):
 		var b: Button = child as Button
 		if b.is_visible_in_tree():
 			var c: Vector2 = b.get_global_rect().get_center()
@@ -108,7 +108,7 @@ func run() -> void:
 	check(root.get_visible_rect().size == Vector2(960,540),"The game renders at 960 x 540")
 	check(int(ProjectSettings.get_setting("rendering/textures/canvas_textures/default_texture_filter")) == 0,"Nearest-neighbour sampling")
 	check(AudioServer.get_driver_name() != "Dummy","A real audio driver is active")
-	check((find_button("종료") != null) == BmkPlatform.can_quit(),"종료 matches the platform")
+	check(find_button(game.menu.title_image.caption("Exit")) != null,"Exit is on the title")
 	if mode == "write": await write_pass()
 	elif mode == "read": await read_pass()
 	else: check(false,"Unknown --probe mode")
@@ -118,19 +118,19 @@ func run() -> void:
 	report.close()
 	print("PROBE %s: %d checks, %d failures" % [mode.to_upper(),checks.size(),failures])
 	# Leave through the game's own path (title 종료 where it exists, otherwise request_close).
-	if mode == "read" and find_button("종료") != null: await click_button("종료")
+	if mode == "read" and BmkPlatform.can_quit() and find_button(game.menu.title_image.caption("Exit")) != null: await click_button(game.menu.title_image.caption("Exit"))
 	else: game.request_close()
 
 func write_pass() -> void:
-	check(find_button("이어하기") != null and find_button("이어하기").disabled,"No checkpoint before the first run")
+	check(find_button(game.menu.title_image.caption("Continue")) != null and find_button(game.menu.title_image.caption("Continue")).disabled,"No checkpoint before the first run")
 	check(game.audio.enabled,"Sound starts on")
 	await capture("title")
 	await record_layout("title")
-	await click_button("설정")
+	await click_button(game.menu.title_image.caption("Options"))
 	await record_layout("settings")
-	await click_button("뒤로")
+	await click_button("돌아가기")
 	check(game.menu.mode == "title","Settings → 뒤로 returns to the title")
-	await click_button("새 게임")
+	await click_button(game.menu.title_image.caption("New Game"))
 	await record_layout("characters")
 	await click_button("비에사로 시작")
 	check(game.menu.mode == "tutorial" and game.demo.on and game.demo.character == "viesa","Character select opens Viesa's tutorial")
@@ -158,10 +158,10 @@ func write_pass() -> void:
 	check(audio_pref is Dictionary and (audio_pref as Dictionary).get("sound") == "off","The sound preference is on disk")
 
 func read_pass() -> void:
-	var continue_button: Button = find_button("이어하기")
+	var continue_button: Button = find_button(game.menu.title_image.caption("Continue"))
 	check(continue_button != null and not continue_button.disabled,"이어하기 is offered after a restart")
 	check(not game.audio.enabled,"The sound stays off after a restart")
-	await click_button("이어하기")
+	await click_button(game.menu.title_image.caption("Continue"))
 	await get_tree().create_timer(1.0).timeout
 	check(not game.menu.visible and game.game_mode == "story" and game.stage_index == 0 and game.session.player.character_id == "viesa","Continue restores Viesa in Stage 1")
 	await capture("continue")

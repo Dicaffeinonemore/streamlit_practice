@@ -1,10 +1,12 @@
-# BLACK MOON KNIGHTS
+# Lunatic Nights
+
+웹과 Godot은 메인 메뉴의 [번역 CSV](godot/phase4/title_art/menu.csv)를 공유합니다. 기본 언어는 영어이며 **Options → Main menu language**에서 한국어를 선택할 수 있습니다.
 
 ## 모바일 화면 실험실
 
 사용자가 제공한 mini 가로 설정은 `data/mobile-layout-iphone-mini.json`에 보관하고 `mobile-display.js`에서 적용합니다. iPhone의 375×812 논리 화면 계열이 가로로 회전하면 좌우 50px·하단 21px을 최소 안전 여백으로 사용합니다. 실제 기기 안전 여백이 더 크면 그 값을 우선합니다. 게임의 960×540 전투 좌표와 16:9 비율은 유지하고 표시 크기만 남은 영역에 맞춥니다. 사용자가 저장한 조작키 배치는 우선 보존합니다. 브라우저에서는 mini 모델명을 직접 구분할 수 없어 동일 논리 화면 크기의 iPhone에도 이 규칙이 적용됩니다.
 
-게임 타이틀의 **모바일 화면 실험실 ↗** 링크 또는 로컬 서버의 `/mobile-lab.html`에서 엽니다.
+게임의 **Options** 안에 있는 **모바일 화면 실험실 ↗** 링크 또는 로컬 서버의 `/mobile-lab.html`에서 엽니다.
 전용 실행: `python tools/mobile_lab_server.py` (출력된 주소를 브라우저에서 열기).
 
 - 아이폰·갤럭시 대표 프리셋 10종(iPhone 12 mini·13 mini 포함), 가로/세로, 직접 입력, 브라우저 도구 모음 높이와 안전 여백을 비교합니다.

@@ -6,7 +6,7 @@ signal finished
 
 const MS: float = 1000.0 / 60.0
 const DURATION: float = 18000.0
-const LINES: Array[String] = ["붉은 월식이 다섯 왕국을 삼켰다.","무너진 왕좌 너머, 검은 성채가 깨어난다.","잿더미에서 한 기사가 일어섰다.","다섯 군주가 밤의 문을 지킨다.","대검을 들어, 끝나지 않는 밤을 가르라.","흑월의 기사"]
+const LINES: Array[String] = ["붉은 월식이 다섯 왕국을 삼켰다.","무너진 왕좌 너머, 검은 성채가 깨어난다.","잿더미에서 한 기사가 일어섰다.","다섯 군주가 밤의 문을 지킨다.","대검을 들어, 끝나지 않는 밤을 가르라.","Lunatic Nights"]
 const IMAGES: Array[String] = ["release_art.opening0__88bf332616b7.png","release_art.opening1__5d336676bd2f.png","release_art.opening2__e7e5e60d281d.png","release_art.opening3__be9495493866.png","release_art.opening4__9e061837a03c.png","release_art.opening5__bd77ca4fb7f1.png"]
 ## openingTime (ms), advanced once per simulation tick.
 var time: float = 0.0

@@ -23,9 +23,18 @@ static func code_for(key: int) -> String:
 		KEY_DOWN: return "ArrowDown"
 		KEY_SPACE: return "Space"
 		KEY_SHIFT: return "ShiftLeft"
+		BmkPhysicalInput.RIGHT_SHIFT: return "ShiftRight"
+		KEY_CTRL: return "ControlLeft"
+		BmkPhysicalInput.RIGHT_CTRL: return "ControlRight"
 		KEY_ESCAPE: return "Escape"
 		KEY_ENTER: return "Enter"
 	return ""
+
+static func key_for(code: String) -> int:
+	if code.begins_with("Key") or code.begins_with("Digit"): return code.unicode_at(code.length() - 1)
+	for key: int in [KEY_LEFT,KEY_RIGHT,KEY_UP,KEY_DOWN,KEY_SPACE,KEY_SHIFT,BmkPhysicalInput.RIGHT_SHIFT,KEY_CTRL,BmkPhysicalInput.RIGHT_CTRL]:
+		if code_for(key) == code: return key
+	return KEY_NONE
 
 ## UX.keyName(code)
 static func key_name(code: String) -> String:

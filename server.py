@@ -11,6 +11,7 @@ import http.server
 import hashlib
 import base64
 import json
+import mimetypes
 import os
 import re
 import shutil
@@ -20,6 +21,7 @@ import webbrowser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+TITLE_ASSETS = ("godot/phase4/title_art/menu.webp", "godot/phase4/title_art/selection.png", "godot/phase4/title_art/lettering.png", "godot/phase4/title_art/menu.csv")
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
 SCRIPTS = ["perf-runtime.js", "combat-data.js", "motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "aurelion-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-dash-attack.js", "src/animation/barel-hurt.js", "src/animation/barel-down.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "gorath-remake-art.js", "gorath-remake-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "stage1-bg-art.js", "stage1-fx-art.js", "stage1-enemy-art.js", "stage1-runtime.js", "feel-runtime.js", "demo-runtime.js", "game.js"]   # 순서 중요: combat-data.js(전투 수치) → motion.js(엔진) 먼저
@@ -74,6 +76,11 @@ def build_single_html() -> str:
             mime = "jpeg" if extension == "jpg" else extension
             return "data:image/" + mime + ";base64," + base64.b64encode(image_path.read_bytes()).decode("ascii")
         code = re.sub(r"assets/runtime/[a-f0-9]+\.(?:png|webp|gif|jpg)", embed_image, code)
+        if name == "title-menu.js":
+            for asset in TITLE_ASSETS:
+                mime = "text/csv;charset=utf-8" if asset.endswith(".csv") else mimetypes.guess_type(asset)[0]
+                encoded = base64.b64encode((ROOT / asset).read_bytes()).decode("ascii")
+                code = code.replace(asset, f"data:{mime};base64,{encoded}")
         return f"<script>\n{code}\n</script>"
 
     html = re.sub(r'<script\s+src=([\"\'])([^\"\']+)\1\s*>\s*</script>', inline_script, html)
@@ -113,6 +120,8 @@ def prepare_streamlit_component() -> Path:
     destination.mkdir(parents=True, exist_ok=True)
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     files = set(re.findall(r'<script\s+src=[\"\']([^\"\']+)[\"\']', html))
+    if "title-menu.js" in files:
+        files.update(TITLE_ASSETS)
     if "src/animation/barel-combo0.js" in files:
         # Runtime fetches are relative to the component document, as locally.
         animation_files = (
@@ -243,7 +252,7 @@ def prepare_streamlit_component() -> Path:
 def run_streamlit():
     import streamlit as st
 
-    st.set_page_config(page_title="BLACK MOON KNIGHTS", page_icon="🌑", layout="wide")
+    st.set_page_config(page_title="Lunatic Nights", page_icon="🌑", layout="wide")
     # 좌우 여백 최소화: 기본 block-container 의 max-width / 좌우 padding 제거
     st.markdown(
         "<style>.block-container,.stMainBlockContainer{padding:1rem .5rem .5rem;max-width:100%}</style>",

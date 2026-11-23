@@ -29,10 +29,10 @@ func click_at(point: Vector2) -> void:
 
 func click_button(label: String, container: Node = null) -> void:
 	await process_frame
-	for child: Node in (container if container != null else game.menu.buttons).find_children("*","Button",true,false):
+	for child: Node in (container if container != null else game.menu).find_children("*","Button",true,false):
 		var b: Button = child as Button
 		if b.text == label and b.is_visible_in_tree():
-			if container == null and game.menu.scroll != null:
+			if container == null and game.menu.scroll.is_ancestor_of(b):
 				game.menu.scroll.ensure_control_visible(b)
 				await process_frame
 				await process_frame
@@ -97,7 +97,7 @@ func run() -> void:
 	var startup: BmkSimulation = game.session
 
 	# ---- Title -> character select -> tutorial (characterSelect origin)
-	await click_button("새 게임")
+	await click_button(game.menu.title_image.caption("New Game"))
 	await click_button("바렐로 시작")
 	await process_frame
 	check(game.menu.mode == "tutorial" and t.visible,"Picking a character opens the tutorial")
@@ -189,7 +189,7 @@ func run() -> void:
 	# ---- Story: tutorial -> 게임 시작 (Enter) -> opening -> stage 1
 	game.pause_game(true)
 	game.menu.show_title()
-	await click_button("새 게임")
+	await click_button(game.menu.title_image.caption("New Game"))
 	await click_button("비에사로 시작")
 	var before_files: String = files()
 	tick(120)
@@ -211,7 +211,7 @@ func run() -> void:
 	# ---- Opening runs out by itself after 18 s
 	game.pause_game(true)
 	game.menu.show_title()
-	await click_button("새 게임")
+	await click_button(game.menu.title_image.caption("New Game"))
 	await click_button("바렐로 시작")
 	await click_button("게임 시작",t)
 	check(game.menu.mode == "opening","게임 시작 opens the opening")

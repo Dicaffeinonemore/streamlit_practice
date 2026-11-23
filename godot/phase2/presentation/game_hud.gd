@@ -40,7 +40,7 @@ func _draw() -> void:
 		text(Vector2(20,46),"HP %d / 100    LIFE %d" % [p.hp,p.lives],Color("f2e9dd"),13)
 		bar(Vector2(20,53),260,p.hp / 100,Color("bd354b"))
 		bar(Vector2(20,66),260,p.sp / 100,Color("70b7ee"))
-		text(Vector2(304,27),"BLACK MOON KNIGHTS",Color("e4d5ba"),19)
+		text(Vector2(304,27),"Lunatic Nights",Color("e4d5ba"),19)
 		text(Vector2(304,49),"STAGE 1 / OCCUPIED STREET",Color("bbb0b5"),12)
 		text(Vector2(755,25),"SCORE %06d" % p.score,Color("e4d5ba"),16)
 		text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)
@@ -54,7 +54,9 @@ func _draw() -> void:
 		text(Vector2(21,104),"F9  HITBOX / F2 REFILL SP + MAGIC",Color("c1efc5"),12)
 		text(Vector2(21,123),"tick %d | hitStop %d | tier %s" % [s.tick,s.hit_stop,s.last_tier],Color("c1efc5"),12)
 		text(Vector2(21,143),"%s t=%d | x %.2f  y %.2f  z %.2f" % [p.st,p.t,p.x,p.y,p.z],Color("c1efc5"),12)
-	if game.clock.paused or game.section.complete or s.game_over:
+	# The F5 game's menu draws its own pause / CONTINUE? / GAME OVER screens over this.
+	var menu_shown: bool = game is BmkMenuGame and (game as BmkMenuGame).menu != null and (game as BmkMenuGame).menu.visible
+	if (game.clock.paused or game.section.complete or s.game_over) and not menu_shown:
 		draw_rect(Rect2(0,0,960,540),Color(0.015,0.01,0.025,0.7))
 		var title: String = "SECTION 1 COMPLETE" if game.section.complete else ("GAME OVER" if s.game_over else "PAUSED")
 		text(Vector2(304,251),title,Color("e4d5ba"),30)

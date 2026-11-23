@@ -167,7 +167,7 @@ const UX = (() => {
   function refreshTitle() {
     const btn = document.getElementById('btnContinue'); if (!btn) return;
     const c = checkpoint(), r = records();
-    btn.hidden = !c; btn.textContent = c ? `STAGE ${c.stage + 1} 이어하기` : '이어하기';
+    btn.disabled = !c;
     document.getElementById('recordSummary').textContent = r.bestScore ? `최고 점수 ${r.bestScore.toLocaleString()} · ` + r.stages.map((s, i) => s ? `${i + 1}: ${s.rank}` : '').filter(Boolean).join(' / ') : '첫 클리어 기록에 도전하세요';
     document.getElementById('saveStatus').textContent = available ? '' : '이 브라우저에서는 저장할 수 없습니다. 현재 게임은 계속할 수 있습니다.';
   }
@@ -176,8 +176,6 @@ const UX = (() => {
     document.getElementById('performanceStats').hidden = !options.perf;
     AUDIO.setVolumes(options.music, options.sfx);
     document.body.classList.toggle('reduce-motion', !options.shake);
-    const titleImage = document.getElementById('namedTitleImage');
-    if (titleImage && typeof TITLE_ART_SRC === 'string' && titleImage.getAttribute('src') !== TITLE_ART_SRC) titleImage.src = TITLE_ART_SRC;
     document.body.classList.toggle('touch', options.touch);
     if (typeof MOBILE_FULLSCREEN !== 'undefined') MOBILE_FULLSCREEN.sync();
   }
@@ -402,7 +400,8 @@ const UX = (() => {
     AUDIO.onBossInfo(() => showBgm()); showBgm();
     applySettings(); bindingButtons(); refreshTitle();
   }
-  return { options, keyName, mapKey, drawKeyboard, shortName, setPreset, presets: PRESET_INFO, checkpoint, records, record, mount, refreshTitle, clearTouch, startTouchEdit, endTouchEdit, refreshBindings:bindingButtons,
+  return { menuLanguage: () => read('menuLanguage') === 'ko' ? 'ko' : 'en',
+    saveMenuLanguage: value => write('menuLanguage', value), options, keyName, mapKey, drawKeyboard, shortName, setPreset, presets: PRESET_INFO, checkpoint, records, record, mount, refreshTitle, clearTouch, startTouchEdit, endTouchEdit, refreshBindings:bindingButtons,
     setTouchLayout: layout => { options.touchLayout = validLayout(layout); applyTouchLayout(); },
     get touchEditing() { return editing; },
     saveCheckpoint: c => write('checkpoint', c && { ...c, version: 1 }), cancelCapture: () => { capture = null; } };

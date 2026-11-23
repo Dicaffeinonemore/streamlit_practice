@@ -101,6 +101,7 @@ function inputDown(code) {
 }
 function inputUp(code) { if (scene === 'tutorial') { lightCaps(code, false); return; } keys[code] = false; }
 addEventListener('keydown', e => {
+  if (scene === 'title' && TitleMenu.handleKey(e)) return;
   if(!e.repeat&&vargulDebugKey(e.code)){e.preventDefault();return;}
   if(e.code==='F9'&&!e.repeat){e.preventDefault();toggleHitboxDebug();return;}   // 판정 오버레이
   if (e.target.closest?.('input, select, textarea, button') && scene !== 'play' && !['Escape', 'KeyM'].includes(e.code)) return;
@@ -283,7 +284,7 @@ function newPlayer(score = 0, characterId = selectedCharacterId) {
 }
 
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
-const screens = ['title', 'characterSelect', 'tutorial', 'pause', 'clear', 'over', 'ending', 'settings', 'challenge', 'challengeResult'];
+const screens = ['title', 'titleInfo', 'characterSelect', 'tutorial', 'pause', 'clear', 'continue', 'over', 'ending', 'settings', 'challenge', 'challengeResult'];
 const CHARACTER_ROSTER = {
   barel: { name: '바렐', job: '흑기사', description:'대검으로 전장을 가르는 흑기사', available: true },
   viesa: { name: '비에사', job: '궁수', description:'흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.', available: true }
@@ -380,7 +381,7 @@ function beginGame(cinematic = false) {
   player = newPlayer(0);
   startStage(0);
 }
-function toTitle() { bossChallenge = false; clearInput(); practice = false; scene = 'title'; showScreen('title'); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
+function toTitle() { bossChallenge = false; clearInput(); practice = false; scene = 'title'; showScreen('title'); TitleMenu.reset(); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
 function pauseGame(reason = 'ESC 또는 계속하기') {
   if (!['play', 'intro', 'bossintro'].includes(scene)) return;
   resumeScene = scene; clearInput(); scene = 'pause'; $('pauseReason').textContent = reason; showScreen('pause'); AUDIO.pause(true);
@@ -389,7 +390,7 @@ function resumeGame() {
   if (scene !== 'pause') return;
   clearInput(); scene = resumeScene; showScreen(null); AUDIO.pause(false); last = performance.now(); acc = 0;
 }
-function openSettings(from) { settingsFrom = from; clearInput(); scene = 'settings'; showScreen('settings'); }
+function openSettings(from) { $('titleExtras').hidden = from !== 'title'; settingsFrom = from; clearInput(); scene = 'settings'; showScreen('settings'); }
 function closeSettings() { UX.cancelCapture(); scene = settingsFrom; showScreen(settingsFrom); clearInput(); }
 function entrySnapshot(i = stageIdx) {
   const { score, hp, lives, sp, mg, buff } = player;
@@ -456,6 +457,8 @@ $('btnStart').onclick = openCharacterSelect;
 $('btnGo').onclick = () => beginGame(true);
 $('btnNext').onclick = nextStage;
 $('btnRetry').onclick = retryStage;
+$('btnContinueFight').onclick = continueFight;
+$('btnContinueGiveUp').onclick = () => { if (scene === 'continue') gameOver(); };
 $('btnToTitle').onclick = toTitle;
 $('btnEndTitle').onclick = toTitle;
 $('btnContinue').onclick = continueGame;
@@ -466,6 +469,20 @@ $('btnResume').onclick = resumeGame;
 $('playPause').onclick = () => pauseGame();
 $('btnPauseTitle').onclick = toTitle;
 $('btnRestart').onclick = () => { AUDIO.pause(false); if (practice) beginPractice(); else retryStage(); };
+function showTitleInfo(heading, body) {
+  clearInput(); scene = 'titleInfo'; showScreen(scene);
+  $('titleInfoHeading').dataset.menu = heading;
+  $('titleInfoHeading').textContent = TitleMenu.text(heading);
+  $('titleInfoBody').dataset.menu = body;
+  $('titleInfoBody').textContent = TitleMenu.text(body);
+  $('btnInfoBack').focus();
+}
+$('btnCredits').onclick = () => showTitleInfo('Credits', 'MENU_CREDIT_LINE');
+$('btnExit').onclick = () => {
+  MOBILE_FULLSCREEN.exit();
+  showTitleInfo('Exit', 'MENU_EXIT_WEB');
+};
+$('btnInfoBack').onclick = toTitle;
 $('btnTitleSettings').onclick = () => openSettings('title');
 $('btnPauseSettings').onclick = () => openSettings('pause');
 $('btnPauseHelp').onclick = () => toTutorial('pause');
@@ -486,6 +503,7 @@ function onKeyOnce(code) {
     else if (scene === 'tutorial' && helpFrom !== 'pause') beginGame(true);
     else if (scene === 'clear') nextStage();
     else if (scene === 'over') retryStage();
+    else if (scene === 'continue') continueFight();
     else if (scene === 'ending') toTitle();
     else if (scene === 'challengeResult') beginBossChallenge(stageIdx);
   }
@@ -493,7 +511,8 @@ function onKeyOnce(code) {
   if (code === 'Escape') {
     if (['play', 'intro', 'bossintro'].includes(scene)) pauseGame();
     else if (scene === 'pause') resumeGame();
-    else if (scene === 'challenge') toTitle();
+    else if (scene === 'continue') gameOver();
+    else if (scene === 'challenge' || scene === 'titleInfo') toTitle();
     else if (scene === 'characterSelect') backFromCharacterSelect();
     else if (scene === 'challengeResult') openBossChallenge();
     else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else closeSettings(); }
@@ -533,6 +552,37 @@ function startStage(i, restored = false) {
 function nextStage() {
   if (bossChallenge) return;
   if (stageIdx + 1 < STAGES.length) startStage(stageIdx + 1);
+}
+// ---------------------------------------------------------------- 컨티뉴 (스토리 모드)
+// 라이프를 모두 잃으면 10초 동안 CONTINUE? 를 묻는다. 이어서 싸우면 쓰러진 자리(일반 리스폰과 같은 위치·무적)에서
+// 라이프 3개·체력 가득으로 다시 일어나고 점수는 0이 된다. 포기하거나 시간이 다 되면 GAME OVER.
+const CONTINUE_SECONDS = 10, TICKS_PER_SECOND = Math.round(1000 / MS);
+let continueTicks = 0;                             // 정수 틱으로 센다 (MS 누적의 부동소수 오차 방지)
+function offerContinue() {
+  scene = 'continue'; continueTicks = CONTINUE_SECONDS * TICKS_PER_SECOND; clearInput();
+  $('continueCount').textContent = String(CONTINUE_SECONDS);
+  showScreen('continue'); $('btnContinueFight').focus();
+}
+function updateContinue() {
+  continueTicks--;
+  const left = Math.max(0, Math.ceil(continueTicks / TICKS_PER_SECOND));
+  if ($('continueCount').textContent !== String(left)) { $('continueCount').textContent = String(left); if (left > 0) sfx('click'); }
+  if (continueTicks <= 0) gameOver();
+}
+function continueFight() {
+  if (scene !== 'continue') return;
+  const p = player;
+  p.score = 0; p.lives = newPlayer(0, p.characterId).lives;
+  p.st = 'free'; p.t = 0; p.hp = p.max; p.inv = 150; p.z = 0; p.vz = 0; p.vx = 0;
+  p.x = camX + 100; p.y = 420;
+  stat.continues = (stat.continues || 0) + 1;
+  clearInput(); scene = 'play'; showScreen(null); last = performance.now(); acc = 0; sfx('click');
+}
+function gameOver() {
+  const p = player;
+  scene = 'over'; AUDIO.stop(0.3); sfx('defeat');
+  $('overInfo').textContent = `${stage.name} ${stage.title} — 점수 ${p.score}`;
+  showScreen('over');
 }
 function retryStage() {
   if (bossChallenge) { beginBossChallenge(stageIdx); return; }
@@ -1081,11 +1131,8 @@ function updPlayer() {
         if (p.lives > 0) {                      // 리스폰
           p.st = 'free'; p.t = 0; p.hp = p.max; p.inv = 150; p.z = 0; p.vz = 0;
           p.x = camX + 100; p.y = 420;
-        } else {
-          scene = 'over'; AUDIO.stop(0.3); sfx('defeat');
-          $('overInfo').textContent = `${stage.name} ${stage.title} — 점수 ${p.score}`;
-          showScreen('over');
-        }
+        } else if (!bossChallenge && !practice) offerContinue();   // 스토리: 10초 안에 이어서 싸우기
+        else gameOver();
       }
       break;
   }
@@ -1650,6 +1697,7 @@ function updHazards() {
 // ---------------------------------------------------------------- 메인 업데이트
 function update() {
   if (scene === 'tutorial') return demoUpdate();
+  if (scene === 'continue') { updateContinue(); return false; }
   if (['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene)) return false;
   tick++;
   if (scene === 'opening') { openingTime += MS; if (openingTime >= 18000) finishOpening(); return; }
@@ -3175,7 +3223,7 @@ function loop(t) {
     waitingAssets = true; acc = 0; GamePerf.reset(); scheduleLoop(100); return;
   }
   if (waitingAssets) { real = 0; waitingAssets = false; }
-  const frozen = ['pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene) && !(scene === 'tutorial' && DEMO.on && !DEMO.paused);
+  const frozen = ['title', 'titleInfo', 'pause', 'settings', 'tutorial', 'clear', 'over', 'ending'].includes(scene) && !(scene === 'tutorial' && DEMO.on && !DEMO.paused);
   const frozenKey = `${scene}|${renderRevision}|${GameAssets.revision}`;
   if (document.hidden || (frozen && frozenFrame === frozenKey)) {
     GamePerf.reset();
@@ -3192,7 +3240,7 @@ function loop(t) {
   }
   const renderStart = performance.now();
   ctx.setTransform(RENDER_K, 0, 0, RENDER_K, 0, 0);   // 960x540 좌표계를 실제 해상도로 확대
-  if (scene === 'title' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && !DEMO.on && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
+  if (scene === 'title' || scene === 'titleInfo' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && !DEMO.on && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
   else render();
   if (scene === 'characterSelect') drawCharacterPreview();

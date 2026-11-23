@@ -2,7 +2,10 @@ config_version=5
 
 [application]
 
-config/name="Black Moon Knight"
+config/name="Lunatic Nights"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Godot/app_userdata/Black Moon Knight"
+config/custom_user_dir_name.linuxbsd="godot/app_userdata/Black Moon Knight"
 run/main_scene="res://phase4/game.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/quit_on_go_back=false

@@ -250,7 +250,7 @@ func strike_crows(reach: float, behind: float, x: float, y: float, z: float, fac
 	morgra.strike_crows(self,reach,behind,x,y,z,face)
 
 func step() -> bool:
-	if mode == "clear" or game_over: return false
+	if mode == "clear" or game_over or continue_pending: return false
 	tick += 1
 	if mode == "intro":
 		banner_t -= 1
@@ -270,7 +270,7 @@ func step() -> bool:
 	if shake > 0: shake *= 0.85
 	player_controller.step(self)
 	observe_jump()
-	if game_over: return true
+	if game_over or continue_pending: return true
 	if progression_enabled: update_waves()
 	var i: int = 0
 	while i < enemies.size():

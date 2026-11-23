@@ -4,7 +4,7 @@
 const fs = require('fs'), path = require('path'), os = require('os');
 const { spawnSync } = require('child_process');
 const godot = path.resolve(__dirname, '../..');
-const exe = path.join(godot, 'build/windows/BlackMoonKnight.exe');
+const exe = path.join(godot, 'build/windows/LunaticNights.exe');
 const out = path.join(godot, 'evidence/phase13/windows');
 const userDir = path.join(process.env.APPDATA, 'Godot/app_userdata/Black Moon Knight');
 const backup = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-phase13-saves-'));

@@ -44,6 +44,8 @@ func _ready() -> void:
 	menu.resume_game.connect(resume_from_menu)
 	menu.retry_game.connect(retry_current)
 	menu.next_stage.connect(continue_next_stage)
+	menu.continue_fight.connect(continue_fight)
+	menu.give_up.connect(game_over_now)
 	menu.quit_game.connect(request_close)
 	menu.settings_changed.connect(apply_preferences)
 	menu.tutorial_requested.connect(open_tutorial)
@@ -71,8 +73,7 @@ func _ready() -> void:
 	pause_button.tooltip_text = "일시정지"
 	pause_button.visible = false
 	pause_button.pressed.connect(func() -> void:
-		pause_game(true)
-		menu.show_pause())
+		open_pause())
 	pause_layer.add_child(pause_button)
 	practice_buttons = HBoxContainer.new()
 	practice_buttons.theme = menu.tutorial.theme
@@ -135,10 +136,17 @@ func practice_go() -> void:
 
 ## btnPracticeHelp: pauseGame(); toTutorial('pause').
 func practice_help() -> void:
-	pause_game(true)
+	open_pause()
 	menu.show_tutorial("pause")
 
 ## clearInput() also forgets touch pointers (UX.clearTouch()).
+func open_pause(reason: String = "PAUSE_REASON") -> void:
+	pause_game(true)
+	menu.paused_challenge = game_mode == "challenge"
+	menu.paused_character = session.player.character_id
+	menu.pause_reason = reason
+	menu.show_pause()
+
 func pause_game(value: bool) -> void:
 	super.pause_game(value)
 	if touch != null: touch.clear_touch()
@@ -314,8 +322,12 @@ func _physics_process(delta: float) -> void:
 		demo.tick()
 		present()
 		return
+	# Only the story offers CONTINUE? (game.js: !bossChallenge && !practice).
+	session.continue_offer = game_mode == "story"
 	super._physics_process(delta)
 	var s: BmkStageSimulation = session as BmkStageSimulation
+	if s.continue_pending and not (menu.visible and menu.mode == "continue"): offer_continue()
+	elif s.game_over and not menu.visible: show_game_over()
 	if game_mode == "practice" and not clock.paused:
 		var p: BmkActorState = s.player
 		if absf(p.x - practice_origin) > 40: practice_done["move"] = true
@@ -351,6 +363,56 @@ func _physics_process(delta: float) -> void:
 		if game_mode == "story" and stage_index >= 4: menu.show_ending(report)
 		else: menu.show_result(report,game_mode == "challenge",stage_index,game_mode == "story" and stage_index < 4)
 
+# ------------------------------------------------------------------ continue (story)
+## game.js offerContinue(): the run is frozen (the simulation stops on continue_pending) and the music
+## keeps playing, as in the page, while the menu counts down from 10.
+func offer_continue() -> void:
+	clock.paused = true
+	physical.clear(session)
+	if touch != null: touch.clear_touch()
+	menu.show_continue()
+
+## game.js continueFight(): up where the player fell, as a normal respawn (cam + 100, 420, 150 ticks of
+## invulnerability), with newPlayer()'s 3 lives, full HP and the score reset to 0.
+func continue_fight() -> void:
+	var s: BmkSimulation = session
+	if not s.continue_pending: return
+	var p: BmkActorState = s.player
+	p.score = 0
+	p.lives = BmkActorState.new().lives
+	p.st = "free"
+	p.t = 0
+	p.hp = p.max_hp
+	p.inv = 150
+	p.z = 0.0
+	p.vz = 0.0
+	p.vx = 0.0
+	p.x = s.cam_x + 100.0
+	p.y = 420.0
+	s.continue_pending = false
+	menu.visible = false
+	physical.clear(session)
+	clock.paused = false
+	audio.play("click")
+
+## game.js gameOver(): declined or timed out (or a boss challenge's last life): AUDIO.stop(0.3),
+## sfx('defeat') and the GAME OVER screen.
+func game_over_now() -> void:
+	var s: BmkSimulation = session
+	if s.continue_pending:
+		s.continue_pending = false
+		s.game_over = true
+		s.music("stop",0.3)
+		s.sound("defeat")
+	show_game_over()
+
+func show_game_over() -> void:
+	clock.paused = true
+	physical.clear(session)
+	if touch != null: touch.clear_touch()
+	var stage: Dictionary = (bank.catalogs["STAGES"] as Array)[clampi(stage_index,0,4)]
+	menu.show_game_over("%s %s — 점수 %d" % [stage["name"],stage["title"],int(session.player.score)],game_mode == "challenge")
+
 ## Phase 13: Android's back button (application/config/quit_on_go_back is off). On the title it
 ## leaves the app; everywhere else it is Esc, so it pauses, goes back a menu or ends layout editing.
 func go_back() -> void:
@@ -366,7 +428,7 @@ func go_back() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	# game.js keydown: M toggles sound on every screen (AUDIO.toggle()).
-	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_M and not (touch != null and touch.editing) and not (menu != null and menu.mode == "bindings"):
+	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_M and not (touch != null and touch.editing):
 		audio.toggle()
 		if menu != null and menu.visible and menu.mode == "settings": menu.show_settings()
 		return
@@ -378,11 +440,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if menu.visible:
 		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and menu.tutorial_key((event as InputEventKey).keycode): return
-		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE and menu.mode == "pause": resume_from_menu()
+		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE:
+			if menu.mode == "pause": resume_from_menu()
+			elif menu.mode == "settings": menu.back_from_settings()
+			elif menu.mode == "continue": menu.answer_continue(false)
+		# onKeyOnce Enter: continue, or 다시 도전 on GAME OVER.
+		if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode in [KEY_ENTER,KEY_KP_ENTER]:
+			if menu.mode == "continue": menu.answer_continue(true)
+			elif menu.mode == "over": retry_current()
 		return
 	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_ESCAPE:
-		pause_game(true)
-		menu.show_pause()
+		open_pause()
+		return
+	# A custom physical R belongs to the selected action, including on key release.
+	if event is InputEventKey and BmkPhysicalInput.key_id(event) == KEY_R and physical.by_key.has(KEY_R):
+		physical.handle(event, session)
+		return
+	if event is InputEventKey and (event as InputEventKey).keycode == KEY_F1:
+		if event.is_pressed() and not (event as InputEventKey).echo:
+			physical.clear(session)
+			preferences.use_preset("wasd" if preferences.preset == "arcade" else "arcade")
+			apply_preferences()
 		return
 	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_R:
 		retry_current()
@@ -393,4 +471,4 @@ func _notification(what: int) -> void:
 	super._notification(what)
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST: go_back()
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and menu != null and not menu.visible and not capture_mode:
-		menu.show_pause()
+		open_pause("PAUSE_BLUR")

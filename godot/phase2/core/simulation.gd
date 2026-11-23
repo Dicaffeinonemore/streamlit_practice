@@ -40,6 +40,10 @@ var lane_flash_ids: Dictionary[int, bool] = {}
 var sp_full: bool = false
 var fixed_random: bool = false
 var game_over: bool = false
+## Story continue (game.js offerContinue): when the owner allows it, losing the last life stops the
+## run with continue_pending instead of game_over, and the game asks CONTINUE? for 10 s.
+var continue_offer: bool = false
+var continue_pending: bool = false
 var stage_driver: Callable
 var jump_phase: String = ""
 var jump_phase_ticks: int = 0

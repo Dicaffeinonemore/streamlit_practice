@@ -18,6 +18,7 @@ const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></
   return `<script>\n${source}\n</script>`;
 }), embeddedSource);
 const allowed = new Set(['index.html', 'mobile-lab.html', 'mobile-lab.css', 'mobile-lab.js', ...scripts]);
+for (const name of ['menu.csv', 'menu.webp', 'selection.png', 'lettering.png']) allowed.add('godot/phase4/title_art/' + name);
 for (const name of JSON.parse(fs.readFileSync(path.join(root, 'data/runtime-assets.json'), 'utf8'))) allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-revised-10/barel-walk-revised-10.animation.json','assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.json','assets/aseprite/exports/barel-walk-revised-10/barel-walk-revised-10.png'])allowed.add(name);
@@ -496,6 +497,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.DEATH_FADE_SUITE){await ready(base+'/embedded.html');await require('./death-fade.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VIESA_FIXES_SUITE){await ready(base+'/embedded.html');await require('./viesa-fixes.cjs')({evaluate,call,errors,root});return;}
     if(process.env.CONTROLS_DEMO_SUITE){await ready(base+'/embedded.html');await require('./controls-demo.cjs')({evaluate,call,errors,root,base,ready});return;}
+    if(process.env.TITLE_MENU_SUITE){await ready(process.env.TITLE_MENU_URL || base+'/index.html');await require('./title-menu.cjs')({evaluate,call,errors,root});return;}
     if(process.env.CHARACTER_SELECT_SUITE){await ready(base+'/embedded.html');await require('./character-select.cjs')({evaluate,call,errors,root});return;}
     if(process.env.FRAME_DATA_SUITE){await ready(base+'/index.html');await require('./frame-data.cjs')({evaluate,call,errors,root});return;}
     if(process.env.COMBAT_UPDATE_SUITE){await ready(base+'/embedded.html');await require('./combat-update.cjs')({evaluate,call,errors,root});return;}
@@ -611,11 +613,12 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       await screenshot('player-walk-'+face);
     }
     await evaluate('toTitle(); document.getElementById("namedTitleImage").decode()');
-    assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundImage.startsWith('url(')`),true,'Settings uses supplied artwork');
-    assert.equal(await evaluate(`getComputedStyle($('btnTitleSettings')).backgroundSize`),'contain','Settings art is fitted inside button');
+    await evaluate('TitleMenu.ready');
+    assert.deepEqual(await evaluate("Array.from(document.querySelectorAll('.title-choice'), b => b.textContent)"),
+      ['New Game', 'Continue', 'Options', 'Credits', 'Exit']);
     for(const [width,height] of [[1920,1080],[844,390],[390,844]]) {
       await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
-      assert.equal(await evaluate(`(()=>{const r=$('wrap').getBoundingClientRect();return ['btnStart','btnContinue','btnTitleSettings'].every(id=>{const b=$(id).getBoundingClientRect();return b.top>=r.top&&b.bottom<=r.bottom&&b.left>=r.left&&b.right<=r.right})})()`),true,'Named title controls fit');
+      assert.equal(await evaluate(`(()=>{const r=$('wrap').getBoundingClientRect();return ['btnStart','btnContinue','btnTitleSettings','btnCredits','btnExit'].every(id=>{const b=$(id).getBoundingClientRect();return b.top>=r.top&&b.bottom<=r.bottom&&b.left>=r.left&&b.right<=r.right})})()`),true,'Named title controls fit');
       await screenshot('named-title-'+width);
     }
     await call('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false});

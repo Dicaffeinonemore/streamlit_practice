@@ -2,7 +2,7 @@ class_name BmkKeyboardView
 extends Control
 ## game-ui.js UX.drawKeyboard(box, {focus, pressed}): the keyboard picture with each bound key
 ## coloured by action kind, unfocused keys dimmed and pressed keys lit.
-## Not ported: alias keys (dashed), because the native input has no alias keys.
+signal key_chosen(code: String)
 
 const KB_W: float = 15.75
 const KB_H: float = 5.0
@@ -63,19 +63,39 @@ func action_for(map: Dictionary, code: String) -> String:
 		if map.get(action) == code: return action
 	return ""
 
+func alias_for(map: Dictionary, code: String) -> String:
+	if settings == null or settings.preset == "arcade" or map.values().has(code): return ""
+	return BmkPhysicalInput.ALIASES.get(BmkKeyNames.key_for(code), "")
+
+func key_rect(k: Array) -> Rect2:
+	var unit := size.x / KB_W
+	return Rect2(float(k[2])*unit, float(k[3])*unit, (float(k[4])-0.12)*unit, 0.88*unit)
+
+func _gui_input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if click == null or click.button_index != MOUSE_BUTTON_LEFT or not click.pressed: return
+	for k: Array in keys:
+		if key_rect(k).has_point(click.position):
+			key_chosen.emit(str(k[0]))
+			accept_event()
+			return
+
 func _draw() -> void:
 	var w: float = size.x
-	var h: float = w * KB_H / KB_W
 	var cqi: float = w / 100.0
+	var cap := StyleBoxFlat.new()
+	cap.set_corner_radius_all(maxi(2,roundi(0.9 * cqi)))
 	var map: Dictionary = BmkKeyNames.bindings(settings)
 	for k: Array in keys:
 		var code: String = str(k[0])
 		var action: String = action_for(map,code)
+		var alias := alias_for(map,code)
+		if action.is_empty(): action = alias
 		var kind: String = str(BmkKeyNames.KIND[action]) if not action.is_empty() else ("system" if BmkKeyNames.SYSTEM.has(code) else "")
 		var text: String = BmkKeyNames.short_name(action,character) if not action.is_empty() else str(BmkKeyNames.SYSTEM.get(code,""))
 		var dim: bool = use_focus and not (not action.is_empty() and focus.has(action))
 		var on: bool = not action.is_empty() and pressed.has(action)
-		var r: Rect2 = Rect2(float(k[2]) / KB_W * w,float(k[3]) / KB_H * h,(float(k[4]) - 0.12) / KB_W * w,0.88 / KB_H * h)
+		var r: Rect2 = key_rect(k)
 		if on: r.position.y += 0.4 * cqi
 		var kc: Color = COLORS.get(kind,Color("4a4256"))
 		var bg: Color = Color("1b1722")
@@ -92,8 +112,16 @@ func _draw() -> void:
 			act_color = fg
 		var alpha: float = 0.28 if dim else 1.0
 		var bottom: float = (0.2 if on else 0.6) * cqi
-		draw_rect(r,Color(border,alpha))
-		draw_rect(Rect2(r.position + Vector2(1,1),r.size - Vector2(2,1 + bottom)),Color(bg,alpha))
+		cap.bg_color = Color(bg,alpha)
+		cap.border_color = Color(border,alpha)
+		cap.set_border_width_all(1)
+		cap.border_width_bottom = maxi(1,roundi(bottom))
+		draw_style_box(cap,r)
+		if not alias.is_empty() and not on:
+			draw_rect(r, Color("1b1722"))
+			var corners := [r.position,Vector2(r.end.x,r.position.y),r.end,Vector2(r.position.x,r.end.y)]
+			for edge: int in range(4):
+				draw_dashed_line(corners[edge],corners[(edge+1)%4],Color(kc,alpha),1.0,3.0)
 		var cap_size: int = maxi(7,roundi(1.5 * cqi))
 		draw_string(font,r.position + Vector2(0.6 * cqi + 1,cap_size + 0.5 * cqi),str(k[1]),HORIZONTAL_ALIGNMENT_LEFT,-1,cap_size,Color(fg,alpha))
 		if text.is_empty(): continue

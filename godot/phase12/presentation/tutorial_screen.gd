@@ -467,11 +467,14 @@ func _process(_delta: float) -> void:
 ## inputDown/inputUp in scene 'tutorial': only lightCaps(code, on); the game gets no input.
 func _input(event: InputEvent) -> void:
 	if not visible or event is not InputEventKey or (event as InputEventKey).echo: return
-	for action: String in BmkPhysicalInput.ACTIONS:
-		if event.is_action("bmk_" + action):
-			if event.is_pressed(): user_lit[action] = true
-			else: user_lit.erase(action)
-			refresh_lights()
+	var map := BmkKeyNames.bindings(settings)
+	var code := BmkKeyNames.code_for(BmkPhysicalInput.key_id(event))
+	var action := keyboard.action_for(map,code)
+	if action.is_empty(): action = keyboard.alias_for(map,code)
+	if not action.is_empty():
+		if event.is_pressed(): user_lit[action] = true
+		else: user_lit.erase(action)
+		refresh_lights()
 	# The page does not move button focus with the arrow keys (they are the arcade movement keys),
 	# so Enter keeps pressing the focused 게임 시작.
 	for nav: String in ["ui_left","ui_right","ui_up","ui_down"]:

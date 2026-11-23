@@ -139,12 +139,12 @@ async function openPage(name, metrics, contextId) {
     await desk.call('Page.navigate', { url });
     const loadSeconds = await desk.waitStarted('first load');
     const titleButtons = await desk.eval('Object.keys(window.bmkButtons || {})');
-    check(!titleButtons.includes('종료') && titleButtons.includes('새 게임'), `desktop: Web title has no 종료 (${titleButtons.join(', ')})`);
-    check((await desk.button('이어하기'))?.[2] === true, 'desktop: 이어하기 is disabled before any save');
+    check(titleButtons.includes('Exit') && titleButtons.includes('New Game'), `desktop: Web title has Exit and New Game (${titleButtons.join(', ')})`);
+    check((await desk.button('Continue'))?.[2] === true, 'desktop: 이어하기 is disabled before any save');
     await desk.shot('desktop_title');
     const audioBefore = await desk.eval(`(window.__bmkAudio || []).map(c => c.state)`);
     // Settings → boss music through the browser file chooser.
-    await desk.click('설정');
+    await desk.click('Options');
     check((await desk.state()).menu === 'settings', 'desktop: 설정 opens the settings');
     await desk.call('Page.setInterceptFileChooserDialog', { enabled: true });
     const chooser = () => new Promise(resolve => {
@@ -180,7 +180,7 @@ async function openPage(name, metrics, contextId) {
     await desk.call('Page.reload', { ignoreCache: false });
     await desk.waitStarted('reload after settings');
     // New game with Viesa.
-    await desk.click('새 게임');
+    await desk.click('New Game');
     check((await desk.state()).menu === 'characters', 'desktop: 새 게임 opens character select');
     await desk.shot('desktop_characters');
     await desk.click('비에사로 시작');
@@ -209,10 +209,10 @@ async function openPage(name, metrics, contextId) {
     // Reload: the same browser profile must offer 이어하기 and restore the run.
     await desk.call('Page.reload', { ignoreCache: false });
     await desk.waitStarted('reload');
-    check((await desk.button('이어하기'))?.[2] === false, 'desktop: 이어하기 is offered after a reload');
+    check((await desk.button('Continue'))?.[2] === false, 'desktop: 이어하기 is offered after a reload');
     check((await desk.state()).sound === false, 'desktop: sound stays off after a reload');
     await desk.shot('desktop_title_after_reload');
-    await desk.click('이어하기');
+    await desk.click('Continue');
     await delay(2500);
     st = await desk.state();
     check(!st.menuVisible && st.gameMode === 'story' && st.character === 'viesa' && st.stage === 0, `desktop: 이어하기 restores Viesa in Stage 1 (${JSON.stringify(st)})`);
@@ -230,7 +230,7 @@ async function openPage(name, metrics, contextId) {
     const canvas = await phone.eval(`(() => { const c = document.getElementById('canvas'); return [c.width, c.height]; })()`);
     check(canvas[0] === 844 * 3 && canvas[1] === 390 * 3, `phone: canvas uses device pixels (${canvas}), 2x integer stretch`);
     await phone.shot('phone_title');
-    await phone.tap('새 게임');
+    await phone.tap('New Game');
     check((await phone.state()).menu === 'characters', 'phone: tapping 새 게임 opens character select');
     await phone.tap('비에사로 시작');
     await delay(1500);
@@ -249,9 +249,9 @@ async function openPage(name, metrics, contextId) {
     await small.call('Page.navigate', { url });
     await small.waitStarted('small window');
     await small.shot('small_title');
-    const settings = await small.button('설정');
+    const settings = await small.button('Exit');
     check(settings && (await small.toCss(settings))[1] < 450, 'small: the lowest title button is inside the 450 px window');
-    await small.click('새 게임');
+    await small.click('New Game');
     check((await small.state()).menu === 'characters', 'small: 새 게임 is reachable below 960 x 540');
     await small.shot('small_characters');
 

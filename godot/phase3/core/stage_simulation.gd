@@ -61,7 +61,7 @@ func spawn(species: String, x: float, y: float) -> BmkActorState:
 	return e
 
 func step() -> bool:
-	if mode == "clear" or game_over: return false
+	if mode == "clear" or game_over or continue_pending: return false
 	tick += 1
 	if mode == "bossintro":
 		gorath.intro(self)
@@ -81,7 +81,7 @@ func step() -> bool:
 		return true
 	player_controller.step(self)
 	observe_jump()
-	if game_over: return true
+	if game_over or continue_pending: return true
 	if progression_enabled: sections.step()
 	for e: BmkActorState in enemies:
 		if (e as BmkStageActor).boss: gorath.step(self,e as BmkStageActor)

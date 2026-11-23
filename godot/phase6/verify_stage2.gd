@@ -13,8 +13,8 @@ func check(value: bool, label: String) -> void:
 
 func click_button(label: String) -> void:
 	await process_frame
-	for child: Node in game.menu.buttons.get_children():
-		if child is Button and (child as Button).text == label:
+	for child: Node in game.menu.find_children("*","Button",true,false):
+		if (child as Button).is_visible_in_tree() and (child as Button).text == label:
 			var point: Vector2 = (child as Button).get_global_rect().get_center()
 			for pressed: bool in [true,false]:
 				var event: InputEventMouseButton = InputEventMouseButton.new()
@@ -84,7 +84,7 @@ func run() -> void:
 	game.pause_game(true)
 	game.menu.show_title()
 	await process_frame
-	await click_button("이어하기")
+	await click_button(game.menu.title_image.caption("Continue"))
 	check(wave() != null and wave().player.is_viesa() and wave().player.hp == 66 and wave().player.score == 1200,"Continue restores a Stage 2 Viesa entry without extra healing")
 	# Waves to the boss: walk and clear each lock like the oracle's progression scenario.
 	var s: BmkWaveSimulation = wave()
@@ -131,7 +131,9 @@ func run() -> void:
 	# Boss challenge: Morgra with the chosen character, starting in her arena.
 	game.menu.show_title()
 	await process_frame
-	await click_button("보스 도전")
+	await click_button(game.menu.title_image.caption("Options"))
+	await process_frame
+	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 2 / 까마귀 마녀 모르그라")
 	check(game.menu.mode == "characters" and game.menu.challenge_stage == 1,"Morgra challenge opens character selection")
 	await click_button("비에사로 시작")

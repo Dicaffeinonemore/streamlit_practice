@@ -252,6 +252,7 @@ func ramp(index: int, target: float, seconds: float) -> void:
 		return
 	var tween: Tween = create_tween()
 	tween.tween_property(player, "volume_linear", target, seconds)
+	tween.finished.connect(func() -> void: music_tweens[index] = null, CONNECT_ONE_SHOT)
 	music_tweens[index] = tween
 	if paused: tween.pause()
 

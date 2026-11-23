@@ -2,9 +2,8 @@ class_name BmkPlatform
 extends RefCounted
 ## Phase 13: the few behaviours that differ between export targets.
 ##
-## The browser source runs only in a web page, so it has no quit button and picks the boss file with
-## <input type=file>. Native targets keep the Phase 4 quit button; Web and iOS hide it (a web page
-## cannot close its tab, and iOS apps must not quit themselves). Android's back button acts like Esc.
+## Exit closes native desktop and Android builds. Web and iOS show a returnable end screen.
+## Android's back button acts like Esc. Web uses a browser picker for custom boss music.
 
 static func is_web() -> bool:
 	return OS.has_feature("web")
@@ -12,7 +11,7 @@ static func is_web() -> bool:
 static func is_mobile() -> bool:
 	return OS.has_feature("android") or OS.has_feature("ios")
 
-## Whether the title screen shows 종료.
+## Whether Exit can terminate the application.
 static func can_quit() -> bool:
 	return not is_web() and not OS.has_feature("ios")
 

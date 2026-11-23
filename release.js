@@ -70,7 +70,7 @@ function drawBossBar(boss) {
   ctx.restore();
 }
 let openingTime = 0;
-const OPENING_LINES = ['붉은 월식이 다섯 왕국을 삼켰다.', '무너진 왕좌 너머, 검은 성채가 깨어난다.', '잿더미에서 한 기사가 일어섰다.', '다섯 군주가 밤의 문을 지킨다.', '대검을 들어, 끝나지 않는 밤을 가르라.', '흑월의 기사'];
+const OPENING_LINES = ['붉은 월식이 다섯 왕국을 삼켰다.', '무너진 왕좌 너머, 검은 성채가 깨어난다.', '잿더미에서 한 기사가 일어섰다.', '다섯 군주가 밤의 문을 지킨다.', '대검을 들어, 끝나지 않는 밤을 가르라.', document.title];
 function startOpening() {
   clearInput(); openingTime = 0; scene = 'opening'; showScreen(null); AUDIO.silence();
   $('openingSkip').hidden = false;
@@ -94,7 +94,3 @@ function drawOpening() {
   krText(OPENING_LINES[n], W / 2, H - 64, '#f0dce0', n === 5 ? 32 : 20, 'center'); ctx.restore();
 }
 document.getElementById('openingSkip').onclick = finishOpening;
-for (const [id, key] of [['btnStart', 'newgame'], ['btnContinue', 'continue'], ['btnTitleSettings', 'settings']]) {
-  const b = document.getElementById(id); b.classList.add('art-button'); b.style.setProperty('background-image', `url("${RELEASE_ART[key]}")`, 'important');
-}
-

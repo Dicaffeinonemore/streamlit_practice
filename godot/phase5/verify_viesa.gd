@@ -12,8 +12,8 @@ func check(value: bool, label: String) -> void:
 	if not value: failures.append(label)
 
 func click_button(label: String) -> void:
-	for child: Node in game.menu.buttons.get_children():
-		if child is Button and (child as Button).text == label:
+	for child: Node in game.menu.find_children("*","Button",true,false):
+		if (child as Button).is_visible_in_tree() and (child as Button).text == label:
 			var point: Vector2 = (child as Button).get_global_rect().get_center()
 			for pressed: bool in [true,false]:
 				var event: InputEventMouseButton = InputEventMouseButton.new()
@@ -116,7 +116,7 @@ func run() -> void:
 	check(not game.audio.offsets.has("viesaArrow"),"Viesa samples start at 0 like playViesaSkill")
 	game.menu.show_title()
 	await process_frame
-	await click_button("새 게임")
+	await click_button(game.menu.title_image.caption("New Game"))
 	check(game.menu.mode == "characters","Mouse opens character selection")
 	await capture("phase5_select")
 	await click_button("비에사로 시작")
@@ -207,7 +207,7 @@ func run() -> void:
 	game.save_store.save_checkpoint(saved)
 	game.menu.show_title()
 	await process_frame
-	await click_button("이어하기")
+	await click_button(game.menu.title_image.caption("Continue"))
 	check(session().player.is_viesa() and session().player.hp == 55 and session().player.sp == 30,"Continue restores Viesa")
 	var bad: BmkCheckpoint = BmkCheckpoint.decode({"version":1,"characterId":"viesa","stage":0,"score":0,"hp":100,"lives":3,"sp":0,"mg":0,"buff":0})
 	check(bad == null,"Viesa save above HP 80 is rejected")
@@ -236,7 +236,9 @@ func run() -> void:
 	game.pause_game(true)
 	game.menu.show_title()
 	await process_frame
-	await click_button("보스 도전")
+	await click_button(game.menu.title_image.caption("Options"))
+	await process_frame
+	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 1 / 도살자 고라스")
 	check(game.menu.mode == "characters" and game.menu.character_challenge,"Challenge opens character selection")
 	await click_button("비에사로 시작")

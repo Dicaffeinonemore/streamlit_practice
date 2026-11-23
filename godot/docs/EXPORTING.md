@@ -1,4 +1,4 @@
-# Exporting Black Moon Knight
+# Exporting Lunatic Nights
 
 How to build the four platform targets defined in `export_presets.cfg`. Outputs go to `godot/build/`, which git ignores. Commands run from the repository root. `Godot` stands for `Godot_v4.7.2-stable_win64_console.exe`.
 
@@ -24,10 +24,10 @@ How to build the four platform targets defined in `export_presets.cfg`. Outputs 
 ## Windows
 
 ```text
-Godot --headless --path godot --export-release "Windows Desktop" build/windows/BlackMoonKnight.exe
+Godot --headless --path godot --export-release "Windows Desktop" build/windows/LunaticNights.exe
 ```
 
-Output: `BlackMoonKnight.exe` (109 MB) and `BlackMoonKnight.pck` (517 MB). The two files must stay in the same folder. Saves go to `%APPDATA%/Godot/app_userdata/Black Moon Knight/`, the same folder the editor's F5 run uses.
+Output: `LunaticNights.exe` (109 MB) and `LunaticNights.pck` (519 MB). The two files must stay in the same folder. Saves go to `%APPDATA%/Godot/app_userdata/Black Moon Knight/`, the same folder the editor's F5 run uses.
 
 Check it (this moves your real saves aside and puts them back afterwards):
 
@@ -53,7 +53,7 @@ Output: `index.html`, `index.js`, `index.wasm` (40 MB), `index.pck` (526 MB), au
 - **Fonts.** A web page gives Godot no system fonts. Noto Sans KR, Noto Sans Symbols 2 and Noto Emoji (SIL OFL 1.1, `phase13/fonts/`) are added as fallbacks of the default font on Web only.
 - **Saves.** `user://` is IndexedDB `/userfs` for that origin in that browser. Clearing site data deletes them.
 - **Boss music.** The file is chosen with the browser's file chooser, not a Godot file dialog.
-- **No 종료 button.** A page cannot close its tab.
+- **Exit** opens a screen where the player can close the tab or return to the title.
 
 Check it in headless Chrome. The check opens the page with `?bmk_probe=1`. `phase13/web_probe.gd` (Web pack only) then reports visible buttons and game state to the page; without that parameter it is never attached.
 
@@ -97,7 +97,7 @@ Needs macOS with Xcode. On the Mac:
 2. Set `application/app_store_team_id` and check the bundle id `com.blackmoonknight.game` (placeholder).
 3. Export. Godot writes an Xcode project; sign and archive it in Xcode.
 
-The title has no 종료 button on iOS (apps must not quit themselves). Hangul uses the system fonts, as on Android.
+On iOS, Exit shows the end screen and lets the player return to the title. Hangul uses the system fonts, as on Android.
 
 ## Device checklist (Android / iOS, still to do)
 

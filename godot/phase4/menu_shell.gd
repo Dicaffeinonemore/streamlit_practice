@@ -7,6 +7,9 @@ signal challenge_game(character: String)
 signal resume_game
 signal retry_game
 signal next_stage
+## Story continue: CONTINUE? answered (이어서 싸우기) or declined / timed out (game over).
+signal continue_fight
+signal give_up
 signal quit_game
 signal settings_changed
 signal touch_edit
@@ -29,10 +32,17 @@ var character_challenge: bool = false
 ## Stage index of the boss chosen in the challenge list (0 = Gorath, 1 = Morgra).
 var challenge_stage: int = 0
 var message: Label
-var capture_action: String = ""
-var title_image: TextureRect
+const Copy := preload("res://phase4/menu_copy.gd")
+const KeySettings := preload("res://phase4/key_settings.gd")
+const WebDialog := preload("res://phase4/web_dialog.gd")
+var dialog := WebDialog.new()
+var key_settings: KeySettings
+var paused_challenge := false
+var paused_character := "barel"
+var pause_reason := "PAUSE_REASON"
+const TitleMenu := preload("res://phase4/title_art/title_menu.gd")
+var title_image: TitleMenu
 var title_backing: ColorRect
-var title_shade: TextureRect
 var backdrop: ColorRect
 var scroll: ScrollContainer
 var button_size: Vector2 = Vector2(410,34)
@@ -42,45 +52,20 @@ var selected_character: String = "barel"
 var tutorial: BmkTutorialScreen
 var opening: BmkOpeningScreen
 
-# Same key art as named-runtime.js TITLE_ART_SRC (assets/runtime/7b79aad0ddf5c47ddf77fa60.webp).
-const TITLE_ART_PATH: String = "res://port_assets/images/runtime_unreferenced__7b79aad0ddf5.webp"
-
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var korean_font: SystemFont = SystemFont.new()
 	korean_font.font_names = PackedStringArray(["Malgun Gothic", "Noto Sans CJK KR", "Arial"])
 	add_theme_font_override("font",korean_font)
-	# index.html #title.named-title: #070509 behind an object-fit: contain image.
 	title_backing = ColorRect.new()
 	title_backing.color = Color8(7,5,9)
 	title_backing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(title_backing)
-	title_image = TextureRect.new()
-	title_image.texture = load(TITLE_ART_PATH) as Texture2D
-	title_image.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	title_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	title_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	title_image = TitleMenu.new()
 	title_image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	title_image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_image.chosen.connect(title_choice)
 	add_child(title_image)
-	# .logo::before: radial shade under the right-hand title buttons.
-	var gradient: Gradient = Gradient.new()
-	gradient.offsets = PackedFloat32Array([0.0,0.45,0.72])
-	gradient.colors = PackedColorArray([Color8(10,5,8,0xb8),Color8(10,5,8,0x70),Color8(10,5,8,0)])
-	var shade_texture: GradientTexture2D = GradientTexture2D.new()
-	shade_texture.gradient = gradient
-	shade_texture.fill = GradientTexture2D.FILL_RADIAL
-	shade_texture.fill_from = Vector2(0.5,0.5)
-	shade_texture.fill_to = Vector2(1.0,0.5)
-	title_shade = TextureRect.new()
-	title_shade.texture = shade_texture
-	title_shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	title_shade.stretch_mode = TextureRect.STRETCH_SCALE
-	title_shade.position = Vector2(556,214)
-	title_shade.size = Vector2(450,320)
-	title_shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(title_shade)
 	backdrop = ColorRect.new()
 	backdrop.color = Color(0.025,0.015,0.035,0.72)
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -112,6 +97,15 @@ func _ready() -> void:
 	add_child(opening)
 	opening.finished.connect(func() -> void:
 		if mode == "opening": new_game.emit(selected_character))
+	dialog.theme = tutorial.theme.duplicate()
+	dialog.theme.default_font = tutorial.font
+	var bold: SystemFont = tutorial.font.duplicate()
+	bold.font_weight = 700
+	dialog.theme.set_font("font","Button",bold)
+	add_child(dialog)
+	dialog.heading.add_theme_font_override("font", tutorial.serif)
+	dialog.action(dialog.footer, Copy.text("KEYS_BACK"), back_from_settings, true)
+	dialog.action(dialog.footer, Copy.text("KEYS_RESET"), func() -> void: change_preset("arcade"))
 	show_title()
 
 func clear_buttons() -> void:
@@ -119,19 +113,17 @@ func clear_buttons() -> void:
 		if child != title and child != message:
 			buttons.remove_child(child)
 			child.queue_free()
+	key_settings = null
 	apply_layout()
 
-# The title screen follows the browser's named title: the logo is part of the
-# key art and the buttons sit beneath it on the right. Sub-menus keep the
-# centered panel over a darkened backdrop.
 func apply_layout() -> void:
 	var art_title: bool = mode == "title"
 	var overlay: bool = mode in ["tutorial","opening"]
+	var web := mode in ["settings","pause"]
 	title_backing.visible = title_image.visible
-	title_shade.visible = art_title and title_image.visible
+	title_image.controls.visible = art_title
 	backdrop.visible = not art_title and not overlay
-	panel.visible = not overlay
-	title.visible = not art_title
+	panel.visible = not overlay and not art_title and not web
 	# showScreen(id !== 'tutorial') -> demoStop()
 	if tutorial != null and tutorial.visible and mode != "tutorial":
 		tutorial.visible = false
@@ -139,16 +131,28 @@ func apply_layout() -> void:
 	if opening != null and opening.running and mode != "opening":
 		opening.running = false
 		opening.visible = false
-	if art_title:
-		panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
-		button_size = Vector2(320,30)
-		scroll.custom_minimum_size = Vector2(330,280)
-		panel.position = Vector2(614,236)
-	else:
-		panel.remove_theme_stylebox_override("panel")
-		button_size = Vector2(410,34)
-		scroll.custom_minimum_size = Vector2(460,470)
-		panel.position = Vector2(250,35)
+	dialog.visible = web
+	buttons.alignment = BoxContainer.ALIGNMENT_CENTER if mode == "pause" else BoxContainer.ALIGNMENT_BEGIN
+	buttons.size_flags_vertical = Control.SIZE_EXPAND_FILL if mode == "pause" else Control.SIZE_SHRINK_BEGIN
+	buttons.add_theme_constant_override("separation",12 if web else 5)
+	message.remove_theme_stylebox_override("normal")
+	title.visible = not art_title and mode != "settings"
+	title.remove_theme_font_override("font")
+	title.add_theme_font_size_override("font_size",29 if web else 26)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	if web:
+		scroll.custom_minimum_size = Vector2.ZERO
+		dialog.show_scroll(scroll,mode == "settings")
+		title.add_theme_font_override("font", tutorial.serif)
+		title.add_theme_color_override("font_color",Color("e6d6d0"))
+		button_size = Vector2(0,34)
+		return
+	if scroll.get_parent() != panel: scroll.reparent(panel, false)
+	title.remove_theme_color_override("font_color")
+	button_size = Vector2(410,34)
+	scroll.custom_minimum_size = Vector2(460,470)
+	panel.position = Vector2(250,35)
 	panel.size = scroll.custom_minimum_size
 
 func add_button(label: String, callback: Callable, disabled: bool = false) -> void:
@@ -168,15 +172,27 @@ func show_title() -> void:
 		audio.pause_audio(false)
 	title_image.visible = true
 	clear_buttons()
-	title.text = "BLACK MOON KNIGHTS"
-	var records_: Dictionary = store.records() if store != null else {"bestScore":0}
-	message.text = "최고 점수  %d" % int(records_["bestScore"])
-	add_button("새 게임",show_characters)
-	add_button("이어하기",func() -> void: continue_game.emit(),store == null or store.checkpoint() == null)
-	add_button("연습하기",func() -> void: practice_game.emit())
-	add_button("보스 도전",show_challenges)
-	add_button("설정",show_settings)
-	if BmkPlatform.can_quit(): add_button("종료",func() -> void: quit_game.emit())
+	title_image.open(settings.menu_language if settings != null else "en", store != null and store.checkpoint() != null)
+	title.text = title_image.caption("GAME_NAME")
+	message.text = ""
+
+func title_choice(key: String) -> void:
+	match key:
+		"New Game": show_characters()
+		"Continue": continue_game.emit()
+		"Options": show_settings()
+		"Credits": show_title_info(key, "MENU_CREDIT_LINE")
+		"Exit":
+			if BmkPlatform.can_quit(): quit_game.emit()
+			else: show_title_info(key, "MENU_EXIT_WEB")
+
+func show_title_info(heading: String, body: String) -> void:
+	mode = "title_info"
+	clear_buttons()
+	title.text = title_image.caption(heading)
+	message.text = title_image.caption(body)
+	add_button(title_image.caption("MENU_BACK"), show_title)
+	(buttons.get_child(-1) as Button).grab_focus()
 
 ## game.js openCharacterSelect(challengeStage): story start, or the character for a boss challenge.
 func show_characters(challenge: bool = false) -> void:
@@ -239,13 +255,46 @@ func show_pause() -> void:
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "일시정지"
-	message.text = ""
-	add_button("계속하기",func() -> void: resume_game.emit())
-	add_button("다시 시작",func() -> void: retry_game.emit())
-	add_button("조작 안내",func() -> void: show_tutorial("pause"))
-	add_button("설정",show_settings)
-	add_button("타이틀로",show_title)
+	title.text = Copy.text("PAUSE_TITLE")
+	message.text = Copy.text(pause_reason)
+	var spacing := StyleBoxEmpty.new()
+	spacing.content_margin_top = 5
+	spacing.content_margin_bottom = 5
+	message.add_theme_stylebox_override("normal",spacing)
+	var first := pause_row()
+	if paused_challenge: dialog.action(first, Copy.text("PAUSE_BOSSES"), show_challenges)
+	dialog.action(first, Copy.text("PAUSE_RESUME"), func() -> void: resume_game.emit(), true)
+	dialog.action(first, Copy.text("PAUSE_HELP"), show_tutorial.bind("pause"))
+	dialog.action(first, Copy.text("Options"), show_settings)
+	var second := pause_row()
+	dialog.action(second, Copy.text("PAUSE_RESTART"), func() -> void: retry_game.emit())
+	dialog.action(second, Copy.text("PAUSE_TITLE_BACK"), show_title)
+	if can_toggle_fullscreen():
+		var fullscreen := DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN,DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]
+		dialog.action(second, Copy.text("FULL_OFF" if fullscreen else "FULL_ON"), func() -> void:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if fullscreen else DisplayServer.WINDOW_MODE_FULLSCREEN)
+			show_pause())
+	var tip := Label.new()
+	tip.text = Copy.text("PAUSE_TIP")
+	tip.add_theme_stylebox_override("normal",spacing)
+	tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tip.add_theme_font_size_override("font_size",14)
+	tip.add_theme_color_override("font_color",Color("cfd2ff"))
+	buttons.add_child(tip)
+
+func can_toggle_fullscreen() -> bool:
+	if not (DisplayServer.is_touchscreen_available() or settings.touch): return false
+	if OS.has_feature("web"):
+		return bool(JavaScriptBridge.eval("!!(document.fullscreenEnabled || document.webkitFullscreenEnabled)"))
+	return DisplayServer.has_feature(DisplayServer.FEATURE_SUBWINDOWS)
+
+func pause_row() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation",10)
+	buttons.add_child(row)
+	return row
 
 func show_result(value: String, challenge: bool, stage: int = 0, has_next: bool = false) -> void:
 	mode = "result"
@@ -256,6 +305,58 @@ func show_result(value: String, challenge: bool, stage: int = 0, has_next: bool 
 	message.text = value
 	if has_next: add_button("다음 스테이지",func() -> void: next_stage.emit())
 	add_button("다시 시작",func() -> void: retry_game.emit())
+	add_button("타이틀로",show_title)
+
+## game.js offerContinue(): CONTINUE? with a 10 s countdown (story mode, last life lost). The world
+## stays frozen behind it. Enter / 이어서 싸우기 continues on the spot; Esc / 포기 or 0 is game over.
+const CONTINUE_SECONDS: int = 10
+const TICKS_PER_SECOND: int = 60
+var continue_ticks: int = 0
+
+func show_continue() -> void:
+	mode = "continue"
+	visible = true
+	title_image.visible = false
+	clear_buttons()
+	continue_ticks = CONTINUE_SECONDS * TICKS_PER_SECOND
+	title.text = continue_title(CONTINUE_SECONDS)
+	message.text = "쓰러진 자리에서 라이프 3개로 다시 일어납니다.
+점수는 0이 됩니다."
+	add_button("이어서 싸우기 (Enter)",answer_continue.bind(true))
+	add_button("포기 (Esc)",answer_continue.bind(false))
+
+static func continue_title(seconds: int) -> String:
+	return "CONTINUE?  %d" % seconds
+
+func answer_continue(fight: bool) -> void:
+	if mode != "continue" or not visible: return
+	if fight: continue_fight.emit()
+	else: give_up.emit()
+
+## updateContinue(): one 60 Hz tick, counted in whole ticks; a click on each new second; at 0, give up.
+func step_continue() -> void:
+	if mode != "continue" or not visible: return
+	continue_ticks -= 1
+	var left: int = maxi(0,ceili(continue_ticks / float(TICKS_PER_SECOND)))
+	if title.text != continue_title(left):
+		title.text = continue_title(left)
+		if left > 0 and audio != null: audio.play("click")
+	if continue_ticks <= 0: answer_continue(false)
+
+func _physics_process(_delta: float) -> void:
+	step_continue()
+
+## index.html #over (game.js gameOver()): the stage and score, 다시 도전 / 타이틀로, and 보스 목록 in
+## a boss challenge.
+func show_game_over(info: String, challenge: bool) -> void:
+	mode = "over"
+	visible = true
+	title_image.visible = false
+	clear_buttons()
+	title.text = "GAME OVER"
+	message.text = info
+	if challenge: add_button("보스 목록",show_challenges)
+	add_button("다시 도전",func() -> void: retry_game.emit())
 	add_button("타이틀로",show_title)
 
 ## game.js toTutorial(from): the demonstration screen, from character select or pause.
@@ -288,6 +389,9 @@ func show_opening() -> void:
 
 ## onKeyOnce() while the tutorial is shown: Enter starts the game (not from pause), Esc goes back.
 func tutorial_key(key: Key) -> bool:
+	if mode == "title_info" and key == KEY_ESCAPE:
+		show_title()
+		return true
 	if mode != "tutorial": return false
 	if key in [KEY_ENTER,KEY_KP_ENTER] and tutorial.origin != "pause":
 		show_opening()
@@ -308,15 +412,18 @@ func show_ending(value: String) -> void:
 	add_button("타이틀로",show_title)
 
 func show_settings() -> void:
-	if mode != "settings" and mode != "bindings": settings_origin = mode
+	var previous_scroll := scroll.scroll_vertical if mode == "settings" else 0
+	if mode != "settings": settings_origin = mode
 	mode = "settings"
-	capture_action = ""
 	clear_buttons()
-	title.text = "설정"
+	dialog.heading.text = title_image.caption("Options")
+	add_button(title_image.caption("MENU_LANGUAGE") + " · " + ("English" if settings.menu_language == "en" else "한국어"), toggle_menu_language)
+	if settings_origin == "title":
+		add_button(title_image.caption("MENU_CHALLENGE"), show_challenges)
+		add_button(title_image.caption("MENU_PRACTICE"), func() -> void: practice_game.emit())
 	message.text = "키 배치: " + settings.preset.to_upper()
-	add_button("아케이드",func() -> void: change_preset("arcade"))
-	add_button("WASD",func() -> void: change_preset("wasd"))
-	add_button("키 직접 설정",show_bindings)
+	if settings_origin == "title" and store != null:
+		message.text += " · 최고 점수 %d" % int(store.records()["bestScore"])
 	add_button("배경 음악: %d%%" % roundi(settings.music_volume * 100),func() -> void: change_volume("music_volume"))
 	add_button("효과음: %d%%" % roundi(settings.sfx_volume * 100),func() -> void: change_volume("sfx_volume"))
 	if audio != null:
@@ -338,7 +445,24 @@ func show_settings() -> void:
 	add_button("모바일 키 크기: %d%%" % roundi(float(settings.touch_layout["scale"]) * 100),change_touch_scale)
 	add_button("모바일 키 배치 편집",func() -> void: touch_edit.emit())
 	add_button("모바일 키 초기화",reset_touch_layout)
-	add_button("뒤로",show_pause if settings_origin == "pause" else show_title)
+	key_settings = KeySettings.new()
+	key_settings.settings = settings
+	key_settings.character = paused_character if settings_origin == "pause" else selected_character
+	key_settings.changed.connect(func() -> void: settings_changed.emit())
+	buttons.add_child(key_settings)
+	scroll.set_deferred("scroll_vertical", previous_scroll)
+
+func back_from_settings() -> void:
+	if settings_origin == "pause": show_pause()
+	else: show_title()
+
+
+func toggle_menu_language() -> void:
+	settings.menu_language = "ko" if settings.menu_language == "en" else "en"
+	title_image.locale = settings.menu_language
+	var error := settings.save()
+	show_settings()
+	if error != OK: message.text = error_string(error)
 
 func boss_status() -> String:
 	var info: Dictionary = audio.boss_info()
@@ -401,11 +525,7 @@ func save_settings() -> void:
 	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
 
 func change_preset(id: String) -> void:
-	settings.use_preset(id)
-	var error: Error = settings.save()
-	settings_changed.emit()
-	show_settings()
-	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
+	key_settings.choose_preset(id)
 
 func change_volume(option: String) -> void:
 	var value: int = roundi(float(settings.get(option)) * 10)
@@ -420,35 +540,4 @@ func change_toggle(option: String) -> void:
 	var error: Error = settings.save()
 	settings_changed.emit()
 	show_settings()
-	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
-
-func show_bindings() -> void:
-	if settings.bindings.size() != BmkPhysicalInput.ACTIONS.size(): settings.use_preset(settings.preset)
-	mode = "bindings"
-	clear_buttons()
-	title.text = "키 직접 설정"
-	message.text = "동작을 고른 뒤 키를 누르세요. ESC: 취소"
-	var labels: Array[String] = ["왼쪽","오른쪽","위","아래","점프","공격","회피","필살기","마법","찌르기","강타","회전","강하","적월파"]
-	for i: int in range(BmkPhysicalInput.ACTIONS.size()):
-		var action: String = BmkPhysicalInput.ACTIONS[i]
-		add_button("%s: %s" % [labels[i],OS.get_keycode_string(settings.bindings[action])],func() -> void: capture_action = action; message.text = "새 키를 누르세요: " + action)
-	add_button("뒤로",show_settings)
-
-func _input(event: InputEvent) -> void:
-	if not visible or capture_action.is_empty() or event is not InputEventKey: return
-	var key: InputEventKey = event as InputEventKey
-	if not key.pressed or key.echo: return
-	get_viewport().set_input_as_handled()
-	if key.keycode == KEY_ESCAPE:
-		capture_action = ""
-		show_bindings()
-		return
-	var code: int = key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
-	if key.ctrl_pressed or key.alt_pressed or key.meta_pressed or not settings.bind(capture_action,code):
-		message.text = "사용할 수 없거나 이미 지정된 키입니다."
-		return
-	var error: Error = settings.save()
-	settings_changed.emit()
-	capture_action = ""
-	show_bindings()
 	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)

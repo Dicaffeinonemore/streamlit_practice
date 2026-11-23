@@ -313,9 +313,12 @@ func step(s: BmkSimulation) -> void:
 					p.vz = 0.0
 					p.x = s.cam_x + 100.0
 					p.y = 420.0
+				elif s.continue_offer:
+					# game.js: offerContinue() (story mode); the game shows CONTINUE?.
+					s.continue_pending = true
 				else:
 					s.game_over = true
-					# game.js: scene = "over"; AUDIO.stop(0.3); sfx("defeat")
+					# game.js gameOver(): scene = "over"; AUDIO.stop(0.3); sfx("defeat")
 					s.music("stop", 0.3)
 					s.sound("defeat")
 	p.x = clampf(p.x, s.cam_x + 20.0, minf(s.cam_x + 620.0, s.stage_length - 20.0))

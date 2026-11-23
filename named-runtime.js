@@ -105,13 +105,3 @@ function drawNamedWave(z) {
     {x:z.x,y:z.y,z:z.h,face:z.dir,alpha:Math.min(1,(520-z.travel)/50)});
 }
 function drawNamedEnemy(e){return paintNamedFrame(namedEnemyFrame(e),e,true);}
-// 메인 메뉴 배경 (BLACK MOON KNIGHTS 키 아트, 정지 이미지)
-const TITLE_ART_SRC='assets/runtime/7b79aad0ddf5c47ddf77fa60.webp';
-function setupNamedTitle() {
-  const title=document.getElementById('title');title.classList.add('named-title');
-  document.getElementById('btnTitleSettings').classList.remove('secondary');
-  const image=document.createElement('img');image.id='namedTitleImage';image.alt='검은 월식 아래 폐허를 내려다보는 기사와 궁수 — BLACK MOON KNIGHTS';image.src=TITLE_ART_SRC;
-  title.prepend(image);
-  for(const [id,label] of [['btnStart','새 게임'],['btnContinue','이어하기'],['btnTitleSettings','설정']])document.getElementById(id).setAttribute('aria-label',label);
-}
-setupNamedTitle();

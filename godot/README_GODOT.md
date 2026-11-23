@@ -1,4 +1,4 @@
-# Black Moon Knight — native Godot port
+# Lunatic Nights — native Godot port
 
 Open this folder's `project.godot` with Godot 4.7.2 and press **F5**. The main scene is `res://phase4/game.tscn`: title, character select (Barel or Viesa), new game, Continue, practice, boss challenge and settings. A new game goes through 조작 안내 (a live demonstration of every move for the chosen character) and the opening (skip with Enter, Space or Esc); 조작 안내 is also in the pause menu and under the practice prompt. All five stages and their bosses are playable, from Gorath to the Black Moon Sovereign, and the story ends with the ALL CLEAR screen.
 
@@ -8,7 +8,7 @@ To run without the editor:
 Godot_v4.7.2-stable_win64.exe --path <this folder>
 ```
 
-Arcade keys (default): arrows move, Z attacks, X jumps, Shift dashes, C uses the full-SP special, A casts stocked magic. Barel's skills are S/D/Q/W/E (thrust, slam, whirl, leap, red wave). Viesa's are S (rapid fire), E (charge shot: hold on the full draw for up to three levels, +4 damage each), Q (dash with ground backflip), W (dash with air backflip) and D (melee combo). For both characters, holding the direction when a dash (Shift or a double tap) ends keeps them running at ×1.6 walking speed. Holding attack does not chain combos; press again within the source buffer/link timing. The WASD preset and custom bindings are in Settings.
+Arcade keys (default): arrows move, Z attacks, X jumps, Shift dashes, C uses the full-SP special, A casts stocked magic. Barel's skills are S/D/Q/W/E (thrust, slam, whirl, leap, red wave). Viesa's are S (rapid fire), E (charge shot: hold on the full draw for up to three levels, +4 damage each), Q (dash with ground backflip), W (dash with air backflip) and D (melee combo). For both characters, holding the direction when a dash (Shift or a double tap) ends keeps them running at ×1.6 walking speed. Holding attack does not chain combos; press again within the source buffer/link timing. In **Settings → 키 설정**, choose Arcade, WASD or Custom. In Custom, select an action and press a physical key or click the keyboard diagram. Assigning an occupied key swaps the two actions. Custom bindings are retained when switching presets or restoring the Arcade default.
 
 Escape or the pause button (top right) pauses. On touch screens, turn on Settings → 모바일 조작 키 for the on-screen lever and buttons; their transparency, size and layout are adjustable (배치 편집). F9 shows collision debug. With debug visible, F10/F11 jump to a boss's phase two / ultimate where the original has such keys (Gorath, Vargul), and for the Sovereign. Saves go to `user://` (bmk_settings, bmk_checkpoint, bmk_records).
 

@@ -13,8 +13,8 @@ func check(value: bool, label: String) -> void:
 
 func click_button(label: String) -> void:
 	await process_frame
-	for child: Node in game.menu.buttons.get_children():
-		if child is Button and (child as Button).text == label:
+	for child: Node in game.menu.find_children("*","Button",true,false):
+		if (child as Button).is_visible_in_tree() and (child as Button).text == label:
 			var point: Vector2 = (child as Button).get_global_rect().get_center()
 			for pressed: bool in [true,false]:
 				var event: InputEventMouseButton = InputEventMouseButton.new()
@@ -80,7 +80,7 @@ func run() -> void:
 	game.pause_game(true)
 	game.menu.show_title()
 	await process_frame
-	await click_button("이어하기")
+	await click_button(game.menu.title_image.caption("Continue"))
 	check(wave() != null and wave().stage_index == 3 and wave().player.is_viesa() and wave().player.hp == 58,"Continue restores a Stage 4 Viesa entry")
 	var s: BmkWaveSimulation = wave()
 	var guard: int = 0
@@ -137,7 +137,9 @@ func run() -> void:
 	check(records.size() > 3 and records[3] != null,"Stage 4 record unlocks its challenge")
 	game.menu.show_title()
 	await process_frame
-	await click_button("보스 도전")
+	await click_button(game.menu.title_image.caption("Options"))
+	await process_frame
+	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 4 / 얼어붙은 묘지왕 바르굴")
 	check(game.menu.mode == "characters" and game.menu.challenge_stage == 3,"Vargul challenge opens character selection")
 	await click_button("바렐로 시작")

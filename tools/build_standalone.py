@@ -2,7 +2,7 @@
 
     python tools/build_standalone.py [출력경로]
 
-기본 출력: dist/black-moon-knight-standalone.html (git 에서 제외)
+기본 출력: dist/lunatic-nights.html (git 에서 제외)
 
 방식
   * <script src> 80여 개를 인라인한다.
@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUT = ROOT / "dist" / "black-moon-knight-standalone.html"
+DEFAULT_OUT = ROOT / "dist" / "lunatic-nights.html"
 
 MIME = {
     ".png": "image/png", ".webp": "image/webp", ".gif": "image/gif",
@@ -45,6 +45,8 @@ def collect_assets(html: str, scripts: list[str]) -> set[str]:
     if manifest.is_file():
         wanted.update(json.loads(manifest.read_text(encoding="utf-8")))
     wanted.add("assets/bgm/boss.mp3")
+    for script in scripts:
+        wanted.update(re.findall(r"""(godot/phase4/title_art/[\w.-]+)""", script))
     for text in [html, *scripts]:
         for match in ASSET_LITERAL.finditer(text):
             path = norm(match.group(1))
