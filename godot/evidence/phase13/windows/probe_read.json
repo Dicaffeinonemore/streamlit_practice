@@ -1,0 +1,88 @@
+{
+  "checks": [
+    {
+      "label": "Running in an exported template, not the editor",
+      "ok": true
+    },
+    {
+      "label": "The title screen opens",
+      "ok": true
+    },
+    {
+      "label": "The game renders at 960 x 540",
+      "ok": true
+    },
+    {
+      "label": "Nearest-neighbour sampling",
+      "ok": true
+    },
+    {
+      "label": "A real audio driver is active",
+      "ok": true
+    },
+    {
+      "label": "종료 matches the platform",
+      "ok": true
+    },
+    {
+      "label": "이어하기 is offered after a restart",
+      "ok": true
+    },
+    {
+      "label": "The sound stays off after a restart",
+      "ok": true
+    },
+    {
+      "label": "Button exists: 이어하기",
+      "ok": true
+    },
+    {
+      "label": "Continue restores Viesa in Stage 1",
+      "ok": true
+    },
+    {
+      "label": "Capture continue",
+      "ok": true
+    },
+    {
+      "label": "M turns the sound back on",
+      "ok": true
+    },
+    {
+      "label": "Esc pauses",
+      "ok": true
+    }
+  ],
+  "environment": {
+    "audio_driver": "WASAPI",
+    "display_driver": "Windows",
+    "editor": false,
+    "features": [
+      "template",
+      "release",
+      "windows",
+      "pc"
+    ],
+    "mix_rate": 48000.0,
+    "os": "Windows",
+    "physics_ticks": 60,
+    "rendering_driver": "opengl3",
+    "stretch": [
+      "canvas_items",
+      "integer"
+    ],
+    "texture_filter": 0,
+    "user_dir": "C:/Users/훈도/AppData/Roaming/Godot/app_userdata/Black Moon Knight",
+    "viewport": [
+      960.0,
+      540.0
+    ],
+    "window": [
+      960,
+      540
+    ]
+  },
+  "failures": 0,
+  "layout": {},
+  "mode": "read"
+}

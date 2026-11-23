@@ -19,8 +19,12 @@ var demo_saved: Dictionary = {}
 var demo_port: SubViewport
 ## #practiceGuide buttons: 실전 시작 (btnPracticeGo) and 조작 안내 (btnPracticeHelp).
 var practice_buttons: HBoxContainer
+const EXPORT_PROBE: String = "res://phase13/export_probe.gd"
+const WEB_PROBE: String = "res://phase13/web_probe.gd"
 
 func _ready() -> void:
+	BmkPlatform.install_web_fonts()
+	BmkPlatform.watch_window(get_tree().root)
 	preferences = BmkSettings.read()
 	super._ready()
 	if preferences.preset == "custom": physical.configure_custom(preferences.bindings)
@@ -102,6 +106,15 @@ func _ready() -> void:
 		touch.start_edit())
 	apply_preferences()
 	pause_game(true)
+	# Phase 13: export templates ignore --script, so the exported-build probes are attached here. Each
+	# is in one pack only (Windows / Web) and loaded by path, so other exports never reference it.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--export-probe=") and ResourceLoader.exists(EXPORT_PROBE):
+			add_child.call_deferred((load(EXPORT_PROBE) as GDScript).new())
+			break
+	# The Web counterpart (Web pack only): reports buttons and state to the page for verify_web.cjs.
+	if BmkPlatform.is_web() and ResourceLoader.exists(WEB_PROBE) and str(JavaScriptBridge.eval("location.search")).contains("bmk_probe=1"):
+		add_child.call_deferred((load(WEB_PROBE) as GDScript).new())
 
 func present() -> void:
 	super.present()
@@ -338,6 +351,19 @@ func _physics_process(delta: float) -> void:
 		if game_mode == "story" and stage_index >= 4: menu.show_ending(report)
 		else: menu.show_result(report,game_mode == "challenge",stage_index,game_mode == "story" and stage_index < 4)
 
+## Phase 13: Android's back button (application/config/quit_on_go_back is off). On the title it
+## leaves the app; everywhere else it is Esc, so it pauses, goes back a menu or ends layout editing.
+func go_back() -> void:
+	if menu != null and menu.visible and menu.mode == "title" and not (touch != null and touch.editing):
+		request_close()
+		return
+	for pressed: bool in [true,false]:
+		var key: InputEventKey = InputEventKey.new()
+		key.keycode = KEY_ESCAPE
+		key.physical_keycode = KEY_ESCAPE
+		key.pressed = pressed
+		Input.parse_input_event(key)
+
 func _unhandled_input(event: InputEvent) -> void:
 	# game.js keydown: M toggles sound on every screen (AUDIO.toggle()).
 	if event is InputEventKey and event.is_pressed() and not (event as InputEventKey).echo and (event as InputEventKey).keycode == KEY_M and not (touch != null and touch.editing) and not (menu != null and menu.mode == "bindings"):
@@ -365,5 +391,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _notification(what: int) -> void:
 	super._notification(what)
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST: go_back()
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and menu != null and not menu.visible and not capture_mode:
 		menu.show_pause()

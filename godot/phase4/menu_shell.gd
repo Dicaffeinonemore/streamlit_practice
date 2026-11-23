@@ -22,6 +22,7 @@ var store: BmkSaveStore
 ## audio.js AUDIO: silence on the title/boss list, the select click, mute and the boss file.
 var audio: BmkGameAudio
 var boss_dialog: FileDialog
+var web_picker: BmkWebFilePicker
 var mode: String = "title"
 var settings_origin: String = "title"
 var character_challenge: bool = false
@@ -175,7 +176,7 @@ func show_title() -> void:
 	add_button("연습하기",func() -> void: practice_game.emit())
 	add_button("보스 도전",show_challenges)
 	add_button("설정",show_settings)
-	add_button("종료",func() -> void: quit_game.emit())
+	if BmkPlatform.can_quit(): add_button("종료",func() -> void: quit_game.emit())
 
 ## game.js openCharacterSelect(challengeStage): story start, or the character for a boss challenge.
 func show_characters(challenge: bool = false) -> void:
@@ -345,6 +346,9 @@ func boss_status() -> String:
 
 ## index.html #bossBgmFile: pick an audio file (mp3, ogg or wav, at most 30 MB).
 func choose_boss_file() -> void:
+	if BmkPlatform.uses_browser_file_picker():
+		choose_boss_file_in_browser()
+		return
 	if boss_dialog == null:
 		boss_dialog = FileDialog.new()
 		boss_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
@@ -360,6 +364,19 @@ func choose_boss_file() -> void:
 			elif not bool(result.get("saved",true)): message.text = "내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name)
 		add_child(boss_dialog)
 	boss_dialog.popup_centered(Vector2i(720,480))
+
+## Phase 13 Web export: the page's own file chooser, with the same messages as the FileDialog path.
+func choose_boss_file_in_browser() -> void:
+	if web_picker == null:
+		web_picker = BmkWebFilePicker.new()
+		web_picker.picked.connect(func(file_name: String, bytes: PackedByteArray) -> void:
+			var result: Dictionary = audio.set_boss_bytes(file_name,bytes)
+			if mode == "settings": show_settings()
+			if not bool(result["ok"]): message.text = str(result["message"])
+			elif not bool(result.get("saved",true)): message.text = "내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name)
+		web_picker.failed.connect(func(reason: String, _file_name: String) -> void:
+			message.text = "30MB 이하의 파일만 쓸 수 있습니다." if reason == "big" else "파일을 열 수 없습니다.")
+	web_picker.open(".mp3,.ogg,.wav,audio/mpeg,audio/ogg,audio/wav",BmkGameAudio.BOSS_MAX_BYTES)
 
 ## Transparency slider 0-90% (alpha = 1 - value), in 10% steps; past 90% it wraps to 0%.
 func change_touch_alpha() -> void:

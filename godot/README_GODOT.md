@@ -14,4 +14,4 @@ Escape or the pause button (top right) pauses. On touch screens, turn on Setting
 
 M toggles sound on every screen; Settings also has the sound switch and the boss-fight music file (MP3/OGG/WAV, at most 30 MB, remembered between runs).
 
-Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE12_REPORT.md`. Platform exports are Phase 13.
+Validation, source differences and regeneration commands for each phase are in `docs/PHASE1_REPORT.md` through `docs/PHASE13_REPORT.md`. Building for Windows, Web, Android and iOS: `docs/EXPORTING.md`.

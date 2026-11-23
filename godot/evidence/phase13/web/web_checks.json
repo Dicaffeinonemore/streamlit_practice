@@ -1,0 +1,210 @@
+{
+  "failures": 0,
+  "checks": [
+    {
+      "ok": true,
+      "label": "desktop: engine started, title shown (first load)"
+    },
+    {
+      "ok": true,
+      "label": "desktop: Web title has no 종료 (보스 도전, 새 게임, 설정, 연습하기, 이어하기)"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 이어하기 is disabled before any save"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 설정 opens the settings"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 보스전 음악 opens the browser file chooser"
+    },
+    {
+      "ok": true,
+      "label": "desktop: the chosen file is decoded and stored in IndexedDB"
+    },
+    {
+      "ok": true,
+      "label": "desktop: the settings row names the chosen file"
+    },
+    {
+      "ok": true,
+      "label": "desktop: a > 30 MB file is refused and the previous choice kept"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 기본값으로 removes the stored file"
+    },
+    {
+      "ok": true,
+      "label": "desktop: engine started, title shown (reload after settings)"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 새 게임 opens character select"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 비에사로 시작 opens the tutorial"
+    },
+    {
+      "ok": true,
+      "label": "desktop: Enter plays the opening"
+    },
+    {
+      "ok": true,
+      "label": "desktop: Esc skips to Stage 1 with Viesa ({\"character\":\"viesa\",\"gameMode\":\"story\",\"menu\":\"opening\",\"menuVisible\":false,\"sound\":true,\"stage\":0})"
+    },
+    {
+      "ok": true,
+      "label": "desktop: audio runs after the first gesture (before [\"running\"], after [\"running\"])"
+    },
+    {
+      "ok": true,
+      "label": "desktop: the stage-entry checkpoint is in IndexedDB"
+    },
+    {
+      "ok": true,
+      "label": "desktop: M turns the sound off and stores it"
+    },
+    {
+      "ok": true,
+      "label": "desktop: engine started, title shown (reload)"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 이어하기 is offered after a reload"
+    },
+    {
+      "ok": true,
+      "label": "desktop: sound stays off after a reload"
+    },
+    {
+      "ok": true,
+      "label": "desktop: 이어하기 restores Viesa in Stage 1 ({\"character\":\"viesa\",\"gameMode\":\"story\",\"menu\":\"title\",\"menuVisible\":false,\"sound\":false,\"stage\":0})"
+    },
+    {
+      "ok": true,
+      "label": "desktop: M turns the sound back on"
+    },
+    {
+      "ok": true,
+      "label": "desktop: Esc pauses"
+    },
+    {
+      "ok": true,
+      "label": "phone: engine started, title shown (phone)"
+    },
+    {
+      "ok": true,
+      "label": "phone: canvas uses device pixels (2532,1170), 2x integer stretch"
+    },
+    {
+      "ok": true,
+      "label": "phone: tapping 새 게임 opens character select"
+    },
+    {
+      "ok": true,
+      "label": "phone: tapping 비에사로 시작 opens the tutorial"
+    },
+    {
+      "ok": true,
+      "label": "phone: 게임 시작 and 건너뛰기 by touch reach Stage 1 ({\"character\":\"viesa\",\"gameMode\":\"story\",\"menu\":\"opening\",\"menuVisible\":false,\"sound\":true,\"stage\":0})"
+    },
+    {
+      "ok": true,
+      "label": "small: engine started, title shown (small window)"
+    },
+    {
+      "ok": true,
+      "label": "small: the lowest title button is inside the 450 px window"
+    },
+    {
+      "ok": true,
+      "label": "small: 새 게임 is reachable below 960 x 540"
+    },
+    {
+      "ok": true,
+      "label": "no script errors in the console (0)"
+    }
+  ],
+  "loadSeconds": 3.825,
+  "sizes": {
+    "index.apple-touch-icon.png": 11944,
+    "index.apple-touch-icon.png.import": 980,
+    "index.audio.position.worklet.js": 2973,
+    "index.audio.worklet.js": 7298,
+    "index.html": 5494,
+    "index.icon.png": 5700,
+    "index.icon.png.import": 944,
+    "index.js": 279815,
+    "index.pck": 525911308,
+    "index.png": 21443,
+    "index.png.import": 929,
+    "index.wasm": 39514754
+  },
+  "console": [
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    }
+  ]
+}

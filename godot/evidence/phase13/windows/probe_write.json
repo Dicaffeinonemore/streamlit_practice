@@ -1,0 +1,239 @@
+{
+  "checks": [
+    {
+      "label": "Running in an exported template, not the editor",
+      "ok": true
+    },
+    {
+      "label": "The title screen opens",
+      "ok": true
+    },
+    {
+      "label": "The game renders at 960 x 540",
+      "ok": true
+    },
+    {
+      "label": "Nearest-neighbour sampling",
+      "ok": true
+    },
+    {
+      "label": "A real audio driver is active",
+      "ok": true
+    },
+    {
+      "label": "종료 matches the platform",
+      "ok": true
+    },
+    {
+      "label": "No checkpoint before the first run",
+      "ok": true
+    },
+    {
+      "label": "Sound starts on",
+      "ok": true
+    },
+    {
+      "label": "Capture title",
+      "ok": true
+    },
+    {
+      "label": "Button exists: 설정",
+      "ok": true
+    },
+    {
+      "label": "Button exists: 뒤로",
+      "ok": true
+    },
+    {
+      "label": "Settings → 뒤로 returns to the title",
+      "ok": true
+    },
+    {
+      "label": "Button exists: 새 게임",
+      "ok": true
+    },
+    {
+      "label": "Button exists: 비에사로 시작",
+      "ok": true
+    },
+    {
+      "label": "Character select opens Viesa's tutorial",
+      "ok": true
+    },
+    {
+      "label": "Capture tutorial",
+      "ok": true
+    },
+    {
+      "label": "게임 시작 (Enter) plays the opening",
+      "ok": true
+    },
+    {
+      "label": "Stage 1 starts with Viesa",
+      "ok": true
+    },
+    {
+      "label": "The stage-entry checkpoint is on disk",
+      "ok": true
+    },
+    {
+      "label": "The simulation runs at 60 ticks/s (60 ticks in 1.00 s)",
+      "ok": true
+    },
+    {
+      "label": "Capture stage1",
+      "ok": true
+    },
+    {
+      "label": "M turns the sound off",
+      "ok": true
+    },
+    {
+      "label": "The sound preference is on disk",
+      "ok": true
+    }
+  ],
+  "environment": {
+    "audio_driver": "WASAPI",
+    "display_driver": "Windows",
+    "editor": false,
+    "features": [
+      "template",
+      "release",
+      "windows",
+      "pc"
+    ],
+    "mix_rate": 48000.0,
+    "os": "Windows",
+    "physics_ticks": 60,
+    "rendering_driver": "opengl3",
+    "stretch": [
+      "canvas_items",
+      "integer"
+    ],
+    "texture_filter": 0,
+    "user_dir": "C:/Users/훈도/AppData/Roaming/Godot/app_userdata/Black Moon Knight",
+    "viewport": [
+      960.0,
+      540.0
+    ],
+    "window": [
+      960,
+      540
+    ]
+  },
+  "failures": 0,
+  "layout": {
+    "characters": {
+      "뒤로": [
+        480,
+        433
+      ],
+      "바렐로 시작": [
+        480,
+        355
+      ],
+      "비에사로 시작": [
+        480,
+        394
+      ]
+    },
+    "settings": {
+      "WASD": [
+        476,
+        161
+      ],
+      "뒤로": [
+        476,
+        746
+      ],
+      "모바일 조작 키: 꺼짐": [
+        476,
+        551
+      ],
+      "모바일 키 배치 편집": [
+        476,
+        668
+      ],
+      "모바일 키 초기화": [
+        476,
+        707
+      ],
+      "모바일 키 크기: 100%": [
+        476,
+        629
+      ],
+      "모바일 키 투명도: 45%": [
+        476,
+        590
+      ],
+      "배경 음악: 70%": [
+        476,
+        239
+      ],
+      "보스전 음악 기본값으로": [
+        476,
+        395
+      ],
+      "보스전 음악: 게임 기본 mp3": [
+        476,
+        356
+      ],
+      "소리: 켜짐 (M)": [
+        476,
+        317
+      ],
+      "아케이드": [
+        476,
+        122
+      ],
+      "위험 구역 표시: 켜짐": [
+        476,
+        512
+      ],
+      "키 직접 설정": [
+        476,
+        200
+      ],
+      "화면 번쩍임: 켜짐": [
+        476,
+        473
+      ],
+      "화면 흔들림: 켜짐": [
+        476,
+        434
+      ],
+      "효과음: 80%": [
+        476,
+        278
+      ]
+    },
+    "title": {
+      "보스 도전": [
+        779,
+        388
+      ],
+      "새 게임": [
+        779,
+        280
+      ],
+      "설정": [
+        779,
+        424
+      ],
+      "연습하기": [
+        779,
+        352
+      ],
+      "이어하기": [
+        779,
+        316
+      ],
+      "종료": [
+        779,
+        460
+      ]
+    }
+  },
+  "mode": "write"
+}

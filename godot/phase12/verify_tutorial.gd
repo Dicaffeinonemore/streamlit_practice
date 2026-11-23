@@ -215,10 +215,16 @@ func run() -> void:
 	await click_button("바렐로 시작")
 	await click_button("게임 시작",t)
 	check(game.menu.mode == "opening","게임 시작 opens the opening")
-	for i: int in range(1079): game.menu.opening.advance()
-	check(game.menu.mode == "opening","Still in the opening at 1079 ticks")
+	# Step the opening by hand only (its own _physics_process would add real-time ticks), from 0.
+	# openingTime += MS reaches 17999.99999999988 after 1080 ticks in both JavaScript and GDScript,
+	# so the source and the port finish on tick 1081.
+	game.menu.opening.set_physics_process(false)
+	game.menu.opening.time = 0.0
+	for i: int in range(1080): game.menu.opening.advance()
+	check(game.menu.mode == "opening","Still in the opening after 1080 ticks")
 	game.menu.opening.advance()
-	check(game.game_mode == "story" and not game.menu.visible and game.session.player.character_id == "barel","The opening ends at 18 s and starts the story")
+	game.menu.opening.set_physics_process(true)
+	check(game.game_mode == "story" and not game.menu.visible and game.session.player.character_id == "barel","The opening ends at 18 s (tick 1081) and starts the story")
 
 	# ---- Pause origin, Stage 1: the live run is put back exactly
 	game.pause_game(false)

@@ -331,7 +331,12 @@ func set_boss_file(path: String) -> Dictionary:
 	if file.get_length() > BOSS_MAX_BYTES: return {"ok":false,"message":"30MB 이하의 파일만 쓸 수 있습니다."}
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
-	var extension: String = path.get_extension().to_lower()
+	return set_boss_bytes(path.get_file(), bytes)
+
+## The same choice from bytes already read (the Web export's browser file chooser).
+func set_boss_bytes(file_name: String, bytes: PackedByteArray) -> Dictionary:
+	if bytes.size() > BOSS_MAX_BYTES: return {"ok":false,"message":"30MB 이하의 파일만 쓸 수 있습니다."}
+	var extension: String = file_name.get_extension().to_lower()
 	var stream: AudioStream = decode(bytes, extension)
 	if stream == null: return {"ok":false,"message":"재생할 수 없는 오디오 파일입니다."}
 	var saved: bool = false
@@ -340,7 +345,7 @@ func set_boss_file(path: String) -> Dictionary:
 		saved = copy.store_buffer(bytes)
 		copy.close()
 	boss_stream = stream
-	boss_name = path.get_file()
+	boss_name = file_name
 	write_preferences(extension if saved else "")
 	notify_boss()
 	return {"ok":true,"saved":saved}
