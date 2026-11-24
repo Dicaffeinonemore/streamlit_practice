@@ -28,6 +28,10 @@ var boss_dialog: FileDialog
 var web_picker: BmkWebFilePicker
 var mode: String = "title"
 var settings_origin: String = "title"
+## Options page (index.html #settings .settings-page): main, bgm, display, mobile or controls.
+var settings_page: String = "main"
+## Row focused after a rebuild of the same options page.
+var settings_focus: int = 0
 var character_challenge: bool = false
 ## Stage index of the boss chosen in the challenge list (0 = Gorath, 1 = Morgra).
 var challenge_stage: int = 0
@@ -102,10 +106,11 @@ func _ready() -> void:
 	var bold: SystemFont = tutorial.font.duplicate()
 	bold.font_weight = 700
 	dialog.theme.set_font("font","Button",bold)
+	var row_serif := SystemFont.new()
+	row_serif.font_names = PackedStringArray(["Georgia", "Times New Roman", "Batang"])
+	dialog.serif = row_serif
+	dialog.sans = tutorial.font
 	add_child(dialog)
-	dialog.heading.add_theme_font_override("font", tutorial.serif)
-	dialog.action(dialog.footer, Copy.text("KEYS_BACK"), back_from_settings, true)
-	dialog.action(dialog.footer, Copy.text("KEYS_RESET"), func() -> void: change_preset("arcade"))
 	show_title()
 
 func clear_buttons() -> void:
@@ -122,7 +127,9 @@ func apply_layout() -> void:
 	var web := mode in ["settings","pause"]
 	title_backing.visible = title_image.visible
 	title_image.controls.visible = art_title
-	backdrop.visible = not art_title and not overlay
+	# Design 1: the pause menu barely dims the game; the options show the title art undimmed.
+	backdrop.visible = not art_title and not overlay and mode != "settings"
+	backdrop.color.a = 0.28 if mode == "pause" else 0.72
 	panel.visible = not overlay and not art_title and not web
 	# showScreen(id !== 'tutorial') -> demoStop()
 	if tutorial != null and tutorial.visible and mode != "tutorial":
@@ -132,18 +139,19 @@ func apply_layout() -> void:
 		opening.running = false
 		opening.visible = false
 	dialog.visible = web
-	buttons.alignment = BoxContainer.ALIGNMENT_CENTER if mode == "pause" else BoxContainer.ALIGNMENT_BEGIN
-	buttons.size_flags_vertical = Control.SIZE_EXPAND_FILL if mode == "pause" else Control.SIZE_SHRINK_BEGIN
-	buttons.add_theme_constant_override("separation",12 if web else 5)
+	buttons.alignment = BoxContainer.ALIGNMENT_BEGIN
+	buttons.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	buttons.add_theme_constant_override("separation",5)
 	message.remove_theme_stylebox_override("normal")
-	title.visible = not art_title and mode != "settings"
+	message.visible = not web
+	title.visible = not art_title and mode not in ["settings", "pause"]
 	title.remove_theme_font_override("font")
 	title.add_theme_font_size_override("font_size",29 if web else 26)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.follow_focus = true
 	if web:
 		scroll.custom_minimum_size = Vector2.ZERO
-		dialog.show_scroll(scroll,mode == "settings")
+		dialog.show_scroll(scroll, dialog_page())
 		title.add_theme_font_override("font", tutorial.serif)
 		title.add_theme_color_override("font_color",Color("e6d6d0"))
 		button_size = Vector2(0,34)
@@ -163,6 +171,24 @@ func add_button(label: String, callback: Callable, disabled: bool = false) -> vo
 	button.pressed.connect(callback)
 	buttons.add_child(button)
 
+func dialog_page() -> String:
+	if mode == "pause": return "pause"
+	return "controls" if settings_page == "controls" else "settings"
+
+## Sizes the framed panel to its rows, as the web panel wraps its content.
+func fit_dialog() -> void:
+	var rows: int = 0
+	for child: Node in buttons.get_children():
+		if child is Button and (child as Button).visible: rows += 1
+		elif child is Label and (child as Label).visible and child != title: rows += 1
+	dialog.show_scroll(scroll, dialog_page(), rows)
+
+## Shows a save or file error above the option rows.
+func notice(text: String) -> void:
+	message.text = text
+	message.visible = not text.is_empty()
+	if mode == "settings": fit_dialog()
+
 func show_title() -> void:
 	mode = "title"
 	visible = true
@@ -180,6 +206,7 @@ func title_choice(key: String) -> void:
 	match key:
 		"New Game": show_characters()
 		"Continue": continue_game.emit()
+		"MENU_CHALLENGE": show_challenges()
 		"Options": show_settings()
 		"Credits": show_title_info(key, "MENU_CREDIT_LINE")
 		"Exit":
@@ -255,46 +282,35 @@ func show_pause() -> void:
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = Copy.text("PAUSE_TITLE")
-	message.text = Copy.text(pause_reason)
-	var spacing := StyleBoxEmpty.new()
-	spacing.content_margin_top = 5
-	spacing.content_margin_bottom = 5
-	message.add_theme_stylebox_override("normal",spacing)
-	var first := pause_row()
-	if paused_challenge: dialog.action(first, Copy.text("PAUSE_BOSSES"), show_challenges)
-	dialog.action(first, Copy.text("PAUSE_RESUME"), func() -> void: resume_game.emit(), true)
-	dialog.action(first, Copy.text("PAUSE_HELP"), show_tutorial.bind("pause"))
-	dialog.action(first, Copy.text("Options"), show_settings)
-	var second := pause_row()
-	dialog.action(second, Copy.text("PAUSE_RESTART"), func() -> void: retry_game.emit())
-	dialog.action(second, Copy.text("PAUSE_TITLE_BACK"), show_title)
+	var language: String = settings.menu_language if settings != null else "en"
+	title.text = Copy.text("PAUSE_TITLE", language)
+	message.text = Copy.text(pause_reason, language)
+	# Design 1: bilingual rows, English in serif capitals and Korean after a rule.
+	var resume_button := pause_row("ROW_RESUME", "PAUSE_RESUME", func() -> void: resume_game.emit())
+	if paused_challenge: pause_row("ROW_BOSSES", "PAUSE_BOSSES", show_challenges)
+	pause_row("ROW_CONTROLS", "PAUSE_HELP", show_tutorial.bind("pause"))
+	pause_row("ROW_OPTIONS", "Options", show_settings)
+	pause_row("ROW_RESTART", "PAUSE_RESTART", func() -> void: retry_game.emit())
+	var title_button := pause_row("ROW_MAIN_MENU", "PAUSE_TITLE_BACK", show_title)
+	title_button.tooltip_text = Copy.text("PAUSE_TIP", language)
 	if can_toggle_fullscreen():
 		var fullscreen := DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN,DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]
-		dialog.action(second, Copy.text("FULL_OFF" if fullscreen else "FULL_ON"), func() -> void:
+		var key: String = "FULL_OFF" if fullscreen else "FULL_ON"
+		dialog.row(buttons, Copy.text(key, "en"), Copy.text(key, "ko"), func() -> void:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if fullscreen else DisplayServer.WINDOW_MODE_FULLSCREEN)
 			show_pause())
-	var tip := Label.new()
-	tip.text = Copy.text("PAUSE_TIP")
-	tip.add_theme_stylebox_override("normal",spacing)
-	tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tip.add_theme_font_size_override("font_size",14)
-	tip.add_theme_color_override("font_color",Color("cfd2ff"))
-	buttons.add_child(tip)
+	fit_dialog()
+	resume_button.grab_focus()
+
+## One pause row; old_key keeps the previous caption ("계속하기", "설정") findable.
+func pause_row(key: String, old_key: String, callback: Callable) -> Button:
+	return dialog.row(buttons, Copy.text(key, "en"), Copy.text(key, "ko"), callback, false, [Copy.text(old_key, "en"), Copy.text(old_key, "ko")])
 
 func can_toggle_fullscreen() -> bool:
 	if not (DisplayServer.is_touchscreen_available() or settings.touch): return false
 	if OS.has_feature("web"):
 		return bool(JavaScriptBridge.eval("!!(document.fullscreenEnabled || document.webkitFullscreenEnabled)"))
 	return DisplayServer.has_feature(DisplayServer.FEATURE_SUBWINDOWS)
-
-func pause_row() -> HBoxContainer:
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation",10)
-	buttons.add_child(row)
-	return row
 
 func show_result(value: String, challenge: bool, stage: int = 0, has_next: bool = false) -> void:
 	mode = "result"
@@ -413,46 +429,171 @@ func show_ending(value: String) -> void:
 
 func show_settings() -> void:
 	var previous_scroll := scroll.scroll_vertical if mode == "settings" else 0
-	if mode != "settings": settings_origin = mode
+	if mode != "settings":
+		settings_origin = mode
+		settings_page = "main"
+		settings_focus = 0
 	mode = "settings"
+	title_image.visible = true
 	clear_buttons()
-	dialog.heading.text = title_image.caption("Options")
-	add_button(title_image.caption("MENU_LANGUAGE") + " · " + ("English" if settings.menu_language == "en" else "한국어"), toggle_menu_language)
-	if settings_origin == "title":
-		add_button(title_image.caption("MENU_CHALLENGE"), show_challenges)
-		add_button(title_image.caption("MENU_PRACTICE"), func() -> void: practice_game.emit())
-	message.text = "키 배치: " + settings.preset.to_upper()
-	if settings_origin == "title" and store != null:
-		message.text += " · 최고 점수 %d" % int(store.records()["bestScore"])
-	add_button("배경 음악: %d%%" % roundi(settings.music_volume * 100),func() -> void: change_volume("music_volume"))
-	add_button("효과음: %d%%" % roundi(settings.sfx_volume * 100),func() -> void: change_volume("sfx_volume"))
-	if audio != null:
-		add_button("소리: %s (M)" % ("켜짐" if audio.enabled else "꺼짐"),func() -> void:
-			audio.toggle()
-			show_settings())
-		# game-ui.js showBgm(): custom file > game default mp3 > synthesized score; the clear button
-		# is only enabled for a custom file.
-		add_button("보스전 음악: %s" % boss_status(),choose_boss_file)
-		add_button("보스전 음악 기본값으로",func() -> void:
-			audio.clear_boss_file()
-			show_settings(),audio.boss_info()["source"] != "custom")
-	for option: String in ["shake","flash","danger_zones"]:
-		var label: String = {"shake":"화면 흔들림", "flash":"화면 번쩍임", "danger_zones":"위험 구역 표시"}[option]
-		add_button("%s: %s" % [label,"켜짐" if settings.get(option) else "꺼짐"],func() -> void: change_toggle(option))
-	# Touch controls (index.html settings: touchEnabled, touchAlpha, touchScale, layout edit / reset).
-	add_button("모바일 조작 키: %s" % ("켜짐" if settings.touch else "꺼짐"),func() -> void: change_toggle("touch"))
-	add_button("모바일 키 투명도: %d%%" % roundi((1 - float(settings.touch_layout["alpha"])) * 100),change_touch_alpha)
-	add_button("모바일 키 크기: %d%%" % roundi(float(settings.touch_layout["scale"]) * 100),change_touch_scale)
-	add_button("모바일 키 배치 편집",func() -> void: touch_edit.emit())
-	add_button("모바일 키 초기화",reset_touch_layout)
+	message.text = ""
+	match settings_page:
+		"bgm": build_bgm_page()
+		"display": build_display_page()
+		"mobile": build_mobile_page()
+		"controls": build_controls_page()
+		_: build_main_page()
+	fit_dialog()
+	scroll.set_deferred("scroll_vertical", previous_scroll)
+	var rows: Array[Button] = []
+	for child: Node in buttons.get_children():
+		if child is Button: rows.append(child as Button)
+	if settings_page == "controls" and key_settings != null and settings_focus == 0:
+		key_settings.tabs[settings.preset].grab_focus()
+	elif not rows.is_empty():
+		rows[clampi(settings_focus, 0, rows.size() - 1)].grab_focus()
+
+func opt(key: String) -> String:
+	return Copy.text(key, settings.menu_language)
+
+## Every caption a row is known by: this language, the other one, and older labels.
+func opt_captions(key: String, extra: Array = []) -> Array:
+	var names: Array = [Copy.text(key, "en"), Copy.text(key, "ko")]
+	names.append_array(extra)
+	return names
+
+func open_settings_page(page: String) -> void:
+	if mode != "settings": show_settings()
+	settings_page = page
+	settings_focus = 0
+	show_settings()
+
+func show_controls() -> void:
+	open_settings_page("controls")
+
+func nav_row(key: String, page: String, extra: Array = []) -> Button:
+	return dialog.row(buttons, opt(key), "", open_settings_page.bind(page), true, opt_captions(key, extra))
+
+func back_row() -> Button:
+	return dialog.row(buttons, opt("OPT_BACK"), "", back_from_settings, true, opt_captions("OPT_BACK", ["뒤로", Copy.text("KEYS_BACK")]))
+
+## Left / Right on a focused row run step(-1 or 1).
+func arrows_step(button: Button, step: Callable) -> void:
+	button.gui_input.connect(func(event: InputEvent) -> void:
+		for direction: int in [-1, 1]:
+			if event.is_action_pressed("ui_left" if direction < 0 else "ui_right"):
+				step.call(direction)
+				button.accept_event())
+
+## The design's first five rows plus the sub-pages the web options have.
+func build_main_page() -> void:
+	var language := dialog.row(buttons, opt("OPT_LANGUAGE"), "", toggle_menu_language, false, opt_captions("OPT_LANGUAGE", [title_image.caption("MENU_LANGUAGE")]))
+	var area := dialog.value_area(language)
+	area.add_child(dialog.arrow("◀", toggle_menu_language))
+	area.add_child(dialog.value_box("English" if settings.menu_language == "en" else "한국어", 112))
+	area.add_child(dialog.arrow("▶", toggle_menu_language))
+	arrows_step(language, func(_d: int) -> void: toggle_menu_language())
+	slider_row("OPT_MUSIC", roundi(settings.music_volume * 100), 0, 100, func(v: int) -> void: settings.music_volume = v / 100.0)
+	slider_row("OPT_SOUND", roundi(settings.sfx_volume * 100), 0, 100, func(v: int) -> void: settings.sfx_volume = v / 100.0)
+	if audio != null: nav_row("OPT_BOSS_BGM", "bgm")
+	nav_row("OPT_DISPLAY", "display")
+	nav_row("OPT_MOBILE", "mobile")
+	nav_row("OPT_CONTROLS", "controls", [Copy.text("KEYS")])
+	back_row()
+
+## game-ui.js showBgm(): custom file > game default mp3 > synthesized score; the clear row is only
+## enabled for a custom file.
+func build_bgm_page() -> void:
+	var status := dialog.text_label("%s · %s" % [opt("OPT_BOSS_BGM"), boss_status()], dialog.sans, 13)
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	status.add_theme_color_override("font_color", Color("cbb9b0"))
+	buttons.add_child(status)
+	dialog.row(buttons, opt("OPT_BGM_PICK"), "", choose_boss_file, false, opt_captions("OPT_BGM_PICK"))
+	var clear := dialog.row(buttons, opt("OPT_BGM_CLEAR"), "", func() -> void:
+		audio.clear_boss_file()
+		show_settings(), false, opt_captions("OPT_BGM_CLEAR", ["보스전 음악 기본값으로"]))
+	clear.disabled = audio.boss_info()["source"] != "custom"
+	back_row()
+
+func build_display_page() -> void:
+	toggle_row("OPT_SHAKE", "shake")
+	toggle_row("OPT_FLASH", "flash")
+	toggle_row("OPT_DANGER", "danger_zones")
+	back_row()
+
+## Touch controls (index.html settings: touchEnabled, touchAlpha, touchScale, layout edit / reset).
+func build_mobile_page() -> void:
+	toggle_row("OPT_TOUCH", "touch")
+	slider_row("OPT_TOUCH_ALPHA", roundi((1 - float(settings.touch_layout["alpha"])) * 100), 0, 90, func(v: int) -> void: settings.touch_layout["alpha"] = 1 - v / 100.0)
+	slider_row("OPT_TOUCH_SCALE", roundi(float(settings.touch_layout["scale"]) * 100), 60, 160, func(v: int) -> void: settings.touch_layout["scale"] = v / 100.0)
+	dialog.row(buttons, opt("OPT_TOUCH_EDIT"), "", func() -> void: touch_edit.emit(), true, opt_captions("OPT_TOUCH_EDIT", ["모바일 키 배치 편집"]))
+	dialog.row(buttons, opt("OPT_TOUCH_RESET"), "", reset_touch_layout, false, opt_captions("OPT_TOUCH_RESET", ["모바일 키 초기화"]))
+	back_row()
+
+func build_controls_page() -> void:
 	key_settings = KeySettings.new()
 	key_settings.settings = settings
 	key_settings.character = paused_character if settings_origin == "pause" else selected_character
 	key_settings.changed.connect(func() -> void: settings_changed.emit())
 	buttons.add_child(key_settings)
-	scroll.set_deferred("scroll_vertical", previous_scroll)
+	dialog.row(buttons, opt("OPT_RESET_KEYS"), "", func() -> void: change_preset("arcade"), false, opt_captions("OPT_RESET_KEYS", [Copy.text("KEYS_RESET")]))
+	back_row()
+
+## ON / OFF row; Enter, a click or Left / Right flips it in place.
+func toggle_row(key: String, option: String) -> Button:
+	var button := dialog.row(buttons, opt(key), "", Callable(), false, opt_captions(key))
+	var box := dialog.value_box("", 58)
+	dialog.value_area(button).add_child(box)
+	var paint := func() -> void:
+		var on := bool(settings.get(option))
+		box.text = "ON" if on else "OFF"
+		dialog.set_box_state(box, on)
+		button.set_meta("value", on)
+	paint.call()
+	var flip := func() -> void:
+		settings.set(option, not bool(settings.get(option)))
+		paint.call()
+		persist()
+	button.pressed.connect(flip)
+	arrows_step(button, func(_d: int) -> void: flip.call())
+	return button
+
+## Slider row with a percentage. A click steps 10 and wraps like the old option buttons; Left / Right
+## step 10 within the range; dragging the track sets any value.
+func slider_row(key: String, value: int, low: int, high: int, apply: Callable) -> Button:
+	var button := dialog.row(buttons, opt(key), "", Callable(), false, opt_captions(key))
+	var area := dialog.value_area(button)
+	var bar := dialog.slider(value, high)
+	bar.min_value = low
+	bar.value = value
+	var percent := dialog.text_label("%d%%" % value, dialog.serif, 14)
+	percent.custom_minimum_size.x = 42
+	percent.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	area.add_child(bar)
+	area.add_child(percent)
+	button.set_meta("slider", bar)
+	bar.value_changed.connect(func(v: float) -> void:
+		percent.text = "%d%%" % roundi(v)
+		apply.call(roundi(v))
+		persist())
+	button.pressed.connect(func() -> void:
+		bar.value = low if roundi(bar.value) + 10 > high else roundi(bar.value) + 10)
+	arrows_step(button, func(d: int) -> void: bar.value = clampi(roundi(bar.value) + d * 10, low, high))
+	return button
+
+## Saves without rebuilding the page, so the focused row and a dragged slider stay put.
+func persist() -> void:
+	var error: Error = settings.save()
+	settings_changed.emit()
+	if error != OK: notice("설정을 저장하지 못했습니다: " + error_string(error))
 
 func back_from_settings() -> void:
+	if settings_page != "main":
+		var from := settings_page
+		settings_page = "main"
+		settings_focus = ["bgm", "display", "mobile", "controls"].find(from) + (3 if audio != null else 2)
+		show_settings()
+		return
 	if settings_origin == "pause": show_pause()
 	else: show_title()
 
@@ -461,8 +602,9 @@ func toggle_menu_language() -> void:
 	settings.menu_language = "ko" if settings.menu_language == "en" else "en"
 	title_image.locale = settings.menu_language
 	var error := settings.save()
+	settings_focus = 0
 	show_settings()
-	if error != OK: message.text = error_string(error)
+	if error != OK: notice(error_string(error))
 
 func boss_status() -> String:
 	var info: Dictionary = audio.boss_info()
@@ -481,11 +623,10 @@ func choose_boss_file() -> void:
 		boss_dialog.filters = PackedStringArray(["*.mp3, *.ogg, *.wav ; 오디오 파일"])
 		boss_dialog.title = "보스전 음악 파일"
 		boss_dialog.file_selected.connect(func(path: String) -> void:
-			message.text = "불러오는 중…"
 			var result: Dictionary = audio.set_boss_file(path)
 			show_settings()
-			if not bool(result["ok"]): message.text = str(result["message"])
-			elif not bool(result.get("saved",true)): message.text = "내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name)
+			if not bool(result["ok"]): notice(str(result["message"]))
+			elif not bool(result.get("saved",true)): notice("내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name))
 		add_child(boss_dialog)
 	boss_dialog.popup_centered(Vector2i(720,480))
 
@@ -496,23 +637,11 @@ func choose_boss_file_in_browser() -> void:
 		web_picker.picked.connect(func(file_name: String, bytes: PackedByteArray) -> void:
 			var result: Dictionary = audio.set_boss_bytes(file_name,bytes)
 			if mode == "settings": show_settings()
-			if not bool(result["ok"]): message.text = str(result["message"])
-			elif not bool(result.get("saved",true)): message.text = "내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name)
+			if not bool(result["ok"]): notice(str(result["message"]))
+			elif not bool(result.get("saved",true)): notice("내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name))
 		web_picker.failed.connect(func(reason: String, _file_name: String) -> void:
-			message.text = "30MB 이하의 파일만 쓸 수 있습니다." if reason == "big" else "파일을 열 수 없습니다.")
+			notice("30MB 이하의 파일만 쓸 수 있습니다." if reason == "big" else "파일을 열 수 없습니다."))
 	web_picker.open(".mp3,.ogg,.wav,audio/mpeg,audio/ogg,audio/wav",BmkGameAudio.BOSS_MAX_BYTES)
-
-## Transparency slider 0-90% (alpha = 1 - value), in 10% steps; past 90% it wraps to 0%.
-func change_touch_alpha() -> void:
-	var value: int = roundi((1 - float(settings.touch_layout["alpha"])) * 100) + 10
-	settings.touch_layout["alpha"] = 1 - (value if value <= 90 else 0) / 100.0
-	save_settings()
-
-## Size slider 60-160%, in 10% steps.
-func change_touch_scale() -> void:
-	var value: int = roundi(float(settings.touch_layout["scale"]) * 10) + 1
-	settings.touch_layout["scale"] = (value if value <= 16 else 6) / 10.0
-	save_settings()
 
 func reset_touch_layout() -> void:
 	settings.touch_layout = BmkTouchLayout.defaults()
@@ -522,22 +651,8 @@ func save_settings() -> void:
 	var error: Error = settings.save()
 	settings_changed.emit()
 	show_settings()
-	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
+	if error != OK: notice("설정을 저장하지 못했습니다: " + error_string(error))
 
 func change_preset(id: String) -> void:
+	if key_settings == null: show_controls()
 	key_settings.choose_preset(id)
-
-func change_volume(option: String) -> void:
-	var value: int = roundi(float(settings.get(option)) * 10)
-	settings.set(option, float((value + 1) % 11) / 10.0)
-	var error: Error = settings.save()
-	settings_changed.emit()
-	show_settings()
-	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)
-
-func change_toggle(option: String) -> void:
-	settings.set(option,not bool(settings.get(option)))
-	var error: Error = settings.save()
-	settings_changed.emit()
-	show_settings()
-	if error != OK: message.text = "설정을 저장하지 못했습니다: " + error_string(error)

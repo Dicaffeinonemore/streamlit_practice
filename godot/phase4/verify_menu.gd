@@ -52,7 +52,7 @@ func run() -> void:
 	check(game.session.player.score == 0 and game.game_mode == "story" and not game.clock.paused,"Retry uses current stage entry")
 	game.start_challenge()
 	check(game.game_mode == "challenge" and game.start_section == 4 and game.session.player.sp == 100 and game.session.player.mg == 3,"Challenge starts unlocked Gorath arena")
-	game.menu.show_settings()
+	game.menu.show_controls()
 	var editor := game.menu.key_settings
 	check(editor.assignments["KeyA"].disabled, "Built-in layouts are locked")
 	editor.choose_preset("custom")

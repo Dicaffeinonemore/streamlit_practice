@@ -76,8 +76,8 @@ func _ready() -> void:
 	keyboard.resized.connect(keyboard.update_minimum_size)
 	keyboard.key_chosen.connect(func(code: String) -> void: assign(BmkKeyNames.key_for(code)))
 	add_child(keyboard)
-	var legend := HBoxContainer.new()
-	legend.alignment = BoxContainer.ALIGNMENT_CENTER
+	var legend := HFlowContainer.new()
+	legend.alignment = FlowContainer.ALIGNMENT_CENTER
 	legend.add_theme_constant_override("separation", 9)
 	add_child(legend)
 	for kind: String in ["move","attack","jump","dash","special","magic","skill","alias"]:
@@ -109,6 +109,7 @@ func _ready() -> void:
 		pair.add_child(stripe)
 		var label := Label.new()
 		label.text = action_name(action)
+		label.clip_text = true
 		label.size_flags_horizontal = SIZE_EXPAND_FILL
 		pair.add_child(label)
 		var button := Button.new()

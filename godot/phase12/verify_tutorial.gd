@@ -31,7 +31,7 @@ func click_button(label: String, container: Node = null) -> void:
 	await process_frame
 	for child: Node in (container if container != null else game.menu).find_children("*","Button",true,false):
 		var b: Button = child as Button
-		if b.text == label and b.is_visible_in_tree():
+		if (b.text == label or b.get_meta("captions", []).has(label)) and b.is_visible_in_tree():
 			if container == null and game.menu.scroll.is_ancestor_of(b):
 				game.menu.scroll.ensure_control_visible(b)
 				await process_frame

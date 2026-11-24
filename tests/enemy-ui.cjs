@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 module.exports = async ({ evaluate, call, errors, root }) => {
-  await evaluate(`(async()=>{await Promise.all([ENEMY_UI.decode(),PIXEL_UI.decode(),NAMED_ATLAS.decode()]);window.requestAnimationFrame=()=>0;UX.options.touch=false;document.body.classList.remove('touch');player=newPlayer();startStage(4);scene='play';showScreen(null);player.x=220;enemies=[mkEnemy('grunt',430,420)];target={e:enemies[0],t:150};})()`);
+  await evaluate(`(async()=>{await Promise.all([ENEMY_UI.decode(),HUD_UI.decode(),NAMED_ATLAS.decode()]);window.requestAnimationFrame=()=>0;UX.options.touch=false;document.body.classList.remove('touch');player=newPlayer();startStage(4);scene='play';showScreen(null);player.x=220;enemies=[mkEnemy('grunt',430,420)];target={e:enemies[0],t:150};})()`);
   assert.equal(await evaluate(`(()=>{
     for(let stage=0;stage<5;stage++) {stageIdx=stage;for(const type of ['grunt','rogue','archer','brute']) {
       if(!enemyHUDPortrait(mkEnemy(type,430,420))) return false;

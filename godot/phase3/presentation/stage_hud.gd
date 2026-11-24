@@ -1,7 +1,8 @@
 class_name BmkStageHud
 extends BmkGameHud
-var boss_atlas: Texture2D
 var enemy_atlas: Texture2D
+## Damage trail of the boss bar, per boss (release.js drawBossBar hud.lag).
+var boss_lag: Dictionary = {}
 
 func _draw() -> void:
 	super._draw()
@@ -16,8 +17,9 @@ func _draw() -> void:
 			if not practice.practice_done.has(step):
 				prompt = str(labels[step])
 				break
-		draw_rect(Rect2(260,82,440,32),Color(0,0,0,0.8))
-		draw_string(korean_font,Vector2(275,104),"연습 %d / 5   %s" % [practice.practice_done.size(),prompt],HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("ffe18b"))
+		# Right of the HUD design's player panel.
+		draw_rect(Rect2(470,96,440,32),Color(0,0,0,0.8))
+		draw_string(korean_font,Vector2(485,118),"연습 %d / 5   %s" % [practice.practice_done.size(),prompt],HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("ffe18b"))
 	if game is not BmkMenuGame:
 		draw_rect(Rect2(298,31,662,29),Color(0.025,0.02,0.035,0.98))
 		var names: Array[String] = ["OCCUPIED STREET","CONQUERED MARKET","HOUND KENNEL","EXECUTION PLAZA","BUTCHER'S ARENA"]
@@ -25,13 +27,13 @@ func _draw() -> void:
 		text(Vector2(755,47),"MAGIC %d   WAVE %d/%d" % [s.player.mg,mini(s.sections.event_index + 1,(s.sections.section["events"] as Array).size()),(s.sections.section["events"] as Array).size()],Color("bbb0b5"),12)
 	var boss_: BmkStageActor = s.gorath.boss(s)
 	if boss_ != null:
-		if game is BmkMenuGame: draw_source_boss(boss_)
+		if game is BmkMenuGame: draw_source_boss(boss_, "", "GUARD" if boss_.g2.guard else ("II" if boss_.g2.phase >= 2 else ""), "gorath")
 		else:
 			draw_rect(Rect2(168,425,624,47),Color(0.025,0.01,0.025,0.85))
 			text(Vector2(180,442),"GORATH / PHASE %d     HP %d / %d" % [boss_.g2.phase,boss_.hp,boss_.max_hp],Color("f6ccaf"),14)
 			bar(Vector2(180,449),600,boss_.hp / boss_.max_hp,Color("b91d38"))
 			bar(Vector2(180,462),600,boss_.gr / boss_.gr_max,Color("d6a563"))
-		if boss_.g2.guard: text(Vector2(680,442),"GUARD",Color("ff755e"),12)
+		if boss_.g2.guard and game is not BmkMenuGame: text(Vector2(680,442),"GUARD",Color("ff755e"),12)
 		if boss_.g2.card_t > 0 and boss_.g2.card_t < 130:
 			draw_rect(Rect2(0,144,960,92),Color(0.02,0.01,0.04,0.55))
 			text(Vector2(340,190),"GORATH",Color("ffe27a"),42)
@@ -39,8 +41,7 @@ func _draw() -> void:
 		if s.boss_title > 0: text(Vector2(315,160),"RAIN OF THE SLAUGHTERHOUSE",Color("ffbcaa"),19)
 	elif s is BmkWaveSimulation and wave_boss(s as BmkWaveSimulation) != null and s.mode != "bossintro" and wave_boss(s as BmkWaveSimulation).st != "intro":
 		var legacy: BmkLegacyActor = wave_boss(s as BmkWaveSimulation)
-		draw_source_boss(legacy,str(legacy.stats.get("name","")))
-		if legacy.p2shown: text(Vector2(232,432),"II",Color("ffe5dd"),12)
+		draw_source_boss(legacy,str(legacy.stats.get("name","")),"II" if legacy.p2shown else "",legacy.type)
 	elif game is BmkMenuGame:
 		for actor: BmkActorState in s.enemies:
 			if actor.id == s.last_hit_id and actor.st != "dead":
@@ -66,6 +67,14 @@ func _draw() -> void:
 		draw_rect(Rect2(0,0,960,540),Color(0.01,0.005,0.02,0.72))
 		text(Vector2(282,243),"STAGE 1 COMPLETE",Color("ffe18b"),36)
 		text(Vector2(282,283),"SCORE %d    R: RESTART" % s.player.score,Color("e4d5ba"),18)
+
+func boss_bar_visible() -> bool:
+	if game is not BmkMenuGame or game.session is not BmkStageSimulation: return false
+	var s: BmkStageSimulation = game.session as BmkStageSimulation
+	if s.gorath.boss(s) != null: return true
+	if s is not BmkWaveSimulation: return false
+	var legacy: BmkLegacyActor = wave_boss(s as BmkWaveSimulation)
+	return legacy != null and s.mode != "bossintro" and legacy.st != "intro"
 
 func hud_hidden() -> bool:
 	return game != null and game.session is BmkWaveSimulation and (game.session as BmkWaveSimulation).mode == "bossintro"
@@ -111,20 +120,14 @@ func outlined(at: Vector2, value: String, size_: int, color: Color, alpha: float
 	draw_string_outline(which,at,value,HORIZONTAL_ALIGNMENT_CENTER,960,size_,6,outline)
 	draw_string(which,at,value,HORIZONTAL_ALIGNMENT_CENTER,960,size_,color)
 
-func draw_source_boss(boss_: BmkStageActor, label: String = "") -> void:
-	if boss_atlas == null: boss_atlas = load("res://port_assets/images/boss_ui_source__29c360191ddf.png") as Texture2D
-	var scale_: float = 600.0 / 2172.0
-	var origin: Vector2 = Vector2(140,350)
-	var extra: float = 680.0 / scale_ - 2172.0
-	for part: Array in [[0,500,0,500],[500,1300,500,1300 + extra],[1800,372,1800 + extra,372]]:
-		draw_texture_rect_region(boss_atlas,Rect2(origin + Vector2(float(part[2]),0) * scale_,Vector2(float(part[3]),724) * scale_),Rect2(float(part[0]),0,float(part[1]),724))
-	var width: float = 1588 + extra
-	var start: Vector2 = origin + Vector2(342,342) * scale_
-	draw_rect(Rect2(start,Vector2(width,58) * scale_),Color("1b0c12"))
-	var fill: float = width * clampf(boss_.hp / boss_.max_hp,0,1)
-	if fill > 0: draw_texture_rect_region(boss_atlas,Rect2(start,Vector2(fill,58) * scale_),Rect2(400,342,1000,58))
-	draw_rect(Rect2(origin + Vector2(380,416) * scale_,Vector2((1500 + extra) * scale_ * clampf(boss_.gr / boss_.gr_max,0,1),2)),Color("cfab70"))
-	draw_string(korean_font,origin + Vector2(910 + extra / 2,320) * scale_,label if not label.is_empty() else "도살자 고라스  %d단계" % boss_.g2.phase,HORIZONTAL_ALIGNMENT_LEFT,-1,13,Color("ffe5dd"))
+## Boss bar of the HUD design (pixel-ui.js drawPixelBossBar). kind picks the frame portrait.
+func draw_source_boss(boss_: BmkStageActor, label: String = "", tag: String = "", kind: String = "gorath") -> void:
+	var id: int = boss_.get_instance_id()
+	var lag: float = float(boss_lag.get(id, boss_.hp))
+	if lag < boss_.hp: lag = boss_.hp
+	elif not game.clock.paused: lag = maxf(boss_.hp, lag - boss_.max_hp * 0.008)
+	boss_lag[id] = lag
+	BmkHudDesign.draw_boss(self, kind, label if not label.is_empty() else "도살자 고라스", boss_.hp / boss_.max_hp, lag / boss_.max_hp, boss_.gr / boss_.gr_max if boss_.gr_max > 0 else 0.0, tag)
 
 func draw_source_enemy(actor: BmkActorState) -> void:
 	if enemy_atlas == null: enemy_atlas = load("res://port_assets/images/enemy_ui_source__92e4bd2e3ff9.png") as Texture2D

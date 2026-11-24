@@ -46,7 +46,7 @@ func click_at(point: Vector2) -> void:
 func find_button(label: String) -> Button:
 	for child: Node in game.menu.find_children("*","Button",true,false):
 		var b: Button = child as Button
-		if b.text == label and b.is_visible_in_tree(): return b
+		if (b.text == label or b.get_meta("captions", []).has(label)) and b.is_visible_in_tree(): return b
 	return null
 
 func click_button(label: String) -> void:

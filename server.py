@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent
 TITLE_ASSETS = ("godot/phase4/title_art/menu.webp", "godot/phase4/title_art/selection.png", "godot/phase4/title_art/lettering.png", "godot/phase4/title_art/menu.csv")
 START_PORT = 8000
 PORT_TRIES = 30            # 포트가 사용 중이면 8000, 8001, ... 순서로 빈 포트를 찾는다
-SCRIPTS = ["perf-runtime.js", "combat-data.js", "motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "aurelion-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-dash-attack.js", "src/animation/barel-hurt.js", "src/animation/barel-down.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "gorath-remake-art.js", "gorath-remake-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "pixel-ui-art.js", "boss-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "stage1-bg-art.js", "stage1-fx-art.js", "stage1-enemy-art.js", "stage1-runtime.js", "feel-runtime.js", "demo-runtime.js", "game.js"]   # 순서 중요: combat-data.js(전투 수치) → motion.js(엔진) 먼저
+SCRIPTS = ["perf-runtime.js", "combat-data.js", "motion.js", "sprites.js", "backgrounds.js", "score.js", "death-sfx.js", "viesa-sfx.js", "aurelion-sfx.js", "audio.js", "hd_sprites.js", "legion_sprites.js", "game-ui.js", "release-art.js", "release.js", "named-art.js", "named-runtime.js", "floor-art.js", "floor-runtime.js", "zone-art.js", "zone-runtime.js", "barel-art.js", "src/animation/aseprite.js", "src/animation/barel-combo0.js", "src/animation/barel-combo1.js", "src/animation/barel-combo2.js", "src/animation/barel-idle.js", "src/animation/barel-walk.js", "src/animation/barel-dash.js", "src/animation/barel-dash-attack.js", "src/animation/barel-hurt.js", "src/animation/barel-down.js", "src/animation/barel-jump.js", "src/animation/barel-air-attack.js", "src/animation/barel-grabbed.js", "barel-runtime.js", "viesa-art.js", "viesa-runtime.js", "gorath-art.js", "gorath-runtime.js", "gorath-remake-art.js", "gorath-remake-runtime.js", "morgra-art.js", "judgment-art.js", "judgment-runtime.js", "morgra-runtime.js", "aurelion-art.js", "aurelion-runtime.js", "vargul-art.js", "vargul-melee-art.js", "vargul-data.js", "vargul-runtime.js", "sovereign-art.js", "sovereign-data.js", "sovereign-runtime.js", "item-art.js", "item-runtime.js", "hud-ui-art.js", "enemy-ui-art.js", "viesa-ui-art.js", "viesa-ui.js", "pixel-ui.js", "stage1-bg-art.js", "stage1-fx-art.js", "stage1-enemy-art.js", "stage1-runtime.js", "feel-runtime.js", "demo-runtime.js", "game.js"]   # 순서 중요: combat-data.js(전투 수치) → motion.js(엔진) 먼저
 
 
 def in_streamlit() -> bool:
@@ -56,6 +56,12 @@ def embed_boss_bgm(html: str) -> str:
 def build_single_html() -> str:
     """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
     html = embed_boss_bgm((ROOT / "index.html").read_text(encoding="utf-8"))
+    # The settings backdrop is CSS rather than a script asset; embed it for the
+    # single-file export too, just as title-menu.js embeds the same image below.
+    backdrop = "url('godot/phase4/title_art/menu.webp')"
+    if backdrop in html:
+        title_image = base64.b64encode((ROOT / TITLE_ASSETS[0]).read_bytes()).decode("ascii")
+        html = html.replace(backdrop, "url('data:image/webp;base64," + title_image + "')")
     # The developer lab needs its sibling files and a same-origin game iframe.
     html = re.sub(r'<a id="mobileLabLink"[^>]*>.*?</a>', '', html)
     # 실제 HTML의 연결 순서가 기준이다. 오래된 목록에만 남은 파일을 읽지 않는다.

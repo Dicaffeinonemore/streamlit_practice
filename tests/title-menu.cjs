@@ -19,11 +19,14 @@ module.exports = async ({ evaluate, call, errors, root }) => {
         return Math.round((r.top + r.height / 2 - image.top) / image.height * 941);
       });
     })()`);
-    assert.deepEqual(centers, [394, 460, 521, 582, 642]);
+    assert.deepEqual(centers, [394, 460, 521, 582, 642, 703]);
     const shot = await call('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(output, 'web-' + width + '.png'), Buffer.from(shot.data, 'base64'));
   }
   assert.equal(await evaluate("$('btnContinue').disabled"), true);
+  // Continue is disabled, so the first step lands on Boss Challenge, the next on Options.
+  await key('ArrowDown', 40);
+  assert.equal(await evaluate('document.activeElement.id'), 'btnBossChallenge');
   await key('ArrowDown', 40);
   await key('Enter', 13);
   assert.equal(await evaluate('scene'), 'settings');
@@ -39,5 +42,5 @@ module.exports = async ({ evaluate, call, errors, root }) => {
   await evaluate("$('btnContinue').click()");
   assert.ok(['play', 'intro'].includes(await evaluate('scene')));
   assert.deepEqual(errors, []);
-  console.log('PASS title positions at three sizes, keyboard, language, credits, exit and saved Continue');
+  console.log('PASS title positions at three sizes, Boss Challenge item, keyboard, language, credits, exit and saved Continue');
 };

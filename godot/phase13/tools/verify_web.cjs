@@ -10,7 +10,7 @@ const fs = require('fs'), path = require('path'), http = require('http'), os = r
 const { spawn } = require('child_process');
 const godot = path.resolve(__dirname, '../..');
 const web = path.join(godot, 'build/web');
-const out = path.join(godot, 'evidence/phase13/web');
+const out = process.env.BMK_EVIDENCE_DIR || path.join(godot, 'evidence/phase13/web');
 const smallMp3 = path.join(godot, 'port_assets/audio/original/gorath/g2hook.mp3');
 fs.mkdirSync(out, { recursive: true });
 

@@ -266,11 +266,20 @@
   #skillbar .skillbtn::after { font-size: clamp(6px,1cqw,14px); inset: 25% 14% 22% 16%; }
   #skillbar .skillbtn:disabled { filter: brightness(.65); }
   #skillbar .skillbtn.ready:hover { filter: brightness(1.2); }
-  #playPause, body.touch #playPause { top: .5%; right: .5%; width: 5.5%; height: 9%; padding: 0; margin: 0; border: 0; border-radius: 0; background-color: transparent !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; box-shadow: none; color: transparent; font-size: 0; image-rendering: pixelated; }
+  #playPause, body.touch #playPause { top: 2.232%; right: 1.914%; width: 6.938%; height: 12.221%; padding: 0; margin: 0; border: 0; border-radius: 0; background-color: transparent !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; box-shadow: none; color: transparent; font-size: 0; image-rendering: pixelated; }
   body.viesa-player #skillbar { left: 25.5%; top: 27%; }
   body.viesa-player #skillbar .skillbtn { width: 4.2cqw; aspect-ratio: 148 / 260; background-image: var(--viesa-icon) !important; image-rendering: auto; }
   body.viesa-player #skillbar .skillbtn .key { top: 28%; left: 25%; font-size: clamp(5px,.7cqw,10px); }
   body.viesa-player #skillbar .skillbtn .cool, body.viesa-player #skillbar .skillbtn::after { inset: 26% 8% 27% 12%; }
+  /* Barel HUD design: the canvas draws the five skill icons under the bars; these buttons sit
+     exactly over them (live key labels, cooldown sweep, clicks). Viesa keeps her own icon tiles. */
+  body:not(.viesa-player) #skillbar { left: 2.2727%; top: 19.128%; }
+  body:not(.viesa-player) #skillbar .skillbtn { width: 5.2153cqw; aspect-ratio: 87.2 / 114; margin: 0; background: none !important; filter: none; }
+  body:not(.viesa-player) #skillbar .skillbtn .skill-icon { display: none !important; }
+  body:not(.viesa-player) #skillbar .skillbtn .key { top: 20%; left: 16%; font-size: clamp(5px,.75cqw,11px); }
+  body:not(.viesa-player) #skillbar .skillbtn .cool, body:not(.viesa-player) #skillbar .skillbtn::after { inset: 21% 15% 21% 15%; }
+  body:not(.viesa-player) #skillbar .skillbtn:disabled::before { content: ''; position: absolute; inset: 21% 15% 21% 15%; background: rgba(0,0,0,.35); pointer-events: none; }
+  body:not(.viesa-player) #skillbar .skillbtn.ready:hover { filter: brightness(1.25); background: radial-gradient(circle, #8fd0ff33, transparent 65%) !important; }
   /* Character selection: two permanent slots, including upcoming heroes. */
   #characterSelect { padding: clamp(14px,3cqw,36px); gap: 14px; background: radial-gradient(ellipse at 25% 55%,#541c2c66,transparent 55%),radial-gradient(ellipse at 85% 30%,#143d3c55,transparent 55%),#08070ded; }
   #characterSelect .selection-kicker { margin: 0; font-size: 11px; letter-spacing: .35em; color: #b99a7e; }
@@ -319,6 +328,93 @@
   }
   .title-choice:focus-visible { outline: 1px solid #dfaa84; outline-offset: -1px; }
   .title-choice:disabled { cursor: default; }
+  /* Lunatic Nights menu design 1 (dark iron): pause lower left over the game, options on the right
+     over the title art. Rows share one frame; the focused row turns crimson like the mockup. */
+  .title-diamond { position: absolute; left: 7.6555%; width: 1.3cqw; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1L14.6 9.4L23 12L14.6 14.6L12 23L9.4 14.6L1 12L9.4 9.4Z' fill='none' stroke='%23a89890' stroke-width='1.3'/%3E%3Cpath d='M12 8L16 12L12 16L8 12Z' fill='%238d8079'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  #pause, #settings { padding: 0; gap: 0; border: 0; }
+  #pause { background: rgba(5, 3, 8, .28); }
+  #settings { background: linear-gradient(90deg, transparent 45%, #0a06084d), url('godot/phase4/title_art/menu.webp') center / cover no-repeat, #0b080a; }
+  .menu-panel { --row-h: 4.5cqw; --row-gap: 1cqw; --ink: #eadbd0;
+    box-sizing: border-box; position: absolute; display: flex; flex-direction: column; color: var(--ink); text-align: left;
+    padding: 2.5cqw 1.5cqw 2.3cqw;
+    background: linear-gradient(160deg, rgba(34,26,30,.96), rgba(13,9,12,.97) 55%, rgba(20,14,17,.97));
+    border: 1px solid #a68b7d; border-radius: 4px;
+    box-shadow: inset 0 0 0 4px #110b0e, inset 0 0 0 5px #5a464a, 0 0 0 1px #000, 0 8px 26px #000c; }
+  /* Corner brackets: short strokes at each inner corner. */
+  .menu-panel > .corners { position: absolute; inset: 7px; pointer-events: none;
+    background:
+      linear-gradient(#b89c8c,#b89c8c) left top / 14px 1px, linear-gradient(#b89c8c,#b89c8c) left top / 1px 14px,
+      linear-gradient(#b89c8c,#b89c8c) right top / 14px 1px, linear-gradient(#b89c8c,#b89c8c) right top / 1px 14px,
+      linear-gradient(#b89c8c,#b89c8c) left bottom / 14px 1px, linear-gradient(#b89c8c,#b89c8c) left bottom / 1px 14px,
+      linear-gradient(#b89c8c,#b89c8c) right bottom / 14px 1px, linear-gradient(#b89c8c,#b89c8c) right bottom / 1px 14px;
+    background-repeat: no-repeat; }
+  /* Crescent with flourishes on the top edge, a small diamond on the bottom edge. */
+  .menu-panel::before { content: ''; position: absolute; left: 50%; top: 0; width: 15cqw; max-width: 70%; aspect-ratio: 200 / 34; transform: translate(-50%, -62%); pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 34'%3E%3Cdefs%3E%3Cmask id='m'%3E%3Crect width='200' height='34' fill='%23fff'/%3E%3Ccircle cx='106' cy='13' r='11' fill='%23000'/%3E%3C/mask%3E%3C/defs%3E%3Cpath d='M70 21h17M113 21h17' stroke='%23140d11' stroke-width='9'/%3E%3Cg fill='none' stroke='%23b8998a' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M6 21h52c7 0 10-7 16-7s7 7 13 7'/%3E%3Cpath d='M194 21h-52c-7 0-10-7-16-7s-7 7-13 7'/%3E%3Cpath d='M44 21c5-6 11-6 14 0M156 21c-5-6-11-6-14 0'/%3E%3C/g%3E%3Ccircle cx='100' cy='18' r='13' fill='%23140d11'/%3E%3Ccircle cx='100' cy='17' r='12' fill='%23dcc6b0' mask='url(%23m)'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .menu-panel::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 9cqw; max-width: 50%; aspect-ratio: 120 / 16; transform: translate(-50%, 50%); pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 16'%3E%3Cpath d='M50 8h20' stroke='%23140d11' stroke-width='8'/%3E%3Cpath d='M4 8h44M72 8h44' stroke='%239c8378' stroke-width='1.2'/%3E%3Cpath d='M60 1L67 8L60 15L53 8Z' fill='%23cdb6a2' stroke='%23140d11'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .menu-rows, .settings-page { display: flex; flex-direction: column; gap: var(--row-gap); }
+  .menu-row { position: relative; display: flex; align-items: center; gap: .8em; width: 100%; min-height: var(--row-h); box-sizing: border-box;
+    margin: 0; padding: .25em 1em .25em 2.5em; border: 1px solid #5d4b4e; border-radius: 3px; cursor: pointer;
+    background: linear-gradient(#1f181b, #130e11); box-shadow: inset 0 0 0 1px #0b0709, inset 0 0 0 2px #2b2125, 0 2px 4px #0007;
+    color: var(--ink); font: 500 clamp(11px, 1.75cqw, 24px)/1.15 Georgia, 'Batang', 'Noto Serif CJK KR', serif; text-align: left; text-shadow: 0 1px 2px #000; }
+  .menu-row::before { content: ''; position: absolute; left: .85em; top: 50%; width: .95em; height: .95em; transform: translateY(-50%);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 1L12.3 7.7L19 10L12.3 12.3L10 19L7.7 12.3L1 10L7.7 7.7Z' fill='none' stroke='%23a3918a' stroke-width='1.1'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .menu-row:is(:focus, :focus-within) { outline: none; border-color: #c4907e;
+    background: linear-gradient(90deg, #67182a, #3f0e1a 55%, #2a0b13); box-shadow: inset 0 0 0 1px #1a0508, inset 0 0 0 2px #8f3a43, 0 0 12px #a51f3355; }
+  .menu-row:is(:focus, :focus-within)::before { filter: drop-shadow(0 0 3px #ff5a5a);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z' fill='%23ff6b6b'/%3E%3Cpath d='M10 4L11.5 8.5L16 10L11.5 11.5L10 16L8.5 11.5L4 10L8.5 8.5Z' fill='%23fff3e6'/%3E%3C/svg%3E"); }
+  .menu-row:focus-visible { outline: 1px solid #f0c9ad; outline-offset: 2px; }
+  .menu-row:disabled { opacity: .45; cursor: default; }
+  .row-label { flex: 1 1 auto; min-width: 0; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row-label:lang(ko), .row-sub { text-transform: none; font-family: 'Malgun Gothic', 'Noto Sans CJK KR', sans-serif; letter-spacing: 0; }
+  .menu-rows .row-label { flex: 0 1 auto; }
+  .row-sep { flex: none; width: 1px; height: 1em; background: #9c8580; }
+  .row-sub { flex: 1 1 auto; min-width: 0; font-size: .82em; color: #e2d2c8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .menu-row.nav::after { content: ''; flex: none; width: .45em; height: .45em; margin: 0 .2em 0 auto; border: solid #e8d6ca; border-width: 2px 2px 0 0; transform: rotate(45deg); }
+  .row-control { flex: none; display: flex; align-items: center; gap: .45em; margin-left: auto; font-size: .9em; }
+  .stepper .step { padding: 0; width: 1em; border: 0; background: none; color: #f4e5da; font-size: .9em; cursor: pointer; }
+  .stepper select { appearance: none; -webkit-appearance: none; min-width: 8.5em; padding: .3em .6em; border: 1px solid #77605f; border-radius: 2px;
+    background: #0d090b; color: #f4e5da; font: inherit; text-align: center; text-align-last: center; cursor: pointer; }
+  .stepper select option { background: #1b1418; }
+  .menu-row input[type=range] { -webkit-appearance: none; appearance: none; width: 8em; height: 1.2em; margin: 0; background: none; cursor: pointer; --fill: 50%; }
+  .menu-row input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; box-shadow: inset 0 0 0 1px #0009;
+    background: linear-gradient(90deg, #a91f35, #d8344c var(--fill), #3b3236 var(--fill)); }
+  .menu-row input[type=range]::-moz-range-track { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #a91f35, #d8344c var(--fill), #3b3236 var(--fill)); }
+  .menu-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -5px; border: 0; cursor: pointer;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0L16 8L8 16L0 8Z' fill='%23d9cfc8' stroke='%23201a1c'/%3E%3Cpath d='M8 4L12 8L8 12L4 8Z' fill='%237d6e6a'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .menu-row input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 0; transform: rotate(45deg); background: #d9cfc8; }
+  .menu-row output { min-width: 2.7em; text-align: right; font-size: .9em; color: #efe0d5; }
+  .menu-row input[type=checkbox] { -webkit-appearance: none; appearance: none; position: relative; width: 4.2em; height: 1.65em; margin: 0; border: 1px solid #77605f; border-radius: 2px;
+    background: #0d090b; cursor: pointer; font: 600 .8em Georgia, serif; }
+  .menu-row input[type=checkbox]::after { content: 'OFF'; position: absolute; inset: 0; display: grid; place-items: center; color: #a8968f; letter-spacing: .08em; }
+  .menu-row input[type=checkbox]:checked { background: linear-gradient(#a3263b, #6b1324); border-color: #e2a99a; }
+  .menu-row input[type=checkbox]:checked::after { content: 'ON'; color: #fff4ea; }
+  .menu-row input:focus-visible, .menu-row select:focus-visible { outline: 1px solid #f0c9ad; outline-offset: 2px; }
+  /* Pause: lower left over the frozen game. */
+  #pause .pause-panel { left: 1.5%; bottom: 3.5%; width: 32.5%; max-height: 90%; --row-h: 4.8cqw; --row-gap: 1.15cqw; }
+  #pause .menu-rows { overflow-y: auto; scrollbar-width: none; padding: 2px; margin: -2px; }
+  #pause .menu-row { padding-right: .9em; }
+  /* Options: right side over the title art. */
+  #settings .settings-panel { right: 1.6%; top: 50%; transform: translateY(-50%); width: 40%; max-height: 86%; }
+  #settings .dialog-body { flex: 1 1 auto; padding: 2px; margin: -2px; box-sizing: border-box; scrollbar-width: thin; scrollbar-color: #927a72 #171014; }
+  #settings .dialog-body > * { max-width: none; }
+  #settings .settings-panel[data-page="controls"] { left: 3%; right: 3%; width: auto; top: 6%; bottom: 6%; max-height: none; transform: none; }
+  #settings .page-note { margin: 0 .2em; color: #cbb9b0; font-size: clamp(10px, 1.15cqw, 14px); overflow-wrap: anywhere; }
+  #titleExtras { display: flex; flex-wrap: wrap; align-items: center; gap: .2em .9em; margin-top: .2cqw; color: #bba9a0; font-size: clamp(10px, 1.05cqw, 13px); }
+  #titleExtras p { margin: 0; color: inherit; font-size: inherit; }
+  #titleExtras #mobileLabLink { background: none; color: #c9b2a6; font-size: inherit; }
+  #titleExtras .fs-toggle { width: auto; min-height: 0; padding: .3em .8em .3em 2.2em; font-size: inherit; }
+  #settings .keys-title { margin: .2em 0 0; color: #f2e3d5; font: 600 clamp(14px, 1.7cqw, 22px) Georgia, 'Batang', serif; }
+  #settings #customTools .btn { border-color: #77636a !important; background: linear-gradient(#292126, #110d11) !important; }
+  @media (max-height: 500px) {
+    .menu-panel { padding: 16px 10px 14px; }
+    .menu-row { font-size: 12px; }
+    #pause .pause-panel { --row-h: 30px; --row-gap: 5px; width: 40%; }
+    #settings .settings-panel { --row-h: 28px; --row-gap: 4px; width: 50%; max-height: 92%; }
+  }
 </style>
 </head>
 <body>
@@ -353,9 +449,11 @@
   <section class="screen show" id="title" aria-label="Lunatic Nights" lang="en">
     <div class="title-art">
       <img id="namedTitleImage" alt="Lunatic Nights" width="1672" height="941">
+      <i class="title-diamond" aria-hidden="true" style="top:74.7078%"></i>
       <img id="titleSelection" alt="" width="412" height="80" style="top:41.87%">
       <button class="title-choice selected" id="btnStart" data-menu="New Game">New Game</button>
       <button class="title-choice" id="btnContinue" data-menu="Continue" disabled>Continue</button>
+      <button class="title-choice" id="btnBossChallenge" data-menu="MENU_CHALLENGE">Boss Challenge</button>
       <button class="title-choice" id="btnTitleSettings" data-menu="Options">Options</button>
       <button class="title-choice" id="btnCredits" data-menu="Credits">Credits</button>
       <button class="title-choice" id="btnExit" data-menu="Exit">Exit</button>
@@ -417,32 +515,62 @@
     <div class="actions"><button class="btn" id="btnPractice">직접 연습</button><button class="btn secondary" id="btnGo">게임 시작</button><button class="btn secondary" id="btnHelpBack" hidden>돌아가기</button></div>
   </div>
 
-  <div class="screen dialog" id="pause"><h2>일시정지</h2><p id="pauseReason">ESC 또는 계속하기</p>
-    <div class="actions"><button class="btn secondary" id="btnPauseBosses" hidden>보스 목록</button><button class="btn" id="btnResume">계속하기</button><button class="btn secondary" id="btnPauseHelp">조작 안내</button><button class="btn secondary" id="btnPauseSettings">설정</button></div>
-    <div class="actions"><button class="btn secondary" id="btnRestart">스테이지 다시 시작</button><button class="btn secondary" id="btnPauseTitle">타이틀로</button><button class="btn secondary fs-toggle" id="btnPauseFullscreen" type="button" hidden>⛶ 전체화면</button></div>
-    <p class="tips">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
-  </div>
-  <div class="screen dialog" id="settings"><h2 data-menu="Options">Options</h2><div class="dialog-body">
-    <div class="setting-row"><label for="menuLanguage" data-menu="MENU_LANGUAGE">Main menu language</label>
-      <select id="menuLanguage"><option value="en">English</option><option value="ko">한국어</option></select></div>
-    <div id="titleExtras"><button class="btn small-btn" id="btnBossChallenge" data-menu="MENU_CHALLENGE">Boss Challenge</button>
-      <button class="btn small-btn secondary fs-toggle" id="btnTitleFullscreen" type="button" hidden>⛶ 전체화면</button>
-      <a id="mobileLabLink" href="mobile-lab.html" target="_blank" rel="noopener">모바일 화면 실험실 ↗</a>
-      <p id="recordSummary"></p><p id="saveStatus"></p></div>
-    <div class="setting-row"><label for="renderQuality">화질</label><select id="renderQuality"><option value="balanced">기본 · 960×540</option><option value="high">고화질 · 최대 1920×1080</option></select></div>
-    <div class="setting-row"><label for="showPerformance">성능 표시 (FPS)</label><input id="showPerformance" type="checkbox"></div>
-    <div class="setting-row"><label for="lowFx">이펙트 감소 (저사양)</label><input id="lowFx" type="checkbox"></div>
-<label class="setting-row">음악 <input id="musicVolume" aria-label="음악 음량" type="range" min="0" max="100"></label>
-    <label class="setting-row">효과음 <input id="sfxVolume" aria-label="효과음 음량" type="range" min="0" max="100"></label>
-    <div class="setting-row"><span>보스전 BGM <small id="bossBgmStatus" role="status"></small></span><span><button class="btn small-btn secondary" id="btnBossBgm">mp3 선택</button> <button class="btn small-btn secondary" id="btnBossBgmClear">내 파일 해제</button><input id="bossBgmFile" type="file" accept=".mp3,audio/mpeg,audio/*" hidden></span></div>
-    <label class="setting-row">화면 흔들림 <input id="screenShake" type="checkbox"></label>
-    <label class="setting-row">화면 섬광 <input id="screenFlash" type="checkbox"></label>
-    <label class="setting-row">적 공격 범위 표시 <input id="dangerZones" type="checkbox"></label>
-    <label class="setting-row">모바일 조작 키 <input id="touchEnabled" type="checkbox"></label>
-    <label class="setting-row">모바일 키 투명도 <input id="touchAlpha" aria-label="모바일 키 투명도" type="range" min="0" max="90"></label>
-    <label class="setting-row">모바일 키 크기 <input id="touchScale" aria-label="모바일 키 크기" type="range" min="60" max="160"></label>
-    <div class="setting-row"><span>모바일 키 배치</span><span><button class="btn small-btn secondary" id="btnTouchEdit">배치 편집</button> <button class="btn small-btn secondary" id="btnTouchReset">초기화</button></span></div>
-    <h3 class="keys-title">키 설정</h3>
+  <div class="screen dialog" id="pause"><div class="menu-panel pause-panel"><i class="corners" aria-hidden="true"></i>
+    <h2 class="sr-only" data-menu="PAUSE_TITLE">일시정지</h2><p id="pauseReason" class="sr-only" role="status">ESC 또는 계속하기</p>
+    <div class="menu-rows">
+      <button class="menu-row" id="btnResume"><span class="row-label" data-menu="ROW_RESUME" data-menu-lang="en">Resume</span><i class="row-sep" aria-hidden="true"></i><span class="row-sub" data-menu="ROW_RESUME" data-menu-lang="ko">게임 계속하기</span></button>
+      <button class="menu-row" id="btnPauseBosses" hidden><span class="row-label" data-menu="ROW_BOSSES" data-menu-lang="en">Boss List</span><i class="row-sep" aria-hidden="true"></i><span class="row-sub" data-menu="ROW_BOSSES" data-menu-lang="ko">보스 목록</span></button>
+      <button class="menu-row" id="btnPauseHelp"><span class="row-label" data-menu="ROW_CONTROLS" data-menu-lang="en">Controls</span><i class="row-sep" aria-hidden="true"></i><span class="row-sub" data-menu="ROW_CONTROLS" data-menu-lang="ko">조작 방법</span></button>
+      <button class="menu-row" id="btnPauseSettings"><span class="row-label" data-menu="ROW_OPTIONS" data-menu-lang="en">Options</span><i class="row-sep" aria-hidden="true"></i><span class="row-sub" data-menu="ROW_OPTIONS" data-menu-lang="ko">옵션</span></button>
+      <button class="menu-row" id="btnRestart"><span class="row-label" data-menu="ROW_RESTART" data-menu-lang="en">Restart</span><i class="row-sep" aria-hidden="true"></i><span class="row-sub" data-menu="ROW_RESTART" data-menu-lang="ko">다시 시작</span></button>
+      <button class="menu-row" id="btnPauseTitle" title="타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다."><span class="row-label" data-menu="ROW_MAIN_MENU" data-menu-lang="en">Main Menu</span><i class="row-sep" aria-hidden="true"></i><span class="row-sub" data-menu="ROW_MAIN_MENU" data-menu-lang="ko">메인 메뉴</span></button>
+      <button class="menu-row fs-toggle" id="btnPauseFullscreen" type="button" hidden>⛶ 전체화면</button>
+    </div>
+    <p class="tips sr-only" data-menu="PAUSE_TIP">타이틀로 나가거나 새로고침하면 저장된 스테이지 시작 지점에서 이어집니다.</p>
+  </div></div>
+  <div class="screen dialog" id="settings"><div class="menu-panel settings-panel" data-page="main"><i class="corners" aria-hidden="true"></i>
+    <h2 class="sr-only" data-menu="Options">Options</h2><div class="dialog-body">
+    <section class="settings-page" data-page="main">
+      <div class="menu-row"><label class="row-label" for="menuLanguage" data-menu="OPT_LANGUAGE">Language</label>
+        <span class="row-control stepper"><button type="button" class="step" data-step="-1" tabindex="-1" aria-label="이전">◀</button><select id="menuLanguage"><option value="en">English</option><option value="ko">한국어</option></select><button type="button" class="step" data-step="1" tabindex="-1" aria-label="다음">▶</button></span></div>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_MUSIC">Music</span><span class="row-control"><input id="musicVolume" aria-label="음악 음량" type="range" min="0" max="100"><output></output></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_SOUND">Sound</span><span class="row-control"><input id="sfxVolume" aria-label="효과음 음량" type="range" min="0" max="100"><output></output></span></label>
+      <button type="button" class="menu-row nav" data-go="bgm"><span class="row-label" data-menu="OPT_BOSS_BGM">Boss BGM</span></button>
+      <button type="button" class="menu-row nav" data-go="display"><span class="row-label" data-menu="OPT_DISPLAY">Display</span></button>
+      <button type="button" class="menu-row nav" data-go="mobile"><span class="row-label" data-menu="OPT_MOBILE">Mobile</span></button>
+      <button type="button" class="menu-row nav" data-go="controls"><span class="row-label" data-menu="OPT_CONTROLS">Controls</span></button>
+      <button type="button" class="menu-row nav" id="btnSettingsBack"><span class="row-label" data-menu="OPT_BACK">Back</span></button>
+      <div id="titleExtras"><button class="menu-row fs-toggle" id="btnTitleFullscreen" type="button" hidden>⛶ 전체화면</button>
+        <p id="recordSummary"></p><p id="saveStatus"></p>
+        <a id="mobileLabLink" href="mobile-lab.html" target="_blank" rel="noopener">모바일 화면 실험실 ↗</a></div>
+    </section>
+    <section class="settings-page" data-page="bgm" hidden>
+      <p class="page-note"><span data-menu="OPT_BOSS_BGM">Boss BGM</span> · <small id="bossBgmStatus" role="status"></small></p>
+      <button type="button" class="menu-row" id="btnBossBgm"><span class="row-label" data-menu="OPT_BGM_PICK">Choose a file</span></button>
+      <button type="button" class="menu-row" id="btnBossBgmClear"><span class="row-label" data-menu="OPT_BGM_CLEAR">Use the default</span></button>
+      <input id="bossBgmFile" type="file" accept=".mp3,audio/mpeg,audio/*" hidden>
+      <button type="button" class="menu-row nav" data-go="main"><span class="row-label" data-menu="OPT_BACK">Back</span></button>
+    </section>
+    <section class="settings-page" data-page="display" hidden>
+      <div class="menu-row"><label class="row-label" for="renderQuality" data-menu="OPT_QUALITY">Quality</label>
+        <span class="row-control stepper"><button type="button" class="step" data-step="-1" tabindex="-1" aria-label="이전">◀</button><select id="renderQuality"><option value="balanced">기본 · 960×540</option><option value="high">고화질 · 1920×1080</option></select><button type="button" class="step" data-step="1" tabindex="-1" aria-label="다음">▶</button></span></div>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_FPS">Show FPS</span><span class="row-control"><input id="showPerformance" type="checkbox"></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_LOW_FX">Reduce effects</span><span class="row-control"><input id="lowFx" type="checkbox"></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_SHAKE">Screen shake</span><span class="row-control"><input id="screenShake" type="checkbox"></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_FLASH">Screen flash</span><span class="row-control"><input id="screenFlash" type="checkbox"></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_DANGER">Attack zones</span><span class="row-control"><input id="dangerZones" type="checkbox"></span></label>
+      <button type="button" class="menu-row nav" data-go="main"><span class="row-label" data-menu="OPT_BACK">Back</span></button>
+    </section>
+    <section class="settings-page" data-page="mobile" hidden>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_TOUCH">Touch controls</span><span class="row-control"><input id="touchEnabled" type="checkbox"></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_TOUCH_ALPHA">Key transparency</span><span class="row-control"><input id="touchAlpha" aria-label="모바일 키 투명도" type="range" min="0" max="90"><output></output></span></label>
+      <label class="menu-row"><span class="row-label" data-menu="OPT_TOUCH_SCALE">Key size</span><span class="row-control"><input id="touchScale" aria-label="모바일 키 크기" type="range" min="60" max="160"><output></output></span></label>
+      <button type="button" class="menu-row nav" id="btnTouchEdit"><span class="row-label" data-menu="OPT_TOUCH_EDIT">Edit layout</span></button>
+      <button type="button" class="menu-row" id="btnTouchReset"><span class="row-label" data-menu="OPT_TOUCH_RESET">Reset layout</span></button>
+      <button type="button" class="menu-row nav" data-go="main"><span class="row-label" data-menu="OPT_BACK">Back</span></button>
+    </section>
+    <section class="settings-page" data-page="controls" hidden>
+    <h3 class="keys-title" data-menu="KEYS">키 설정</h3>
     <div class="preset-tabs" role="group" aria-label="키 배치 프리셋">
       <button type="button" class="preset" data-preset="arcade"><b>1 · 오락실 아케이드</b><small>방향키 + Z X C · A S D</small><em>추천</em></button>
       <button type="button" class="preset" data-preset="wasd"><b>2 · PC 액션 (WASD)</b><small>WASD + J K L</small></button>
@@ -453,7 +581,10 @@
     <div class="kb-legend" aria-hidden="true"><i class="kb-move">이동</i><i class="kb-attack">공격</i><i class="kb-jump">점프</i><i class="kb-dash">대시</i><i class="kb-special">필살기</i><i class="kb-magic">뇌격</i><i class="kb-skill">전투 기술</i><i class="kb-alias">보조</i></div>
     <div id="customTools" class="actions" hidden><span>복사해서 시작:</span><button type="button" class="btn small-btn secondary" data-copy="arcade">1번 배치</button><button type="button" class="btn small-btn secondary" data-copy="wasd">2번 배치</button></div>
     <div id="bindings"></div><p id="bindingStatus" role="status"></p>
-  </div><div class="actions"><button class="btn" id="btnSettingsBack">돌아가기</button><button class="btn secondary" id="btnResetKeys">기본 키 복원</button></div></div>
+      <button type="button" class="menu-row" id="btnResetKeys"><span class="row-label" data-menu="OPT_RESET_KEYS">Restore default keys</span></button>
+      <button type="button" class="menu-row nav" data-go="main"><span class="row-label" data-menu="OPT_BACK">Back</span></button>
+    </section>
+  </div></div></div>
 
   <div class="screen" id="clear">
     <h2 id="clearTitle">STAGE CLEAR!</h2>
@@ -576,8 +707,7 @@
 <script src="sovereign-runtime.js"></script>
 <script src="item-art.js"></script>
 <script src="item-runtime.js"></script>
-<script src="pixel-ui-art.js"></script>
-<script src="boss-ui-art.js"></script>
+<script src="hud-ui-art.js"></script>
 <script src="enemy-ui-art.js"></script>
 <script src="viesa-ui-art.js"></script>
 <script src="viesa-ui.js"></script>

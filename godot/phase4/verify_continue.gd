@@ -32,7 +32,7 @@ func click_button(label: String) -> void:
 	await process_frame
 	for child: Node in game.menu.buttons.find_children("*","Button",true,false):
 		var b: Button = child as Button
-		if b.text == label and b.is_visible_in_tree():
+		if (b.text == label or b.get_meta("captions", []).has(label)) and b.is_visible_in_tree():
 			for pressed: bool in [true,false]:
 				var event: InputEventMouseButton = InputEventMouseButton.new()
 				event.button_index = MOUSE_BUTTON_LEFT

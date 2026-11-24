@@ -2,8 +2,9 @@ class_name BmkGameHud
 extends Control
 var game: BmkVerticalSlice
 var font: Font
-var source_hud_atlas: Texture2D
 var korean_font: Font
+## Health trail behind the HP fill (game.js lagTo(p, 'hpLag', p.hp, .5)).
+var hp_lag: float = -1.0
 
 func _ready() -> void:
 	font = ThemeDB.fallback_font
@@ -11,6 +12,8 @@ func _ready() -> void:
 	system_font.font_names = PackedStringArray(["Malgun Gothic", "Noto Sans CJK KR", "Arial"])
 	korean_font = system_font
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# The HUD design is drawn at 960 / 1672 of its size; smooth it like the web canvas does.
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
 func text(at: Vector2, value: String, color: Color = Color.WHITE, size_value: int = 16) -> void:
 	draw_string(font,at,value,HORIZONTAL_ALIGNMENT_LEFT,-1,size_value,color)
@@ -46,7 +49,8 @@ func _draw() -> void:
 		text(Vector2(755,47),"WAVE %d / 2    MAGIC %d" % [mini(2,game.section.event_index + 1),p.mg],Color("bbb0b5"),12)
 	if s.chain_n > 1:
 		text(Vector2(820,108),"%d HIT" % s.chain_n,Color("ffe18b"),25)
-	if not page_controls_hidden(): draw_key_help(s,p)
+	# The bottom key line would sit under the boss bar of the HUD design; the skill icons show the keys.
+	if not page_controls_hidden() and not boss_bar_visible(): draw_key_help(s,p)
 	if not game.section.locked and game.section.event_index > 0 and not game.section.complete:
 		text(Vector2(826,281),"GO  >",Color("ffe18b"),22)
 	if game.debug_view.visible:
@@ -80,49 +84,40 @@ func draw_key_help(s: BmkSimulation, p: BmkActorState) -> void:
 	text(Vector2(18,509),"%s/%s/%s/%s MOVE  %s ATTACK  %s JUMP  %s SPECIAL  %s MAGIC  %s DASH" % [keys[0],keys[1],keys[2],keys[3],keys[5],keys[4],keys[7],keys[8],keys[6]],Color("d0c5ca"),12)
 	text(Vector2(18,529),"%s THRUST   %s SLAM   %s WHIRL   %s LEAP   %s RED WAVE" % [keys[9],keys[10],keys[11],keys[12],keys[13]],Color("a3b4c9"),12)
 	text(Vector2(659,529),"F1 KEYS   F9 DEBUG   ESC PAUSE   R RESTART",Color("a3b4c9"),11)
-	var index: int = 0
-	for skill: BmkAttackData in s.data.skills:
-		var x: float = 21 + index * 124
-		var remaining: float = p.skill_cd[skill.id]
-		bar(Vector2(x,478),108,1.0 - remaining / skill.cooldown_ms,Color("a6badd"))
-		if remaining > 0:
-			text(Vector2(x,472),"%s %.1f" % [skill.id,remaining / 1000.0],Color("a3a0ad"),11)
-		index += 1
+	# Skill cooldowns are shown on the HUD icons (BmkHudDesign.draw_skills).
+	if game is not BmkMenuGame:
+		var index: int = 0
+		for skill: BmkAttackData in s.data.skills:
+			var x: float = 21 + index * 124
+			var remaining: float = p.skill_cd[skill.id]
+			bar(Vector2(x,478),108,1.0 - remaining / skill.cooldown_ms,Color("a6badd"))
+			if remaining > 0:
+				text(Vector2(x,472),"%s %.1f" % [skill.id,remaining / 1000.0],Color("a3a0ad"),11)
+			index += 1
 
 ## game.js render(): the boss intro replaces the player HUD with its card.
 func hud_hidden() -> bool:
 	return false
 
+## True while the boss bar of the HUD design is on screen (BmkStageHud).
+func boss_bar_visible() -> bool:
+	return false
+
+func stage_number() -> int:
+	if game != null and game.session is BmkWaveSimulation: return (game.session as BmkWaveSimulation).stage_index + 1
+	return 1
+
 func draw_source_hud(p: BmkActorState) -> void:
 	if p.is_viesa():
 		BmkViesaHud.draw_player(self,p)
 		return
-	if source_hud_atlas == null: source_hud_atlas = load("res://port_assets/images/pixel_ui_source__1d6b42ef373a.png") as Texture2D
-	var atlas: Texture2D = source_hud_atlas
-	var scale_: float = 960.0 / 1672.0 * 0.62 * 1064.0 / 1104.0
-	var origin: Vector2 = Vector2(3,20)
-	draw_texture_rect_region(atlas,Rect2(origin,Vector2(1104,420) * scale_),Rect2(0,140,1104,420))
-	for row: Array in [[290,p.hp / 100.0,Color("290508")],[350,p.sp / 100.0,Color("031329")]]:
-		var pos: Vector2 = origin + Vector2(274,int(row[0]) - 140) * scale_
-		draw_rect(Rect2(pos,Vector2(468,34) * scale_),row[2])
-		var amount: float = 468 * clampf(float(row[1]),0,1)
-		if amount > 0: draw_texture_rect_region(atlas,Rect2(pos,Vector2(amount,34) * scale_),Rect2(305,int(row[0]),300,34))
-	for i: int in range(3):
-		if i >= p.mg: draw_rect(Rect2(origin + Vector2(773 + i * 82,303 - 140) * scale_,Vector2(83,90) * scale_),Color(0.04,0.03,0.04,0.85))
-		if i >= p.lives: draw_rect(Rect2(origin + Vector2(284 + i * 88,423 - 140) * scale_,Vector2(88,132) * scale_),Color(0.04,0.03,0.04,0.85))
-	text(Vector2(6,14),"SCORE %d" % p.score,Color("ffe1a0"),11)
+	# Player HUD design (pixel-ui.js drawPixelHUD).
+	if hp_lag < p.hp or hp_lag < 0: hp_lag = p.hp
+	elif not game.clock.paused: hp_lag = maxf(p.hp, hp_lag - 0.5)
+	BmkHudDesign.draw_player(self, p, stage_number(), hp_lag)
 
 func draw_source_skills(p: BmkActorState, s: BmkSimulation) -> void:
 	if p.is_viesa():
 		BmkViesaHud.draw_skills(self,p,s)
 		return
-	var actions: Array[String] = ["KeyU","KeyH","KeyO","KeyP","KeyL"]
-	for i: int in range(mini(5,s.data.skills.size())):
-		var at: Vector2 = Vector2(915,145 + i * 50)
-		draw_texture_rect_region(source_hud_atlas,Rect2(at,Vector2(29,50)),Rect2(505 + 131 * i,644,140,243))
-		draw_rect(Rect2(at + Vector2(4,13),Vector2(9,9)),Color("03101c"))
-		var events: Array[InputEvent] = InputMap.action_get_events("bmk_" + actions[i])
-		if not events.is_empty(): text(at + Vector2(4,21),OS.get_keycode_string((events[0] as InputEventKey).physical_keycode),Color("ffe1a0"),8)
-		var skill: BmkAttackData = s.data.skills[i]
-		var ratio: float = clampf(p.skill_cd[skill.id] / skill.cooldown_ms,0,1)
-		if ratio > 0: draw_rect(Rect2(at,Vector2(29,50 * ratio)),Color(0,0,0,0.7))
+	BmkHudDesign.draw_skills(self, p, s, font)

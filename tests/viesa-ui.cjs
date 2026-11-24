@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 module.exports=async({evaluate,call,errors,root})=>{
   await evaluate(`(async()=>{
-    await Promise.all([VIESA_UI.decode(),PIXEL_UI.decode(),VIESA_READY]);
+    await Promise.all([VIESA_UI.decode(),HUD_UI.decode(),VIESA_READY]);
     await new Promise(r=>setTimeout(r,50));requestAnimationFrame=()=>0;AUDIO.enable(false);
     UX.options.touch=false;document.body.classList.remove('touch');
     player=newPlayer(0,'viesa');startStage(1);scene='play';showScreen(null);syncPlayerCharacterUI('viesa');
@@ -32,7 +32,8 @@ module.exports=async({evaluate,call,errors,root})=>{
     return {remapped,used,distinct:viesa!==barel,viesa,barel};
   })()`);
   assert.equal(controls.remapped,'B');assert(controls.used,'Pointer starts Viesa skill');
-  assert(controls.distinct&&controls.viesa.startsWith('url(')&&controls.barel.startsWith('url('),'Character skins switch correctly');
+  // Barel's buttons are transparent: the HUD design draws his icons on the canvas beneath them.
+  assert(controls.distinct&&controls.viesa.startsWith('url(')&&controls.barel==='none','Character skins switch correctly');
   const dir=path.join(root,'artifacts/viesa-ui');fs.mkdirSync(dir,{recursive:true});
   for(const [width,height] of [[1280,720],[844,390],[390,844]]){
     await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});

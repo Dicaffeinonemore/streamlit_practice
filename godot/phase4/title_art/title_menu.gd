@@ -2,8 +2,11 @@ extends TextureRect
 
 signal chosen(key: String)
 
-const KEYS := ["New Game", "Continue", "Options", "Credits", "Exit"]
-const CENTERS := [394, 460, 521, 582, 642]
+const KEYS := ["New Game", "Continue", "MENU_CHALLENGE", "Options", "Credits", "Exit"]
+## The art has five baked diamonds; the sixth row (Exit) gets a drawn one at the same spacing.
+const CENTERS := [394, 460, 521, 582, 642, 703]
+## lettering.png rows: the five original English captions. Boss Challenge uses the serif text.
+const LETTERING := ["New Game", "Continue", "Options", "Credits", "Exit"]
 const SOURCE_SIZE := Vector2(1672, 941)
 const Copy := preload("res://phase4/menu_copy.gd")
 
@@ -26,6 +29,14 @@ func _ready() -> void:
 	add_child(controls)
 	marker.texture = preload("res://phase4/title_art/selection.png")
 	marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sixth := Control.new()
+	sixth.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sixth.draw.connect(func() -> void:
+		var c := Vector2(128, CENTERS[5])
+		var outline := PackedVector2Array([c + Vector2(0, -11), c + Vector2(2.6, -2.6), c + Vector2(11, 0), c + Vector2(2.6, 2.6), c + Vector2(0, 11), c + Vector2(-2.6, 2.6), c + Vector2(-11, 0), c + Vector2(-2.6, -2.6), c + Vector2(0, -11)])
+		sixth.draw_polyline(outline, Color("a89890"), 1.4, true)
+		sixth.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -4), c + Vector2(4, 0), c + Vector2(0, 4), c + Vector2(-4, 0)]), Color("8d8079")))
+	controls.add_child(sixth)
 	controls.add_child(marker)
 	var font := SystemFont.new()
 	font.font_names = PackedStringArray(["Georgia", "Times New Roman", "Batang", "Noto Serif CJK KR"])
@@ -46,11 +57,13 @@ func _ready() -> void:
 		button.pressed.connect(func() -> void: chosen.emit(KEYS[i]))
 		controls.add_child(button)
 		choices.append(button)
-		var region := AtlasTexture.new()
-		region.atlas = preload("res://phase4/title_art/lettering.png")
-		region.region = Rect2(0, i * 40, 144, 40)
 		var ink := TextureRect.new()
-		ink.texture = region
+		var atlas_row: int = LETTERING.find(KEYS[i])
+		if atlas_row >= 0:
+			var region := AtlasTexture.new()
+			region.atlas = preload("res://phase4/title_art/lettering.png")
+			region.region = Rect2(0, atlas_row * 40, 144, 40)
+			ink.texture = region
 		ink.position = Vector2(119, 10)
 		ink.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(ink)

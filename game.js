@@ -102,6 +102,7 @@ function inputDown(code) {
 function inputUp(code) { if (scene === 'tutorial') { lightCaps(code, false); return; } keys[code] = false; }
 addEventListener('keydown', e => {
   if (scene === 'title' && TitleMenu.handleKey(e)) return;
+  if (menuRowKey(e)) return;
   if(!e.repeat&&vargulDebugKey(e.code)){e.preventDefault();return;}
   if(e.code==='F9'&&!e.repeat){e.preventDefault();toggleHitboxDebug();return;}   // 판정 오버레이
   if (e.target.closest?.('input, select, textarea, button') && scene !== 'play' && !['Escape', 'KeyM'].includes(e.code)) return;
@@ -384,13 +385,63 @@ function beginGame(cinematic = false) {
 function toTitle() { bossChallenge = false; clearInput(); practice = false; scene = 'title'; showScreen('title'); TitleMenu.reset(); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
 function pauseGame(reason = 'ESC 또는 계속하기') {
   if (!['play', 'intro', 'bossintro'].includes(scene)) return;
-  resumeScene = scene; clearInput(); scene = 'pause'; $('pauseReason').textContent = reason; showScreen('pause'); AUDIO.pause(true);
+  const label = reason === 'ESC 또는 계속하기' ? TitleMenu.text('PAUSE_REASON') : reason === '다른 창으로 이동해 게임을 멈췄습니다.' ? TitleMenu.text('PAUSE_BLUR') : '';
+  resumeScene = scene; clearInput(); scene = 'pause'; $('pauseReason').textContent = label || reason; showScreen('pause'); $('btnResume').focus({preventScroll:true}); AUDIO.pause(true);
 }
 function resumeGame() {
   if (scene !== 'pause') return;
   clearInput(); scene = resumeScene; showScreen(null); AUDIO.pause(false); last = performance.now(); acc = 0;
 }
-function openSettings(from) { $('titleExtras').hidden = from !== 'title'; settingsFrom = from; clearInput(); scene = 'settings'; showScreen('settings'); }
+function openSettings(from) { $('titleExtras').hidden = from !== 'title'; settingsFrom = from; clearInput(); scene = 'settings'; showScreen('settings'); settingsPage('main'); }
+// Options pages (index.html #settings .settings-page): main rows, then BGM / display / mobile / controls.
+function settingsPage(name) {
+  $('settings').querySelector('.settings-panel').dataset.page = name;
+  document.querySelectorAll('#settings .settings-page').forEach(page => { page.hidden = page.dataset.page !== name; });
+  $('settings').querySelector('.dialog-body').scrollTop = 0;
+  paintRanges();
+  // The controls page starts at its layout tabs, the other pages at their first row.
+  const first = document.querySelector(`#settings .settings-page[data-page="${name}"] :is(.menu-row, .preset)`);
+  if (first) focusMenuRow(first);
+}
+function paintRanges() {
+  document.querySelectorAll('#settings input[type=range]').forEach(el => {
+    el.style.setProperty('--fill', (el.value - el.min) / (el.max - el.min) * 100 + '%');
+    const out = el.parentElement.querySelector('output'); if (out) out.textContent = Math.round(el.value) + '%';
+  });
+}
+function focusMenuRow(row, scroll = true) {
+  const target = row.matches('button') ? row : row.querySelector('input, select, button:not([tabindex="-1"])');
+  target?.focus({ preventScroll: !scroll });
+}
+function stepSelect(select, step) {
+  const options = [...select.options].filter(o => !o.disabled), at = options.findIndex(o => o.value === select.value);
+  select.value = options[(at + step + options.length) % options.length].value;
+  select.dispatchEvent(new Event('change'));
+}
+// Pause and options rows: Up/Down move between rows, Left/Right change a ◀ ▶ value.
+function menuRowKey(e) {
+  if (!['pause', 'settings'].includes(scene) || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return false;
+  const root = scene === 'pause' ? $('pause') : $('settings').querySelector('.settings-page:not([hidden])');
+  const rows = [...root.querySelectorAll('.menu-row')].filter(r => !r.hidden && !r.disabled && r.offsetParent);
+  const at = rows.findIndex(r => r.contains(document.activeElement));
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    if (!rows.length || (at < 0 && root.contains(document.activeElement) && document.activeElement !== document.body)) return false;
+    focusMenuRow(rows[at < 0 ? 0 : (at + (e.key === 'ArrowDown' ? 1 : rows.length - 1)) % rows.length]);
+  } else {
+    const select = rows[at]?.querySelector('.stepper select');
+    if (!select) return false;
+    stepSelect(select, e.key === 'ArrowRight' ? 1 : -1);
+  }
+  e.preventDefault();
+  return true;
+}
+document.querySelectorAll('#settings [data-go]').forEach(b => { b.onclick = () => settingsPage(b.dataset.go); });
+document.querySelectorAll('#settings [data-step]').forEach(b => { b.onclick = () => stepSelect(b.closest('.stepper').querySelector('select'), Number(b.dataset.step)); });
+document.querySelectorAll('#settings input[type=range]').forEach(el => el.addEventListener('input', paintRanges));
+$('settings').addEventListener('click', () => requestAnimationFrame(paintRanges));
+document.querySelectorAll('.menu-row').forEach(row => row.addEventListener('pointerenter', e => {
+  if (e.pointerType === 'mouse' && !row.contains(document.activeElement)) focusMenuRow(row, false);
+}));
 function closeSettings() { UX.cancelCapture(); scene = settingsFrom; showScreen(settingsFrom); clearInput(); }
 function entrySnapshot(i = stageIdx) {
   const { score, hp, lives, sp, mg, buff } = player;
@@ -515,7 +566,7 @@ function onKeyOnce(code) {
     else if (scene === 'challenge' || scene === 'titleInfo') toTitle();
     else if (scene === 'characterSelect') backFromCharacterSelect();
     else if (scene === 'challengeResult') openBossChallenge();
-    else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else closeSettings(); }
+    else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else if ($('settings').querySelector('.settings-panel').dataset.page !== 'main') settingsPage('main'); else closeSettings(); }
     else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else if (helpFrom === 'characterSelect') openCharacterSelect(); else toTitle(); }
   }
 }

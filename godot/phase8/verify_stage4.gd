@@ -14,7 +14,7 @@ func check(value: bool, label: String) -> void:
 func click_button(label: String) -> void:
 	await process_frame
 	for child: Node in game.menu.find_children("*","Button",true,false):
-		if (child as Button).is_visible_in_tree() and (child as Button).text == label:
+		if (child as Button).is_visible_in_tree() and ((child as Button).text == label or (child as Button).get_meta("captions", []).has(label)):
 			var point: Vector2 = (child as Button).get_global_rect().get_center()
 			for pressed: bool in [true,false]:
 				var event: InputEventMouseButton = InputEventMouseButton.new()
@@ -136,8 +136,6 @@ func run() -> void:
 	var records: Array = game.save_store.records()["stages"]
 	check(records.size() > 3 and records[3] != null,"Stage 4 record unlocks its challenge")
 	game.menu.show_title()
-	await process_frame
-	await click_button(game.menu.title_image.caption("Options"))
 	await process_frame
 	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 4 / 얼어붙은 묘지왕 바르굴")

@@ -26,9 +26,10 @@ func click_at(point: Vector2) -> void:
 
 func click_button(label: String, container: Node = null) -> void:
 	await process_frame
-	for child: Node in (container if container != null else game.menu.buttons).find_children("*","Button",true,false):
-		if (child as Button).text == label:
-			if container == null and game.menu.scroll != null:
+	for child: Node in (container if container != null else game.menu).find_children("*","Button",true,false):
+		if not (child as Button).is_visible_in_tree(): continue
+		if ((child as Button).text == label or (child as Button).get_meta("captions", []).has(label)):
+			if container == null and game.menu.scroll != null and game.menu.scroll.is_ancestor_of(child):
 				game.menu.scroll.ensure_control_visible(child as Control)
 				await process_frame
 				await process_frame
@@ -166,17 +167,19 @@ func run() -> void:
 	check(not game.touch.visible,"Touch controls hidden on the title")
 	# Settings: enable touch controls with the menu.
 	await click_button("설정")
-	await click_button("모바일 조작 키: 꺼짐")
+	await click_button("모바일 조작")
+	await click_button("모바일 조작 키")
 	check(game.preferences.touch and BmkSettings.read(SETTINGS).touch,"Touch option saved")
-	await click_button("모바일 키 투명도: 45%")
+	await click_button("모바일 키 투명도")
 	check(is_equal_approx(float(game.preferences.touch_layout["alpha"]),0.45),"Transparency steps by 10%")
-	for value: int in [55,65,75]: await click_button("모바일 키 투명도: %d%%" % value)
-	await click_button("모바일 키 투명도: 85%")
+	for _i: int in range(3): await click_button("모바일 키 투명도")
+	await click_button("모바일 키 투명도")
 	check(is_equal_approx(float(game.preferences.touch_layout["alpha"]),1.0),"Transparency wraps from 90% to 0%")
-	await click_button("모바일 키 크기: 100%")
+	await click_button("모바일 키 크기")
 	check(is_equal_approx(float(game.preferences.touch_layout["scale"]),1.1),"Size steps by 10%")
 	await click_button("모바일 키 초기화")
 	check(is_equal_approx(float(game.preferences.touch_layout["scale"]),1.0) and (game.preferences.touch_layout["items"] as Dictionary).is_empty(),"Layout reset to defaults")
+	await click_button("뒤로")
 	await click_button("뒤로")
 	# Story start: hidden during the stage banner, shown in play, pause button present.
 	await click_button("새 게임")
@@ -245,6 +248,7 @@ func run() -> void:
 	game.pause_game(true)
 	game.menu.show_pause()
 	await click_button("설정")
+	await click_button("모바일 조작")
 	await click_button("모바일 키 배치 편집")
 	await process_frame
 	check(game.touch.editing and game.touch.visible and not game.menu.visible,"Layout editor opens over the game")
@@ -276,6 +280,7 @@ func run() -> void:
 	var stored: BmkSettings = BmkSettings.read(SETTINGS)
 	var stored_items: Dictionary = stored.touch_layout["items"]
 	check(is_equal_approx(float(stored_items.get("KeyJ",{}).get("k",0)),1.1) and bool(stored_items.get("KeyL",{}).get("hide",false)),"Layout persisted: %s" % JSON.stringify(stored_items))
+	await click_button("뒤로")
 	await click_button("뒤로")
 	await click_button("계속하기")
 	game.touch._process(0)

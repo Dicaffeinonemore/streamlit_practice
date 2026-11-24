@@ -15,7 +15,7 @@ func check(value: bool, label: String) -> void:
 
 func click_button(label: String) -> void:
 	for child: Node in game.menu.find_children("*","Button",true,false):
-		if (child as Button).is_visible_in_tree() and (child as Button).text == label:
+		if (child as Button).is_visible_in_tree() and ((child as Button).text == label or (child as Button).get_meta("captions", []).has(label)):
 			var button: Button = child as Button
 			if game.menu.scroll.is_ancestor_of(button):
 				game.menu.scroll.ensure_control_visible(button)
@@ -52,6 +52,7 @@ func run() -> void:
 	game.save_store.checkpoint_path = "res://phase4/render_test_checkpoint.json"
 	game.save_store.records_path = "res://phase4/render_test_records.json"
 	game.preferences.storage_path = "res://phase4/render_test_settings.json"
+	game.preferences.menu_language = "ko"
 	game.preferences.custom_bindings.clear()
 	game.preferences.use_preset("arcade")
 	game.apply_preferences()
@@ -81,6 +82,8 @@ func run() -> void:
 	check(root.get_texture().get_image().save_png(output_dir + "/pause.png") == OK,"Capture pause")
 	await click_button("설정")
 	check(game.menu.mode == "settings","Mouse opens settings")
+	await click_button("조작 설정")
+	check(game.menu.settings_page == "controls","The controls row opens the key editor")
 	var editor := game.menu.key_settings
 	await click_button(editor.tabs["custom"].text)
 	check(game.preferences.preset == "custom","Mouse selects the custom layout inline")
@@ -108,6 +111,8 @@ func run() -> void:
 				mouse.pressed = pressed
 				root.push_input(mouse)
 	check(game.preferences.bindings["KeyJ"] == KEY_R,"Clicking the diagram binds R")
+	await key(KEY_ESCAPE)
+	check(game.menu.mode == "settings" and game.menu.settings_page == "main","Escape from the key editor returns to the options")
 	await key(KEY_ESCAPE)
 	check(game.menu.mode == "pause" and game.clock.paused,"Escape from settings returns to pause")
 	await click_button("계속하기")

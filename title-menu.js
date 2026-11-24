@@ -5,7 +5,8 @@ const TitleMenu = (() => {
   const choices = Array.from(title.querySelectorAll('.title-choice'));
   const marker = document.getElementById('titleSelection');
   const language = document.getElementById('menuLanguage');
-  const centers = [394, 460, 521, 582, 642];
+  // The art has five baked diamonds; the sixth row (Exit) gets a drawn one at the same spacing.
+  const centers = [394, 460, 521, 582, 642, 703];
   let selected = 0;
   let strings = new Map();
   let locale = UX.menuLanguage();
@@ -22,7 +23,9 @@ const TitleMenu = (() => {
     marker.style.top = choices[index].style.top;
   }
   choices.forEach((button, index) => {
-    button.style.setProperty('--atlas-y', (index * 25) + '%');
+    // lettering.png holds the five original English captions; other rows use the serif text.
+    const atlas = ['New Game', 'Continue', 'Options', 'Credits', 'Exit'].indexOf(button.dataset.menu);
+    if (atlas >= 0) button.style.setProperty('--atlas-y', (atlas * 25) + '%');
     button.style.top = centers[index] / 941 * 100 + '%';
     button.addEventListener('pointerenter', () => select(index));
     button.addEventListener('focus', () => select(index));
@@ -60,16 +63,18 @@ const TitleMenu = (() => {
     const columns = rows.shift();
     return new Map(rows.map(row => [row[0], Object.fromEntries(columns.map((col, i) => [col, row[i]]))]));
   }
-  function text(key) {
+  function text(key, lang = locale) {
     const row = strings.get(key);
-    return row?.[locale] || row?.en || '';
+    return row?.[lang] || row?.en || '';
   }
   function translate() {
     language.value = locale;
     title.lang = locale;
     document.querySelectorAll('[data-menu]').forEach(el => {
-      el.textContent = text(el.dataset.menu);
-      el.lang = locale;
+      // data-menu-lang pins a label to one language (the bilingual pause rows).
+      const lang = el.dataset.menuLang || locale;
+      el.textContent = text(el.dataset.menu, lang);
+      el.lang = lang;
       if (el.classList.contains('title-choice')) {
         el.classList.toggle('lettered', el.textContent === el.dataset.menu);
       }

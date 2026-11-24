@@ -1,7 +1,8 @@
 'use strict';
-// Coordinates refer to the supplied 1672 × 941 transparent UI atlas.
-const PIXEL_UI = new Image();
-const BOSS_UI = new Image();
+// HUD_UI is the supplied 1672 × 941 player / boss design as a full-screen overlay
+// (tools/build-hud-ui.py removes the live text and fills). Its coordinates are screen coordinates
+// at 1672 wide, so the whole HUD is drawn at W / 1672.
+const HUD_UI = new Image();
 const ENEMY_UI = new Image();
 // Large data URLs can fail to decode while the rest of the art loads; retry rather than keep the plain bar.
 function loadUIImage(img, source) {
@@ -10,69 +11,85 @@ function loadUIImage(img, source) {
   img.src = source;
 }
 loadUIImage(ENEMY_UI, ENEMY_UI_SOURCE);
-loadUIImage(BOSS_UI, BOSS_UI_SOURCE);
-const pixelUI = { ready: false, hud: null, emptyScrolls: [], emptyLives: [] };
-function uiCrop(x, y, w, h) {
+const HUD_LAYOUT = {
+  hp: [152, 99, 432, 23], sp: [56, 147, 507, 21], boss: [475, 850, 1142, 24],
+  // Fill strips kept in the atlas by the build script: [x, y, width, height].
+  hpStrip: [100, 400, 431, 21], spStrip: [100, 440, 505, 21], bossStrip: [100, 480, 1045, 22], bossLowStrip: [100, 520, 94, 22],
+  scrolls: [[603, 92, 47, 74], [650, 92, 47, 74], [697, 92, 47, 74]],
+  playerPortrait: [50, 42, 73, 79], bossPortrait: [45, 814, 80, 84],
+  pause: [1524, 21, 116, 115],
+};
+const hudUI = { ready: false, emptyScrolls: [], bossLow: null };
+function uiCrop(img, x, y, w, h) {
   const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
-  canvas.getContext('2d').drawImage(PIXEL_UI, x, y, w, h, 0, 0, w, h);
+  canvas.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);
   return canvas;
 }
-PIXEL_UI.onload = () => {
-  pixelUI.hud = uiCrop(0, 140, 1104, 420);
-  const dimCrop = (x, y, w, h) => {
-    const tile = uiCrop(x, y, w, h), c = tile.getContext('2d');
-    c.globalCompositeOperation = 'source-atop'; c.fillStyle = 'rgba(10,7,9,.85)'; c.fillRect(0, 0, w, h);
+HUD_UI.onload = () => {
+  // Spent scroll charges become dark silhouettes, never mistaken for usable ones.
+  hudUI.emptyScrolls = HUD_LAYOUT.scrolls.map(([x, y, w, h]) => {
+    const tile = uiCrop(HUD_UI, x, y, w, h), c = tile.getContext('2d');
+    c.globalCompositeOperation = 'source-atop'; c.fillStyle = 'rgba(10,7,9,.82)'; c.fillRect(0, 0, w, h);
     return tile;
-  };
-  pixelUI.emptyScrolls = [0, 1, 2].map(i => dimCrop(773 + i * 82, 303, 83, 90));
-  pixelUI.emptyLives = [0, 1, 2].map(i => dimCrop(284 + i * 88, 423, 88, 132));
-  document.querySelectorAll('#skillbar .skillbtn').forEach((button, i) => {
-    const tile = uiCrop(505 + 131 * i, 644, 140, 243), c = tile.getContext('2d');
-    // Physical key labels remain DOM text so remapping continues to work.
-    c.fillStyle = '#03101c'; c.fillRect(20, 63, 35, 35);
-    button.style.backgroundImage = `url("${tile.toDataURL()}")`;
   });
-  const pause = uiCrop(1510, 388, 150, 135);
-  document.getElementById('playPause').style.setProperty('background-image', `url("${pause.toDataURL()}")`, 'important');
-  pixelUI.ready = true;
+  const [lx, ly, lw, lh] = HUD_LAYOUT.bossLowStrip;
+  hudUI.bossLow = uiCrop(HUD_UI, lx, ly, lw, lh);
+  const [px, py, pw, ph] = HUD_LAYOUT.pause;
+  document.getElementById('playPause').style.setProperty('background-image', `url("${uiCrop(HUD_UI, px, py, pw, ph).toDataURL()}")`, 'important');
+  hudUI.ready = true;
 };
-PIXEL_UI.src = PIXEL_UI_SOURCE;
+loadUIImage(HUD_UI, HUD_UI_SOURCE);
+
+// The design's lettering: heavy rounded type, a thick black outline, white or gold.
+function hudText(text, x, y, size, fill, align = 'left', maxWidth = 0) {
+  ctx.save();
+  ctx.font = `900 ${size}px 'Arial Rounded MT Bold', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif`;
+  ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
+  if (maxWidth) { const w = ctx.measureText(text).width; if (w > maxWidth) { const s = maxWidth / w; ctx.translate(x, y); ctx.scale(s, 1); x = 0; y = 0; } }
+  ctx.lineJoin = 'round'; ctx.lineWidth = size * .22; ctx.strokeStyle = '#000'; ctx.strokeText(text, x, y);
+  if (fill === 'gold') {
+    const g = ctx.createLinearGradient(0, y - size * .78, 0, y); g.addColorStop(0, '#fff7b0'); g.addColorStop(.45, '#ffd23a'); g.addColorStop(1, '#d88a00'); fill = g;
+  } else if (fill === 'white') {
+    const g = ctx.createLinearGradient(0, y - size * .78, 0, y); g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#d6d6d6'); fill = g;
+  }
+  ctx.fillStyle = fill; ctx.fillText(text, x, y);
+  ctx.restore();
+}
+// Fill a bar interior from its strip: the strip is cropped (not squeezed) as the value drops.
+function hudBar([x, y, w, h], [sx, sy, sw, sh], ratio, lag, lagColor) {
+  ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  if (lag > ratio) { ctx.fillStyle = lagColor; ctx.fillRect(x, y, w * clamp(lag, 0, 1), h); }
+  const amount = w * clamp(ratio, 0, 1);
+  if (amount > 0) ctx.drawImage(HUD_UI, sx, sy, Math.min(sw, amount * sw / w), sh, x + 1, y + 1, amount, h - 2);
+  ctx.restore();
+}
 
 function drawPixelHUD(p) {
-  if(isViesa(p)&&drawViesaUI(p))return true;
-  if (!pixelUI.ready) return false;
-  const k = W / 1672 * .62;
-  // Keep the current width and scale both axes equally to preserve the atlas ratio.
-  const scale = 1064 * k / 1104;
-  ctx.save(); ctx.translate(3, 20); ctx.scale(scale, scale); ctx.translate(0, -140); ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(pixelUI.hud, 0, 140);
-  if(isViesa(p)){
-    drawViesaHUDPortrait(145,324,82,80);
-    for(let i=0;i<p.lives;i++)drawViesaHUDPortrait(330+i*88,477,24,27);
+  if (isViesa(p) && drawViesaUI(p)) return true;
+  if (!hudUI.ready) return false;
+  const L = HUD_LAYOUT;
+  ctx.save(); ctx.scale(W / 1672, W / 1672);
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(HUD_UI, 0, 0, 800, 300, 0, 0, 800, 300);
+  if (isViesa(p)) { const [x, y, w, h] = L.playerPortrait; drawViesaHUDPortrait(x, y, w, h); }
+  hudBar(L.hp, L.hpStrip, p.hp / p.max, lagTo(p, 'hpLag', p.hp, .5) / p.max, '#f3d6c6');
+  hudBar(L.sp, L.spStrip, p.sp / SP_MAX, 0, '');
+  spGaugeShine(...L.sp);   // SP 가득: 마나 게이지 반짝임
+  for (let i = 0; i < MAGIC.max && i < 3; i++) if (i >= p.mg) ctx.drawImage(hudUI.emptyScrolls[i], L.scrolls[i][0], L.scrolls[i][1]);
+  if (p.buff > 0) {   // 파워업: 초상화 테두리가 금빛으로 깜빡인다
+    const [x, y, w, h] = L.playerPortrait;
+    ctx.strokeStyle = Math.floor(tick / 6) % 2 ? '#ffe14d' : '#c9a24a'; ctx.lineWidth = 5; ctx.strokeRect(x - 3, y - 3, w + 6, h + 6);
+    ctx.fillStyle = '#36240c'; ctx.fillRect(x, y + h - 6, w, 6);
+    ctx.fillStyle = '#ffdd63'; ctx.fillRect(x, y + h - 6, w * clamp(p.buff / 900, 0, 1), 6);
   }
-  for (const [y, ratio, color] of [[290, p.hp / p.max, '#290508'], [350, p.sp / SP_MAX, '#031329']]) {
-    const width = 468, amount = width * clamp(ratio, 0, 1);
-    ctx.save(); ctx.beginPath(); ctx.roundRect(274, y, width, 34, 17); ctx.clip();
-    ctx.fillStyle = color; ctx.fillRect(274, y, width, 34);
-    if (amount > 0) ctx.drawImage(PIXEL_UI, 305, y, 300, 34, 274, y, amount, 34);
-    if (y === 350) spGaugeShine(274, y, width, 34);   // SP 가득: 마나 게이지 반짝임
-    ctx.restore();
-  }
-  // Empty scroll slots are silhouettes, never mistaken for usable charges.
-  for (let i = 0; i < MAGIC.max; i++) if (i >= p.mg) {
-    ctx.drawImage(pixelUI.emptyScrolls[i], 773 + i * 82, 303);
-  }
-  for (let i = 0; i < 3; i++) if (i >= p.lives) ctx.drawImage(pixelUI.emptyLives[i], 284 + i * 88, 423);
-  if (p.buff > 0) {
-    ctx.fillStyle = '#36240c'; ctx.fillRect(70, 434, 130, 6);
-    ctx.fillStyle = '#ffdd63'; ctx.fillRect(70, 434, 130 * p.buff / 900, 6);
-  }
+  hudText(isViesa(p) ? 'viesa' : 'varel', 142, 70, 54, 'white');
+  hudText(`1P×${Math.max(0, p.lives)}`, 297, 70, 54, 'gold');
+  hudText(String(p.score), 621, 70, 54, 'white', 'right', 320);
+  hudText(`level ${stageIdx + 1}`, 645, 70, 54, 'white');
   ctx.restore();
-  pxText(`score ${p.score}`, 6, 14, '#ffe1a0', 11);
   return true;
 }
 
-const BOSS_UI_LAYOUT = { x: 140, y: 350, width: 680, scale: 600 / 2172 };
 // Trim only the transparent padding, then scale both axes equally.
 const ENEMY_UI_LAYOUT = { right: 8, top: 56, width: 290, crop: [185, 28, 1815, 660] };
 const enemyPortraitCache = new Map();
@@ -135,27 +152,54 @@ function drawPixelEnemyBar(e) {
   return true;
 }
 
+// The boss frame's face. The remade Gorath (boss1) is cut from its own idle frame; the other
+// bosses use their existing portraits.
+let gorathHUDFace = null;
+function hudBossFace(boss) {
+  if (boss.type === 'boss1' && typeof G2A !== 'undefined') {
+    if (gorathHUDFace) return gorathHUDFace;
+    const f = G2A.clips.p1_idle?.frames[0], im = f && G2_IMG[f.p];
+    if (im?.naturalWidth) {
+      const [x, y, w] = f.atlas, s = w * .4, c = document.createElement('canvas');
+      c.width = c.height = 128; c.hd = true;
+      const g = c.getContext('2d'); g.imageSmoothingQuality = 'high';
+      g.drawImage(im, x + w * .56 - s / 2, y - w * .01, s, s, 0, 0, 128, 128);
+      return (gorathHUDFace = c);
+    }
+  }
+  return portrait(boss.d.sprite);
+}
+// Boss bar (bottom of the HUD design): portrait, gold name on the plate, green over red.
 function drawPixelBossBar(boss, hud) {
-  if (!BOSS_UI.complete || !BOSS_UI.naturalWidth) return false;
-  ctx.save();
-  // Extend only the central section; the end ornaments retain their proportions.
-  const { x, y, width, scale } = BOSS_UI_LAYOUT;
-  const extra = width / scale - 2172, barWidth = 1588 + extra;
-  ctx.translate(x, y); ctx.scale(scale, scale);
-  ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(BOSS_UI, 0, 0, 500, 724, 0, 0, 500, 724);
-  ctx.drawImage(BOSS_UI, 500, 0, 1300, 724, 500, 0, 1300 + extra, 724);
-  ctx.drawImage(BOSS_UI, 1800, 0, 372, 724, 1800 + extra, 0, 372, 724);
-  ctx.beginPath(); ctx.roundRect(342, 342, barWidth, 58, 29); ctx.clip();
-  ctx.fillStyle = '#1b0c12'; ctx.fillRect(342, 342, barWidth, 58);
-  ctx.fillStyle = '#a75236'; ctx.fillRect(342, 342, barWidth * clamp(hud.lag / boss.max, 0, 1), 58);
-  const fill = barWidth * clamp(hud.value / boss.max, 0, 1);
-  if (fill > 0) ctx.drawImage(BOSS_UI, 400, 342, 1000, 58, 342, 342, fill, 58);
-  if (fill > 0 && boss.barTint) { ctx.fillStyle = boss.barTint; ctx.fillRect(342, 342, fill, 58); }   // 2페이즈: 체력바를 붉게
+  if (!hudUI.ready) return false;
+  const L = HUD_LAYOUT, [bx, by, bw, bh] = L.boss;
+  ctx.save(); ctx.scale(W / 1672, W / 1672);
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(HUD_UI, 0, 790, 1672, 130, 0, 790, 1672, 130);
+  // The design shows Aurelion; every other boss gets its own face in the frame.
+  if (boss.d.sprite !== 'boss3') {
+    const [x, y, w, h] = L.bossPortrait, img = hudBossFace(boss);
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, '#5a1a1e'); g.addColorStop(1, '#140608');
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    const s = Math.max(w / img.width, h / img.height);
+    ctx.imageSmoothingEnabled = !!img.hd;
+    ctx.drawImage(img, x + (w - img.width * s) / 2, y + h - img.height * s, img.width * s, img.height * s);
+    ctx.restore();
+  }
+  ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
+  ctx.fillStyle = ctx.createPattern(hudUI.bossLow, 'repeat-x'); ctx.translate(bx, by + 1); ctx.fillRect(0, 0, bw, bh - 2); ctx.translate(-bx, -by - 1);
+  const value = clamp(hud.value / boss.max, 0, 1), lag = clamp(hud.lag / boss.max, 0, 1);
+  if (lag > value) { ctx.fillStyle = '#ffc96b'; ctx.fillRect(bx, by + 1, bw * lag, bh - 2); }
+  const [sx, sy, sw, sh] = L.bossStrip;
+  if (value > 0) ctx.drawImage(HUD_UI, sx, sy, sw * value, sh, bx + 1, by + 1, bw * value, bh - 2);
+  if (value > 0 && boss.barTint) { ctx.fillStyle = boss.barTint; ctx.fillRect(bx, by, bw * value, bh); }   // 2페이즈: 체력바를 붉게
   ctx.restore();
-  krText(boss.d.name, x + (1136 + extra / 2) * scale, y + 320 * scale, '#ffe5dd', 13, 'center');
-  if (boss.barLabel) krText(boss.barLabel, x + 370 * scale, y + 322 * scale, '#ff8a80', 11); else pxText(boss.p2shown ? 'II' : 'I', x + 370 * scale, y + 320 * scale, '#e1b99b', 9);
+  // Groggy gauge: a thin gold line riding just above the bar frame.
   const groggy = boss.st === 'stun' ? 1 - boss.t / GROGGY_TICKS : boss.gr / boss.grMax;
-  ctx.fillStyle = '#cfab70'; rect(x + 380 * scale, y + 416 * scale, (1500 + extra) * scale * clamp(groggy, 0, 1), 2);
+  if (groggy > 0) { ctx.fillStyle = '#000'; ctx.fillRect(bx + 4, 834, (bw - 8) * clamp(groggy, 0, 1) + 2, 7); ctx.fillStyle = '#f0c870'; ctx.fillRect(bx + 5, 835, (bw - 8) * clamp(groggy, 0, 1), 5); }
+  hudText(boss.d.name || '', 300, 872, 44, 'gold', 'center', 300);
+  if (boss.barLabel) hudText(boss.barLabel, bx + bw, 830, 26, '#ff8a80', 'right');
+  ctx.restore();
   return true;
 }

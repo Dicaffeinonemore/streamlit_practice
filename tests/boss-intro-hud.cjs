@@ -4,7 +4,7 @@ const path = require('node:path');
 module.exports = async ({evaluate, call, errors, root}) => {
   const out = path.join(root, 'artifacts/boss-intro-hud');
   fs.mkdirSync(out, {recursive:true});
-  await evaluate(`(async()=>{await Promise.all([PIXEL_UI.decode(), BOSS_UI.decode()]);window.requestAnimationFrame=()=>0;UX.options.touch=false;document.body.classList.remove('touch');})()`);
+  await evaluate(`(async()=>{await HUD_UI.decode();window.requestAnimationFrame=()=>0;UX.options.touch=false;document.body.classList.remove('touch');})()`);
   const capture = async name => {
     await evaluate("fitCanvas();ctx.setTransform(RENDER_K,0,0,RENDER_K,0,0);render()");
     const shot = await call('Page.captureScreenshot',{format:'png'});
