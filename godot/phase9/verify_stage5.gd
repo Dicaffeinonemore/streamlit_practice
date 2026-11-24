@@ -52,6 +52,7 @@ func run() -> void:
 	game.save_store.records_path = "res://phase9/stage5_test_records.json"
 	game.preferences.storage_path = "res://phase9/stage5_test_settings.json"
 	game.preferences.use_preset("arcade")
+	game.preferences.menu_language = "ko"   # English is the default; these checks read the Korean copy
 	game.apply_preferences()
 	game.save_store.write_json(game.save_store.checkpoint_path,null)
 	game.save_store.write_json(game.save_store.records_path,{"bestScore":0,"stages":[]})
@@ -158,15 +159,13 @@ func run() -> void:
 		if waited == 120: await capture("phase9_death")
 	check(s.sovereign_remains.size() == 1,"The Sovereign's remains stay on the floor")
 	check(game.audio.track_id == "ending","Final clear plays the ending score")
-	check(game.menu.mode == "ending" and game.menu.title.text == "ALL CLEAR!","Final clear shows the ending")
+	check(game.menu.mode == "ending" and game.menu.title.text == BmkCopy.text("ALL_CLEAR"),"Final clear shows the ending")
 	await capture("phase9_ending")
 	check(game.save_store.checkpoint() == null,"Final clear clears the checkpoint")
 	var records: Array = game.save_store.records()["stages"]
 	check(records.size() > 4 and records[4] != null,"Stage 5 record unlocks its challenge")
 	await click_button("타이틀로")
 	check(game.menu.mode == "title","Ending returns to the title")
-	await click_button(game.menu.title_image.caption("Options"))
-	await process_frame
 	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 5 / 흑월의 군주, 소버린")
 	check(game.menu.mode == "characters" and game.menu.challenge_stage == 4,"Sovereign challenge opens character selection")

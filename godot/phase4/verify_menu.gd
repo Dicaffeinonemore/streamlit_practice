@@ -20,8 +20,20 @@ func run() -> void:
 	game.preferences.storage_path = "res://phase4/test_settings.json"
 	game.save_store.write_json(game.save_store.checkpoint_path,null)
 	game.save_store.write_json(game.save_store.records_path,{"bestScore":0,"stages":[]})
+	# English is the default; these checks read the Korean copy.
+	game.preferences.menu_language = "ko"
+	game.apply_preferences()
 	game.menu.show_title()
 	check(game.menu.visible and game.menu.mode == "title" and game.clock.paused,"Title pauses gameplay")
+	check(game.menu.title_image.choices.size() == 6 and game.menu.title_image.choices[2].text == "보스 도전","Boss Challenge is the third title choice")
+	game.menu.title_choice("MENU_CHALLENGE")
+	check(game.menu.mode == "challenge","Title opens the boss list")
+	game.menu.show_title()
+	game.menu.title_choice("Options")
+	var option_labels: Array = []
+	for child: Node in game.menu.buttons.find_children("*","Button",true,false): option_labels.append((child as Button).text)
+	check(not option_labels.has("보스 도전"),"Options no longer lists Boss Challenge")
+	game.menu.show_title()
 	game.start_new()
 	check(not game.menu.visible and not game.clock.paused,"New game starts")
 	check(game.save_store.checkpoint() != null,"New game saves stage entry")

@@ -89,7 +89,9 @@ func run() -> void:
 	game.preferences.storage_path = SETTINGS
 	game.preferences.use_preset("arcade")
 	game.preferences.touch = false
+	game.preferences.menu_language = "ko"   # English is the default; these checks read the Korean copy
 	game.apply_preferences()
+	game.menu.show_title()
 	game.save_store.write_json(CHECKPOINT,null)
 	game.save_store.write_json(RECORDS,{"bestScore":1234,"stages":[{"rank":"A","seconds":200}]})
 	await process_frame

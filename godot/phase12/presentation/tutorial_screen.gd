@@ -7,8 +7,6 @@ signal practice_pressed
 signal start_pressed
 signal back_pressed
 
-const TIPS: String = "🏹 [color=#9cc3ff]궁수[/color]는 같은 줄에서 활을 당긴 뒤 화살을 쏩니다 — 위아래로 줄을 바꾸거나 점프해서 피하세요\n🐟 생선 = HP +30 · 🍖 고기 = HP +60  ·  📜 두루마리 = 뇌격 +1  ·  🧪 엘릭서 = SP +25  ·  ⭐ 파워업 = 공격력 UP  ·  📦 상자를 부수면 아이템\n🪙 동전 = 500점 · 동전 주머니 = 1,000점 · 금괴 = 2,000점\n연속으로 때리면 [color=#ffe27a]HIT[/color] 가 쌓이고, 이어질수록 보스에게 주는 피해가 커집니다\n보스는 맞을수록 [color=#ffb300]그로기 게이지[/color]가 차고, 가득 차면 5초간 기절  ·  적 머리 위 [color=#ff5252]![/color] · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기)  ·  화면의 [color=#ffd23f]GO →[/color] 가 뜨면 오른쪽으로 전진\n랭크는 누적 피해·사망·시간·최대 콤보로 결정됩니다."
-const FOOT: String = "키 배치는 설정에서 1 오락실 / 2 WASD / 3 사용자 설정 중에 고를 수 있습니다 · [b]ESC[/b] 일시정지 · [b]M[/b] 소리 켜기/끄기 · 연습장에서는 피해를 받지 않습니다."
 
 var demo: BmkDemoController
 var settings: BmkSettings
@@ -28,6 +26,7 @@ var play_button: Button
 var next_button: Button
 var chips: HFlowContainer
 var tips_toggle: Button
+var foot: RichTextLabel
 var tips: RichTextLabel
 var practice_button: Button
 var start_button: Button
@@ -126,7 +125,6 @@ func _ready() -> void:
 	head.add_theme_constant_override("separation",10)
 	root.add_child(head)
 	heading = Label.new()
-	heading.text = "조작 안내"
 	heading.add_theme_font_override("font",serif)
 	heading.add_theme_font_size_override("font_size",29)
 	heading.add_theme_color_override("font_color",Color("e6d6d0"))
@@ -245,14 +243,14 @@ func _ready() -> void:
 	nav.alignment = BoxContainer.ALIGNMENT_CENTER
 	nav.add_theme_constant_override("separation",6)
 	side.add_child(nav)
-	prev_button = small_button("◀ 이전","이전 동작",func() -> void:
+	prev_button = small_button(func() -> void:
 		demo.step_to(demo.index - 1))
 	nav.add_child(prev_button)
-	play_button = small_button("❚❚ 멈춤","시범 플레이 멈춤",func() -> void:
+	play_button = small_button(func() -> void:
 		demo.toggle_pause()
 		refresh_play_button())
 	nav.add_child(play_button)
-	next_button = small_button("다음 ▶","다음 동작",func() -> void:
+	next_button = small_button(func() -> void:
 		demo.step_to(demo.index + 1))
 	nav.add_child(next_button)
 	chips = HFlowContainer.new()
@@ -266,24 +264,24 @@ func _ready() -> void:
 	tips_toggle.add_theme_color_override("font_color",Color("ffe27a"))
 	tips_toggle.add_theme_color_override("font_hover_color",Color("ffe27a"))
 	tips_toggle.add_theme_font_size_override("font_size",14)
-	tips_toggle.text = "▶ 아이템 · 전투 팁"
 	tips_toggle.pressed.connect(func() -> void:
 		tips.visible = not tips.visible
-		tips_toggle.text = ("▼" if tips.visible else "▶") + " 아이템 · 전투 팁")
+		tips_toggle.text = ("▼ " if tips.visible else "▶ ") + BmkCopy.text("TUTORIAL_TIPS_TITLE"))
 	body.add_child(tips_toggle)
-	tips = rich(TIPS)
+	tips = rich()
 	tips.visible = false
 	body.add_child(tips)
-	body.add_child(rich(FOOT))
+	foot = rich()
+	body.add_child(foot)
 	var actions: HBoxContainer = HBoxContainer.new()
 	actions.alignment = BoxContainer.ALIGNMENT_CENTER
 	actions.add_theme_constant_override("separation",12)
 	root.add_child(actions)
-	practice_button = action_button("직접 연습",func() -> void: practice_pressed.emit())
+	practice_button = action_button(func() -> void: practice_pressed.emit())
 	actions.add_child(practice_button)
-	start_button = action_button("게임 시작",func() -> void: start_pressed.emit())
+	start_button = action_button(func() -> void: start_pressed.emit())
 	actions.add_child(start_button)
-	back_button = action_button("돌아가기",func() -> void: back_pressed.emit())
+	back_button = action_button(func() -> void: back_pressed.emit())
 	actions.add_child(back_button)
 
 func make_theme() -> Theme:
@@ -324,29 +322,25 @@ func label(size_: int, color: Color, bold: bool = false) -> Label:
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-func rich(text: String) -> RichTextLabel:
+func rich() -> RichTextLabel:
 	var r: RichTextLabel = RichTextLabel.new()
 	r.bbcode_enabled = true
 	r.fit_content = true
 	r.scroll_active = false
-	r.text = text
 	r.add_theme_font_size_override("normal_font_size",13)
 	r.add_theme_font_size_override("bold_font_size",13)
 	r.add_theme_color_override("default_color",Color("e9dfe6"))
 	r.add_theme_constant_override("line_separation",5)
 	return r
 
-func small_button(text: String, tip: String, callback: Callable) -> Button:
+func small_button(callback: Callable) -> Button:
 	var b: Button = Button.new()
-	b.text = text
-	b.tooltip_text = tip
 	b.add_theme_font_size_override("font_size",13)
 	b.pressed.connect(callback)
 	return b
 
-func action_button(text: String, callback: Callable) -> Button:
+func action_button(callback: Callable) -> Button:
 	var b: Button = Button.new()
-	b.text = text
 	b.custom_minimum_size = Vector2(150,34)
 	b.add_theme_font_size_override("font_size",16)
 	b.pressed.connect(callback)
@@ -365,14 +359,23 @@ func open(controller: BmkDemoController, texture: Texture2D, from: String) -> vo
 	user_lit.clear()
 	keyboard.settings = settings
 	keyboard.character = demo.character
+	heading.text = BmkCopy.text("PAUSE_HELP")
+	prev_button.text = BmkCopy.text("TUTORIAL_PREV")
+	prev_button.tooltip_text = BmkCopy.text("TUTORIAL_PREV_TIP")
+	next_button.text = BmkCopy.text("TUTORIAL_NEXT")
+	next_button.tooltip_text = BmkCopy.text("TUTORIAL_NEXT_TIP")
+	tips_toggle.text = "▶ " + BmkCopy.text("TUTORIAL_TIPS_TITLE")
+	tips.text = BmkCopy.text("TUTORIAL_TIPS")
+	foot.text = BmkCopy.text("TUTORIAL_FOOT")
+	practice_button.text = BmkCopy.text("TUTORIAL_PRACTICE")
+	start_button.text = BmkCopy.text("TUTORIAL_START")
 	preset_label.text = BmkKeyNames.preset_name(settings)
 	# btnHelpBack only from pause / character select; practice and start are hidden from pause.
 	back_button.visible = from in ["pause","characterSelect"]
-	back_button.text = "캐릭터 선택" if from == "characterSelect" else "돌아가기"
+	back_button.text = BmkCopy.text("CHARACTERS") if from == "characterSelect" else BmkCopy.text("KEYS_BACK")
 	practice_button.visible = from != "pause"
 	start_button.visible = from != "pause"
 	tips.visible = false
-	tips_toggle.text = "▶ 아이템 · 전투 팁"
 	scroll.scroll_vertical = 0
 	build_chips()
 	refresh(demo.index)
@@ -401,13 +404,13 @@ func build_chips() -> void:
 		var step: Dictionary = demo.steps[i]
 		var chip: Chip = Chip.new()
 		chip.index = i
-		chip.tooltip_text = str(step["title"])
+		chip.tooltip_text = BmkCopy.text(step["title"])
 		var row: HBoxContainer = HBoxContainer.new()
 		row.add_theme_constant_override("separation",3)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		chip.add_child(row)
 		chip.title = label(13,Color("d9cfe0"))
-		chip.title.text = str(step["title"])
+		chip.title.text = BmkCopy.text(step["title"])
 		row.add_child(chip.title)
 		for cap: Cap in caps_for(step["keys"],12,20,22):
 			chip.caps.append(cap)
@@ -422,8 +425,8 @@ func refresh(_index: int = 0) -> void:
 	if demo == null or demo.steps.is_empty(): return
 	var step: Dictionary = demo.current()
 	caption_step.text = "%d / %d" % [demo.index + 1,demo.steps.size()]
-	caption_title.text = str(step["title"])
-	desc.text = str(step["desc"])
+	caption_title.text = BmkCopy.text(step["title"])
+	desc.text = BmkCopy.text(step["desc"])
 	for child: Node in caption_keys.get_children():
 		caption_keys.remove_child(child)
 		child.queue_free()
@@ -455,8 +458,8 @@ func refresh_lights() -> void:
 
 ## demoPlayButton()
 func refresh_play_button() -> void:
-	play_button.text = "▶ 재생" if demo.paused else "❚❚ 멈춤"
-	play_button.tooltip_text = "시범 플레이 재생" if demo.paused else "시범 플레이 멈춤"
+	play_button.text = BmkCopy.text("TUTORIAL_PLAY") if demo.paused else BmkCopy.text("TUTORIAL_PAUSE")
+	play_button.tooltip_text = BmkCopy.text("TUTORIAL_PLAY_TIP") if demo.paused else BmkCopy.text("TUTORIAL_PAUSE_TIP")
 
 func _process(_delta: float) -> void:
 	if not visible or demo == null: return

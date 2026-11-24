@@ -2,8 +2,10 @@ extends TextureRect
 
 signal chosen(key: String)
 
-const KEYS := ["New Game", "Continue", "Options", "Credits", "Exit"]
-const CENTERS := [394, 460, 521, 582, 642]
+const KEYS := ["New Game", "Continue", "MENU_CHALLENGE", "Options", "Credits", "Exit"]
+const CENTERS := [394, 460, 521, 582, 642, 703]
+# Original atlas rows for the five illustrated English captions.
+const ART_ROWS := [0, 1, -1, 2, 3, 4]
 const SOURCE_SIZE := Vector2(1672, 941)
 const Copy := preload("res://phase4/menu_copy.gd")
 
@@ -48,7 +50,7 @@ func _ready() -> void:
 		choices.append(button)
 		var region := AtlasTexture.new()
 		region.atlas = preload("res://phase4/title_art/lettering.png")
-		region.region = Rect2(0, i * 40, 144, 40)
+		region.region = Rect2(0, maxi(0, ART_ROWS[i]) * 40, 144, 40)
 		var ink := TextureRect.new()
 		ink.texture = region
 		ink.position = Vector2(119, 10)
@@ -70,7 +72,7 @@ func open(language: String, can_continue: bool) -> void:
 	var enabled: Array[Button] = []
 	for i: int in range(choices.size()):
 		choices[i].text = caption(KEYS[i])
-		lettering[i].visible = choices[i].text == KEYS[i]
+		lettering[i].visible = ART_ROWS[i] >= 0 and choices[i].text == KEYS[i]
 		if not choices[i].disabled: enabled.append(choices[i])
 	for i: int in range(enabled.size()):
 		var previous := enabled[i].get_path_to(enabled[posmod(i - 1, enabled.size())])

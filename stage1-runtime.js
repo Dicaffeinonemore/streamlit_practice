@@ -521,7 +521,7 @@ function releaseStage1Grab(result) {
 function drawStage1Grab() {
   const p = player, g = p.grab; if (p.st !== 'grabbed' || !g?.stage1) return;
   const x = p.x - camX, y = p.y - p.z - 120;
-  outlineText(`공격 / 방향키 연타 ${g.presses}/${grabPresses(g)}`, x, y, '#ffe1ab', 'bold 12px sans-serif');
+  outlineText(TitleMenu.text('BREAK_FREE', g.presses, grabPresses(g)), x, y, '#ffe1ab', 'bold 12px sans-serif');
   ctx.save(); ctx.fillStyle = '#28171d'; ctx.fillRect(x - 35, y + 8, 70, 5);
   ctx.fillStyle = '#ffa34d'; ctx.fillRect(x - 35, y + 8, 70 * (1 - g.t / grabLength(g)), 5); ctx.restore();
 }
@@ -984,7 +984,7 @@ function drawStage1Overlay() {
     const a = clamp(Math.min(S1.banner, 170 - S1.banner) / 20, 0, 1);
     ctx.save(); ctx.globalAlpha = a;
     ctx.fillStyle = 'rgba(0,0,0,.55)'; rect(0, 138, W, 58);
-    pxText(`AREA ${S1.idx + 1}`, W / 2, 156, '#e45b64', 9, 'center');
+    pxText(TitleMenu.text('AREA_NUMBER', S1.idx + 1), W / 2, 156, '#e45b64', 9, 'center');
     krText(S1.sec.name, W / 2, 184, '#ffe5dd', 24, 'center', '#5a0a14');
     ctx.restore();
   }

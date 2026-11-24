@@ -14,6 +14,14 @@ module.exports=async({evaluate,call,errors,root,base})=>{
     await new Promise(r=>setTimeout(r,100));
   }
   assert.equal(await evaluate('ready'),true,'lab connects to live game');
+  assert.equal(await evaluate("document.documentElement.lang"), 'en');
+  assert.equal(await evaluate("document.querySelector('h1').textContent"), 'Mobile Layout Lab');
+  await evaluate(`(() => {
+    const picker = frame.contentDocument.getElementById('menuLanguage');
+    picker.value = 'ko';
+    picker.dispatchEvent(new Event('change'));
+  })()`);
+  assert.equal(await evaluate("document.querySelector('h1').textContent"), '모바일 화면 실험실');
   assert.equal(await evaluate(`JSON.parse(localStorage.getItem('bmk_settings')).music`),.23);
   assert.equal(await evaluate(`localStorage.getItem('bmk_checkpoint')`),'{"sentinel":true}','preview must not overwrite checkpoint');
   const reports=await evaluate('runBatch()');assert.equal(reports.length,20);

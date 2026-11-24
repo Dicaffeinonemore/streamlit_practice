@@ -68,7 +68,7 @@ function drawPixelHUD(p) {
     ctx.fillStyle = '#ffdd63'; ctx.fillRect(70, 434, 130 * p.buff / 900, 6);
   }
   ctx.restore();
-  pxText(`score ${p.score}`, 6, 14, '#ffe1a0', 11);
+  pxText(TitleMenu.text('HUD_SCORE', p.score), 6, 14, '#ffe1a0', 11);
   return true;
 }
 
@@ -131,7 +131,7 @@ function drawPixelEnemyBar(e) {
   const fill = 1168 * clamp(e.hp / e.max, 0, 1);
   if (fill > 0) ctx.drawImage(ENEMY_UI, 760, 332, 800, 63, 697, 332, fill, 63);
   ctx.restore(); ctx.restore();
-  krText(e.d.name, x + (1280 - cx) * scale, top + (254 - cy) * scale, '#ffe5dd', 12, 'center', '#240b0e');
+  krText(enemyDisplayName(e), x + (1280 - cx) * scale, top + (254 - cy) * scale, '#ffe5dd', 12, 'center', '#240b0e');
   return true;
 }
 

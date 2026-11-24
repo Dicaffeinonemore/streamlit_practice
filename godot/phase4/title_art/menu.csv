@@ -6,7 +6,7 @@ Options,Options,설정
 Credits,Credits,제작진
 Exit,Exit,종료
 MENU_BACK,Back to Title,타이틀로
-MENU_LANGUAGE,Main menu language,메인 메뉴 언어
+MENU_LANGUAGE,Language,언어
 MENU_CREDIT_LINE,Project · Dicaffeinonemore,프로젝트 · Dicaffeinonemore
 MENU_EXIT_WEB,You can now close this tab.,이제 이 탭을 닫아도 됩니다.
 MENU_CHALLENGE,Boss Challenge,보스 도전
@@ -74,3 +74,618 @@ KIND_special,Special,필살기
 KIND_magic,Magic,뇌격
 KIND_skill,Combat skill,전투 기술
 KIND_alias,Alternate,보조
+CHARACTERS,Choose a character,캐릭터 선택
+PLAY_AS,Play as %s,%s로 시작
+COMING_SOON,Coming soon,곧 추가
+BACK,Back,뒤로
+CHALLENGE_INFO,Clear a stage in the story to unlock its boss.,본편의 스테이지를 클리어하면 해금됩니다.
+CHALLENGE_STAGE,Stage %d / %s,스테이지 %d / %s
+BOSS_DEFEATED,%s defeated!,%s 격파!
+STAGE_CLEAR,Stage %d clear!,스테이지 %d 클리어!
+NEXT_STAGE,Next stage,다음 스테이지
+RESTART,Restart,다시 시작
+CONTINUE_ACCEPT,Keep fighting (Enter),이어서 싸우기 (Enter)
+CONTINUE_GIVE_UP,Give up (Esc),포기 (Esc)
+RETRY,Try again,다시 도전
+SET_MUSIC,Music volume: %d%%,배경 음악: %d%%
+SET_SFX,Effects volume: %d%%,효과음: %d%%
+SET_SOUND,Sound: %s (M),소리: %s (M)
+ON,On,켜짐
+OFF,Off,꺼짐
+SET_BOSS_MUSIC,Boss music: %s,보스전 음악: %s
+RESET_BOSS_MUSIC,Restore default boss music,보스전 음악 기본값으로
+SET_TOUCH,Touch controls: %s,모바일 조작 키: %s
+SET_TOUCH_ALPHA,Touch control transparency: %d%%,모바일 키 투명도: %d%%
+SET_TOUCH_SCALE,Touch control size: %d%%,모바일 키 크기: %d%%
+EDIT_TOUCH,Edit touch layout,모바일 키 배치 편집
+RESET_TOUCH,Reset touch layout,모바일 키 초기화
+CUSTOM_FILE,My file: %s,내 파일: %s
+DEFAULT_MP3,Built-in MP3,게임 기본 mp3
+SYNTH_MUSIC,Synthesized music,기본 합성 BGM
+LOADING,Loading…,불러오는 중…
+FILE_TEMP,My file: %s (could not save · this session only),내 파일: %s (저장 불가 · 이번 실행에만 적용)
+FILE_SIZE,Choose a file of 30 MB or less.,30MB 이하의 파일만 쓸 수 있습니다.
+FILE_OPEN_ERROR,Could not open the file.,파일을 열 수 없습니다.
+LANGUAGE_NAME,English,한국어
+PRACTICE_GO,Start story,실전 시작
+HERO_barel,Barel,바렐
+HERO_viesa,Viesa,비에사
+HERO_JOB_barel,Black Knight,흑기사
+HERO_JOB_viesa,Archer,궁수
+HERO_DESC_barel,A black knight who cuts through the battlefield with his greatsword.,대검으로 전장을 가르는 흑기사
+HERO_DESC_viesa,The last hunter of a village lost to the Black Moon. She commands the battlefield from afar.,흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.
+BOSS_1,Gorath the Butcher,도살자 고라스
+BOSS_2,Morgra the Raven Witch,까마귀 마녀 모르그라
+BOSS_3,Aurelion the Golden King,황금왕 아우렐리온
+BOSS_4,Vargul the Frozen Gravelord,얼어붙은 묘지왕 바르굴
+BOSS_5,The Black Moon Sovereign,"흑월의 군주, 소버린"
+BOSS_SHORT_1,Gorath,고라스
+BOSS_SHORT_2,Morgra,모르그라
+BOSS_SHORT_3,Aurelion,아우렐리온
+BOSS_SHORT_4,Vargul,바르굴
+BOSS_SHORT_5,Sovereign,소버린
+CONTINUE_COUNT,CONTINUE?  %d,계속하시겠습니까?  %d
+CONTINUE_INFO,Rise where you fell with three lives.\nYour score resets to zero.,쓰러진 자리에서 라이프 3개로 다시 일어납니다.\n점수는 0이 됩니다.
+GAME_OVER,GAME OVER,게임 오버
+ALL_CLEAR,ALL CLEAR!,전체 클리어!
+ENDING_INFO,You cleared every stage. Congratulations!,모든 스테이지를 클리어했습니다. 축하합니다!
+SET_LAYOUT,Key layout: %s,키 배치: %s
+BEST_SCORE,Best score %d,최고 점수 %d
+SETTING_shake,Screen shake,화면 흔들림
+SETTING_flash,Screen flashes,화면 번쩍임
+SETTING_danger_zones,Show danger zones,위험 구역 표시
+AUDIO_FILES,Audio files,오디오 파일
+BOSS_FILE_TITLE,Choose boss music,보스전 음악 파일
+FILE_MISSING,No file selected.,파일을 고르지 않았습니다.
+FILE_UNPLAYABLE,This audio file cannot be played.,재생할 수 없는 오디오 파일입니다.
+SAVE_ERROR,Could not save: %s,저장하지 못했습니다: %s
+NO_SAVE,No usable save found.,사용할 수 있는 저장 기록이 없습니다.
+STAGE_UNAVAILABLE,This stage is still in development.,이 스테이지는 아직 준비 중입니다.
+NEXT_UNAVAILABLE,The next stage is still in development.,다음 스테이지는 아직 준비 중입니다.
+STATS_REPORT,Rank %s   Time %d:%02d\nLongest combo %d   Damage taken %d   Deaths %d\nScore %d,랭크 %s   시간 %d:%02d\n최대 연속 공격 %d   누적 피해 %d   사망 %d\n점수 %d
+RECORD_FAILED,Could not save the record.,기록 저장에 실패했습니다.
+CHECKPOINT_FAILED,Could not save the checkpoint.,이어하기 저장에 실패했습니다.
+STAGE_SCORE,Stage %d %s — Score %d,스테이지 %d %s — 점수 %d
+DEMO_barel_01_TITLE,Move,이동
+DEMO_barel_01_DESC,"Walk left and right, or move up and down to change lanes. Line up with an enemy to hit it. Move right when GO → appears.",좌우로 걷고 위/아래로 줄(깊이)을 바꿉니다. 적과 같은 줄에 서야 공격이 맞습니다. 화면에 GO → 가 뜨면 오른쪽으로 전진하세요.
+DEMO_barel_02_TITLE,Jump,점프
+DEMO_barel_02_DESC,Jump over ground shockwaves and low attacks. Hold a direction as you jump to leap forward.,점프로 바닥 충격파와 낮은 공격을 넘습니다. 이동 키를 누른 채 점프하면 앞으로 뛰어오릅니다.
+DEMO_barel_03_TITLE,Three-hit combo,공격 3연타
+DEMO_barel_03_DESC,Tap attack three times. The third slash sends a blade wave forward. Keep landing hits to increase combo damage against bosses.,연타하면 3연 콤보! 3타 참격은 검기를 날립니다. 연속으로 맞히면 HIT가 쌓이고 보스에게 주는 피해가 커집니다.
+DEMO_barel_04_TITLE,Dash and thrust,대시 · 대시 찌르기
+DEMO_barel_04_DESC,Dash for a brief moment of invulnerability. You can also double-tap a direction. Attack during a dash to thrust.,잠깐 무적이 되는 빠른 이동입니다. 같은 방향 이동 키를 빠르게 두 번 눌러도 됩니다. 대시 중 공격하면 대시 찌르기.
+DEMO_barel_05_TITLE,Aerial slash,공중 공격
+DEMO_barel_05_DESC,Press attack in the air to swing your sword.,점프 중에 공격하면 공중 베기가 나갑니다.
+DEMO_barel_06_TITLE,Thrust,견제 찌르기
+DEMO_barel_06_DESC,Jab forward to interrupt an enemy. Each skill has its own cooldown.,앞으로 빠르게 찌르는 견제 기술. 기술은 각자 재사용 시간이 있습니다.
+DEMO_barel_07_TITLE,Slam,내려찍기
+DEMO_barel_07_DESC,Strike the ground to knock down nearby enemies.,검을 땅에 내려찍어 주변 적을 넘어뜨립니다.
+DEMO_barel_08_TITLE,Whirl slash,회전 베기
+DEMO_barel_08_DESC,Spin to cut enemies on both sides of you. Use it when surrounded.,몸을 돌려 앞뒤의 적을 한꺼번에 벱니다. 둘러싸였을 때 유용합니다.
+DEMO_barel_09_TITLE,Diving strike,점프 강하
+DEMO_barel_09_DESC,Leap high and crash down on enemies ahead.,높이 뛰어올라 앞쪽 적에게 내리꽂힙니다.
+DEMO_barel_10_TITLE,Red wave,붉은 파동
+DEMO_barel_10_DESC,Send a piercing red blade wave across the field. Cooldown: 6.5 seconds.,멀리 날아가며 적을 꿰뚫는 붉은 검기 (재사용 6.5초).
+DEMO_barel_11_TITLE,Black Moon Slash,필살기 흑월참
+DEMO_barel_11_DESC,"With a full SP gauge, dash forward for three slashes and a crescent finisher. You are invulnerable throughout.",SP 게이지가 가득 차면 사용! 돌진 3연 베기 + 초승달 마무리. 사용하는 동안 무적입니다.
+DEMO_barel_12_TITLE,Lightning,마법 뇌격
+DEMO_barel_12_DESC,Spend a scroll to strike every enemy on screen with lightning. Carry up to three scrolls.,두루마리 1개로 화면 안의 모든 적에게 번개! 두루마리는 최대 3개까지 모입니다.
+DEMO_viesa_01_TITLE,Move,이동
+DEMO_viesa_01_DESC,"Walk left and right, or move up and down to line up a shot. Arrows hit enemies in your lane.",좌우로 걷고 위/아래로 사격 줄(깊이)을 바꿉니다. 화살은 같은 줄의 적에게 맞습니다.
+DEMO_viesa_02_TITLE,Jump,점프
+DEMO_viesa_02_DESC,Jump over ground shockwaves and low attacks. Hold a direction as you jump to leap forward.,점프로 바닥 충격파와 낮은 공격을 넘습니다. 이동 키를 누른 채 점프하면 앞으로 뛰어오릅니다.
+DEMO_viesa_03_TITLE,Arrow shot,화살
+DEMO_viesa_03_DESC,An arrow deals 8 damage. Press attack again during the shot to keep firing. Arrows are unlimited.,화살 한 발에 8 피해. 사격 도중 다시 누르면 연속 사격합니다. 화살은 무제한입니다.
+DEMO_viesa_04_TITLE,Dash,대시
+DEMO_viesa_04_DESC,Dash to move quickly while invulnerable. You can also double-tap a direction.,이동하는 동안 무적인 빠른 이동입니다. 같은 방향 이동 키를 빠르게 두 번 눌러도 됩니다.
+DEMO_viesa_05_TITLE,Aerial shot,공중 사격
+DEMO_viesa_05_DESC,Fire downward at 30° to slow your descent until you land.,공중에서는 아래 30°로 쏘며 천천히 내려옵니다. 땅에 닿으면 착지합니다.
+DEMO_viesa_06_TITLE,Melee combo,근접 콤보
+DEMO_viesa_06_DESC,Strike a nearby enemy three times with your bow.,가까이 붙은 적을 활로 세 번 후려칩니다.
+DEMO_viesa_07_TITLE,Rapid fire,화살 연사
+DEMO_viesa_07_DESC,Fire six arrows for 10 damage each. Move up or down to adjust your firing lane.,6발 연사 (발당 10 피해). 위/아래 키로 사격 줄을 조절할 수 있습니다.
+DEMO_viesa_08_TITLE,Dash to ground backflip,대시 → 지상 백플립
+DEMO_viesa_08_DESC,"Dash through enemies, knock them down on landing, then backflip. You are invulnerable during the dash and deal 20 extra damage per enemy.",대시로 적을 꿰뚫고 착지 충격으로 넘어뜨린 뒤 땅에서 백플립. 대시 중 무적이며 적마다 20 추가 피해.
+DEMO_viesa_09_TITLE,Dash to aerial backflip,대시 → 공중 백플립
+DEMO_viesa_09_DESC,Backflip high and hover for up to 40 ticks. Press attack to keep firing. You can also use this once in the air before landing.,높은 백플립 후 최대 40틱 체공. 체공 중 공격 키로 사격을 이어갑니다. 공중에서도 착지 전 한 번 쓸 수 있습니다.
+DEMO_viesa_10_TITLE,Charged shot,모아 쏘기
+DEMO_viesa_10_DESC,"Hold to charge up to three levels. Each adds 4 damage. Release for a piercing shot, or hold briefly past level three to fire automatically.","시위를 끝까지 당긴 자세로 누르고 있으면 최대 3단까지 모읍니다. 단계마다 피해 +4, 놓으면 관통 사격. 3단 뒤 잠시 지나면 자동 발사."
+DEMO_viesa_11_TITLE,Black Moon Barrage,필살기 흑월 난사
+DEMO_viesa_11_DESC,"Spend 100 SP to leap into the air, summon a magic circle and fire 200 phantom arrows followed by an exploding giant arrow. You are invulnerable throughout.",SP 100에서 사용. 공중 도약 → 마법진 → 환영 화살 200발 → 거대 화살 폭발. 시전 전체 무적.
+DEMO_viesa_12_TITLE,Lightning,마법 뇌격
+DEMO_viesa_12_DESC,Spend a scroll to strike every enemy on screen with lightning. Carry up to three scrolls.,두루마리 1개로 화면 안의 모든 적에게 번개! 두루마리는 최대 3개까지 모입니다.
+TUTORIAL_TIPS,"🏹 [color=#9cc3ff]Archers[/color] draw and shoot down their lane. Change lanes or jump to dodge.\n🐟 Fish: +30 HP · 🍖 Meat: +60 HP · 📜 Scroll: +1 lightning · 🧪 Elixir: +25 SP · ⭐ Power-up: increased attack · 📦 Break crates for items.\n🪙 Coin: 500 points · Coin pouch: 1,000 · Gold bar: 2,000.\nLand consecutive hits to build a [color=#ffe27a]combo[/color] and deal more damage to bosses.\nFill a boss’s [color=#ffb300]stagger gauge[/color] to stun it for five seconds. A [color=#ff5252]![/color] or a red floor mark warns of an incoming attack. Jump over shockwaves. Advance when [color=#ffd23f]GO →[/color] appears.\nYour rank depends on damage taken, deaths, time and longest combo.","🏹 [color=#9cc3ff]궁수[/color]는 같은 줄에서 활을 당긴 뒤 화살을 쏩니다 — 위아래로 줄을 바꾸거나 점프해서 피하세요\n🐟 생선 = HP +30 · 🍖 고기 = HP +60  ·  📜 두루마리 = 뇌격 +1  ·  🧪 엘릭서 = SP +25  ·  ⭐ 파워업 = 공격력 UP  ·  📦 상자를 부수면 아이템\n🪙 동전 = 500점 · 동전 주머니 = 1,000점 · 금괴 = 2,000점\n연속으로 때리면 [color=#ffe27a]HIT[/color] 가 쌓이고, 이어질수록 보스에게 주는 피해가 커집니다\n보스는 맞을수록 [color=#ffb300]그로기 게이지[/color]가 차고, 가득 차면 5초간 기절  ·  적 머리 위 [color=#ff5252]![/color] · 바닥의 붉은 표식 = 공격 예고 (충격파는 점프로 넘기)  ·  화면의 [color=#ffd23f]GO →[/color] 가 뜨면 오른쪽으로 전진\n랭크는 누적 피해·사망·시간·최대 콤보로 결정됩니다."
+TUTORIAL_FOOT,"Choose Arcade, WASD or custom key bindings in Options. [b]Esc[/b] pauses and [b]M[/b] toggles sound. You take no damage in practice.",키 배치는 설정에서 1 오락실 / 2 WASD / 3 사용자 설정 중에 고를 수 있습니다 · [b]ESC[/b] 일시정지 · [b]M[/b] 소리 켜기/끄기 · 연습장에서는 피해를 받지 않습니다.
+TUTORIAL_PLAY,▶ Play,▶ 재생
+TUTORIAL_PAUSE,❚❚ Pause,❚❚ 멈춤
+TUTORIAL_PLAY_TIP,Play demonstration,시범 플레이 재생
+TUTORIAL_PAUSE_TIP,Pause demonstration,시범 플레이 멈춤
+TUTORIAL_PREV,◀ Prev,◀ 이전
+TUTORIAL_PREV_TIP,Previous move,이전 동작
+TUTORIAL_NEXT,Next ▶,다음 ▶
+TUTORIAL_NEXT_TIP,Next move,다음 동작
+TUTORIAL_TIPS_TITLE,Items and combat tips,아이템 · 전투 팁
+TUTORIAL_PRACTICE,Try it yourself,직접 연습
+TUTORIAL_START,Start game,게임 시작
+OPENING_0,A crimson eclipse swallowed the five kingdoms.,붉은 월식이 다섯 왕국을 삼켰다.
+OPENING_1,"Beyond the fallen throne, a black citadel stirs.","무너진 왕좌 너머, 검은 성채가 깨어난다."
+OPENING_2,"From the ashes, a knight rose.",잿더미에서 한 기사가 일어섰다.
+OPENING_3,Five lords guard the gates of night.,다섯 군주가 밤의 문을 지킨다.
+OPENING_4,Raise your greatsword and cleave the endless night.,"대검을 들어, 끝나지 않는 밤을 가르라."
+OPENING_SKIP,Skip · Enter / Space,건너뛰기 · Enter / Space
+KEY_SHORT_KeyA,◀Move,◀이동
+KEY_SHORT_KeyD,▶Move,▶이동
+KEY_SHORT_KeyW,▲Move,▲이동
+KEY_SHORT_KeyS,▼Move,▼이동
+KEY_SHORT_Space,Jump,점프
+KEY_SHORT_KeyJ,Attack,공격
+KEY_SHORT_ShiftLeft,Dash,대시
+KEY_SHORT_KeyK,Special,필살기
+KEY_SHORT_KeyI,Bolt,뇌격
+KEY_SHORT_KeyU,Thrust,찌르기
+KEY_SHORT_KeyH,Slam,내려 찍기
+KEY_SHORT_KeyO,Whirl,회전 베기
+KEY_SHORT_KeyP,Dive,점프 강하
+KEY_SHORT_KeyL,Red wave,붉은 파동
+BOW_SHORT_KeyJ,Arrow,화살
+BOW_SHORT_KeyH,Melee,근접
+BOW_SHORT_KeyU,Burst,연사
+BOW_SHORT_KeyL,Snipe,저격
+BOW_SHORT_KeyO,Ground flip,지상 플립
+BOW_SHORT_KeyP,Air flip,공중 플립
+BOW_SHORT_KeyK,Barrage,흑월 난사
+KEY_SYSTEM_Escape,Pause,일시 정지
+KEY_SYSTEM_Enter,Confirm,확인
+KEY_SYSTEM_KeyM,Sound,소리
+KEYBOARD_LAYOUT,Keyboard layout: %s,키보드 배치: %s
+TOUCH_STICK,Movement stick,이동 레버
+TOUCH_DRAG,Drag a control to move it,키를 끌어서 옮기세요
+TOUCH_SHOW,Show,보이기
+TOUCH_HIDE,Hide,숨기기
+TOUCH_RESET,Reset position,원위치
+TOUCH_RESET_ALL,Reset all positions,전체 원위치
+TOUCH_DONE,Done,완료
+WEB_ROTATE,Rotate your device to landscape for a larger view.,가로로 돌리면 게임이 크게 표시됩니다.
+WEB_SKIP,Skip · Enter / Space,건너뛰기 · Enter / Space
+WEB_DARK_SLASH,Dark Moon Slash,흑월참
+WEB_FIGHT,Start fighting,실전 시작
+WEB_CHALLENGE_DESC,Challenge bosses you have defeated in the story.,본편에서 클리어한 보스에게 다시 도전하세요.
+WEB_CHALLENGE_STATS,"Start with full health, a full special gauge, three lives and three lightning charges.",체력과 필살기 게이지가 가득 찬 상태에서 목숨 3개와 뇌격 3회로 시작합니다.
+WEB_CHALLENGE_SAVE,Your story progress and score records are preserved.,본편 진행과 점수 기록은 유지됩니다.
+WEB_BAREL_PREVIEW,Barel idle animation,바렐 대기 모션
+WEB_RETRY,Try again,다시 도전
+WEB_CHOOSE_HERO,Character select,캐릭터 선택
+WEB_HERO_KICKER,CHOOSE YOUR HERO,영웅을 선택하세요
+WEB_HERO_LIST,Characters,캐릭터 목록
+WEB_BAREL_ARIA,"Barel, Black Knight",바렐 흑기사
+WEB_VIESA_ARIA,"Viesa, Archer",비에사 궁수
+WEB_BAREL,Barel,바렐
+WEB_VIESA,Viesa,비에사
+WEB_KNIGHT,Black Knight,흑기사
+WEB_ARCHER,Archer,궁수
+WEB_HERO_KEYS,← → Select · Enter Confirm · Esc Back,← → 선택 · Enter 확인 · Esc 돌아가기
+WEB_HELP_CONTENT,Control instructions,조작 안내 내용
+WEB_DEMO_PREV,Previous move,이전 동작
+WEB_DEMO_NEXT,Next move,다음 동작
+WEB_PREV,◀ Previous,◀ 이전
+WEB_STOP,❚❚ Pause,❚❚ 멈춤
+WEB_NEXT,Next ▶,다음 ▶
+WEB_MOVE_LIST,Move list,동작 목록
+WEB_TIPS,Items and combat tips,아이템 · 전투 팁
+WEB_TIP_ARCHER, draws a bow and fires along the same lane. Change lanes or jump to dodge.,는 같은 줄에서 활을 당긴 뒤 화살을 쏩니다. 위아래로 줄을 바꾸거나 점프해서 피하세요.
+WEB_TIP_ITEMS,🐟 Fish +30 HP · 🍖 Meat +60 HP · 📜 Scroll +1 lightning · 🧪 Elixir +25 SP · ⭐ Power-up boosts attack · 📦 Break crates for items,🐟 생선 = HP +30 · 🍖 고기 = HP +60 · 📜 두루마리 = 뇌격 +1 · 🧪 엘릭서 = SP +25 · ⭐ 파워업 = 공격력 UP · 📦 상자를 부수면 아이템
+WEB_TIP_GOLD,"🪙 Coin 500 points · Coin pouch 1,000 points · Gold bar 2,000 points","🪙 동전 = 500점 · 동전 주머니 = 1,000점 · 금괴 = 2,000점"
+WEB_TIP_HIT,Chain hits to increase your HIT count and deal more damage to bosses.,연속 공격으로 HIT 수를 늘리면 보스에게 주는 피해가 커집니다.
+WEB_TIP_GROGGY,Hit a boss to fill its stagger gauge and stun it for five seconds.,보스를 공격해 그로기 게이지를 채우면 5초간 기절시킬 수 있습니다.
+WEB_TIP_WARNING,An exclamation mark or a red floor marker warns of an attack. Jump over shockwaves.,적 머리 위의 ! 또는 바닥의 붉은 표식은 공격 예고입니다. 충격파는 점프로 넘으세요.
+WEB_TIP_GO,"When GO → appears, move right.",GO → 가 뜨면 오른쪽으로 전진하세요.
+WEB_TIP_RANK,"Rank depends on damage taken, deaths, time and your highest combo.",랭크는 누적 피해·사망·시간·최대 콤보로 결정됩니다.
+WEB_TIP_KEYS,"Choose Arcade, WASD or Custom controls in Options. Esc pauses and M toggles sound. You take no damage in practice.","설정에서 오락실, WASD, 사용자 설정 중 키 배치를 고르세요. Esc로 일시정지, M으로 소리를 켜거나 끕니다. 연습장에서는 피해를 받지 않습니다."
+WEB_TRAIN,Try practice,직접 연습
+WEB_PLAY,Start game,게임 시작
+WEB_LAB,Mobile display lab ↗,모바일 화면 실험실 ↗
+WEB_QUALITY,Graphics quality,화질
+WEB_BALANCED,Standard · 960×540,기본 · 960×540
+WEB_HIGH,High · up to 1920×1080,고화질 · 최대 1920×1080
+WEB_FPS,Show performance (FPS),성능 표시 (FPS)
+WEB_LOW_FX,Reduce effects (low-end devices),이펙트 감소 (저사양)
+WEB_MUSIC,Music,음악
+WEB_MUSIC_VOL,Music volume,음악 음량
+WEB_SFX,Sound effects,효과음
+WEB_SFX_VOL,Effects volume,효과음 음량
+WEB_BOSS_MUSIC,Boss music,보스전 BGM
+WEB_BOSS_MP3,Choose MP3,mp3 선택
+WEB_BOSS_REMOVE,Remove my track,내 파일 해제
+WEB_SHAKE,Screen shake,화면 흔들림
+WEB_FLASH,Screen flashes,화면 섬광
+WEB_ZONES,Show enemy attack zones,적 공격 범위 표시
+WEB_TOUCH_BUTTONS,Touch controls,모바일 조작 키
+WEB_TOUCH_OPACITY,Touch control transparency,모바일 키 투명도
+WEB_TOUCH_SCALE,Touch control size,모바일 키 크기
+WEB_TOUCH_LAYOUT,Touch control layout,모바일 키 배치
+WEB_TOUCH_EDIT,Edit layout,배치 편집
+WEB_RESET,Reset,초기화
+WEB_PRESETS,Keyboard presets,키 배치 프리셋
+WEB_NEXT_STAGE,Next stage,다음 스테이지
+WEB_REVIVE_DESC,Revive where you fell with three lives. Your score resets to zero.,쓰러진 자리에서 라이프 3개로 다시 일어납니다. 점수는 0이 됩니다.
+WEB_FIGHT_ON,Continue fighting (Enter),이어서 싸우기 (Enter)
+WEB_GIVE_UP,Give up (Esc),포기 (Esc)
+WEB_ALL_CLEAR_DESC,You cleared every stage. Congratulations!,모든 스테이지를 클리어했습니다. 축하합니다!
+WEB_TOUCH_GROUP,Touch controls,모바일 조작
+WEB_TOUCH_TOOLBAR,Edit touch controls,모바일 키 배치 편집
+WEB_SMALLER,Smaller,작게
+WEB_BIGGER,Larger,크게
+WEB_HIDE,Hide,숨기기
+WEB_SHOW,Show,보이기
+WEB_RESET_ONE,Reset position,원위치
+WEB_RESET_ALL,Reset all positions,전체 원위치
+WEB_DONE,Done,완료
+WEB_STICK,Movement stick,이동 레버
+WEB_TOUCH_SPECIAL,Special: Dark Moon Slash,필살기 흑월참
+WEB_ASSET_LOADING,Loading graphics…,그래픽 불러오는 중…
+WEB_STAGE_CLEAR,STAGE CLEAR!,스테이지 클리어!
+WEB_CONTINUE_PROMPT,CONTINUE?,계속하시겠습니까?
+WEB_GAME_OVER,GAME OVER,게임 오버
+WEB_ALL_CLEAR,ALL CLEAR!,올 클리어!
+WEB_KEY_LEFT,Left,◀이동
+WEB_KEY_RIGHT,Right,▶이동
+WEB_KEY_UP,Up,▲이동
+WEB_KEY_DOWN,Down,▼이동
+WEB_KEY_THRUST,Thrust,찌르기
+WEB_KEY_SLAM,Slam,내려 찍기
+WEB_KEY_ARROW,Arrow,화살
+WEB_KEY_MELEE,Melee,근접
+WEB_KEY_RAPID,Rapid,연사
+WEB_KEY_CHARGE,Charge,저격
+WEB_KEY_GROUND,Ground flip,지상 플립
+WEB_KEY_AIR,Air flip,공중 플립
+WEB_KEY_BARRAGE,Barrage,흑월 난사
+WEB_KEY_PAUSE,Pause,일시 정지
+WEB_KEY_CONFIRM,Confirm,확인
+WEB_KEY_SOUND,Sound,소리
+WEB_KEY_HINT,Choose 3 · Custom to change this key,3 · 사용자 설정에서 바꿀 수 있습니다
+WEB_KEY_CHANGE,Change key for %s,%s 키 변경
+WEB_KEY_LAYOUT,Keyboard layout: %s,키보드 배치: %s
+WEB_KEY_ALTERNATE,%s (alternate),%s (보조)
+WEB_RECORD,High score %s,최고 점수 %s
+WEB_RECORD_EMPTY,Clear a stage to set your first record,첫 클리어 기록에 도전하세요
+WEB_SAVE_FAILED,This browser cannot save your progress. You can still play this session.,이 브라우저에서는 저장할 수 없습니다. 현재 게임은 계속할 수 있습니다.
+WEB_TOUCH_DRAG,Drag a control to move it,키를 끌어서 옮기세요
+WEB_BGM_FILE,My track: %s,내 파일: %s
+WEB_BGM_SESSION,My track: %s (available for this session only),내 파일: %s (저장 불가 · 이번 접속에만 적용)
+WEB_BGM_DEFAULT,Default MP3,게임 기본 mp3
+WEB_BGM_LOADING,Loading default track…,기본 곡 불러오는 중…
+WEB_BGM_SYNTH,Default synthesized music,기본 합성 BGM
+WEB_BGM_LOADING_FILE,Loading…,불러오는 중…
+WEB_BGM_NO_FILE,No file selected.,파일을 고르지 않았습니다.
+WEB_BGM_TOO_BIG,Choose a file no larger than 30 MB.,30MB 이하의 파일만 쓸 수 있습니다.
+WEB_BGM_UNSUPPORTED,This browser does not support audio.,이 브라우저는 오디오를 지원하지 않습니다.
+WEB_BGM_DECODE,This audio file cannot be played.,재생할 수 없는 오디오 파일입니다.
+LAB_PAGE,Lunatic Nights · Mobile Layout Lab,Lunatic Nights · 모바일 화면 실험실
+LAB_TITLE,Mobile Layout Lab,모바일 화면 실험실
+LAB_OPEN,Open game ↗,게임 열기 ↗
+LAB_DISPLAY,01 Display,01 화면 조건
+LAB_DEVICE,Device preset,기종 기준
+LAB_ORIENTATION,Orientation,방향
+LAB_LANDSCAPE,Landscape,가로
+LAB_PORTRAIT,Portrait,세로
+LAB_ACTUAL,Use this browser’s size,이 브라우저 크기
+LAB_WIDTH,Width · CSS px,너비 · CSS px
+LAB_HEIGHT,Height · CSS px,높이 · CSS px
+LAB_CHROME,Browser toolbar height,브라우저 주소·도구 모음 높이
+LAB_PRESET_HELP,Presets use typical CSS viewport sizes. Adjust the values to match your browser and zoom level.,프리셋은 대표 CSS 화면 크기입니다. 화면 확대 설정·브라우저에 따라 다르므로 실측값으로 수정할 수 있습니다.
+LAB_TOP,Top safe inset,안전 여백 위
+LAB_BOTTOM,Bottom,아래
+LAB_LEFT,Left,왼쪽
+LAB_RIGHT,Right,오른쪽
+LAB_GUIDES,Show safe areas and issues,안전영역·문제 위치 표시
+LAB_CONTROLS,02 Game and controls,02 게임과 조작키
+LAB_CHARACTER,Character,캐릭터
+LAB_BAREL,Barel,바렐
+LAB_VIESA,Viesa,비에사
+LAB_SCREEN,Screen,화면
+LAB_PLAY,Combat,전투
+LAB_MENU,Title,타이틀
+LAB_OPTIONS,Options,설정
+LAB_EDIT,Drag controls in the game,게임 안에서 키 드래그 편집
+LAB_END_EDIT,Finish editing and play,편집 종료 · 플레이
+LAB_SCALE,Control size,전체 키 크기
+LAB_ALPHA,Control opacity,키 불투명도
+LAB_CONTROL,Individual control,개별 조작키
+LAB_DX,Horizontal offset · control units,가로 이동 · 키 단위
+LAB_DY,Vertical offset,세로 이동
+LAB_KEY_SCALE,Selected control size,개별 키 크기
+LAB_HIDE,Hide selected control,선택 키 숨기기
+LAB_FIT,Move off-screen controls into the safe area,화면 밖 조작키를 안전영역 안으로
+LAB_RESET,Restore default controls,조작키 기본값
+LAB_PROFILES,03 Save and apply,03 저장과 적용
+LAB_SAVE,Save for this device,이 기종 저장
+LAB_LOAD,Load for this device,이 기종 불러오기
+LAB_EXPORT,Export JSON,JSON 내보내기
+LAB_IMPORT,Import JSON,JSON 불러오기
+LAB_APPLY,Apply controls to the game in this browser,이 브라우저의 게임에 조작키 적용
+LAB_STORAGE_HELP,Preview settings are stored separately. Apply saves the control layout for this site. Screen size and simulated safe areas are preview settings.,테스트는 별도 저장 공간을 사용합니다. 적용 버튼은 같은 주소의 게임에 키 배치만 저장합니다. 화면 크기·가상 안전 여백은 적용하지 않습니다.
+LAB_LOADING,Loading game…,게임을 불러오는 중…
+LAB_PREPARING,Preparing preview,미리보기 준비 중
+LAB_CHECK,Check current screen,현재 화면 검사
+LAB_BATCH,Check all devices,전체 기종 검사
+LAB_REPORT,Export results as JSON,검사 결과 JSON
+LAB_IFRAME,Mobile game preview,실제 게임 모바일 미리보기
+LAB_RESULTS,Layout check,배치 검사
+LAB_ISSUE_HELP,"Red means outside the screen or safe area, orange marks overlapping controls, and yellow marks touch targets under 44 px. Portrait mode has a smaller play area.",붉은색: 화면/안전영역 밖 · 주황색: 조작키 겹침 · 노란색: 44px 미만(검토 기준). 가로 권장 게임이라 세로 화면에서는 플레이 영역이 작아질 수 있습니다.
+LAB_FOOTER,"The game runs in this browser at the selected viewport size. Device engines, pixel density, multitouch and performance require testing on the device.","현재 브라우저의 실제 게임을 지정한 뷰포트로 렌더링합니다. iOS/Android 엔진, DPR, 멀티터치·성능을 에뮬레이션하지 않습니다."
+LAB_LIMITS,Mobile emulation limits,모바일 에뮬레이션 한계
+LAB_SAFE_HELP,Safe area guide,안전영역 안내
+LAB_PHONE_SE,iPhone SE (2nd/3rd gen),iPhone SE (2·3세대)
+LAB_GALAXY_S,Galaxy S series · small,Galaxy S 계열 · 소형
+LAB_GALAXY_PLUS,Galaxy S Plus series,Galaxy S Plus 계열
+LAB_GALAXY_ULTRA,Galaxy Ultra / A series,Galaxy Ultra·A 계열
+LAB_GALAXY_FOLD,Galaxy Z Fold · inner screen,Galaxy Z Fold · 내부
+LAB_CUSTOM,Custom,직접 입력
+LAB_PREVIEW_SIZE,%s × %s CSS px · Preview %s%,%s × %s CSS px · 미리보기 %s%
+LAB_OUTSIDE,%s is outside the screen or safe area.,%s: 화면 또는 안전영역 밖
+LAB_SMALL,%s has a touch target of %s × %s px.,%s: 터치 영역 %s × %spx
+LAB_OVERLAP,%s and %s overlap.,%s ↔ %s: 버튼 영역 겹침
+LAB_CLIPPED,The game extends beyond the viewport.,게임 화면이 뷰포트 밖으로 잘립니다.
+LAB_MENU_CLIPPED,Menu control outside the safe area: %s,메뉴 %s: 안전영역 밖
+LAB_COUNTS,Controls: %s · Issues: %s,%s개 조작키 · %s개 확인 항목
+LAB_NO_ISSUES,"No clipping, overlapping controls or small touch targets detected.",현재 화면에서 잘림·조작키 겹침·작은 터치 영역이 발견되지 않았습니다.
+LAB_MOVED,Off-screen controls moved. Check the results and adjust any overlapping controls.,화면 밖 조작키를 이동했습니다. 겹침은 검사 결과를 보며 개별 조정하세요.
+LAB_BAD_FORMAT,Unsupported settings file.,지원하지 않는 설정 파일입니다.
+LAB_BAD_DIMENSIONS,Screen dimensions and insets must be numbers.,화면 크기와 여백은 숫자여야 합니다.
+LAB_CHECKING,Checking %s · %s…,%s · %s 검사 중…
+LAB_TABLE_DEVICE,Device / orientation,기종 / 방향
+LAB_TABLE_GAME,Game area,게임 영역
+LAB_TABLE_CLIP,Clipped,잘림
+LAB_TABLE_OVERLAP,Overlap,겹침
+LAB_TABLE_SMALL,Small targets,작은 키
+LAB_BATCH_DONE,Checked %s viewports with the current control layout.,%s개 화면 조건 검사 완료. 현재 키 배치로 비교한 결과입니다.
+LAB_DRAG,Drag a control in the preview or adjust its values in the sidebar.,미리보기에서 키를 끌어 이동하세요. 개별 수치도 함께 사용할 수 있습니다.
+LAB_COPIED,Copied the available browser size. Enter safe insets for your device.,현재 브라우저의 사용 가능 크기를 복사했습니다. 안전 여백은 실기기에 맞게 입력하세요.
+LAB_SAVED,Settings for this device and orientation saved in this browser.,기종·방향별 설정을 이 브라우저에 저장했습니다.
+LAB_NO_STORAGE,Storage is unavailable. Export the settings as JSON.,저장 공간을 사용할 수 없습니다. JSON으로 내보내세요.
+LAB_NO_PROFILE,No saved settings for this device and orientation.,이 기종·방향에 저장된 설정이 없습니다.
+LAB_LOADED,Saved settings loaded.,저장된 설정을 불러왔습니다.
+LAB_BIG_FILE,Settings file is too large.,설정 파일이 너무 큽니다.
+LAB_IMPORTED,Settings file loaded.,설정 파일을 불러왔습니다.
+LAB_IMPORT_ERROR,Import failed: %s,불러오기 실패: %s
+LAB_APPLIED,Controls saved for this browser. Reload the game to apply them.,이 브라우저의 게임에 조작키 배치를 저장했습니다. 게임을 새로고침하면 적용됩니다.
+LAB_SAVE_ERROR,Could not save game settings. Export the settings as JSON.,게임 설정을 저장하지 못했습니다. JSON으로 내보내세요.
+LAB_READY,Ready. Select a device and adjust the controls in the game preview.,준비 완료. 기종을 선택하고 실제 게임 화면에서 배치를 조정하세요.
+LAB_ERROR,Could not load the game. Open mobile-lab.html from the local server. %s,게임 로딩 실패. 로컬 서버로 mobile-lab.html을 열어주세요. %s
+HOST_CONTROLS,Click the game to focus it. Open Options to see your current controls. Press Esc to pause.,게임 화면을 클릭한 뒤 조작하세요. 현재 조작키는 설정에서 확인할 수 있습니다. Esc를 누르면 일시정지합니다.
+HOST_VERSION,v1.67 · Combat feedback and readability,v1.67 · 타격감·가독성 개선
+STAGE_NUMBER,Stage %s,스테이지 %s
+AREA_NUMBER,Area %s,구역 %s
+CHALLENGE_ENTRY,%s · %s — %s,%s · %s — %s
+ENEMY_UNIT,%s %s,%s %s
+HUD_SCORE,Score %s,점수 %s
+START_HERO,Play as %s,%s로 시작
+BAREL_CONTROLS,%s 3-hit combo · Attack while dashing or running for a dash thrust · %s Thrust · %s Slam · %s Whirl · %s Dive · %s Red Wave · %s Black Moon Slash · %s Lightning,%s 3연타 · 대시·달리기 중 공격: 대시 찌르기 · %s 견제 찌르기 · %s 내려찍기 · %s 회전 베기 · %s 점프 강하 · %s 붉은 파동 · %s 흑월참 · %s 뇌격
+VIESA_CONTROLS,%s Arrow · %s Melee · Use melee while dashing or running for a dash thrust · %s Rapid Fire · %s Charged Shot · %s Ground Backflip · %s Aerial Backflip · %s Black Moon Barrage,%s 화살 · %s 근접 · 대시·달리기 중 근접: 대시 찌르기 · %s 연사 · %s 모아 쏘기 · %s 지상 백플립 · %s 공중 백플립 · %s 흑월 난사
+PRACTICE_MOVE,Move: approach the training dummy with %s or the movement buttons.,이동: %s 또는 이동 버튼으로 허수아비에게 접근하세요
+PRACTICE_ATTACK,Attack: hit an enemy in your lane with %s or the attack button.,공격: %s / 공격 버튼으로 같은 줄의 적을 맞히세요
+PRACTICE_JUMP,Jump: press %s or the jump button.,점프: %s / 점프 버튼을 누르세요
+PRACTICE_DASH,Dodge: press %s or double-tap a direction. Attack while dashing or running for a dash thrust.,회피: %s / 방향키 두 번 · 대시·달리기 중 공격: 대시 찌르기
+PRACTICE_SKILL,"Skill: land a thrust, slam, whirl, or dive.",기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요
+PRACTICE_PROGRESS,Practice %s/5 · %s,연습 %s/5 · %s
+PRACTICE_DONE,Practice complete! Watch for attack cues and dodge in battle.,연습 완료! 실전에서 공격 예고를 보고 피하세요.
+DEFEAT_SCORE,%s %s — Score %s,%s %s — 점수 %s
+STAGE_CLEARED,%s cleared!,%s 클리어!
+HEALTH_BONUS,Remaining health bonus +%s,남은 체력 보너스 +%s
+FINAL_SCORE,Final score %s,최종 점수 %s
+COOLDOWN_SECONDS,%ss,%s초
+BREAK_FREE,Tap attack or direction keys repeatedly %s/%s,공격 / 방향키 연타 %s/%s
+PERF_IDLE,Idle · Rendering paused · %s×%s,대기 중 · 화면 갱신 중지 · %s×%s
+PERF_STATS,%s FPS · Frame p95 %sms · Update %sms · Render %sms · %s×%s,%s FPS · 프레임 p95 %sms · 연산 %sms · 그리기 %sms · %s×%s
+POWER UP!,POWER UP!,공격력 증가!
+GROGGY!,GROGGY!,그로기!
+PHASE 2,PHASE 2,2단계
+ARCHER,ARCHER,궁수
+BLACK KNIGHT,BLACK KNIGHT,흑기사
+GO,GO,전진
+VICTORY!,VICTORY!,승리!
+EXCELLENT,EXCELLENT,탁월!
+GREAT,GREAT,훌륭해!
+GOOD,GOOD,좋아!
+HIT,HIT,히트
+WEB_PAUSED_BECAUSE_YOU_LEFT_THE_GAME_SCREEN,Paused because you left the game screen.,화면을 벗어나 게임을 멈췄습니다.
+WEB_CHALLENGE,Challenge,도전하기
+WEB_LOCKED_CLEAR_THIS_STAGE_IN_THE_CAMPAIGN,Locked · Clear this stage in the campaign,미해금 · 본편 클리어 필요
+WEB_BUTCHERS_ROW,Butchers’ Row,도살자들의 거리
+WEB_SANCTUM_OF_THE_RAVEN_WITCH,Sanctum of the Raven Witch,까마귀 마녀의 성역
+WEB_THE_FALLEN_GOLDEN_KINGDOM,The Fallen Golden Kingdom,몰락한 황금 왕국
+WEB_FROZEN_KINGDOM_OF_THE_DEAD,Frozen Kingdom of the Dead,얼어붙은 망자의 왕국
+WEB_THE_ABYSS_OF_THE_BLACK_ECLIPSE,The Abyss of the Black Eclipse,검은 월식의 심연
+WEB_OCCUPIED_STREETS,Occupied Streets,점령당한 거리
+WEB_MEAT_MARKET,Meat Market,정육 시장
+WEB_KENNEL_ALLEY,Kennel Alley,개 사육장 뒷골목
+WEB_ARENA_PLAZA,Arena Plaza,투기장 앞 광장
+WEB_BLOOD_ARENA,Blood Arena,피의 투기장
+WEB_VARGUL_THE_FROZEN_GRAVELORD,"Vargul, the Frozen Gravelord","바르굴, 얼어붙은 묘지왕"
+WEB_EXECUTIONER,Executioner,처형군
+WEB_RAVEN_LEGION,Raven Legion,까마귀 군단
+WEB_GOLDEN_ROYAL,Golden Royal,황금 왕실
+WEB_FROSTBOUND,Frostbound,서리 망자
+WEB_ABYSSAL,Abyssal,심연 군단
+WEB_INFANTRY,Infantry,보병
+WEB_SPEARMAN,Spearman,창병
+WEB_BOWMAN,Bowman,궁병
+WEB_HEAVY_KNIGHT,Heavy Knight,중기사
+WEB_WRAITH_SOLDIER,Wraith Soldier,망령 병사
+WEB_BLACK_SPEARMAN,Black Spearman,흑창병
+WEB_BLACK_IRON_KNIGHT,Black Iron Knight,흑철 중기사
+WEB_WRAITH_ARCHER,Wraith Archer,망령 궁수
+WEB_AXE_BANDIT,Axe Bandit,도끼 도적
+WEB_BLADE_BANDIT,Blade Bandit,칼 도적
+WEB_CLUBBER,Clubber,곤봉잡이
+WEB_ARMORED_BUTCHER,Armored Butcher,도살 중갑병
+WEB_FIREBOMBER,Firebomber,화염병 투척자
+WEB_HOUND,Hound,사냥개
+WEB_LIGHTNING_SCROLL,Lightning Scroll,뇌격 두루마리
+WEB_REINFORCEMENTS,Reinforcements!,부하 소환!
+WEB_LONGEST_COMBO,Longest combo,최대 연속 히트
+WEB_TIME,Time,시간
+WEB_HEALTH_LEFT,Health left,남은 체력
+WEB_DAMAGE_TAKEN,Damage taken,누적 피해
+WEB_DEATHS,Deaths,사망
+WEB_RANK,Rank,랭크
+WEB_CURRENT_SCORE,Current score,현재 점수
+WEB_FIRE_ZONE_MOVE_TO_AN_UNMARKED_LANE,Fire zone · Move to an unmarked lane,화염 지대 · 표식이 없는 줄로 이동하세요
+WEB_FROST_ZONE_STEP_OFF_THE_MARK_OR,Frost zone · Step off the mark or jump,서리 지대 · 표식을 벗어나거나 점프로 피하세요
+WEB_ABYSS_ZONE_UNMARKED_LANES_ARE_SAFE,Abyss zone · Unmarked lanes are safe,심연 지대 · 표식이 없는 줄이 안전합니다
+WEB_READY,Ready,준비 완료
+WEB_LAND_FIRST,Land first,착지 후 사용
+WEB_FINISH_YOUR_MOVE_FIRST,Finish your move first,동작 종료 후 사용
+WEB_UNUSED,Unused,미사용
+WEB_GROUNDBREAKER,Groundbreaker,지축 내려찍기
+WEB_CLEAVER_SWEEP,Cleaver Sweep,식칼 휩쓸기
+WEB_BUTCHERS_CHARGE,Butcher’s Charge,도살 돌진
+WEB_HOOK_AND_REEL,Hook and Reel,갈고리 끌어오기
+WEB_MEAT_TOSS,Meat Toss,고기 덩어리 투척
+WEB_RAVEN_SHIFT,Raven Shift,까마귀 이동
+WEB_GREENFIRE_BARRAGE,Greenfire Barrage,녹염 탄막
+WEB_RAVEN_FLOCK,Raven Flock,까마귀 떼
+WEB_FEATHER_THROW,Feather Throw,깃털 투척
+WEB_STAFF_STRIKE,Staff Strike,지팡이 강타
+WEB_SOUL_HARVEST,Soul Harvest,영혼 추수
+WEB_LUNGE,Lunge,내지르기
+WEB_BODY_CHECK,Body Check,몸통 박치기
+WEB_HOOK_THROW,Hook Throw,갈고리 던지기
+WEB_DOUBLE_SLAM,Double Slam,두 번 내려찍기
+WEB_HOOK_PUNCH,Hook Punch,갈고리 주먹
+WEB_BULL_RUSH,Bull Rush,황소 돌진
+WEB_SLAUGHTERHOUSE_RAIN,Slaughterhouse Rain,도살장의 비
+WEB_ESCAPED,Escaped!,탈출!
+WEB_PHASE_2,Phase 2,2페이즈
+WEB_PHASE_2_ALT,Phase 2,2 페이즈
+WEB_BLOCKED,Blocked,막힘
+WEB_THE_UNBROKEN_CURSE,The Unbroken Curse,끝나지 않은 저주
+WEB_FIST_DESTROYED,Fist destroyed!,주먹 파괴!
+WEB_STAFF_SWING,Staff Swing,지팡이 휘두르기
+WEB_MAGIC_BOLT,Magic Bolt,마법탄
+WEB_SHADOW_STEP,Shadow Step,그림자 순간이동
+WEB_MOCKING_CACKLE,Mocking Cackle,웃음 도발
+WEB_SUMMON_RAVENS,Summon Ravens,까마귀 소환
+WEB_VEIL_OF_DARKNESS,Veil of Darkness,어둠의 장막 시전
+WEB_AERIAL_RAVEN_SLASH,Aerial Raven Slash,공중 까마귀 베기
+WEB_RAVEN_RUSH_SHAPESHIFT,Raven Rush (Shapeshift),까마귀 돌진 (변신)
+WEB_LUNAR_JUDGMENT,Lunar Judgment,달의 심판
+WEB_FEATHER_FAN,Feather Fan,깃털 부채꼴
+WEB_AERIAL_RAVEN_SUMMON,Aerial Raven Summon,까마귀 소환(공중)
+WEB_THREE_VEILS_OF_DARKNESS,Three Veils of Darkness,어둠의 장막(3개)
+WEB_WINGED_TELEPORT,Winged Teleport,날개 순간이동
+WEB_ROYAL_TRIPLE_SLASH,Royal Triple Slash,왕검 3연참
+WEB_GOLDEN_BLADE_WAVE,Golden Blade Wave,황금 검기
+WEB_GOLDEN_SHOCKWAVE_CLEAVE,Golden Shockwave Cleave,황금중파참
+WEB_ROYAL_CHARGE,Royal Charge,왕의 돌진
+WEB_GOLDEN_JUDGMENT,Golden Judgment,황금의 엄벌
+WEB_GUARDIAN_STANCE,Guardian Stance,수호의 자세
+WEB_GOLDEN_WHIRLWIND,Golden Whirlwind,황금 선풍
+WEB_TAUNT,Taunt,도발
+WEB_TRIPLE_FROST_SPEAR,Triple Frost Spear,빙창 3연격
+WEB_SWIFT_CHARGE,Swift Charge,쾌속 돌진
+WEB_SPEARFALL,Spearfall,스피어 폴
+WEB_FROST_CROSS,Frost Cross,십자 빙결
+WEB_ICE_ORBS,Ice Orbs,얼음 구슬
+WEB_SPEAR_SWEEP,Spear Sweep,창 휘두르기
+WEB_COLD_SNEER,Cold Sneer,냉소
+WEB_FROST_SLAM,Frost Slam,빙결 강타
+WEB_DIRECT_STRIKE,Direct Strike,직격
+WEB_TRACKING_SLAM,Tracking Slam,추적 내려찍기
+WEB_HAMMER_BLOWS,Hammer Blows,망치질
+WEB_GRAB,Grab,붙잡기
+WEB_PINCER_STRIKE,Pincer Strike,협공
+WEB_GROUND_WAVE,Ground Wave,지면 파동
+WEB_IRON_WALL,Iron Wall,철벽
+WEB_WHIRLWIND,Whirlwind,회오리
+WEB_BACKHAND,Backhand,손등 치기
+WEB_METEOR_FALL,Meteor Fall,유성 낙하
+WEB_CRIMSON_MOON_CANNON,Crimson Moon Cannon,적월마광포
+WEB_HELM_BEAM,Helm Beam,투구 광선
+WEB_MORGRA_HAS_FALLEN_DARKNESS_GATHERS,Morgra has fallen · Darkness gathers,쓰러진 모르그라 · 어둠이 모입니다
+WEB_MORGRA_RISES_THE_SECOND_BATTLE_BEGINS,Morgra rises · The second battle begins,모르그라 부활 · 두 번째 전투
+WEB_AWAKENING_ATTACKS_WILL_RESUME_SHORTLY,Awakening · Attacks will resume shortly,각성 · 잠시 후 공격이 재개됩니다
+WEB_PAUSE,Pause,멈춤
+DEMO_DESC_MOVE,"Walk left or right, and move up or down to change lanes. Line up with an enemy to hit them. Follow the arrow to the right when it appears.",좌우로 걷고 위/아래로 줄(깊이)을 바꿉니다. 적과 같은 줄에 서야 공격이 맞습니다. 화면에 GO → 가 뜨면 오른쪽으로 전진하세요.
+DEMO_DESC_JUMP,Jump over ground shockwaves and low attacks. Hold a direction as you jump to leap forward.,점프로 바닥 충격파와 낮은 공격을 넘습니다. 이동 키를 누른 채 점프하면 앞으로 뛰어오릅니다.
+DEMO_DESC_COMBO,Tap attack to chain three strikes. The third sends out a blade wave. Keep landing hits to build your combo and deal more damage to bosses.,연타하면 3연 콤보! 3타 참격은 검기를 날립니다. 연속으로 맞히면 HIT가 쌓이고 보스에게 주는 피해가 커집니다.
+DEMO_DESC_DASH_THRUST,Dash to move quickly with a moment of invulnerability. You can also double-tap a direction. Attack during the dash to thrust.,잠깐 무적이 되는 빠른 이동입니다. 같은 방향 이동 키를 빠르게 두 번 눌러도 됩니다. 대시 중 공격하면 대시 찌르기.
+DEMO_DESC_AIR_ATTACK,Attack while jumping to perform an aerial slash.,점프 중에 공격하면 공중 베기가 나갑니다.
+DEMO_DESC_THRUST,Thrust forward for a quick poke. Each skill has its own cooldown.,앞으로 빠르게 찌르는 견제 기술. 기술은 각자 재사용 시간이 있습니다.
+DEMO_DESC_SLAM,Slam your sword into the ground to knock down nearby enemies.,검을 땅에 내려찍어 주변 적을 넘어뜨립니다.
+DEMO_DESC_WHIRL,Spin and slash enemies on both sides when they surround you.,몸을 돌려 앞뒤의 적을 한꺼번에 벱니다. 둘러싸였을 때 유용합니다.
+DEMO_DESC_DIVE,Leap high and plunge down on enemies ahead.,높이 뛰어올라 앞쪽 적에게 내리꽂힙니다.
+DEMO_DESC_RED_WAVE,Launch a red blade wave that travels far and pierces enemies. Cooldown: 6.5 seconds.,멀리 날아가며 적을 꿰뚫는 붉은 검기 (재사용 6.5초).
+DEMO_DESC_BLACK_MOON_SLASH,"With full SP, dash in for three slashes and finish with a crescent strike. You are invulnerable throughout.",SP 게이지가 가득 차면 사용! 돌진 3연 베기 + 초승달 마무리. 사용하는 동안 무적입니다.
+DEMO_DESC_LIGHTNING,Spend one scroll to strike every enemy on screen with lightning. You can carry up to three scrolls.,두루마리 1개로 화면 안의 모든 적에게 번개! 두루마리는 최대 3개까지 모입니다.
+DEMO_DESC_VIESA_MOVE,Walk left or right. Move up or down to change your firing lane. Arrows hit enemies in the same lane.,좌우로 걷고 위/아래로 사격 줄(깊이)을 바꿉니다. 화살은 같은 줄의 적에게 맞습니다.
+DEMO_DESC_ARROW,Each arrow deals 8 damage. Press attack again while shooting to keep firing. Arrows are unlimited.,화살 한 발에 8 피해. 사격 도중 다시 누르면 연속 사격합니다. 화살은 무제한입니다.
+DEMO_DESC_DASH,Dash to move quickly while invulnerable. You can also double-tap a direction.,이동하는 동안 무적인 빠른 이동입니다. 같은 방향 이동 키를 빠르게 두 번 눌러도 됩니다.
+DEMO_DESC_AIR_SHOT,"In the air, shoot downward at 30° while slowly descending. You land when you reach the ground.",공중에서는 아래 30°로 쏘며 천천히 내려옵니다. 땅에 닿으면 착지합니다.
+DEMO_DESC_MELEE,Strike a nearby enemy three times with your bow.,가까이 붙은 적을 활로 세 번 후려칩니다.
+DEMO_DESC_RAPID_FIRE,Fire six arrows for 10 damage each. Press up or down to adjust your firing lane.,6발 연사 (발당 10 피해). 위/아래 키로 사격 줄을 조절할 수 있습니다.
+DEMO_DESC_GROUND_BACKFLIP,"Dash through enemies, knock them down on landing, then backflip. You are invulnerable during the dash and deal 20 extra damage to each enemy.",대시로 적을 꿰뚫고 착지 충격으로 넘어뜨린 뒤 땅에서 백플립. 대시 중 무적이며 적마다 20 추가 피해.
+DEMO_DESC_AIR_BACKFLIP,Backflip high and hover for up to 40 ticks. Press attack to keep shooting. You can also use it once midair before landing.,높은 백플립 후 최대 40틱 체공. 체공 중 공격 키로 사격을 이어갑니다. 공중에서도 착지 전 한 번 쓸 수 있습니다.
+DEMO_DESC_CHARGED_SHOT,Hold at full draw to charge up to three levels. Each adds 4 damage. Release to fire a piercing shot. The arrow fires automatically shortly after level three.,"시위를 끝까지 당긴 자세로 누르고 있으면 최대 3단까지 모읍니다. 단계마다 피해 +4, 놓으면 관통 사격. 3단 뒤 잠시 지나면 자동 발사."
+DEMO_DESC_BLACK_MOON_BARRAGE,"At 100 SP, leap up, summon a magic circle, rain down 200 phantom arrows, then detonate a giant arrow. You are invulnerable throughout.",SP 100에서 사용. 공중 도약 → 마법진 → 환영 화살 200발 → 거대 화살 폭발. 시전 전체 무적.
+PRACTICE_COMPLETE,Practice complete!,연습 완료!
+PRACTICE_STATUS,Practice %d / 5   %s,연습 %d / 5   %s
+GORATH_PHASE,Gorath the Butcher · Phase %d,도살자 고라스  %d단계
+HUD_STAGE,STAGE %d,스테이지 %d
+GUARD,GUARD,방어
+GORATH_CARD,GORATH,고라스
+THE_BUTCHER,THE BUTCHER,도살자
+RAIN_SLAUGHTERHOUSE,RAIN OF THE SLAUGHTERHOUSE,도살장의 비
+VICTORY,VICTORY!,승리!
+HUD_SECTION,STAGE 1 / %d OF 5 / %s,스테이지 1 / 구간 %d/5 / %s
+HUD_WAVE,MAGIC %d   WAVE %d/%d,뇌격 %d   적 무리 %d/%d
+HUD_GORATH,GORATH / PHASE %d     HP %d / %d,고라스 / %d단계     HP %d / %d
+STAGE1_COMPLETE,STAGE 1 COMPLETE,스테이지 1 클리어
+SCORE_RESTART,SCORE %d    R: RESTART,점수 %d    R: 다시 시작
+DEBUG_PHASE,1-5 SECTION   F10 PHASE 2   F11 ULTIMATE,1~5 구간   F10 2단계   F11 필살기
+PRACTICE_move,Move,이동하기
+PRACTICE_attack,Hit the dummy,허수아비 공격
+PRACTICE_jump,Jump,점프
+PRACTICE_dash,Dodge,회피
+PRACTICE_skill,Land a skill,기술 명중
+HAZARD_fire,Fire zone · Move to an unmarked lane,화염 지대 · 표식이 없는 줄로 이동하세요
+HAZARD_frost,Frost zone · Leave the marked area or jump,서리 지대 · 표식을 벗어나거나 점프로 피하세요
+HAZARD_abyss,Abyss zone · Unmarked lanes are safe,심연 지대 · 표식이 없는 줄이 안전합니다
+STAGE_TITLE_1,Butchers’ Street,도살자들의 거리
+STAGE_TITLE_2,Sanctuary of the Raven Witch,까마귀 마녀의 성역
+STAGE_TITLE_3,The Fallen Golden Kingdom,몰락한 황금 왕국
+STAGE_TITLE_4,Frozen Kingdom of the Dead,얼어붙은 망자의 왕국
+STAGE_TITLE_5,Abyss of the Black Eclipse,검은 월식의 심연
+FACTION_1,Executioner,처형군
+FACTION_2,Raven Legion,까마귀 군단
+FACTION_3,Golden Court,황금 왕실
+FACTION_4,Frostbound,서리 망자
+FACTION_5,Abyss Legion,심연 군단
+ENEMY_grunt,Infantry,보병
+ENEMY_rogue,Spearman,창병
+ENEMY_archer,Archer,궁병
+ENEMY_brute,Heavy Knight,중기사
+ENEMY_axe,Axe Bandit,도끼 도적
+ENEMY_blade,Blade Bandit,칼 도적
+ENEMY_club,Club Wielder,곤봉잡이
+ENEMY_heavy,Armored Butcher,도살 중갑병
+ENEMY_molotov,Firebomber,화염병 투척자
+ENEMY_hound,Hound,사냥개
+SECTION_1,OCCUPIED STREET,점령당한 거리
+SECTION_2,CONQUERED MARKET,정육 시장
+SECTION_3,HOUND KENNEL,개 사육장 뒷골목
+SECTION_4,EXECUTION PLAZA,투기장 앞 광장
+SECTION_5,BUTCHER'S ARENA,피의 투기장
+HUD_HP,HP %d / 100    LIFE %d,HP %d / 100    목숨 %d
+HUD_STREET,STAGE 1 / OCCUPIED STREET,스테이지 1 / 점령당한 거리
+HUD_SCORE_PADDED,SCORE %06d,점수 %06d
+HUD_MAGIC_WAVE,WAVE %d / 2    MAGIC %d,적 무리 %d / 2    뇌격 %d
+HUD_COMBO,%d HIT,%d연타
+HUD_GO,GO  >,전진  >
+HUD_HELP,%s/%s/%s/%s MOVE  %s ATTACK  %s JUMP  %s SPECIAL  %s MAGIC  %s DASH,%s/%s/%s/%s 이동  %s 공격  %s 점프  %s 필살기  %s 뇌격  %s 대시
+HUD_SYSTEM_KEYS,F1 KEYS   F9 DEBUG   ESC PAUSE   R RESTART,F1 키 배치   F9 디버그   ESC 일시정지   R 다시 시작
+DEBUG_BOX,F9  HITBOX / F2 REFILL SP + MAGIC,F9  판정 표시 / F2 SP·뇌격 충전
+SECTION_DONE,SECTION 1 COMPLETE,구간 1 완료
+RESTART_STREET,R: RESTART STREET,R: 거리에서 다시 시작
+RESUME_OR_RESTART,ESC: RESUME    R: RESTART,ESC: 계속하기    R: 다시 시작

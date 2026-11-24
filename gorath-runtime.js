@@ -144,7 +144,7 @@ function updateGorathGrab() {
 function drawGorathGrab() {
   const p=player,g=p.grab;if(p.st!=='grabbed'||!g)return;
   const x=p.x-camX,y=p.y-120;
-  outlineText(`공격 / 방향키 연타 ${g.presses}/${GORATH_GRAB.presses}`,x,y,'#ffe1ab','bold 12px sans-serif');
+  outlineText(TitleMenu.text('BREAK_FREE', g.presses, GORATH_GRAB.presses),x,y,'#ffe1ab','bold 12px sans-serif');
   ctx.save();ctx.fillStyle='#28171d';ctx.fillRect(x-35,y+8,70,5);
   ctx.fillStyle='#ffa34d';ctx.fillRect(x-35,y+8,70*(1-g.hold/GORATH_GRAB.hold),5);ctx.restore();
 }

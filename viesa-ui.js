@@ -48,7 +48,7 @@ function drawViesaUI(p){
     ctx.fillStyle='#132813';ctx.fillRect(110,510,180,7);
     ctx.fillStyle='#b7ec89';ctx.fillRect(110,510,180*clamp(p.buff/900,0,1),7);
   }
-  ctx.restore();pxText(`score ${p.score}`,6,14,'#ffe1a0',11);return true;
+  ctx.restore();pxText(TitleMenu.text('HUD_SCORE', p.score),6,14,'#ffe1a0',11);return true;
 }
 
 function drawViesaEnemyBar(e){
@@ -77,6 +77,6 @@ function drawViesaEnemyBar(e){
     ctx.drawImage(VIESA_ENEMY_UI,0,0,artWidth,artHeight);
   }
   ctx.restore();ctx.restore();
-  krText(e.d.name,x+1230*scale,top+347*scale,'#e4f1ff',11,'center','#031023');
+  krText(enemyDisplayName(e),x+1230*scale,top+347*scale,'#e4f1ff',11,'center','#031023');
   return true;
 }

@@ -6,7 +6,6 @@ signal finished
 
 const MS: float = 1000.0 / 60.0
 const DURATION: float = 18000.0
-const LINES: Array[String] = ["붉은 월식이 다섯 왕국을 삼켰다.","무너진 왕좌 너머, 검은 성채가 깨어난다.","잿더미에서 한 기사가 일어섰다.","다섯 군주가 밤의 문을 지킨다.","대검을 들어, 끝나지 않는 밤을 가르라.","Lunatic Nights"]
 const IMAGES: Array[String] = ["release_art.opening0__88bf332616b7.png","release_art.opening1__5d336676bd2f.png","release_art.opening2__e7e5e60d281d.png","release_art.opening3__be9495493866.png","release_art.opening4__9e061837a03c.png","release_art.opening5__bd77ca4fb7f1.png"]
 ## openingTime (ms), advanced once per simulation tick.
 var time: float = 0.0
@@ -26,7 +25,6 @@ func _ready() -> void:
 	font.font_weight = 700
 	# #openingSkip: right 3%, bottom 4%.
 	skip_button = Button.new()
-	skip_button.text = "건너뛰기 · Enter / Space"
 	skip_button.add_theme_font_size_override("font_size",13)
 	skip_button.focus_mode = Control.FOCUS_NONE
 	var box: StyleBoxFlat = StyleBoxFlat.new()
@@ -53,6 +51,7 @@ func start(zoom: bool = true) -> void:
 	zoom_enabled = zoom
 	running = true
 	visible = true
+	skip_button.text = BmkCopy.text("OPENING_SKIP")
 	skip_button.visible = true
 	queue_redraw()
 
@@ -107,5 +106,6 @@ func _draw() -> void:
 	# krText(): bold, 4 px black stroke under the fill, alphabetic baseline at H - 64.
 	var size_: int = 32 if n == 5 else 20
 	var pos: Vector2 = Vector2(0,h - 64)
-	draw_string_outline(font,pos,LINES[n],HORIZONTAL_ALIGNMENT_CENTER,w,size_,4,Color(0,0,0,alpha))
-	draw_string(font,pos,LINES[n],HORIZONTAL_ALIGNMENT_CENTER,w,size_,Color(0xf0 / 255.0,0xdc / 255.0,0xe0 / 255.0,alpha))
+	var line := BmkCopy.text("GAME_NAME" if n == 5 else "OPENING_%d" % n)
+	draw_string_outline(font,pos,line,HORIZONTAL_ALIGNMENT_CENTER,w,size_,4,Color(0,0,0,alpha))
+	draw_string(font,pos,line,HORIZONTAL_ALIGNMENT_CENTER,w,size_,Color(0xf0 / 255.0,0xdc / 255.0,0xe0 / 255.0,alpha))

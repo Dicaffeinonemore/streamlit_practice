@@ -326,20 +326,20 @@ func boss_info() -> Dictionary:
 
 ## AUDIO.setBossFile(file): at most 30 MB, decoded before it replaces the current choice.
 func set_boss_file(path: String) -> Dictionary:
-	if not FileAccess.file_exists(path): return {"ok":false,"message":"파일을 고르지 않았습니다."}
+	if not FileAccess.file_exists(path): return {"ok":false,"message":BmkCopy.text("FILE_MISSING")}
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-	if file == null: return {"ok":false,"message":"파일을 열 수 없습니다."}
-	if file.get_length() > BOSS_MAX_BYTES: return {"ok":false,"message":"30MB 이하의 파일만 쓸 수 있습니다."}
+	if file == null: return {"ok":false,"message":BmkCopy.text("FILE_OPEN_ERROR")}
+	if file.get_length() > BOSS_MAX_BYTES: return {"ok":false,"message":BmkCopy.text("FILE_SIZE")}
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
 	return set_boss_bytes(path.get_file(), bytes)
 
 ## The same choice from bytes already read (the Web export's browser file chooser).
 func set_boss_bytes(file_name: String, bytes: PackedByteArray) -> Dictionary:
-	if bytes.size() > BOSS_MAX_BYTES: return {"ok":false,"message":"30MB 이하의 파일만 쓸 수 있습니다."}
+	if bytes.size() > BOSS_MAX_BYTES: return {"ok":false,"message":BmkCopy.text("FILE_SIZE")}
 	var extension: String = file_name.get_extension().to_lower()
 	var stream: AudioStream = decode(bytes, extension)
-	if stream == null: return {"ok":false,"message":"재생할 수 없는 오디오 파일입니다."}
+	if stream == null: return {"ok":false,"message":BmkCopy.text("FILE_UNPLAYABLE")}
 	var saved: bool = false
 	var copy: FileAccess = FileAccess.open(BOSS_COPY, FileAccess.WRITE)
 	if copy != null:

@@ -33,7 +33,7 @@ const MOBILE_FULLSCREEN = (() => {
     document.body.classList.toggle('is-fullscreen', on);
     for (const button of document.querySelectorAll('.fs-toggle')) {
       button.hidden = !show;
-      button.textContent = on ? '전체화면 끄기' : '⛶ 전체화면';
+      if (typeof TitleMenu !== 'undefined') button.textContent = TitleMenu.text(on ? 'FULL_OFF' : 'FULL_ON');
       button.setAttribute('aria-pressed', String(on));
     }
   }
@@ -60,7 +60,7 @@ const MOBILE_FULLSCREEN = (() => {
   }, { passive: false });
   document.addEventListener('gesturestart', e => e.preventDefault()); // iOS 핀치 확대
 
-  for (const type of ['fullscreenchange', 'webkitfullscreenchange']) document.addEventListener(type, sync);
+  for (const type of ['fullscreenchange', 'webkitfullscreenchange', 'bmk-language-change']) document.addEventListener(type, sync);
   coarse.addEventListener?.('change', sync);
   addEventListener('DOMContentLoaded', sync);
   sync();

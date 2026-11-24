@@ -54,6 +54,7 @@ func run() -> void:
 	game.preferences.storage_path = "res://phase4/render_test_settings.json"
 	game.preferences.custom_bindings.clear()
 	game.preferences.use_preset("arcade")
+	game.preferences.menu_language = "ko"   # English is the default; these checks read the Korean copy
 	game.apply_preferences()
 	game.save_store.write_json(game.save_store.checkpoint_path,null)
 	game.save_store.write_json(game.save_store.records_path,{"bestScore":0,"stages":[]})

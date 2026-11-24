@@ -137,8 +137,8 @@ const GamePerf = (() => {
       panel ||= document.getElementById('performanceStats');
       const s = snapshot();
       panel.textContent = ['pause','settings','tutorial','clear','over','ending'].includes(scene)
-        ? `대기 중 · 화면 갱신 중지 · ${cv.width}×${cv.height}`
-        : `${s.fps} FPS · 프레임 p95 ${s.p95}ms · 연산 ${s.update}ms · 그리기 ${s.render}ms · ${cv.width}×${cv.height}`;
+        ? TitleMenu.text('PERF_IDLE', cv.width, cv.height)
+        : TitleMenu.text('PERF_STATS', s.fps, s.p95, s.update, s.render, cv.width, cv.height);
     }
   }
   function snapshot() {

@@ -77,6 +77,7 @@ func run() -> void:
 	game.preferences.storage_path = SETTINGS
 	game.preferences.use_preset("arcade")
 	game.preferences.touch = false
+	game.preferences.menu_language = "ko"   # English is the default; these checks read the Korean copy
 	game.apply_preferences()
 	game.save_store.write_json(RECORDS,{"bestScore":0,"stages":[{"rank":"A","seconds":100}]})
 	await process_frame
@@ -88,12 +89,12 @@ func run() -> void:
 	kill(4321)
 	check(s.continue_pending and not s.game_over,"Story: the last life asks CONTINUE? instead of game over")
 	check(game.menu.visible and game.menu.mode == "continue" and game.clock.paused,"CONTINUE? is shown over the frozen run")
-	check(game.menu.title.text == "CONTINUE?  10","The countdown starts at 10")
+	check(game.menu.title.text == BmkCopy.text("CONTINUE_COUNT") % 10,"The countdown starts at 10")
 	var frozen: int = s.tick
 	tick(30)
 	check(s.tick == frozen,"The run does not advance while asking")
 	countdown(120)
-	check(game.menu.title.text == "CONTINUE?  8","2 s later it shows 8")
+	check(game.menu.title.text == BmkCopy.text("CONTINUE_COUNT") % 8,"2 s later it shows 8")
 	await capture("continue_prompt")
 	var cam: float = s.cam_x
 	await key(KEY_ENTER)
@@ -114,7 +115,7 @@ func run() -> void:
 	check(game.menu.mode == "over" and s.game_over and not s.continue_pending,"At 10 s: GAME OVER")
 	var log: Array = s.take_audio()
 	check(log.has(["stop",0.3]) and log.has(["sfx","defeat",0]),"Game over stops the music and plays defeat")
-	check(game.menu.title.text == "GAME OVER" and game.menu.message.text == "STAGE 1 도살자들의 거리 — 점수 0","GAME OVER names the stage and the score after the continue")
+	check(game.menu.title.text == "게임 오버" and game.menu.message.text == "스테이지 1 도살자들의 거리 — 점수 0","GAME OVER names the stage and the score after the continue")
 	await capture("continue_game_over")
 	tick(5)
 	check(game.menu.mode == "over","GAME OVER stays until chosen")
@@ -158,7 +159,7 @@ func run() -> void:
 	check(p.lives == 3 and p.hp == p.max_hp and p.max_hp == 80 and p.score == 0,"Viesa continues with her 80 HP")
 	kill()
 	await key(KEY_ESCAPE)
-	check(game.menu.message.text == "STAGE 2 까마귀 마녀의 성역 — 점수 0","Stage 2 GAME OVER text")
+	check(game.menu.message.text == "스테이지 2 까마귀 마녀의 성역 — 점수 0","Stage 2 GAME OVER text")
 
 	# ---- Boss challenge: no continue
 	game.menu.challenge_stage = 0

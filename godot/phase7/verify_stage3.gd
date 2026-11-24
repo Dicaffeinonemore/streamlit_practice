@@ -52,6 +52,7 @@ func run() -> void:
 	game.save_store.records_path = "res://phase7/stage3_test_records.json"
 	game.preferences.storage_path = "res://phase7/stage3_test_settings.json"
 	game.preferences.use_preset("arcade")
+	game.preferences.menu_language = "ko"   # English is the default; these checks read the Korean copy
 	game.apply_preferences()
 	game.save_store.write_json(game.save_store.checkpoint_path,null)
 	game.save_store.write_json(game.save_store.records_path,{"bestScore":0,"stages":[]})
@@ -130,8 +131,6 @@ func run() -> void:
 	var records: Array = game.save_store.records()["stages"]
 	check(records.size() > 2 and records[2] != null,"Stage 3 record unlocks its challenge")
 	game.menu.show_title()
-	await process_frame
-	await click_button(game.menu.title_image.caption("Options"))
 	await process_frame
 	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 3 / 황금왕 아우렐리온")

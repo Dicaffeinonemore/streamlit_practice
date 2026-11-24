@@ -10,13 +10,12 @@ signal edit_finished
 const NO_POINTER: int = -999999
 const MOUSE_POINTER: int = -1000
 const SKILL_KEYS: Dictionary = {"KeyU":"thrust","KeyH":"slam","KeyO":"whirl","KeyP":"leap","KeyL":"redwave"}
-## [code, kind, x, y, s, label] in DOM order (later ones are on top).
+## [code, kind, x, y, s] in DOM order (later ones are on top).
 const BUTTONS: Array = [
-	["KeyJ","attack",1.0,1.0,1.6,"공격"],["Space","jump",2.87,0.67,1.15,"점프"],["ShiftLeft","dash",2.68,1.89,0.9,"대시"],
-	["KeyI","magic",1.95,2.65,0.9,"뇌격"],["KeyK","special",0.93,2.90,0.9,"필살기 흑월참"],
-	["KeyU","skill",1.42,4.02,0.9,"견제 찌르기"],["KeyH","skill",2.57,3.61,0.9,"내려찍기"],["KeyO","skill",3.47,2.79,0.9,"회전 베기"],
-	["KeyP","skill",3.97,1.69,0.9,"점프 강하"],["KeyL","skill",4.00,0.47,0.9,"붉은 파동"]]
-const VIESA_LABELS: Dictionary = {"KeyJ":"화살 / 공중 체공 사격","KeyH":"근접 콤보","KeyU":"화살 연사","KeyL":"모아 쏘기 (유지: 최대 3단)","KeyO":"대시 → 지상 백플립","KeyP":"대시 → 공중 백플립","KeyK":"필살기 흑월 난사"}
+	["KeyJ","attack",1.0,1.0,1.6],["Space","jump",2.87,0.67,1.15],["ShiftLeft","dash",2.68,1.89,0.9],
+	["KeyI","magic",1.95,2.65,0.9],["KeyK","special",0.93,2.90,0.9],
+	["KeyU","skill",1.42,4.02,0.9],["KeyH","skill",2.57,3.61,0.9],["KeyO","skill",3.47,2.79,0.9],
+	["KeyP","skill",3.97,1.69,0.9],["KeyL","skill",4.00,0.47,0.9]]
 const ICON_EFFECTS: Dictionary = {"thrust":"slash","slam":"impact","whirl":"moon","leap":"lightning","redwave":"wave"}
 const SKILL_SYMBOLS: String = "assets/runtime/d878bfe05a598bfba82323c9.png"
 const MOON: PackedFloat32Array = [15.5,2.5,14.04,2.31,12.57,2.35,11.12,2.61,9.74,3.1,8.44,3.79,7.26,4.68,6.24,5.73,5.39,6.93,4.74,8.25,4.3,9.65,4.08,11.11,4.08,12.58,4.32,14.03,4.77,15.43,5.44,16.74,6.3,17.93,7.33,18.98,8.52,19.85,9.82,20.53,11.21,21.01,12.66,21.26,14.13,21.28,15.59,21.08,17.0,20.65,18.32,20.01,19.53,19.18,20.6,18.16,21.5,17.0,20.03,17.45,18.5,17.6,16.97,17.44,15.49,17.0,14.14,16.27,12.95,15.3,11.97,14.11,11.25,12.75,10.8,11.28,10.65,9.75,10.81,8.22,11.25,6.74,11.98,5.39,12.95,4.2,14.14,3.22]
@@ -38,6 +37,7 @@ var test_insets: Dictionary = {}
 var edit_bar: PanelContainer
 var edit_name: Label
 var edit_hide: Button
+var edit_captions: Dictionary[Button, String] = {}
 var edit_need: Array[Button] = []
 var font: Font
 var icons: Dictionary = {}
@@ -73,9 +73,10 @@ func build_edit_bar() -> void:
 	edit_name.add_theme_font_override("font",font)
 	edit_name.add_theme_font_size_override("font_size",13)
 	row.add_child(edit_name)
-	for spec: Array in [["smaller","−",true],["bigger","+",true],["hide","숨기기",true],["reset","원위치",true],["resetAll","전체 원위치",false],["done","완료",false]]:
+	for spec: Array in [["smaller","−",true],["bigger","+",true],["hide","TOUCH_HIDE",true],["reset","TOUCH_RESET",true],["resetAll","TOUCH_RESET_ALL",false],["done","TOUCH_DONE",false]]:
 		var button: Button = Button.new()
-		button.text = str(spec[1])
+		if str(spec[1]).begins_with("TOUCH_"): edit_captions[button] = spec[1]
+		else: button.text = spec[1]
 		button.custom_minimum_size = Vector2(40,38)
 		button.add_theme_font_override("font",font)
 		button.add_theme_font_size_override("font_size",14)
@@ -187,9 +188,10 @@ func controls() -> Array[String]:
 	return list
 
 func label(id: String) -> String:
-	if id == "stick": return "이동 레버"
-	if viesa() and VIESA_LABELS.has(id): return VIESA_LABELS[id]
-	return str(spec(id)[5])
+	if id == "stick": return BmkCopy.text("TOUCH_STICK")
+	if viesa() and id in BmkKeyNames.SHORT_VIESA: return BmkCopy.text("ARCHER_" + id)
+	if id == "KeyK": return BmkCopy.text("DEMO_barel_11_TITLE")
+	return BmkCopy.text("ACTION_" + id)
 
 ## Topmost control under a point (edit mode also hits hidden ones and the selection first).
 func hit_test(at: Vector2) -> String:
@@ -322,6 +324,7 @@ func reset_stick(release_keys: bool) -> void:
 
 # ------------------------------------------------------------------ layout editor
 func start_edit() -> void:
+	for button: Button in edit_captions: button.text = BmkCopy.text(edit_captions[button])
 	editing = true
 	selected = ""
 	drag = {}
@@ -392,8 +395,8 @@ func edit_action(action: String) -> void:
 	keep_on_screen(selected)
 
 func refresh_edit_bar() -> void:
-	edit_name.text = label(selected) if not selected.is_empty() else "키를 끌어서 옮기세요"
-	edit_hide.text = "보이기" if not selected.is_empty() and bool(item(selected)["hide"]) else "숨기기"
+	edit_name.text = label(selected) if not selected.is_empty() else BmkCopy.text("TOUCH_DRAG")
+	edit_hide.text = BmkCopy.text("TOUCH_SHOW") if not selected.is_empty() and bool(item(selected)["hide"]) else BmkCopy.text("TOUCH_HIDE")
 	for button: Button in edit_need: button.disabled = selected.is_empty()
 
 func layout_edit_bar() -> void:

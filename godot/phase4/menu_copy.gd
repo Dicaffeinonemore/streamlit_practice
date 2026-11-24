@@ -1,3 +1,4 @@
+class_name BmkCopy
 extends RefCounted
 
 const CATALOGS := {
@@ -5,7 +6,12 @@ const CATALOGS := {
 	"ko": preload("res://phase4/title_art/menu.ko.translation")
 }
 
-# The current web pause and binding screens use Korean; the title has its own language setting.
-static func text(key: String, language: String = "ko") -> String:
-	var catalog: Translation = CATALOGS.get(language, CATALOGS["ko"])
+static var locale: String = "en"
+
+static func set_language(language: String) -> void:
+	locale = language if CATALOGS.has(language) else "en"
+	TranslationServer.set_locale(locale)
+
+static func text(key: String, language: String = "") -> String:
+	var catalog: Translation = CATALOGS.get(language if not language.is_empty() else locale, CATALOGS["en"])
 	return catalog.get_message(key)

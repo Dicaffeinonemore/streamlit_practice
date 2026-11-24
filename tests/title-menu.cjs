@@ -19,16 +19,39 @@ module.exports = async ({ evaluate, call, errors, root }) => {
         return Math.round((r.top + r.height / 2 - image.top) / image.height * 941);
       });
     })()`);
-    assert.deepEqual(centers, [394, 460, 521, 582, 642]);
+    assert.deepEqual(centers, [394, 460, 521, 582, 642, 703]);
     const shot = await call('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(output, 'web-' + width + '.png'), Buffer.from(shot.data, 'base64'));
   }
   assert.equal(await evaluate("$('btnContinue').disabled"), true);
+  assert.deepEqual(await evaluate("Array.from(document.querySelectorAll('.title-choice'), b => b.textContent)"),
+    ['New Game', 'Continue', 'Boss Challenge', 'Options', 'Credits', 'Exit']);
+  await key('ArrowDown', 40);
+  await key('Enter', 13);
+  assert.equal(await evaluate('scene'), 'challenge');
+  assert.equal(await evaluate("document.querySelectorAll('#challengeList button:disabled').length"), 5);
+  await key('Escape', 27);
+  await key('ArrowDown', 40);
   await key('ArrowDown', 40);
   await key('Enter', 13);
   assert.equal(await evaluate('scene'), 'settings');
-  await evaluate("$('menuLanguage').value = 'ko'; $('menuLanguage').onchange(); $('btnSettingsBack').click()");
+  assert.equal(await evaluate("$('musicVolume').getAttribute('aria-label')"), 'Music volume');
+  assert.match(await evaluate("$('settingsKeyboard').getAttribute('aria-label')"), /^Keyboard layout: /);
+  assert.match(await evaluate("$('recordSummary').textContent"), /first record/);
+  await evaluate("$('menuLanguage').value = 'ko'; $('menuLanguage').onchange()");
+  assert.equal(await evaluate("document.documentElement.lang"), 'ko');
+  assert.equal(await evaluate("$('musicVolume').getAttribute('aria-label')"), '음악 음량');
+  assert.match(await evaluate("$('presetDesc').textContent"), /방향키/);
+  assert.equal(await evaluate("UX.menuLanguage()"), 'ko');
+  await evaluate("$('btnSettingsBack').click()");
   assert.equal(await evaluate("$('btnStart').textContent"), '새 게임');
+  await evaluate("UX.record(0, 500, 'A', 60); $('btnBossChallenge').click()");
+  assert.equal(await evaluate("document.querySelectorAll('#challengeList button:enabled').length"), 1);
+  await evaluate("$('challengeList').firstElementChild.click()");
+  assert.equal(await evaluate('scene'), 'characterSelect');
+  await evaluate("$('characterViesa').click(); $('btnCharacterConfirm').click()");
+  assert.equal(await evaluate("bossChallenge && player.characterId === 'viesa'"), true);
+  await evaluate("toTitle()");
   await evaluate("$('btnCredits').click()");
   assert.equal(await evaluate("$('titleInfoHeading').textContent"), '제작진');
   await key('Escape', 27);
@@ -39,5 +62,5 @@ module.exports = async ({ evaluate, call, errors, root }) => {
   await evaluate("$('btnContinue').click()");
   assert.ok(['play', 'intro'].includes(await evaluate('scene')));
   assert.deepEqual(errors, []);
-  console.log('PASS title positions at three sizes, keyboard, language, credits, exit and saved Continue');
+  console.log('PASS six title choices at three sizes, keyboard, localized settings, locked and unlocked challenges, credits, exit and saved Continue');
 };

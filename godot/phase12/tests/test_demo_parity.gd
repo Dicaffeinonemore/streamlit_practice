@@ -56,7 +56,9 @@ func test_demo_steps_match_source() -> void:
 		var actual: Array = BmkDemoSteps.STEPS[character]
 		assert_eq(actual.size(),expected.size(),"%s step count" % character)
 		for i: int in range(expected.size()):
-			compare_value(actual[i],expected[i],"%s step %d" % [character,i])
+			var step: Dictionary = actual[i].duplicate()
+			for field: String in ["title","desc"]: step[field] = BmkCopy.text(step[field],"ko")
+			compare_value(step,expected[i],"%s step %d" % [character,i])
 	assert_eq(BmkDemoSteps.MAX_MS,float(fixture["meta"]["maxMs"]),"DEMO_MAX_MS")
 	assert_eq(mismatch_count,0,"DEMO_STEPS equal the source")
 

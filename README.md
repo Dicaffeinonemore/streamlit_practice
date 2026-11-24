@@ -1,6 +1,8 @@
 # Lunatic Nights
 
-웹과 Godot은 메인 메뉴의 [번역 CSV](godot/phase4/title_art/menu.csv)를 공유합니다. 기본 언어는 영어이며 **Options → Main menu language**에서 한국어를 선택할 수 있습니다.
+웹과 Godot의 기본 언어는 영어입니다. **Options → Language**에서 한국어로 바꿀 수 있으며 다음 실행에도 선택이 유지됩니다. 메인 메뉴의 **Boss Challenge**를 열면 본편에서 클리어한 보스에 다시 도전할 수 있습니다.
+
+게임 문구는 [공용 번역 CSV](godot/phase4/title_art/menu.csv)의 `keys,en,ko` 열에서 관리합니다. 번역을 수정할 때 키와 자리표시자(`%s` 등)를 유지하세요. Godot은 CSV를 가져올 때 언어별 번역 리소스를 갱신합니다.
 
 ## 모바일 화면 실험실
 
