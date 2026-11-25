@@ -34,8 +34,6 @@ HUD_UI.onload = () => {
   });
   const [lx, ly, lw, lh] = HUD_LAYOUT.bossLowStrip;
   hudUI.bossLow = uiCrop(HUD_UI, lx, ly, lw, lh);
-  const [px, py, pw, ph] = HUD_LAYOUT.pause;
-  document.getElementById('playPause').style.setProperty('background-image', `url("${uiCrop(HUD_UI, px, py, pw, ph).toDataURL()}")`, 'important');
   hudUI.ready = true;
 };
 loadUIImage(HUD_UI, HUD_UI_SOURCE);
@@ -64,7 +62,14 @@ function hudBar([x, y, w, h], [sx, sy, sw, sh], ratio, lag, lagColor) {
   ctx.restore();
 }
 
+function spGaugeShine(x,y,w,h) {
+  if (player?.sp < SP_MAX || !player) return;
+  ctx.fillStyle = Math.floor(tick / 8) % 2 ? '#8fd0ff88' : '#3e8fe855';
+  ctx.fillRect(x,y,w,Math.max(1,Math.round(h / 4)));
+}
+
 function drawPixelHUD(p) {
+  if (drawCompactPlayer(p)) return true;
   if (isViesa(p) && drawViesaUI(p)) return true;
   if (!hudUI.ready) return false;
   const L = HUD_LAYOUT;
@@ -123,6 +128,7 @@ function enemyHUDPortrait(e) {
   return portrait;
 }
 function drawPixelEnemyBar(e) {
+  if (drawCompactEnemy(e)) return true;
   if (!ENEMY_UI.complete || !ENEMY_UI.naturalWidth) return false;
   const portrait = enemyHUDPortrait(e);
   if (!portrait) return false;
@@ -154,23 +160,54 @@ function drawPixelEnemyBar(e) {
 
 // The boss frame's face. The remade Gorath (boss1) is cut from its own idle frame; the other
 // bosses use their existing portraits.
-let gorathHUDFace = null;
+const phaseHUDFaces = new Map();
+function hudFaceCrop(key,im,frame,cut) {
+  if (phaseHUDFaces.has(key)) return phaseHUDFaces.get(key);
+  if (!im?.naturalWidth || !frame) return null;
+  const [x,y,w,h] = frame.atlas, [dx,dy,side] = cut(w,h,frame);
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 36;
+  const c = canvas.getContext('2d');
+  c.imageSmoothingEnabled = false;
+  c.drawImage(im,x+dx,y+dy,side,side,0,0,36,36);
+  phaseHUDFaces.set(key,canvas);
+  return canvas;
+}
 function hudBossFace(boss) {
-  if (boss.type === 'boss1' && typeof G2A !== 'undefined') {
-    if (gorathHUDFace) return gorathHUDFace;
-    const f = G2A.clips.p1_idle?.frames[0], im = f && G2_IMG[f.p];
-    if (im?.naturalWidth) {
-      const [x, y, w] = f.atlas, s = w * .4, c = document.createElement('canvas');
-      c.width = c.height = 128; c.hd = true;
-      const g = c.getContext('2d'); g.imageSmoothingQuality = 'high';
-      g.drawImage(im, x + w * .56 - s / 2, y - w * .01, s, s, 0, 0, 128, 128);
-      return (gorathHUDFace = c);
+  let face;
+  if (boss.type === 'boss1' && boss.g2) {
+    const phase = boss.g2?.phase >= 2 ? 'p2_idle' : 'p1_idle';
+    const f = G2A.clips[phase]?.frames[0];
+    face = hudFaceCrop(phase,f && G2_IMG[f.p],f,(w,h) => [w*.36,0,Math.min(w*.4,h)]);
+  } else if (boss.p2shown) {
+    switch (boss.type) {
+      case 'boss2': {
+        const f = MORGRA_ART.clips.p2_idle[0];
+        face = hudFaceCrop('morgra2',MORGRA_ATLAS,f,(w,h) => {const s=Math.min(w*.7,h*.55);return [(w-s)/2,0,s];});
+        break;
+      }
+      case 'boss3': {
+        const f = AURELION_ART.clips.awaken.at(-1);
+        face = hudFaceCrop('aurelion2',AURELION_SHEETS[f.sheet],f,(w,h) => {const s=Math.min(w*.65,h*.35);return [(w-s)/2,h*.03,s];});
+        break;
+      }
+      case 'boss4': {
+        const f = VARGUL_ART.clips.p2_idle[0];
+        face = hudFaceCrop('vargul2',VARGUL_SHEETS[f.sheet],f,(w,h) => [w*.2,h*.13,Math.min(w*.65,h*.38)]);
+        break;
+      }
+      case 'boss5': {
+        const f = SOV_A.clips.idle_p2[0];
+        face = hudFaceCrop('sovereign2',SOV_SHEETS[f.sheet],f,(w,h) => [f.anchor[0]-h*.126,h*.03,h*.3]);
+        break;
+      }
     }
   }
-  return portrait(boss.d.sprite);
+  return face || portrait(boss.d.sprite);
 }
 // Boss bar (bottom of the HUD design): portrait, gold name on the plate, green over red.
 function drawPixelBossBar(boss, hud) {
+  if (drawCompactBoss(boss, hud)) return true;
   if (!hudUI.ready) return false;
   const L = HUD_LAYOUT, [bx, by, bw, bh] = L.boss;
   ctx.save(); ctx.scale(W / 1672, W / 1672);

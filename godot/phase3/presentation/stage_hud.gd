@@ -27,7 +27,9 @@ func _draw() -> void:
 		text(Vector2(755,47),"MAGIC %d   WAVE %d/%d" % [s.player.mg,mini(s.sections.event_index + 1,(s.sections.section["events"] as Array).size()),(s.sections.section["events"] as Array).size()],Color("bbb0b5"),12)
 	var boss_: BmkStageActor = s.gorath.boss(s)
 	if boss_ != null:
-		if game is BmkMenuGame: draw_source_boss(boss_, "", "GUARD" if boss_.g2.guard else ("II" if boss_.g2.phase >= 2 else ""), "gorath")
+		if game is BmkMenuGame:
+			var phase_two := boss_.g2.phase >= 2
+			draw_source_boss(boss_,"","GUARD" if boss_.g2.guard else "","gorath2" if phase_two else "gorath",phase_two)
 		else:
 			draw_rect(Rect2(168,425,624,47),Color(0.025,0.01,0.025,0.85))
 			text(Vector2(180,442),"GORATH / PHASE %d     HP %d / %d" % [boss_.g2.phase,boss_.hp,boss_.max_hp],Color("f6ccaf"),14)
@@ -41,7 +43,8 @@ func _draw() -> void:
 		if s.boss_title > 0: text(Vector2(315,160),"RAIN OF THE SLAUGHTERHOUSE",Color("ffbcaa"),19)
 	elif s is BmkWaveSimulation and wave_boss(s as BmkWaveSimulation) != null and s.mode != "bossintro" and wave_boss(s as BmkWaveSimulation).st != "intro":
 		var legacy: BmkLegacyActor = wave_boss(s as BmkWaveSimulation)
-		draw_source_boss(legacy,str(legacy.stats.get("name","")),"II" if legacy.p2shown else "",legacy.type)
+		var kind := legacy.type + ("_p2" if legacy.p2shown else "")
+		draw_source_boss(legacy,str(legacy.stats.get("name","")),"",kind,legacy.p2shown)
 	elif game is BmkMenuGame:
 		for actor: BmkActorState in s.enemies:
 			if actor.id == s.last_hit_id and actor.st != "dead":
@@ -121,15 +124,23 @@ func outlined(at: Vector2, value: String, size_: int, color: Color, alpha: float
 	draw_string(which,at,value,HORIZONTAL_ALIGNMENT_CENTER,960,size_,color)
 
 ## Boss bar of the HUD design (pixel-ui.js drawPixelBossBar). kind picks the frame portrait.
-func draw_source_boss(boss_: BmkStageActor, label: String = "", tag: String = "", kind: String = "gorath") -> void:
+func draw_source_boss(boss_: BmkStageActor, label: String, tag: String, kind: String, phase_two: bool) -> void:
 	var id: int = boss_.get_instance_id()
 	var lag: float = float(boss_lag.get(id, boss_.hp))
 	if lag < boss_.hp: lag = boss_.hp
 	elif not game.clock.paused: lag = maxf(boss_.hp, lag - boss_.max_hp * 0.008)
 	boss_lag[id] = lag
-	BmkHudDesign.draw_boss(self, kind, label if not label.is_empty() else "도살자 고라스", boss_.hp / boss_.max_hp, lag / boss_.max_hp, boss_.gr / boss_.gr_max if boss_.gr_max > 0 else 0.0, tag)
+	var groggy := boss_.gr / boss_.gr_max if boss_.gr_max > 0 else 0.0
+	BmkHudDesign.draw_boss(self,kind,label if not label.is_empty() else "도살자 고라스",
+		boss_.hp / boss_.max_hp,lag / boss_.max_hp,groggy,tag,phase_two)
 
 func draw_source_enemy(actor: BmkActorState) -> void:
+	var at := Vector2(780,18)
+	BmkHudDesign.compact_image(self,"enemy_name_plate",at,true)
+	BmkHudDesign.compact_image(self,"enemy_health_frame",at + Vector2(72,1),true)
+	BmkHudDesign.compact_fill(self,"enemy_health_fill",at + Vector2(78,5),actor.hp / actor.max_hp,true)
+	BmkHudDesign.compact_text(self,str((actor as BmkLegacyActor).stats.get("name","")) if actor is BmkLegacyActor else actor.species.to_upper(),at + Vector2(5,10),62)
+	return
 	if enemy_atlas == null: enemy_atlas = load("res://port_assets/images/enemy_ui_source__92e4bd2e3ff9.png") as Texture2D
 	var scale_: float = 290.0 / 1815.0
 	var origin: Vector2 = Vector2(662,56)

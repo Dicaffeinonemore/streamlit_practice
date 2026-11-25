@@ -56,6 +56,17 @@ def embed_boss_bgm(html: str) -> str:
 def build_single_html() -> str:
     """index.html 의 <script src=...> 를 실제 코드로 치환해 파일 하나짜리 HTML 로 만든다."""
     html = embed_boss_bgm((ROOT / "index.html").read_text(encoding="utf-8"))
+    # Compact HUD PNGs also need to work in the self-contained HTML export.
+    hud_dirs = ("assets/aseprite/ui/hud-v4", "assets/aseprite/ui/enemy-v3")
+    hud_images = {}
+    for folder in hud_dirs:
+        for image in (ROOT / folder).glob("*.png"):
+            if "preview" in image.stem:
+                continue
+            path = f"{folder}/{image.name}"
+            hud_images[path] = "data:image/png;base64," + base64.b64encode(image.read_bytes()).decode("ascii")
+    for path, data in hud_images.items():
+        html = html.replace(path, data)
     # The settings backdrop is CSS rather than a script asset; embed it for the
     # single-file export too, just as title-menu.js embeds the same image below.
     backdrop = "url('godot/phase4/title_art/menu.webp')"
@@ -75,6 +86,12 @@ def build_single_html() -> str:
                 "같은 버전으로 포함되어 있는지 확인하세요."
             )
         code = script.read_text(encoding="utf-8")
+        if name == "common-hud-v3.js":
+            for folder in hud_dirs:
+                values = {Path(path).stem: data for path, data in hud_images.items() if path.startswith(folder + "/")}
+                code = code.replace(f"`{folder}/${{name}}.png`", f"({json.dumps(values)})[name]")
+        for path, data in hud_images.items():
+            code = code.replace(path, data)
         # The standalone export remains self-contained; normal play uses cached files.
         def embed_image(asset: re.Match) -> str:
             image_path = ROOT / asset.group(0)

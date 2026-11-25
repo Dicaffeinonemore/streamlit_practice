@@ -503,6 +503,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     if(process.env.COMBAT_UPDATE_SUITE){await ready(base+'/embedded.html');await require('./combat-update.cjs')({evaluate,call,errors,root});return;}
     if(process.env.SOVEREIGN_CANNON_SUITE){await ready(base+'/index.html');await require('./sovereign-cannon.cjs')({evaluate,call,errors,root});return;}
     if(process.env.SOVEREIGN_MOTION_SUITE){await ready(base+'/embedded.html');await require('./sovereign-motion.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.COMPACT_HUD_SUITE){await ready(base+'/index.html');await require('./compact-hud-browser.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_INTRO_HUD_SUITE){await ready(base+'/embedded.html');await require('./boss-intro-hud.cjs')({evaluate,call,errors,root});return;}
     if(process.env.ENEMY_UI_SUITE){await ready(base+'/embedded.html');await require('./enemy-ui.cjs')({evaluate,call,errors,root});return;}
     if(process.env.MOBILE_SKILL_ICONS_SUITE){
@@ -551,7 +552,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       assert.deepEqual(errors,[]);console.log('PASS touch settings visibility, cleared inputs, editing exception and gameplay restoration');return;
     }
     if(process.env.MOBILE_LAB_SUITE){await require('./mobile-lab.cjs')({evaluate,call,errors,root,base});return;}
-    if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./pixel-ui.cjs')({evaluate,call,errors,root});return;}
+    if(process.env.PIXEL_UI_SUITE){await ready(base+'/embedded.html');await require('./compact-hud-browser.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_CHALLENGE_SUITE){await ready(base+'/embedded.html');await require('./boss-challenge.cjs')({evaluate,call,errors,root});return;}
     if(process.env.BOSS_GROGGY_SUITE){await ready(base+'/embedded.html');await require('./boss-groggy.cjs')({evaluate,call,errors,root});return;}
     if(process.env.VARGUL_ULTIMATE_SUITE){await ready(base+'/embedded.html');await require('./vargul-ultimate.cjs')({evaluate,call,errors,root});return;}

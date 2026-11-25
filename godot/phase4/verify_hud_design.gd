@@ -42,7 +42,7 @@ func run() -> void:
 	await shot("godot-hud.png")
 	check(not hud.boss_bar_visible(), "no boss bar outside a boss fight")
 	var pause_rect := Rect2(game.pause_button.position, game.pause_button.size)
-	check(pause_rect.position.distance_to(BmkHudDesign.PAUSE.position * BmkHudDesign.K) < 1 and (game.pause_button.texture_normal as AtlasTexture).region == BmkHudDesign.PAUSE, "pause button uses the design's art and place")
+	check(pause_rect == BmkHudDesign.PAUSE and (game.pause_button.texture_normal as AtlasTexture).atlas == BmkHudDesign.compact_texture("pause_frame"), "pause button uses the v4 sheet and position")
 	for i: int in range(5): game.save_store.record(i, 1000, "A", 100)
 	# Stage 1: Gorath (stage actor).
 	game.menu.challenge_stage = 0
@@ -57,6 +57,7 @@ func run() -> void:
 	s1.player.skill_cd[s1.data.skills[1].id] = 2600
 	await shot("godot-boss-gorath.png")
 	check(not BmkHudDesign.face("gorath").is_empty(), "Gorath has a portrait")
+	check(not BmkHudDesign.face("gorath2").is_empty() and BmkHudDesign.face("gorath")[0] != BmkHudDesign.face("gorath2")[0], "Gorath phase two has a distinct portrait")
 	# Stage 4: Vargul (wave boss).
 	game.menu.challenge_stage = 3
 	game.start_challenge()

@@ -256,30 +256,6 @@
   #barelChallengePreview { width: 100%; height: auto; image-rendering: pixelated; }
   #challengeList .challenge-boss { margin: 0; padding: 12px; font-size: clamp(12px,1.6cqw,18px); text-align: left; }
   #challengeList .challenge-boss:disabled { opacity: .45; cursor: default; transform: none; }
-  /* Supplied gold pixel atlas. Keep live key labels and cooldown overlays. */
-  #skillbar { left: 25.5%; top: 25.5%; bottom: auto; transform: none; padding: 0; gap: 0; border: 0; background: none; border-radius: 0; }
-  #skillbar .skillbtn { width: 3cqw; height: auto; aspect-ratio: 140 / 243; min-width: 0; min-height: 0; max-width: none; max-height: none; margin: 0 -.17cqw 0 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background-color: transparent; background-size: 100% 100%; image-rendering: pixelated; overflow: visible; }
-  #skillbar .skillbtn .skill-icon { display: none; }
-  body:not(.viesa-player) #skillbar .skillbtn:is([data-skill="thrust"], [data-skill="redwave"]) .skill-icon { display: block; inset: 26% 15% 23% 16%; width: 69%; height: 51%; }
-  #skillbar .skillbtn .key { top: 29%; left: 22%; padding: 0; background: none; color: #ffda43; font-size: clamp(5px,.65cqw,10px); text-shadow: 2px 2px #000; }
-  #skillbar .skillbtn .cool { inset: 25% 14% 22% 16%; }
-  #skillbar .skillbtn::after { font-size: clamp(6px,1cqw,14px); inset: 25% 14% 22% 16%; }
-  #skillbar .skillbtn:disabled { filter: brightness(.65); }
-  #skillbar .skillbtn.ready:hover { filter: brightness(1.2); }
-  #playPause, body.touch #playPause { top: 2.232%; right: 1.914%; width: 6.938%; height: 12.221%; padding: 0; margin: 0; border: 0; border-radius: 0; background-color: transparent !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; box-shadow: none; color: transparent; font-size: 0; image-rendering: pixelated; }
-  body.viesa-player #skillbar { left: 25.5%; top: 27%; }
-  body.viesa-player #skillbar .skillbtn { width: 4.2cqw; aspect-ratio: 148 / 260; background-image: var(--viesa-icon) !important; image-rendering: auto; }
-  body.viesa-player #skillbar .skillbtn .key { top: 28%; left: 25%; font-size: clamp(5px,.7cqw,10px); }
-  body.viesa-player #skillbar .skillbtn .cool, body.viesa-player #skillbar .skillbtn::after { inset: 26% 8% 27% 12%; }
-  /* Barel HUD design: the canvas draws the five skill icons under the bars; these buttons sit
-     exactly over them (live key labels, cooldown sweep, clicks). Viesa keeps her own icon tiles. */
-  body:not(.viesa-player) #skillbar { left: 2.2727%; top: 19.128%; }
-  body:not(.viesa-player) #skillbar .skillbtn { width: 5.2153cqw; aspect-ratio: 87.2 / 114; margin: 0; background: none !important; filter: none; }
-  body:not(.viesa-player) #skillbar .skillbtn .skill-icon { display: none !important; }
-  body:not(.viesa-player) #skillbar .skillbtn .key { top: 20%; left: 16%; font-size: clamp(5px,.75cqw,11px); }
-  body:not(.viesa-player) #skillbar .skillbtn .cool, body:not(.viesa-player) #skillbar .skillbtn::after { inset: 21% 15% 21% 15%; }
-  body:not(.viesa-player) #skillbar .skillbtn:disabled::before { content: ''; position: absolute; inset: 21% 15% 21% 15%; background: rgba(0,0,0,.35); pointer-events: none; }
-  body:not(.viesa-player) #skillbar .skillbtn.ready:hover { filter: brightness(1.25); background: radial-gradient(circle, #8fd0ff33, transparent 65%) !important; }
   /* Character selection: two permanent slots, including upcoming heroes. */
   #characterSelect { padding: clamp(14px,3cqw,36px); gap: 14px; background: radial-gradient(ellipse at 25% 55%,#541c2c66,transparent 55%),radial-gradient(ellipse at 85% 30%,#143d3c55,transparent 55%),#08070ded; }
   #characterSelect .selection-kicker { margin: 0; font-size: 11px; letter-spacing: .35em; color: #b99a7e; }
@@ -415,6 +391,26 @@
     #pause .pause-panel { --row-h: 30px; --row-gap: 5px; width: 40%; }
     #settings .settings-panel { --row-h: 28px; --row-gap: 4px; width: 50%; max-height: 92%; }
   }
+  /* HUD v4 paints the skill row on the canvas. These buttons cover its live hit areas. */
+  body #skillbar {
+    left: 4.375%; top: 13.333333%; bottom: auto; transform: none; gap: .3125cqw;
+    padding: 0; border: 0; background: none;
+  }
+  body #skillbar .skillbtn {
+    width: 2.708333cqw; min-width: 0; max-width: none; height: auto;
+    min-height: 0; max-height: none; aspect-ratio: 1; margin: 0; padding: 0;
+    border: 0; border-radius: 0; background: none; box-shadow: none;
+  }
+  body #skillbar .skillbtn > *, body #skillbar .skillbtn::after { visibility: hidden; }
+  #playPause, body.touch #playPause {
+    top: 2.222222%; right: 1.25%; width: 2.708333%; height: auto; aspect-ratio: 1;
+    padding: 0; margin: 0; border: 0; border-radius: 0; box-shadow: none;
+    background-color: transparent !important; background-repeat: no-repeat !important;
+    color: transparent; font-size: 0; image-rendering: pixelated;
+    background-image: url('assets/aseprite/ui/hud-v4/pause_frame.png') !important;
+    background-size: 200% 100% !important; background-position: left top;
+  }
+  #playPause:active, body.touch #playPause:active { background-position: right top; }
 </style>
 </head>
 <body>
@@ -708,6 +704,7 @@
 <script src="item-art.js"></script>
 <script src="item-runtime.js"></script>
 <script src="hud-ui-art.js"></script>
+<script src="common-hud-v3.js"></script>
 <script src="enemy-ui-art.js"></script>
 <script src="viesa-ui-art.js"></script>
 <script src="viesa-ui.js"></script>

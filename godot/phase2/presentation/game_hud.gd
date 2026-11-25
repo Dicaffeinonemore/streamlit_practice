@@ -13,7 +13,7 @@ func _ready() -> void:
 	korean_font = system_font
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# The HUD design is drawn at 960 / 1672 of its size; smooth it like the web canvas does.
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func text(at: Vector2, value: String, color: Color = Color.WHITE, size_value: int = 16) -> void:
 	draw_string(font,at,value,HORIZONTAL_ALIGNMENT_LEFT,-1,size_value,color)
@@ -108,16 +108,10 @@ func stage_number() -> int:
 	return 1
 
 func draw_source_hud(p: BmkActorState) -> void:
-	if p.is_viesa():
-		BmkViesaHud.draw_player(self,p)
-		return
 	# Player HUD design (pixel-ui.js drawPixelHUD).
 	if hp_lag < p.hp or hp_lag < 0: hp_lag = p.hp
 	elif not game.clock.paused: hp_lag = maxf(p.hp, hp_lag - 0.5)
 	BmkHudDesign.draw_player(self, p, stage_number(), hp_lag)
 
 func draw_source_skills(p: BmkActorState, s: BmkSimulation) -> void:
-	if p.is_viesa():
-		BmkViesaHud.draw_skills(self,p,s)
-		return
 	BmkHudDesign.draw_skills(self, p, s, font)

@@ -1,0 +1,206 @@
+{
+  "assets": {
+    "bar_track": {
+      "frames": 1,
+      "size": [144,4]
+    },
+    "boss_bar_frame": {
+      "center": [14,3,372,8],
+      "fill": [13,3,374,8],
+      "frames": 1,
+      "size": [400,14]
+    },
+    "boss_groggy_marker": {
+      "frames": 1,
+      "size": [3,12]
+    },
+    "boss_hp_fill": {
+      "frames": 1,
+      "size": [374,8]
+    },
+    "boss_lag_fill": {
+      "frames": 1,
+      "size": [374,8]
+    },
+    "boss_name_plate": {
+      "center": [11,4,135,8],
+      "frames": 1,
+      "size": [150,16],
+      "text": [12,3]
+    },
+    "boss_phase_pip": {
+      "frames": 2,
+      "size": [7,7],
+      "tags": {
+        "off": [1,1],
+        "on": [0,0]
+      }
+    },
+    "boss_portrait_frame": {
+      "frames": 1,
+      "inner": [4,4,36,36],
+      "size": [44,44]
+    },
+    "boss_track": {
+      "frames": 1,
+      "size": [374,8]
+    },
+    "buff_glow": {
+      "duration": 180,
+      "frames": 2,
+      "offset": [-4,-4],
+      "size": [52,52],
+      "tags": {
+        "pulse": [0,1]
+      }
+    },
+    "hp_fill": {
+      "frames": 1,
+      "size": [144,4]
+    },
+    "hp_lag_fill": {
+      "frames": 1,
+      "size": [144,4]
+    },
+    "hp_track": {
+      "frames": 1,
+      "size": [144,4]
+    },
+    "key_font": {
+      "chars": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+      "frames": 1,
+      "glyph_size": [5,5],
+      "pitch": 6,
+      "size": [216,5]
+    },
+    "life_icon": {
+      "frames": 1,
+      "size": [9,9]
+    },
+    "name_plate": {
+      "center": [4,4,142,8],
+      "frames": 1,
+      "size": [150,16],
+      "text": [7,4]
+    },
+    "pause_frame": {
+      "frames": 2,
+      "size": [26,26],
+      "tags": {
+        "normal": [0,0],
+        "pressed": [1,1]
+      }
+    },
+    "player_bar_frame": {
+      "center": [3,3,144,4],
+      "fill": [3,3,144,4],
+      "frames": 1,
+      "size": [150,10]
+    },
+    "player_panel": {
+      "frames": 1,
+      "size": [202,88]
+    },
+    "portrait_frame": {
+      "frames": 1,
+      "inner": [4,4,36,36],
+      "size": [44,44]
+    },
+    "score_plate": {
+      "center": [4,4,89,4],
+      "frames": 1,
+      "size": [97,12],
+      "text": [6,4]
+    },
+    "scroll_icon": {
+      "frames": 1,
+      "size": [12,14]
+    },
+    "scroll_icon_empty": {
+      "frames": 1,
+      "size": [12,14]
+    },
+    "scroll_slot": {
+      "frames": 1,
+      "inner": [2,2,12,14],
+      "size": [16,18]
+    },
+    "skill_cooldown_mask": {
+      "frames": 1,
+      "size": [20,20]
+    },
+    "skill_keycap": {
+      "frames": 1,
+      "glyph": [2,2],
+      "size": [9,8]
+    },
+    "skill_slot": {
+      "frames": 1,
+      "inner": [3,3,20,20],
+      "size": [26,26]
+    },
+    "sp_fill": {
+      "frames": 1,
+      "size": [144,4]
+    },
+    "sp_track": {
+      "frames": 1,
+      "size": [144,4]
+    }
+  },
+  "layout": {
+    "boss": {
+      "bar_fill": [317,506,374,8],
+      "bar_frame": [304,503,400,14],
+      "groggy_marker_y": 504,
+      "name_plate": [306,484,190,16],
+      "name_text": [318,489],
+      "phase_pips": [
+        [683,489],
+        [692,489]
+      ],
+      "phase_plate": [620,484,84,16],
+      "portrait": [262,484,36,36],
+      "portrait_frame": [258,480],
+      "tag_text": [628,489]
+    },
+    "pause": {
+      "pause_frame": [922,12]
+    },
+    "player": {
+      "buff_glow": [11,11],
+      "hp_fill": [63,32,144,4],
+      "hp_frame": [60,29,150,10],
+      "keycap_offset": [8,18],
+      "level_text_right": [208,58],
+      "life_icon": [182,16],
+      "lives_text": [193,18],
+      "name_plate": [60,13,150,16],
+      "name_text": [67,18],
+      "panel": [12,12,202,88],
+      "portrait": [19,19,36,36],
+      "portrait_frame": [15,15],
+      "score_plate": [113,54,97,12],
+      "score_text": [148,58],
+      "scroll_icon_offset": [2,2],
+      "scroll_slots": [
+        [60,51],
+        [77,51],
+        [94,51]
+      ],
+      "skill_icon_offset": [5,2],
+      "skill_slots": [
+        [42,72],
+        [71,72],
+        [100,72],
+        [129,72],
+        [158,72]
+      ],
+      "sp_fill": [63,43,144,4],
+      "sp_frame": [60,40,150,10]
+    }
+  },
+  "palette": ["ink","iron0","iron1","iron2","iron3","iron4","steel","gold0","gold1","gold2","blood0","blood1","blood2","blood3","blood4","soul0","soul1","soul2","soul3","parch0","parch1","bone","wine","navy"],
+  "screen": [960,540],
+  "version": 4
+}

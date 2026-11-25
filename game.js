@@ -9,7 +9,7 @@ const W = 960, H = 540;
 let RENDER_K = 1, renderRevision = 0;
 function fitCanvas() {
   const limit = UX.options.quality === 'high' && !UX.options.lowFx ? 2 : 1;
-  RENDER_K = clamp((cv.clientWidth || W) * (window.devicePixelRatio || 1) / W, 1, limit);
+  RENDER_K = clamp(Math.floor((cv.clientWidth || W) * (window.devicePixelRatio || 1) / W), 1, limit);
   cv.width = Math.round(W * RENDER_K); cv.height = Math.round(H * RENDER_K);
   renderRevision++;
 }

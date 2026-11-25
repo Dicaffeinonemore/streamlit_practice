@@ -106,3 +106,26 @@ node tests/reference-runtime.cjs
 - 기존 바렐 combo0와 6프레임의 보이는 픽셀 일치 확인. 기본 덮어쓰기 차단 전후 원본/출력/게임 코드 SHA-256 일치 확인.
 - 기존 참조 애니메이션/전투 테스트 통과. Git 변경 목록은 신규 파일만 포함.
 - 출력 PNG를 시각적으로 확인했다. 이 세션에는 사용 가능한 브라우저 자동화 연결이 없어 실제 브라우저의 Canvas 재생 확인은 수행하지 못했다.
+
+## 플레이어·보스 HUD v4
+
+위 설치 경로에서 찾은 실행 파일 또는 `ASEPRITE_PATH`를 사용한다. 프로젝트 루트에서 다음 명령을 실행하면
+최종 표시 크기의 원본과 PNG를 `assets/aseprite/ui/hud-v4/`에 생성한다. 같은 이름의 v4 자산이 있으면 새로 만들기
+전에 별도 폴더에 보관한다.
+
+```powershell
+$ase = $env:ASEPRITE_PATH
+if (!$ase) { $ase = (Get-Command Aseprite.exe -ErrorAction SilentlyContinue).Source }
+if (!$ase) { $ase = "${env:ProgramFiles(x86)}/Steam/steamapps/common/Aseprite/Aseprite.exe" }
+$out = (New-Item -ItemType Directory -Force 'assets/aseprite/ui/hud-v4').FullName
+& $ase --batch --script-param "output=$out" --script tools/create-hud-v4.lua | Out-Host
+foreach ($name in @('name_plate','player_bar_frame','score_plate','boss_name_plate','boss_bar_frame','boss_phase_pip','pause_frame','buff_glow')) {
+    & $ase --batch --list-slices --list-tags "$out/$name.aseprite" --sheet-type horizontal --format json-array --sheet "$out/$name.png" --data "$out/$name.json" | Out-Host
+}
+```
+
+9-slice는 각 JSON의 `meta.slices[].keys[].center`를 사용한다. 페이즈 표식과 일시정지 버튼은
+가로 시트로 내보내며 프레임은 각각 `off/on`, `normal/pressed` 태그로 선택한다.
+미리보기까지 다시 만들려면 생성 명령의 `--script` 앞에 `--script-param "stage=<960x540 캡처 경로>"`와
+`--script-param "art=<152x36 아트 스트립 경로>"`를 추가한다. 아트 스트립의 왼쪽부터 플레이어와 보스
+초상화가 각각 36×36이고, 그 뒤로 기존 스킬 그림 다섯 개가 각각 16×16으로 이어진다.

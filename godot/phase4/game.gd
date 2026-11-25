@@ -61,16 +61,14 @@ func _ready() -> void:
 	pause_layer.layer = 5
 	add_child(pause_layer)
 	pause_button = TextureButton.new()
-	var pause_art: AtlasTexture = AtlasTexture.new()
 	# The pause button of the HUD design (top right).
-	pause_art.atlas = BmkHudDesign.texture()
-	pause_art.region = BmkHudDesign.PAUSE
-	pause_button.texture_normal = pause_art
+	pause_button.texture_normal = BmkHudDesign.sheet_frame("pause_frame",0,BmkHudDesign.PAUSE.size)
+	pause_button.texture_pressed = BmkHudDesign.sheet_frame("pause_frame",1,BmkHudDesign.PAUSE.size)
 	pause_button.ignore_texture_size = true
 	pause_button.stretch_mode = TextureButton.STRETCH_SCALE
-	pause_button.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	pause_button.position = BmkHudDesign.PAUSE.position * BmkHudDesign.K
-	pause_button.size = BmkHudDesign.PAUSE.size * BmkHudDesign.K
+	pause_button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	pause_button.position = BmkHudDesign.PAUSE.position
+	pause_button.size = BmkHudDesign.PAUSE.size
 	pause_button.tooltip_text = "일시정지"
 	pause_button.visible = false
 	pause_button.pressed.connect(func() -> void:

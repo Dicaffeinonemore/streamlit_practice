@@ -1,14 +1,22 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
 
 config/name="Lunatic Nights"
+run/main_scene="res://phase4/game.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Godot/app_userdata/Black Moon Knight"
-config/custom_user_dir_name.linuxbsd="godot/app_userdata/Black Moon Knight"
-run/main_scene="res://phase4/game.tscn"
-config/features=PackedStringArray("4.7", "GL Compatibility")
 config/quit_on_go_back=false
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/custom_user_dir_name.linuxbsd="godot/app_userdata/Black Moon Knight"
 
 [display]
 
@@ -19,16 +27,6 @@ window/size/window_height_override=540
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 window/handheld/orientation=4
-
-[physics]
-
-common/physics_ticks_per_second=60
-
-[rendering]
-
-renderer/rendering_method="gl_compatibility"
-textures/canvas_textures/default_texture_filter=0
-environment/defaults/default_clear_color=Color(0.055, 0.045, 0.075, 1)
 
 [input]
 
@@ -102,3 +100,9 @@ bmk_KeyL={
 "events": Array[InputEvent]([Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ])
 }
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.055, 0.045, 0.075, 1)

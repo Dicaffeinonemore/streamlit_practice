@@ -12,14 +12,6 @@ VIESA_UI.onload = () => {
   const c=hud.getContext('2d');
   c.drawImage(atlas,0,80,1672,550,0,80,1672,550);
   c.drawImage(atlas,0,630,910,90,0,630,910,90);viesaUI.hud=hud;
-  // The five icons retain their vine frame; key labels are live remappable DOM text.
-  document.querySelectorAll('#skillbar .skillbtn').forEach((button,i)=>{
-    const tile=document.createElement('canvas');tile.width=148;tile.height=260;
-    const t=tile.getContext('2d');
-    t.drawImage(atlas,932+i*140,635,148,260,0,0,148,260);
-    t.fillStyle='#05111e';t.fillRect(20,66,45,37);
-    button.style.setProperty('--viesa-icon',`url("${tile.toDataURL()}")`);
-  });
   viesaUI.ready=true;
 };
 VIESA_UI.src=VIESA_UI_SOURCE;
