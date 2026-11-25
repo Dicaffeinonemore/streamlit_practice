@@ -299,13 +299,15 @@ function selectCharacter(id, focus = false) {
     button.setAttribute('aria-pressed', String(button.dataset.character === id));
     if (focus && button.dataset.character === id) button.focus();
   });
-  $('characterSelectionStatus').textContent = `${hero.name} · ${hero.job} — ${hero.description}`;
+  const tr = TitleMenu.localize;
+  $('btnCharacterBack').textContent = TitleMenu.text(characterSelectBossStage === null ? 'MENU_BACK' : 'PAUSE_BOSSES');
+  $('characterSelectionStatus').textContent = `${tr(hero.name)} · ${tr(hero.job)} — ${tr(hero.description)}`;
   const k = a => UX.keyName(UX.options.bindings[a]);
   $('characterSelectionKeys').textContent = id === 'viesa'
-    ? `${k('KeyJ')} 화살 · ${k('KeyH')} 근접 · 대시·달리기 중 근접: 대시 찌르기 · ${k('KeyU')} 연사 · ${k('KeyL')} 모아 쏘기 · ${k('KeyO')} 지상 백플립 · ${k('KeyP')} 공중 백플립 · ${k('KeyK')} 흑월 난사`
-    : `${k('KeyJ')} 3연타 · 대시·달리기 중 공격: 대시 찌르기 · ${k('KeyU')} 견제 찌르기 · ${k('KeyH')} 내려찍기 · ${k('KeyO')} 회전 베기 · ${k('KeyP')} 점프 강하 · ${k('KeyL')} 붉은 파동 · ${k('KeyK')} 흑월참 · ${k('KeyI')} 뇌격`;
+    ? TitleMenu.text('VIESA_CONTROLS', ...['KeyJ','KeyH','KeyU','KeyL','KeyO','KeyP','KeyK'].map(k))
+    : TitleMenu.text('BAREL_CONTROLS', ...['KeyJ','KeyU','KeyH','KeyO','KeyP','KeyL','KeyK','KeyI'].map(k));
   $('btnCharacterConfirm').disabled = !hero.available;
-  $('btnCharacterConfirm').textContent = hero.available ? `${hero.name}로 시작` : '곧 추가';
+  $('btnCharacterConfirm').textContent = hero.available ? TitleMenu.text('START_HERO', tr(hero.name)) : tr('곧 추가');
 }
 function drawCharacterPreview() {
   const preview=$('viesaSelectPortrait'), pc=preview.getContext('2d');
@@ -325,7 +327,6 @@ function drawCharacterPreview() {
 function openCharacterSelect(challengeStage = null) {
   characterSelectBossStage = Number.isInteger(challengeStage) ? challengeStage : null;
   clearInput();practice = false;scene = 'characterSelect';showScreen('characterSelect');
-  $('btnCharacterBack').textContent = characterSelectBossStage === null ? '타이틀로' : '보스 목록';
   selectCharacter('barel', true);drawCharacterPreview();sfx('click');
 }
 function confirmCharacter() {
@@ -371,7 +372,7 @@ function toTutorial(from = 'title') {
   syncPlayerCharacterUI(from==='pause'?player.characterId:selectedCharacterId);
   helpFrom = from; clearInput(); scene = 'tutorial'; showScreen('tutorial'); sfx('click');
   $('btnHelpBack').hidden = !['pause', 'characterSelect'].includes(from); $('btnPractice').hidden = from === 'pause'; $('btnGo').hidden = from === 'pause';
-  $('btnHelpBack').textContent = from === 'characterSelect' ? '캐릭터 선택' : '돌아가기';
+  $('btnHelpBack').textContent = TitleMenu.localize(from === 'characterSelect' ? '캐릭터 선택' : '돌아가기');
   document.querySelector('#tutorial .dialog-body').scrollTop = 0;
   demoStart(from);
 }
@@ -383,6 +384,7 @@ function beginGame(cinematic = false) {
   startStage(0);
 }
 function toTitle() { bossChallenge = false; clearInput(); practice = false; scene = 'title'; showScreen('title'); TitleMenu.reset(); AUDIO.silence(); AUDIO.pause(false); UX.refreshTitle(); }
+let pauseReason = 'ESC 또는 계속하기';
 function pauseGame(reason = 'ESC 또는 계속하기') {
   if (!['play', 'intro', 'bossintro'].includes(scene)) return;
   const label = reason === 'ESC 또는 계속하기' ? TitleMenu.text('PAUSE_REASON') : reason === '다른 창으로 이동해 게임을 멈췄습니다.' ? TitleMenu.text('PAUSE_BLUR') : '';
@@ -466,24 +468,34 @@ function updatePractice() {
   if (player.st === 'dash') practiceDone.add('dash');
   if (!enemies.length || enemies[0].st === 'dead') { enemies = [mkEnemy('grunt', clamp(player.x + 110, 100, 550), player.y)]; enemies[0].training = true; }
   const label = code => UX.keyName(UX.options.bindings[code]);
-  const steps = [['move', `이동: ${['KeyA','KeyD','KeyW','KeyS'].map(label).join(' ')} 또는 이동 버튼으로 허수아비에게 접근하세요`], ['attack', `공격: ${label('KeyJ')} / 공격 버튼으로 같은 줄의 적을 맞히세요`],
-    ['jump', `점프: ${label('Space')} / 점프 버튼을 누르세요`], ['dash', `회피: ${label('ShiftLeft')} / 방향키 두 번 · 대시·달리기 중 공격: 대시 찌르기`], ['skill', '기술: 찌르기·강타·회전·강하 중 하나를 명중시키세요']];
+  const steps = [
+    ['move', 'PRACTICE_MOVE', ['KeyA','KeyD','KeyW','KeyS'].map(label).join(' ')],
+    ['attack', 'PRACTICE_ATTACK', label('KeyJ')],
+    ['jump', 'PRACTICE_JUMP', label('Space')],
+    ['dash', 'PRACTICE_DASH', label('ShiftLeft')],
+    ['skill', 'PRACTICE_SKILL']
+  ];
   const next = steps.find(([id]) => !practiceDone.has(id));
-  $('practiceText').textContent = next ? `연습 ${practiceDone.size}/5 · ${next[1]}` : '연습 완료! 실전에서 공격 예고를 보고 피하세요.';
+  $('practiceText').textContent = next
+    ? TitleMenu.text('PRACTICE_PROGRESS', practiceDone.size, TitleMenu.text(next[1], next[2]))
+    : TitleMenu.text('PRACTICE_DONE');
 }
 
 function openBossChallenge() {
   clearInput(); practice = false; bossChallenge = false;
   AUDIO.silence(); AUDIO.pause(false);
+  renderChallengeList();
+  scene = 'challenge'; showScreen('challenge');
+  drawBarelIdlePreview($('barelChallengePreview'),tick*MS);
+}
+function renderChallengeList() {
   const records = UX.records(), list = $('challengeList'); list.replaceChildren();
   challengeNames.forEach((name, i) => {
     const unlocked = !!records.stages[i], button = document.createElement('button');
     button.className = 'btn challenge-boss'; button.disabled = !unlocked;
-    button.textContent = 'STAGE ' + (i + 1) + ' · ' + name + ' — ' + (unlocked ? '도전하기' : '미해금 · 본편 클리어 필요');
+    button.textContent = TitleMenu.text('CHALLENGE_ENTRY', stageLabel(i), TitleMenu.localize(name), TitleMenu.localize(unlocked ? '도전하기' : '미해금 · 본편 클리어 필요'));
     button.onclick = () => openCharacterSelect(i); list.appendChild(button);
   });
-  scene = 'challenge'; showScreen('challenge');
-  drawBarelIdlePreview($('barelChallengePreview'),tick*MS);
 }
 function beginBossChallenge(i) {
   if (!Number.isInteger(i) || !STAGES[i] || !UX.records().stages[i]) return;
@@ -629,10 +641,10 @@ function continueFight() {
   stat.continues = (stat.continues || 0) + 1;
   clearInput(); scene = 'play'; showScreen(null); last = performance.now(); acc = 0; sfx('click');
 }
+function stageLabel(index = stageIdx) { return TitleMenu.text('STAGE_NUMBER', index + 1); }
 function gameOver() {
-  const p = player;
   scene = 'over'; AUDIO.stop(0.3); sfx('defeat');
-  $('overInfo').textContent = `${stage.name} ${stage.title} — 점수 ${p.score}`;
+  renderResultText();
   showScreen('over');
 }
 function retryStage() {
@@ -660,7 +672,8 @@ function mkEnemy(type, x, y) {
     type==='boss5'?{...ET[type],name:'흑월의 군주, 소버린',en:'THE BLACK MOON SOVEREIGN',hp:SOVEREIGN_RULES.hp[0],h:SOVEREIGN_ART.bodyHeight,hw:SOVEREIGN_RULES.hw,pats:SOVEREIGN_RULES.names}:
     type==='boss3'?{...ET[type],hp:1800,h:240*AURELION_K,pats:Object.fromEntries(AURELION_ATTACKS.map(id=>[id,aurelionMoves[id].name]))}:ET[type];
   const faction = ['처형군', '까마귀 군단', '황금 왕실', '서리 망자', '심연 군단'][stageIdx];
-  const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), name: faction + ' ' + ({grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name) };
+  const unit = {grunt:'보병',rogue:'창병',archer:'궁병',brute:'중기사'}[type] || base.name;
+  const d = base.boss ? base : { ...base, hp: Math.round(base.hp*(1.2+stageIdx*.3)), dmg: Math.round(base.dmg*(1.1+stageIdx*.2)), spd: base.spd*(1+stageIdx*.05), faction, unit, name: faction + ' ' + unit };
   return { kind: 'enemy', id: nextId++, type, d, x, y, z: 0, vx: 0, vz: 0, face: -1, hw: d.hw, hp: d.hp, max: d.hp,
     st: 'chase', t: 0, wait: rand(0, 40), atkCd: rand(20, 60), pat: null, hitSet: null, inv: 0, flash: 0,
     boss: !!d.boss, nextKd: d.hp * 0.75, gr: 0, grMax: type==='boss2'?120:d.hp >= 500 ? 150 : 120, grT: 0, walk: false, recT: d.rec || 30, remove: false,
@@ -672,6 +685,10 @@ function mkEnemy(type, x, y) {
 function sparks(x, y, z, n = 7, col = '#fff6a8') {
   for (let i = 0; i < n; i++)
     parts.push({ x, y, z, vx: rand(-3, 3), vz: rand(1, 5), life: rand(14, 26), col });
+}
+function enemyDisplayName(enemy) {
+  const {name, faction, unit} = enemy.d;
+  return faction ? TitleMenu.text('ENEMY_UNIT', TitleMenu.localize(faction), TitleMenu.localize(unit)) : TitleMenu.localize(name);
 }
 function floatText(x, y, txt, col = '#fff', scale = 1) { texts.push({ x, y, txt, col, life: 50, scale }); }
 // 적중 이펙트(kind 0~2) / 도트 불꽃 / 잔상. 위치는 월드 좌표 (x, 깊이 y, 높이 z)
@@ -1867,32 +1884,37 @@ function rankOf(secs) {
 function tallyHtml() {
   const secs = Math.round(stat.ticks / 60), mm = Math.floor(secs / 60), ss = secs % 60, rk = rankOf(secs);
   const col = { S: '#ffe27a', A: '#9cf0a8', B: '#9cc3ff', C: '#c8c0e0' }[rk];
-  return `최대 연속 히트 <b>${chain.max}</b> · 시간 <b>${mm}:${String(ss).padStart(2, '0')}</b> · 남은 체력 <b>${Math.max(0, player.hp)}</b><br>` +
-    `누적 피해 <b>${stat.damage}</b> · 사망 <b>${stat.deaths}</b> · 랭크 <b style="color:${col};font-size:1.6em">${rk}</b>`;
+  const tr = TitleMenu.localize;
+  return `${tr('최대 연속 히트')} <b>${chain.max}</b> · ${tr('시간')} <b>${mm}:${String(ss).padStart(2, '0')}</b> · ${tr('남은 체력')} <b>${Math.max(0, player.hp)}</b><br>` +
+    `${tr('누적 피해')} <b>${stat.damage}</b> · ${tr('사망')} <b>${stat.deaths}</b> · ${tr('랭크')} <b style="color:${col};font-size:1.6em">${rk}</b>`;
+}
+
+function renderResultText() {
+  if (scene === 'over') {
+    $('overInfo').textContent = TitleMenu.text('DEFEAT_SCORE', stageLabel(), TitleMenu.localize(stage.title), player.score);
+  } else if (scene === 'challengeResult') {
+    $('challengeResultTitle').textContent = TitleMenu.text('BOSS_DEFEATED', TitleMenu.localize(challengeNames[stageIdx]));
+    $('challengeResultInfo').innerHTML = tallyHtml();
+  } else if (scene === 'clear') {
+    $('clearTitle').textContent = TitleMenu.text('STAGE_CLEARED', stageLabel());
+    $('clearInfo').innerHTML = `${tallyHtml()}<br>${TitleMenu.text('HEALTH_BONUS', player.hp * 10)}<br>${TitleMenu.localize('현재 점수')} <b style="color:#ffd23f">${player.score}</b>`;
+  } else if (scene === 'ending') {
+    $('endInfo').innerHTML = `${tallyHtml()}<br>${TitleMenu.text('FINAL_SCORE', player.score)}`;
+  }
 }
 
 function finishStage() {
   if (bossChallenge) {
     scene = 'challengeResult';
-    $('challengeResultTitle').textContent = challengeNames[stageIdx] + ' 격파!';
-    $('challengeResultInfo').innerHTML = tallyHtml();
-    showScreen('challengeResult'); return;
-  }
-  const p = player;
-  const bonus = p.hp * 10;
-  p.score += bonus;
-  UX.record(stageIdx, p.score, rankOf(Math.round(stat.ticks / 60)), Math.round(stat.ticks / 60));
-  UX.saveCheckpoint(stageIdx + 1 < STAGES.length ? { ...entrySnapshot(stageIdx + 1), hp: Math.min(p.max, p.hp + 40) } : null);
-  if (stageIdx + 1 < STAGES.length) {
-    scene = 'clear';
-    $('clearTitle').textContent = `${stage.name} CLEAR!`;
-    $('clearInfo').innerHTML = `${tallyHtml()}<br>남은 체력 보너스 +${bonus}<br>현재 점수 <b style="color:#ffd23f">${p.score}</b>`;
-    showScreen('clear');
   } else {
-    scene = 'ending';
-    $('endInfo').innerHTML = `${tallyHtml()}<br>최종 점수 ${p.score}`;
-    showScreen('ending');
+    const p = player;
+    p.score += p.hp * 10;
+    UX.record(stageIdx, p.score, rankOf(Math.round(stat.ticks / 60)), Math.round(stat.ticks / 60));
+    UX.saveCheckpoint(stageIdx + 1 < STAGES.length ? { ...entrySnapshot(stageIdx + 1), hp: Math.min(p.max, p.hp + 40) } : null);
+    scene = stageIdx + 1 < STAGES.length ? 'clear' : 'ending';
   }
+  renderResultText();
+  showScreen(scene);
 }
 
 // =====================================================================
@@ -2880,6 +2902,7 @@ function drawItem(it) {
 }
 
 function outlineText(txt, x, y, col = '#fff', font = 'bold 14px sans-serif', align = 'center') {
+  txt = TitleMenu.localize(txt);
   ctx.font = font; ctx.textAlign = align; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.strokeText(txt, x, y);
   ctx.fillStyle = col; ctx.fillText(txt, x, y);
 }
@@ -2952,11 +2975,13 @@ function panel(x, y, w, h) {
   }
 }
 function pxText(txt, x, y, col, size, align = 'left') {
+  txt = TitleMenu.localize(txt);
   ctx.font = `${size}px ${PIX}`; ctx.textAlign = align;
   ctx.fillStyle = '#000'; ctx.fillText(txt, x + 2, y + 2);
   ctx.fillStyle = col; ctx.fillText(txt, x, y);
 }
 function krText(txt, x, y, col, size, align = 'left', stroke = '#000') {
+  txt = TitleMenu.localize(txt);
   ctx.font = `bold ${size}px 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif`; ctx.textAlign = align;
   ctx.lineWidth = 4; ctx.strokeStyle = stroke; ctx.strokeText(txt, x, y);
   ctx.fillStyle = col; ctx.fillText(txt, x, y);
@@ -3007,7 +3032,7 @@ function drawHUD() {
   const sg = ctx.createLinearGradient(96, 0, 334, 0); sg.addColorStop(0, '#2a6aff'); sg.addColorStop(1, spFull ? '#ff5a7a' : '#7ad8ff');
   ctx.fillStyle = '#0a1430'; rect(96, 80, 238, 6);
   ctx.fillStyle = spFull && Math.floor(tick / 6) % 2 ? '#fff6c8' : sg; rect(96, 80, 238 * p.sp / SP_MAX, 6);
-  if (spFull) pxText(`${UX.keyName(UX.options.bindings.KeyK)}:${isViesa()?'흑월 난사':'흑월참'}`, 96, 96, '#ffe14d', 8); else pxText('SP', 96, 96, '#7ad8ff', 7);
+  if (spFull) pxText(`${UX.keyName(UX.options.bindings.KeyK)}:${TitleMenu.localize(isViesa()?'흑월 난사':'흑월참')}`, 96, 96, '#ffe14d', 8); else pxText('SP', 96, 96, '#7ad8ff', 7);
   for (let i = 0; i < MAGIC.max; i++) {             // 뇌격 두루마리 칸 (I 키)
     const x = 270 + i * 22, y = 89, on = i < p.mg;
     ctx.fillStyle = '#000'; rect(x - 3, y - 1, 20, 10);
@@ -3028,7 +3053,7 @@ function drawHUD() {
     const e = target.e, a = Math.min(1, target.t / 20);
     ctx.globalAlpha = a;
     if (!drawPixelEnemyBar(e)) {
-      krText(e.d.name, W - 12, 76, '#ffffff', 16, 'right', '#1a3a8a');
+      krText(enemyDisplayName(e), W - 12, 76, '#ffffff', 16, 'right', '#1a3a8a');
       lifeBar(W - 152, 84, 140, 7, e.hp / e.max, lagTo(e, 'hpLag', e.hp, e.max * 0.01) / e.max, ['#fff07a', '#d08a10']);
     }
     ctx.globalAlpha = 1;
@@ -3064,8 +3089,8 @@ function updateSkillButtons() {
     b.classList.toggle('ready', ready);
     b.dataset.cooldown = cd > 0 ? (cd / 1000).toFixed(1) : '';
     b.disabled = !ready;
-    const status = ready ? '준비 완료' : cd > 0 ? `${(cd / 1000).toFixed(1)}초` : scene !== 'play' ? '일시정지' : player.z > 0 ? '착지 후 사용' : '동작 종료 후 사용';
-    b.title = `${isViesa()?VIESA_SKILLS[id]?.name||'미사용':SKILLS[id].name} · ${status}`;
+    const status = cd > 0 && !ready ? TitleMenu.text('COOLDOWN_SECONDS', (cd / 1000).toFixed(1)) : TitleMenu.localize(ready ? '준비 완료' : scene !== 'play' ? '일시정지' : player.z > 0 ? '착지 후 사용' : '동작 종료 후 사용');
+    b.title = `${TitleMenu.localize(isViesa()?VIESA_SKILLS[id]?.name||'미사용':SKILLS[id].name)} · ${status}`;
     b.setAttribute('aria-label', b.title);
     const label = b.querySelector('.state'); if (label) label.textContent = status;
   });
@@ -3075,7 +3100,7 @@ function updateSkillButtons() {
       const cd = player ? player.skillCd[id] : 0;
       const holdingSnipe=isViesa()&&id==='redwave'&&player?.st==='skill'&&player.viesaAction?.phase==='snipe_draw';
       b.disabled = !holdingSnipe&&!canStartSkill(id);
-      b.title = cd > 0 ? `${(cd / 1000).toFixed(1)}초` : b.disabled ? '동작 종료 후 사용' : '준비 완료';
+      b.title = cd > 0 ? TitleMenu.text('COOLDOWN_SECONDS', (cd / 1000).toFixed(1)) : TitleMenu.localize(b.disabled ? '동작 종료 후 사용' : '준비 완료');
       b.style.setProperty('--cool', (isViesa()&&id==='slam'?0:clamp(cd / SKILLS[id].cd, 0, 1)).toFixed(3));
       b.dataset.cooldown = cd > 0 ? Math.ceil(cd / 1000) : '';
       b.classList.toggle('ready', !b.disabled);
@@ -3185,7 +3210,7 @@ function render() {
   if (scene === 'intro' || (scene === 'pause' && resumeScene === 'intro')) {
     const a = clamp(Math.min(bannerT, 160 - bannerT) / 25, 0, 1);
     ctx.globalAlpha = a; ctx.fillStyle = 'rgba(0,0,0,.6)'; rect(0, H / 2 - 70, W, 140);
-    outlineText(stage.name, W / 2, H / 2 - 10, '#ffd23f', 'bold 56px sans-serif');
+    outlineText(stageLabel(), W / 2, H / 2 - 10, '#ffd23f', 'bold 56px sans-serif');
     outlineText(stage.title, W / 2, H / 2 + 38, '#fff', 'bold 28px sans-serif');
     ctx.globalAlpha = 1;
   }
@@ -3229,7 +3254,7 @@ function drawIntroCard(u) {
     const k = ease((u - 0.42) / 0.12), fade = u > 0.84 ? 1 - (u - 0.84) / 0.08 : 1, off = Math.round((1 - k) * 240), y = H - 120;
     ctx.globalAlpha = Math.max(0, fade);
     ctx.fillStyle = 'rgba(5,3,10,.55)'; rect(0, y - 46, W, 92);
-    pxText(`STAGE ${stageIdx + 1}`, W / 2 - off, y - 22, '#ffffff', 11, 'center');
+    pxText(stageLabel(), W / 2 - off, y - 22, '#ffffff', 11, 'center');
     krText(b.d.name, W / 2 + off, y + 14, '#ffe27a', 34, 'center', '#7a1a24');
     pxText(b.d.en, W / 2 + off, y + 38, '#f3d26a', 10, 'center');
     const lw = Math.round(360 * k); ctx.fillStyle = '#dcb444'; rect(W / 2 - lw / 2, y + 46, lw, 2);
@@ -3304,6 +3329,17 @@ function loop(t) {
   GamePerf.record(t, renderStart - updateStart, performance.now() - renderStart);
   scheduleLoop();
 }
+document.addEventListener('bmk-language-change', () => {
+  renderRevision++;
+  syncPlayerCharacterUI(playerControlCharacter);
+  selectCharacter(selectedCharacterId);
+  $('pauseReason').textContent = TitleMenu.localize(pauseReason);
+  $('btnHelpBack').textContent = TitleMenu.localize(helpFrom === 'characterSelect' ? '캐릭터 선택' : '돌아가기');
+  if (DEMO.on) { demoList(); demoCaption(); demoPlayButton(); }
+  if (scene === 'challenge') renderChallengeList();
+  renderResultText();
+  wakeLoop();
+});
 UX.mount();
 demoMount();
 fitCanvas();

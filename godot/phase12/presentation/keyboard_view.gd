@@ -56,7 +56,7 @@ func label() -> String:
 	for k: Array in keys:
 		var action: String = action_for(map,str(k[0]))
 		if not action.is_empty() and (not use_focus or focus.has(action)): parts.append("%s %s" % [BmkKeyNames.key_name(str(k[0])),BmkKeyNames.short_name(action,character)])
-	return "키보드 배치: " + ", ".join(parts)
+	return BmkCopy.text("KEYBOARD_LAYOUT") % ", ".join(parts)
 
 func action_for(map: Dictionary, code: String) -> String:
 	for action: String in BmkPhysicalInput.ACTIONS:
@@ -92,7 +92,7 @@ func _draw() -> void:
 		var alias := alias_for(map,code)
 		if action.is_empty(): action = alias
 		var kind: String = str(BmkKeyNames.KIND[action]) if not action.is_empty() else ("system" if BmkKeyNames.SYSTEM.has(code) else "")
-		var text: String = BmkKeyNames.short_name(action,character) if not action.is_empty() else str(BmkKeyNames.SYSTEM.get(code,""))
+		var text: String = BmkKeyNames.short_name(action,character) if not action.is_empty() else BmkCopy.text("KEY_SYSTEM_" + code) if code in BmkKeyNames.SYSTEM else ""
 		var dim: bool = use_focus and not (not action.is_empty() and focus.has(action))
 		var on: bool = not action.is_empty() and pressed.has(action)
 		var r: Rect2 = key_rect(k)

@@ -227,12 +227,11 @@ func show_characters(challenge: bool = false) -> void:
 	character_challenge = challenge
 	if audio != null: audio.play("click")
 	clear_buttons()
-	title.text = "캐릭터 선택"
+	title.text = BmkCopy.text("CHARACTERS")
 	var roster: Dictionary = BmkViesaData.shared().source["CHARACTERS"]
 	var lines: PackedStringArray = []
 	for id: String in ["barel","viesa"]:
-		var hero: Dictionary = roster[id]
-		lines.append("%s · %s — %s" % [hero["name"],hero["job"],hero["description"]])
+		lines.append("%s · %s — %s" % [Copy.text("HERO_" + id),Copy.text("HERO_JOB_" + id),Copy.text("HERO_DESC_" + id)])
 	message.text = "
 ".join(lines)
 	# Character cards: Barel's idle pose and Viesa's selection portrait (index.html #characterSelect).
@@ -255,8 +254,8 @@ func show_characters(challenge: bool = false) -> void:
 			selected_character = id
 			if character_challenge: challenge_game.emit(id)
 			else: show_tutorial("characterSelect")
-		add_button("%s로 시작" % hero["name"] if bool(hero["available"]) else "곧 추가",pick,not bool(hero["available"]))
-	add_button("보스 목록" if challenge else "뒤로",show_challenges if challenge else show_title)
+		add_button(BmkCopy.text("PLAY_AS") % Copy.text("HERO_" + id) if bool(hero["available"]) else BmkCopy.text("COMING_SOON"),pick,not bool(hero["available"]))
+	add_button(BmkCopy.text("PAUSE_BOSSES") if challenge else BmkCopy.text("BACK"),show_challenges if challenge else show_title)
 
 func show_challenges() -> void:
 	mode = "challenge"
@@ -265,17 +264,16 @@ func show_challenges() -> void:
 		audio.silence()
 		audio.pause_audio(false)
 	clear_buttons()
-	title.text = "보스 도전"
-	message.text = "본편의 스테이지를 클리어하면 해금됩니다."
+	title.text = BmkCopy.text("MENU_CHALLENGE")
+	message.text = BmkCopy.text("CHALLENGE_INFO")
 	var records_: Array = store.records()["stages"]
-	var names: Array[String] = ["도살자 고라스","까마귀 마녀 모르그라","황금왕 아우렐리온","얼어붙은 묘지왕 바르굴","흑월의 군주, 소버린"]
-	for i: int in range(names.size()):
+	for i: int in range(5):
 		var unlocked: bool = records_.size() > i and records_[i] != null
 		var stage: int = i
-		add_button("스테이지 %d / %s" % [i + 1,names[i]],func() -> void:
+		add_button(BmkCopy.text("CHALLENGE_STAGE") % [i + 1,Copy.text("BOSS_%d" % (i + 1))],func() -> void:
 			challenge_stage = stage
 			show_characters(true),not unlocked)
-	add_button("뒤로",show_title)
+	add_button(BmkCopy.text("BACK"),show_title)
 
 func show_pause() -> void:
 	mode = "pause"
@@ -317,11 +315,11 @@ func show_result(value: String, challenge: bool, stage: int = 0, has_next: bool 
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "%s 격파!" % ["고라스","모르그라","아우렐리온","바르굴","소버린"][stage] if challenge else "스테이지 %d 클리어!" % (stage + 1)
+	title.text = BmkCopy.text("BOSS_DEFEATED") % Copy.text("BOSS_SHORT_%d" % (stage + 1)) if challenge else BmkCopy.text("STAGE_CLEAR") % (stage + 1)
 	message.text = value
-	if has_next: add_button("다음 스테이지",func() -> void: next_stage.emit())
-	add_button("다시 시작",func() -> void: retry_game.emit())
-	add_button("타이틀로",show_title)
+	if has_next: add_button(BmkCopy.text("NEXT_STAGE"),func() -> void: next_stage.emit())
+	add_button(BmkCopy.text("RESTART"),func() -> void: retry_game.emit())
+	add_button(BmkCopy.text("MENU_BACK"),show_title)
 
 ## game.js offerContinue(): CONTINUE? with a 10 s countdown (story mode, last life lost). The world
 ## stays frozen behind it. Enter / 이어서 싸우기 continues on the spot; Esc / 포기 or 0 is game over.
@@ -336,13 +334,12 @@ func show_continue() -> void:
 	clear_buttons()
 	continue_ticks = CONTINUE_SECONDS * TICKS_PER_SECOND
 	title.text = continue_title(CONTINUE_SECONDS)
-	message.text = "쓰러진 자리에서 라이프 3개로 다시 일어납니다.
-점수는 0이 됩니다."
-	add_button("이어서 싸우기 (Enter)",answer_continue.bind(true))
-	add_button("포기 (Esc)",answer_continue.bind(false))
+	message.text = Copy.text("CONTINUE_INFO")
+	add_button(BmkCopy.text("CONTINUE_ACCEPT"),answer_continue.bind(true))
+	add_button(BmkCopy.text("CONTINUE_GIVE_UP"),answer_continue.bind(false))
 
 static func continue_title(seconds: int) -> String:
-	return "CONTINUE?  %d" % seconds
+	return Copy.text("CONTINUE_COUNT") % seconds
 
 func answer_continue(fight: bool) -> void:
 	if mode != "continue" or not visible: return
@@ -369,11 +366,11 @@ func show_game_over(info: String, challenge: bool) -> void:
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "GAME OVER"
+	title.text = Copy.text("GAME_OVER")
 	message.text = info
-	if challenge: add_button("보스 목록",show_challenges)
-	add_button("다시 도전",func() -> void: retry_game.emit())
-	add_button("타이틀로",show_title)
+	if challenge: add_button(BmkCopy.text("PAUSE_BOSSES"),show_challenges)
+	add_button(BmkCopy.text("RETRY"),func() -> void: retry_game.emit())
+	add_button(BmkCopy.text("MENU_BACK"),show_title)
 
 ## game.js toTutorial(from): the demonstration screen, from character select or pause.
 func show_tutorial(origin: String) -> void:
@@ -381,7 +378,7 @@ func show_tutorial(origin: String) -> void:
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "조작 안내"
+	title.text = BmkCopy.text("PAUSE_HELP")
 	message.text = ""
 	# The game resumes the sound first (except from pause), then sfx('click').
 	tutorial_requested.emit(origin)
@@ -423,9 +420,9 @@ func show_ending(value: String) -> void:
 	visible = true
 	title_image.visible = false
 	clear_buttons()
-	title.text = "ALL CLEAR!"
-	message.text = "모든 스테이지를 클리어했습니다. 축하합니다!\n" + value
-	add_button("타이틀로",show_title)
+	title.text = Copy.text("ALL_CLEAR")
+	message.text = Copy.text("ENDING_INFO") + "\n" + value
+	add_button(BmkCopy.text("MENU_BACK"),show_title)
 
 func show_settings() -> void:
 	var previous_scroll := scroll.scroll_vertical if mode == "settings" else 0
@@ -585,7 +582,7 @@ func slider_row(key: String, value: int, low: int, high: int, apply: Callable) -
 func persist() -> void:
 	var error: Error = settings.save()
 	settings_changed.emit()
-	if error != OK: notice("설정을 저장하지 못했습니다: " + error_string(error))
+	if error != OK: notice(Copy.text("KEYS_FAILED") % error_string(error))
 
 func back_from_settings() -> void:
 	if settings_page != "main":
@@ -601,14 +598,16 @@ func back_from_settings() -> void:
 func toggle_menu_language() -> void:
 	settings.menu_language = "ko" if settings.menu_language == "en" else "en"
 	title_image.locale = settings.menu_language
+	Copy.set_language(settings.menu_language)
 	var error := settings.save()
+	settings_changed.emit()
 	settings_focus = 0
 	show_settings()
-	if error != OK: notice(error_string(error))
+	if error != OK: notice(Copy.text("KEYS_FAILED") % error_string(error))
 
 func boss_status() -> String:
 	var info: Dictionary = audio.boss_info()
-	return "내 파일: %s" % info["name"] if info["source"] == "custom" else ("게임 기본 mp3" if info["source"] == "default" else "기본 합성 BGM")
+	return BmkCopy.text("CUSTOM_FILE") % info["name"] if info["source"] == "custom" else (BmkCopy.text("DEFAULT_MP3") if info["source"] == "default" else BmkCopy.text("SYNTH_MUSIC"))
 
 ## index.html #bossBgmFile: pick an audio file (mp3, ogg or wav, at most 30 MB).
 func choose_boss_file() -> void:
@@ -620,14 +619,14 @@ func choose_boss_file() -> void:
 		boss_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 		boss_dialog.access = FileDialog.ACCESS_FILESYSTEM
 		boss_dialog.use_native_dialog = true
-		boss_dialog.filters = PackedStringArray(["*.mp3, *.ogg, *.wav ; 오디오 파일"])
-		boss_dialog.title = "보스전 음악 파일"
 		boss_dialog.file_selected.connect(func(path: String) -> void:
 			var result: Dictionary = audio.set_boss_file(path)
 			show_settings()
 			if not bool(result["ok"]): notice(str(result["message"]))
-			elif not bool(result.get("saved",true)): notice("내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name))
+			elif not bool(result.get("saved",true)): notice(BmkCopy.text("FILE_TEMP") % audio.boss_name))
 		add_child(boss_dialog)
+	boss_dialog.filters = PackedStringArray(["*.mp3, *.ogg, *.wav ; " + Copy.text("AUDIO_FILES")])
+	boss_dialog.title = Copy.text("BOSS_FILE_TITLE")
 	boss_dialog.popup_centered(Vector2i(720,480))
 
 ## Phase 13 Web export: the page's own file chooser, with the same messages as the FileDialog path.
@@ -638,9 +637,9 @@ func choose_boss_file_in_browser() -> void:
 			var result: Dictionary = audio.set_boss_bytes(file_name,bytes)
 			if mode == "settings": show_settings()
 			if not bool(result["ok"]): notice(str(result["message"]))
-			elif not bool(result.get("saved",true)): notice("내 파일: %s (저장 불가 · 이번 실행에만 적용)" % audio.boss_name))
+			elif not bool(result.get("saved",true)): notice(BmkCopy.text("FILE_TEMP") % audio.boss_name))
 		web_picker.failed.connect(func(reason: String, _file_name: String) -> void:
-			notice("30MB 이하의 파일만 쓸 수 있습니다." if reason == "big" else "파일을 열 수 없습니다."))
+			notice(BmkCopy.text("FILE_SIZE") if reason == "big" else BmkCopy.text("FILE_OPEN_ERROR")))
 	web_picker.open(".mp3,.ogg,.wav,audio/mpeg,audio/ogg,audio/wav",BmkGameAudio.BOSS_MAX_BYTES)
 
 func reset_touch_layout() -> void:
@@ -651,7 +650,7 @@ func save_settings() -> void:
 	var error: Error = settings.save()
 	settings_changed.emit()
 	show_settings()
-	if error != OK: notice("설정을 저장하지 못했습니다: " + error_string(error))
+	if error != OK: notice(Copy.text("KEYS_FAILED") % error_string(error))
 
 func change_preset(id: String) -> void:
 	if key_settings == null: show_controls()

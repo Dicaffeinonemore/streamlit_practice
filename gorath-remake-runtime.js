@@ -706,7 +706,7 @@ function drawGorath2Overlay() {
     const k = ease(Math.min(1, g.cardT / 10)), fade = clamp((130 - g.cardT) / 16, 0, 1), off = Math.round((1 - k) * 240), y = 190;   // 체력바(아래)와 겹치지 않게 위쪽에
     ctx.save(); ctx.globalAlpha = fade;
     ctx.fillStyle = 'rgba(5,3,10,.55)'; rect(0, y - 46, W, 92);
-    pxText(`STAGE ${stageIdx + 1}`, W / 2 - off, y - 22, '#ffffff', 11, 'center');
+    pxText(stageLabel(), W / 2 - off, y - 22, '#ffffff', 11, 'center');
     krText(e.d.name, W / 2 + off, y + 14, '#ffe27a', 34, 'center', '#7a1a24');
     pxText(e.d.en, W / 2 + off, y + 38, '#f3d26a', 10, 'center');
     const lw = Math.round(360 * k); ctx.fillStyle = '#dcb444'; rect(W / 2 - lw / 2, y + 46, lw, 2);

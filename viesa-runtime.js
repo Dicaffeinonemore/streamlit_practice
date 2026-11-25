@@ -419,13 +419,13 @@ function updateViesaUltimateProjectiles(){
 function playerActionLabel(action,fallback){
   const v=playerControlCharacter==='viesa';
   if(!v)return fallback;
-  return ({KeyJ:'화살 / 공중 체공 사격',KeyH:'근접 콤보',KeyU:'화살 연사',KeyL:'모아 쏘기 (유지: 최대 3단)',KeyO:'대시 → 지상 백플립',KeyP:'대시 → 공중 백플립',KeyK:'필살기 흑월 난사'})[action]||fallback;
+  return TitleMenu.text('ARCHER_' + action) || fallback;
 }
 function syncPlayerCharacterUI(id){
   playerControlCharacter=id;
   const v=id==='viesa';document.body.classList.toggle('viesa-player',v);
-  document.querySelectorAll('.skillbtn').forEach(b=>{const skill=b.dataset.skill;b.hidden=v&&!VIESA_SKILLS[skill];const label=b.querySelector('.name');if(label)label.textContent=v?VIESA_SKILLS[skill]?.name||'':SKILLS[skill].name;});
-  document.querySelectorAll('#touchPad [data-control]').forEach(b=>{b.hidden=v&&b.dataset.control==='KeyI';b.setAttribute('aria-label',playerActionLabel(b.dataset.control,b.dataset.originalLabel||(b.dataset.originalLabel=b.getAttribute('aria-label')||'')));});
+  document.querySelectorAll('.skillbtn').forEach(b=>{const skill=b.dataset.skill;b.hidden=v&&!VIESA_SKILLS[skill];const label=b.querySelector('.name');if(label)label.textContent=TitleMenu.localize(v ? VIESA_SKILLS[skill]?.name || '' : SKILLS[skill].name);});
+  document.querySelectorAll('#touchPad [data-control]').forEach(b=>{b.hidden=v&&b.dataset.control==='KeyI';b.setAttribute('aria-label',playerActionLabel(b.dataset.control, TitleMenu.text(b.dataset.menuAria || 'ACTION_' + b.dataset.control)));});
   UX.refreshBindings?.();
 }
 function drawViesaHUDPortrait(x,y,rx,ry){

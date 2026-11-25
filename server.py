@@ -10,6 +10,7 @@ Streamlit 환경에서는 소켓 서버를 열 수 없으므로(포트 바인딩
 import http.server
 import hashlib
 import base64
+import csv
 import json
 import mimetypes
 import os
@@ -99,8 +100,10 @@ def build_single_html() -> str:
             mime = "jpeg" if extension == "jpg" else extension
             return "data:image/" + mime + ";base64," + base64.b64encode(image_path.read_bytes()).decode("ascii")
         code = re.sub(r"assets/runtime/[a-f0-9]+\.(?:png|webp|gif|jpg)", embed_image, code)
-        if name == "title-menu.js":
+        if name in ("title-menu.js", "game-language.js"):
             for asset in TITLE_ASSETS:
+                if asset not in code:
+                    continue
                 mime = "text/csv;charset=utf-8" if asset.endswith(".csv") else mimetypes.guess_type(asset)[0]
                 encoded = base64.b64encode((ROOT / asset).read_bytes()).decode("ascii")
                 code = code.replace(asset, f"data:{mime};base64,{encoded}")
@@ -282,7 +285,7 @@ def run_streamlit():
         unsafe_allow_html=True,
     )
     with st.container(key="game_help"):
-        st.caption("게임 화면을 한 번 클릭한 뒤 조작하세요. (WASD 이동 · Space 점프 · J 공격 · U/H/O/P 전투 기술 · L 붉은 파동 · K 필살기 · I 뇌격 · ESC 일시정지)")
+        help_caption = st.empty()
     # The parent iframe must fill the mobile browser, not just the game canvas.
     css = (ROOT / "streamlit-game.css").read_text(encoding="utf-8")
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
@@ -292,9 +295,13 @@ def run_streamlit():
     directory = prepare_streamlit_component()
     component = components.declare_component("black_moon_game", path=str(directory))
     with st.container(key="game_host"):
-        component(height=680, key="game", default=None)
+        language = component(height=680, key="game", default="en")
+    locale = "ko" if language == "ko" else "en"
+    with (ROOT / "godot/phase4/title_art/menu.csv").open(encoding="utf-8-sig", newline="") as source:
+        captions = {row["keys"]: row[locale] for row in csv.DictReader(source)}
+    help_caption.caption(captions["HOST_CONTROLS"])
     with st.container(key="game_footer"):
-        st.caption("v1.67 · 타격감·가독성 개선")
+        st.caption(captions["HOST_VERSION"])
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):

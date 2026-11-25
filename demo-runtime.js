@@ -164,8 +164,8 @@ function demoCapsHtml(codes) {
 function demoCaption() {
   const step = DEMO.steps[DEMO.i]; if (!step) return;
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  set('demoStep', `${DEMO.i + 1} / ${DEMO.steps.length}`); set('demoTitle', step.title); set('demoDesc', step.desc);
-  set('demoPreset', UX.presets[UX.options.keyPreset].name);
+  set('demoStep', `${DEMO.i + 1} / ${DEMO.steps.length}`); set('demoTitle', TitleMenu.localize(step.title)); set('demoDesc', TitleMenu.localize(step.desc));
+  set('demoPreset', TitleMenu.text('PRESET_' + UX.options.keyPreset));
   const keysBox = document.getElementById('demoKeys');
   if (keysBox) keysBox.innerHTML = step.keys.map((a, i) => (i && step.keys.length === 2 && step.keys[0] !== step.keys[1] ? '<span class="or">+</span>' : '') + demoCapsHtml([a])).join('');
   document.querySelectorAll('#demoList [data-step]').forEach(b => {
@@ -184,14 +184,14 @@ function demoList() {
   box.replaceChildren();
   DEMO.steps.forEach((step, i) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'demo-chip'; b.dataset.step = i; b.setAttribute('role', 'tab');
-    b.innerHTML = `<b></b>${demoCapsHtml(step.keys)}`; b.firstChild.textContent = step.title;
+    b.innerHTML = `<b></b>${demoCapsHtml(step.keys)}`; b.firstChild.textContent = TitleMenu.localize(step.title);
     b.onclick = () => { demoStep(i); if (DEMO.paused) { DEMO.paused = false; demoPlayButton(); } };
     box.append(b);
   });
 }
 function demoPlayButton() {
   const b = document.getElementById('btnDemoPlay'); if (!b) return;
-  b.textContent = DEMO.paused ? '▶ 재생' : '❚❚ 멈춤'; b.setAttribute('aria-label', DEMO.paused ? '시범 플레이 재생' : '시범 플레이 멈춤');
+  b.textContent = TitleMenu.localize(DEMO.paused ? '▶ 재생' : '❚❚ 멈춤'); b.setAttribute('aria-label', TitleMenu.localize(DEMO.paused ? '시범 플레이 재생' : '시범 플레이 멈춤'));
 }
 function demoMount() {
   const on = (id, f) => { const el = document.getElementById(id); if (el) el.onclick = f; };

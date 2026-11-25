@@ -5,10 +5,9 @@ const TitleMenu = (() => {
   const choices = Array.from(title.querySelectorAll('.title-choice'));
   const marker = document.getElementById('titleSelection');
   const language = document.getElementById('menuLanguage');
-  // The art has five baked diamonds; the sixth row (Exit) gets a drawn one at the same spacing.
   const centers = [394, 460, 521, 582, 642, 703];
+  const letteringRows = ['New Game', 'Continue', 'Options', 'Credits', 'Exit'];
   let selected = 0;
-  let strings = new Map();
   let locale = UX.menuLanguage();
 
   document.getElementById('namedTitleImage').src = 'godot/phase4/title_art/menu.webp';
@@ -45,56 +44,35 @@ const TitleMenu = (() => {
     return true;
   }
 
-  // Godot's translation CSV uses one key per row and a header of locale codes.
-  function readCatalog(csv) {
-    const rows = [], fields = [];
-    let value = '', quoted = false;
-    for (let i = 0; i < csv.length; i++) {
-      const c = csv[i];
-      if (c === '"') {
-        if (quoted && csv[i + 1] === '"') { value += '"'; i++; }
-        else quoted = !quoted;
-      } else if (!quoted && (c === ',' || c === '\n')) {
-        fields.push(value); value = '';
-        if (c === '\n') rows.push(fields.splice(0));
-      } else value += c;
-    }
-    if (value || fields.length) rows.push([...fields, value]);
-    const columns = rows.shift();
-    return new Map(rows.map(row => [row[0], Object.fromEntries(columns.map((col, i) => [col, row[i]]))]));
-  }
-  function text(key, lang = locale) {
-    const row = strings.get(key);
-    return row?.[lang] || row?.en || '';
-  }
+  const text = (key, ...values) => GameLanguage.text(locale, key, ...values);
+  const localize = (source, ...values) => GameLanguage.localize(locale, source, ...values);
   function translate() {
     language.value = locale;
+    document.documentElement.lang = locale;
     title.lang = locale;
     document.querySelectorAll('[data-menu]').forEach(el => {
       // data-menu-lang pins a label to one language (the bilingual pause rows).
       const lang = el.dataset.menuLang || locale;
-      el.textContent = text(el.dataset.menu, lang);
+      el.textContent = GameLanguage.text(lang, el.dataset.menu);
       el.lang = lang;
       if (el.classList.contains('title-choice')) {
-        el.classList.toggle('lettered', el.textContent === el.dataset.menu);
+        el.classList.toggle('lettered', locale === 'en' && letteringRows.includes(el.dataset.menu)
+          && el.textContent === el.dataset.menu);
       }
+    });
+    document.querySelectorAll('[data-menu-aria]').forEach(el => {
+      el.setAttribute('aria-label', text(el.dataset.menuAria));
     });
     document.title = text('GAME_NAME');
     title.setAttribute('aria-label', document.title);
     document.getElementById('namedTitleImage').alt = document.title;
+    document.dispatchEvent(new CustomEvent('bmk-language-change', { detail: { locale } }));
   }
   language.onchange = () => {
     locale = language.value;
     UX.saveMenuLanguage(locale);
     translate();
   };
-  const ready = fetch('godot/phase4/title_art/menu.csv')
-    .then(response => {
-      if (!response.ok) throw new Error('Menu CSV: ' + response.status);
-      return response.text();
-    }).then(csv => {
-      strings = readCatalog(csv.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n'));
-      translate();
-    });
-  return { ready, text, handleKey, reset: () => select(0) };
+  const ready = GameLanguage.ready.then(translate);
+  return { ready, text, localize, handleKey, reset: () => select(0), get locale() { return locale; } };
 })();

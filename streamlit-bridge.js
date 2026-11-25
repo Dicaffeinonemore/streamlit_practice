@@ -2,6 +2,9 @@
 (() => {
   'use strict';
   const send = (type, fields = {}) => window.parent.postMessage({isStreamlitMessage: true, type, ...fields}, '*');
+  document.addEventListener('bmk-language-change', event => {
+    send('streamlit:setComponentValue', {value: event.detail.locale, dataType: 'json'});
+  });
   window.addEventListener('message', event => {
     if (event.source !== window.parent || event.data?.type !== 'streamlit:render') return;
     send('streamlit:setFrameHeight', {height: event.data.args?.height || 680});

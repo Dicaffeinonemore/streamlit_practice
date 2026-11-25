@@ -1,0 +1,95 @@
+keys,en,ko
+LAB_PAGE,Lunatic Nights · Mobile Layout Lab,Lunatic Nights · 모바일 화면 실험실
+LAB_TITLE,Mobile Layout Lab,모바일 화면 실험실
+LAB_OPEN,Open game ↗,게임 열기 ↗
+LAB_DISPLAY,01 Display,01 화면 조건
+LAB_DEVICE,Device preset,기종 기준
+LAB_ORIENTATION,Orientation,방향
+LAB_LANDSCAPE,Landscape,가로
+LAB_PORTRAIT,Portrait,세로
+LAB_ACTUAL,Use this browser’s size,이 브라우저 크기
+LAB_WIDTH,Width · CSS px,너비 · CSS px
+LAB_HEIGHT,Height · CSS px,높이 · CSS px
+LAB_CHROME,Browser toolbar height,브라우저 주소·도구 모음 높이
+LAB_PRESET_HELP,Presets use typical CSS viewport sizes. Adjust the values to match your browser and zoom level.,프리셋은 대표 CSS 화면 크기입니다. 화면 확대 설정·브라우저에 따라 다르므로 실측값으로 수정할 수 있습니다.
+LAB_TOP,Top safe inset,안전 여백 위
+LAB_BOTTOM,Bottom,아래
+LAB_LEFT,Left,왼쪽
+LAB_RIGHT,Right,오른쪽
+LAB_GUIDES,Show safe areas and issues,안전영역·문제 위치 표시
+LAB_CONTROLS,02 Game and controls,02 게임과 조작키
+LAB_CHARACTER,Character,캐릭터
+LAB_BAREL,Barel,바렐
+LAB_VIESA,Viesa,비에사
+LAB_SCREEN,Screen,화면
+LAB_PLAY,Combat,전투
+LAB_MENU,Title,타이틀
+LAB_OPTIONS,Options,설정
+LAB_EDIT,Drag controls in the game,게임 안에서 키 드래그 편집
+LAB_END_EDIT,Finish editing and play,편집 종료 · 플레이
+LAB_SCALE,Control size,전체 키 크기
+LAB_ALPHA,Control opacity,키 불투명도
+LAB_CONTROL,Individual control,개별 조작키
+LAB_DX,Horizontal offset · control units,가로 이동 · 키 단위
+LAB_DY,Vertical offset,세로 이동
+LAB_KEY_SCALE,Selected control size,개별 키 크기
+LAB_HIDE,Hide selected control,선택 키 숨기기
+LAB_FIT,Move off-screen controls into the safe area,화면 밖 조작키를 안전영역 안으로
+LAB_RESET,Restore default controls,조작키 기본값
+LAB_PROFILES,03 Save and apply,03 저장과 적용
+LAB_SAVE,Save for this device,이 기종 저장
+LAB_LOAD,Load for this device,이 기종 불러오기
+LAB_EXPORT,Export JSON,JSON 내보내기
+LAB_IMPORT,Import JSON,JSON 불러오기
+LAB_APPLY,Apply controls to the game in this browser,이 브라우저의 게임에 조작키 적용
+LAB_STORAGE_HELP,Preview settings are stored separately. Apply saves the control layout for this site. Screen size and simulated safe areas are preview settings.,테스트는 별도 저장 공간을 사용합니다. 적용 버튼은 같은 주소의 게임에 키 배치만 저장합니다. 화면 크기·가상 안전 여백은 적용하지 않습니다.
+LAB_LOADING,Loading game…,게임을 불러오는 중…
+LAB_PREPARING,Preparing preview,미리보기 준비 중
+LAB_CHECK,Check current screen,현재 화면 검사
+LAB_BATCH,Check all devices,전체 기종 검사
+LAB_REPORT,Export results as JSON,검사 결과 JSON
+LAB_IFRAME,Mobile game preview,실제 게임 모바일 미리보기
+LAB_RESULTS,Layout check,배치 검사
+LAB_ISSUE_HELP,"Red means outside the screen or safe area, orange marks overlapping controls, and yellow marks touch targets under 44 px. Portrait mode has a smaller play area.",붉은색: 화면/안전영역 밖 · 주황색: 조작키 겹침 · 노란색: 44px 미만(검토 기준). 가로 권장 게임이라 세로 화면에서는 플레이 영역이 작아질 수 있습니다.
+LAB_FOOTER,"The game runs in this browser at the selected viewport size. Device engines, pixel density, multitouch and performance require testing on the device.","현재 브라우저의 실제 게임을 지정한 뷰포트로 렌더링합니다. iOS/Android 엔진, DPR, 멀티터치·성능을 에뮬레이션하지 않습니다."
+LAB_LIMITS,Mobile emulation limits,모바일 에뮬레이션 한계
+LAB_SAFE_HELP,Safe area guide,안전영역 안내
+LAB_PHONE_SE,iPhone SE (2nd/3rd gen),iPhone SE (2·3세대)
+LAB_GALAXY_S,Galaxy S series · small,Galaxy S 계열 · 소형
+LAB_GALAXY_PLUS,Galaxy S Plus series,Galaxy S Plus 계열
+LAB_GALAXY_ULTRA,Galaxy Ultra / A series,Galaxy Ultra·A 계열
+LAB_GALAXY_FOLD,Galaxy Z Fold · inner screen,Galaxy Z Fold · 내부
+LAB_CUSTOM,Custom,직접 입력
+LAB_PREVIEW_SIZE,%s × %s CSS px · Preview %s%,%s × %s CSS px · 미리보기 %s%
+LAB_OUTSIDE,%s is outside the screen or safe area.,%s: 화면 또는 안전영역 밖
+LAB_SMALL,%s has a touch target of %s × %s px.,%s: 터치 영역 %s × %spx
+LAB_OVERLAP,%s and %s overlap.,%s ↔ %s: 버튼 영역 겹침
+LAB_CLIPPED,The game extends beyond the viewport.,게임 화면이 뷰포트 밖으로 잘립니다.
+LAB_MENU_CLIPPED,Menu control outside the safe area: %s,메뉴 %s: 안전영역 밖
+LAB_COUNTS,Controls: %s · Issues: %s,%s개 조작키 · %s개 확인 항목
+LAB_NO_ISSUES,"No clipping, overlapping controls or small touch targets detected.",현재 화면에서 잘림·조작키 겹침·작은 터치 영역이 발견되지 않았습니다.
+LAB_MOVED,Off-screen controls moved. Check the results and adjust any overlapping controls.,화면 밖 조작키를 이동했습니다. 겹침은 검사 결과를 보며 개별 조정하세요.
+LAB_BAD_FORMAT,Unsupported settings file.,지원하지 않는 설정 파일입니다.
+LAB_BAD_DIMENSIONS,Screen dimensions and insets must be numbers.,화면 크기와 여백은 숫자여야 합니다.
+LAB_CHECKING,Checking %s · %s…,%s · %s 검사 중…
+LAB_TABLE_DEVICE,Device / orientation,기종 / 방향
+LAB_TABLE_GAME,Game area,게임 영역
+LAB_TABLE_CLIP,Clipped,잘림
+LAB_TABLE_OVERLAP,Overlap,겹침
+LAB_TABLE_SMALL,Small targets,작은 키
+LAB_BATCH_DONE,Checked %s viewports with the current control layout.,%s개 화면 조건 검사 완료. 현재 키 배치로 비교한 결과입니다.
+LAB_DRAG,Drag a control in the preview or adjust its values in the sidebar.,미리보기에서 키를 끌어 이동하세요. 개별 수치도 함께 사용할 수 있습니다.
+LAB_COPIED,Copied the available browser size. Enter safe insets for your device.,현재 브라우저의 사용 가능 크기를 복사했습니다. 안전 여백은 실기기에 맞게 입력하세요.
+LAB_SAVED,Settings for this device and orientation saved in this browser.,기종·방향별 설정을 이 브라우저에 저장했습니다.
+LAB_NO_STORAGE,Storage is unavailable. Export the settings as JSON.,저장 공간을 사용할 수 없습니다. JSON으로 내보내세요.
+LAB_NO_PROFILE,No saved settings for this device and orientation.,이 기종·방향에 저장된 설정이 없습니다.
+LAB_LOADED,Saved settings loaded.,저장된 설정을 불러왔습니다.
+LAB_BIG_FILE,Settings file is too large.,설정 파일이 너무 큽니다.
+LAB_IMPORTED,Settings file loaded.,설정 파일을 불러왔습니다.
+LAB_IMPORT_ERROR,Import failed: %s,불러오기 실패: %s
+LAB_APPLIED,Controls saved for this browser. Reload the game to apply them.,이 브라우저의 게임에 조작키 배치를 저장했습니다. 게임을 새로고침하면 적용됩니다.
+LAB_SAVE_ERROR,Could not save game settings. Export the settings as JSON.,게임 설정을 저장하지 못했습니다. JSON으로 내보내세요.
+LAB_READY,Ready. Select a device and adjust the controls in the game preview.,준비 완료. 기종을 선택하고 실제 게임 화면에서 배치를 조정하세요.
+LAB_ERROR,Could not load the game. Open mobile-lab.html from the local server. %s,게임 로딩 실패. 로컬 서버로 mobile-lab.html을 열어주세요. %s
+HOST_CONTROLS,Click the game to focus it. Open Options to see your current controls. Press Esc to pause.,게임 화면을 클릭한 뒤 조작하세요. 현재 조작키는 설정에서 확인할 수 있습니다. Esc를 누르면 일시정지합니다.
+HOST_VERSION,v1.67 · Combat feedback and readability,v1.67 · 타격감·가독성 개선

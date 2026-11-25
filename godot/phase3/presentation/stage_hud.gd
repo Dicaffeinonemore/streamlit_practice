@@ -11,40 +11,39 @@ func _draw() -> void:
 	if game is BmkMenuGame and (game as BmkMenuGame).game_mode == "practice":
 		var practice: BmkMenuGame = game as BmkMenuGame
 		var guide: Array[String] = ["move","attack","jump","dash","skill"]
-		var labels: Dictionary = {"move":"이동하기", "attack":"허수아비 공격", "jump":"점프", "dash":"회피", "skill":"기술 명중"}
-		var prompt: String = "연습 완료!"
+		var prompt: String = BmkCopy.text("PRACTICE_COMPLETE")
 		for step: String in guide:
 			if not practice.practice_done.has(step):
-				prompt = str(labels[step])
+				prompt = BmkCopy.text("PRACTICE_" + step)
 				break
 		# Right of the HUD design's player panel.
 		draw_rect(Rect2(470,96,440,32),Color(0,0,0,0.8))
-		draw_string(korean_font,Vector2(485,118),"연습 %d / 5   %s" % [practice.practice_done.size(),prompt],HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("ffe18b"))
+		draw_string(korean_font,Vector2(485,118),BmkCopy.text("PRACTICE_STATUS") % [practice.practice_done.size(),prompt],HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("ffe18b"))
 	if game is not BmkMenuGame:
 		draw_rect(Rect2(298,31,662,29),Color(0.025,0.02,0.035,0.98))
-		var names: Array[String] = ["OCCUPIED STREET","CONQUERED MARKET","HOUND KENNEL","EXECUTION PLAZA","BUTCHER'S ARENA"]
-		text(Vector2(304,49),"STAGE 1 / %d OF 5 / %s" % [s.sections.idx + 1,names[s.sections.idx]],Color("bbb0b5"),12)
-		text(Vector2(755,47),"MAGIC %d   WAVE %d/%d" % [s.player.mg,mini(s.sections.event_index + 1,(s.sections.section["events"] as Array).size()),(s.sections.section["events"] as Array).size()],Color("bbb0b5"),12)
+		var names: Array[String] = [BmkCopy.text("SECTION_1"),BmkCopy.text("SECTION_2"),BmkCopy.text("SECTION_3"),BmkCopy.text("SECTION_4"),BmkCopy.text("SECTION_5")]
+		text(Vector2(304,49),BmkCopy.text("HUD_SECTION") % [s.sections.idx + 1,names[s.sections.idx]],Color("bbb0b5"),12)
+		text(Vector2(755,47),BmkCopy.text("HUD_WAVE") % [s.player.mg,mini(s.sections.event_index + 1,(s.sections.section["events"] as Array).size()),(s.sections.section["events"] as Array).size()],Color("bbb0b5"),12)
 	var boss_: BmkStageActor = s.gorath.boss(s)
 	if boss_ != null:
 		if game is BmkMenuGame:
 			var phase_two := boss_.g2.phase >= 2
-			draw_source_boss(boss_,"","GUARD" if boss_.g2.guard else "","gorath2" if phase_two else "gorath",phase_two)
+			draw_source_boss(boss_,"",BmkCopy.text("GUARD") if boss_.g2.guard else "","gorath2" if phase_two else "gorath",phase_two)
 		else:
 			draw_rect(Rect2(168,425,624,47),Color(0.025,0.01,0.025,0.85))
-			text(Vector2(180,442),"GORATH / PHASE %d     HP %d / %d" % [boss_.g2.phase,boss_.hp,boss_.max_hp],Color("f6ccaf"),14)
+			text(Vector2(180,442),BmkCopy.text("HUD_GORATH") % [boss_.g2.phase,boss_.hp,boss_.max_hp],Color("f6ccaf"),14)
 			bar(Vector2(180,449),600,boss_.hp / boss_.max_hp,Color("b91d38"))
 			bar(Vector2(180,462),600,boss_.gr / boss_.gr_max,Color("d6a563"))
-		if boss_.g2.guard and game is not BmkMenuGame: text(Vector2(680,442),"GUARD",Color("ff755e"),12)
+		if boss_.g2.guard and game is not BmkMenuGame: text(Vector2(680,442),BmkCopy.text("GUARD"),Color("ff755e"),12)
 		if boss_.g2.card_t > 0 and boss_.g2.card_t < 130:
 			draw_rect(Rect2(0,144,960,92),Color(0.02,0.01,0.04,0.55))
-			text(Vector2(340,190),"GORATH",Color("ffe27a"),42)
-			text(Vector2(340,216),"THE BUTCHER",Color("e8d2cd"),16)
-		if s.boss_title > 0: text(Vector2(315,160),"RAIN OF THE SLAUGHTERHOUSE",Color("ffbcaa"),19)
+			text(Vector2(340,190),BmkCopy.text("GORATH_CARD"),Color("ffe27a"),42)
+			text(Vector2(340,216),BmkCopy.text("THE_BUTCHER"),Color("e8d2cd"),16)
+		if s.boss_title > 0: text(Vector2(315,160),BmkCopy.text("RAIN_SLAUGHTERHOUSE"),Color("ffbcaa"),19)
 	elif s is BmkWaveSimulation and wave_boss(s as BmkWaveSimulation) != null and s.mode != "bossintro" and wave_boss(s as BmkWaveSimulation).st != "intro":
 		var legacy: BmkLegacyActor = wave_boss(s as BmkWaveSimulation)
 		var kind := legacy.type + ("_p2" if legacy.p2shown else "")
-		draw_source_boss(legacy,str(legacy.stats.get("name","")),"",kind,legacy.p2shown)
+		draw_source_boss(legacy,BmkCopy.text("BOSS_%d" % (s.stage_index + 1)),"",kind,legacy.p2shown)
 	elif game is BmkMenuGame:
 		for actor: BmkActorState in s.enemies:
 			if actor.id == s.last_hit_id and actor.st != "dead":
@@ -59,17 +58,17 @@ func _draw() -> void:
 		draw_rect(Rect2(0,540 - height,960,height),Color("05030a"))
 	var p: BmkStageActor = s.player as BmkStageActor
 	if p.grab != null:
-		text(Vector2(285,125),"TAP ATTACK / DIRECTIONS TO ESCAPE  %d / %d" % [p.grab.presses,2 if p.grab.kind == "bite" else 4],Color("ffe1ab"),16)
+		text(Vector2(285,125),BmkCopy.text("BREAK_FREE") % [p.grab.presses,2 if p.grab.kind == "bite" else 4],Color("ffe1ab"),16)
 	if s.sections.fade_t >= 0:
 		var alpha: float = s.sections.fade_t / 30.0 if s.sections.fade_t <= 30 else 1 - (s.sections.fade_t - 30) / 30.0
 		draw_rect(Rect2(0,0,960,540),Color(0,0,0,alpha))
 	if game.show_flash and s.boss_white > 0: draw_rect(Rect2(0,0,960,540),Color(1,1,1,0.6))
-	if game.debug_view.visible: text(Vector2(405,102),"1-5 SECTION   F10 PHASE 2   F11 ULTIMATE",Color("c1efc5"),12)
+	if game.debug_view.visible: text(Vector2(405,102),BmkCopy.text("DEBUG_PHASE"),Color("c1efc5"),12)
 	# Standalone Stage 1 scene only; the menu game shows its own result / ending panel.
 	if s.mode == "clear" and game is not BmkMenuGame:
 		draw_rect(Rect2(0,0,960,540),Color(0.01,0.005,0.02,0.72))
-		text(Vector2(282,243),"STAGE 1 COMPLETE",Color("ffe18b"),36)
-		text(Vector2(282,283),"SCORE %d    R: RESTART" % s.player.score,Color("e4d5ba"),18)
+		text(Vector2(282,243),BmkCopy.text("STAGE1_COMPLETE"),Color("ffe18b"),36)
+		text(Vector2(282,283),BmkCopy.text("SCORE_RESTART") % s.player.score,Color("e4d5ba"),18)
 
 func boss_bar_visible() -> bool:
 	if game is not BmkMenuGame or game.session is not BmkStageSimulation: return false
@@ -91,15 +90,15 @@ func wave_boss(s: BmkWaveSimulation) -> BmkLegacyActor:
 func draw_wave_overlays(s: BmkWaveSimulation) -> void:
 	# Arena help line while a fire / frost / abyss wave is locked.
 	if not s.arena.is_empty() and s.cam_lock:
-		var help: Dictionary = {"fire":"화염 지대 · 표식이 없는 줄로 이동하세요","frost":"서리 지대 · 표식을 벗어나거나 점프로 피하세요","abyss":"심연 지대 · 표식이 없는 줄이 안전합니다"}
-		outlined(Vector2(0,540 - 111),str(help.get(s.arena["kind"],"")),15,Color("ffe27a"),1.0,korean_font)
+		var help := BmkCopy.text("HAZARD_" + str(s.arena["kind"]))
+		outlined(Vector2(0,540 - 111),help,15,Color("ffe27a"),1.0,korean_font)
 	# Stage entry banner (scene 'intro').
 	if s.mode == "intro" and s.banner_t > 0:
 		var a: float = clampf(minf(s.banner_t,160 - s.banner_t) / 25.0,0,1)
 		draw_rect(Rect2(0,200,960,140),Color(0,0,0,0.6 * a))
-		outlined(Vector2(0,280),str(s.stage["name"]),56,Color(1,0.82,0.25,a),a,font)
-		outlined(Vector2(0,328),str(s.stage["title"]),28,Color(1,1,1,a),a,korean_font)
-	if s.clear_t > 20 and s.mode == "play": outlined(Vector2(0,270),"VICTORY!",64,Color(1,0.82,0.25),1.0,font)
+		outlined(Vector2(0,280),BmkCopy.text("HUD_STAGE") % (s.stage_index + 1),56,Color(1,0.82,0.25,a),a,font)
+		outlined(Vector2(0,328),BmkCopy.text("STAGE_TITLE_%d" % (s.stage_index + 1)),28,Color(1,1,1,a),a,korean_font)
+	if s.clear_t > 20 and s.mode == "play": outlined(Vector2(0,270),BmkCopy.text("VICTORY"),64,Color(1,0.82,0.25),1.0,font)
 	# drawIntroCard(u): letterbox bars, then STAGE n / Korean name / English name and a gold rule.
 	if s.mode == "bossintro" and s.intro_boss != null:
 		var u: float = s.intro_t / s.intro_duration(s.intro_boss)
@@ -112,9 +111,9 @@ func draw_wave_overlays(s: BmkWaveSimulation) -> void:
 			var off: float = roundf((1 - k) * 240)
 			var y: float = 540 - 120
 			draw_rect(Rect2(0,y - 46,960,92),Color(5 / 255.0,3 / 255.0,10 / 255.0,0.55 * fade))
-			draw_string(font,Vector2(-off,y - 18),"STAGE %d" % (s.stage_index + 1),HORIZONTAL_ALIGNMENT_CENTER,960,11,Color(1,1,1,fade))
-			outlined(Vector2(off,y + 26),str(s.intro_boss.stats.get("name","")),34,Color(1,0.89,0.48,fade),fade,korean_font,Color(0.48,0.1,0.14,fade))
-			draw_string(font,Vector2(off,y + 42),str(s.intro_boss.stats.get("en","")),HORIZONTAL_ALIGNMENT_CENTER,960,10,Color(0.95,0.82,0.42,fade))
+			draw_string(font,Vector2(-off,y - 18),BmkCopy.text("HUD_STAGE") % (s.stage_index + 1),HORIZONTAL_ALIGNMENT_CENTER,960,11,Color(1,1,1,fade))
+			outlined(Vector2(off,y + 26),BmkCopy.text("BOSS_%d" % (s.stage_index + 1)),34,Color(1,0.89,0.48,fade),fade,korean_font,Color(0.48,0.1,0.14,fade))
+			draw_string(font,Vector2(off,y + 42),BmkCopy.text("BOSS_SHORT_%d" % (s.stage_index + 1)),HORIZONTAL_ALIGNMENT_CENTER,960,10,Color(0.95,0.82,0.42,fade))
 			var lw: float = roundf(360 * k)
 			draw_rect(Rect2(480 - lw / 2,y + 46,lw,2),Color(0.86,0.71,0.27,fade))
 
@@ -131,15 +130,22 @@ func draw_source_boss(boss_: BmkStageActor, label: String, tag: String, kind: St
 	elif not game.clock.paused: lag = maxf(boss_.hp, lag - boss_.max_hp * 0.008)
 	boss_lag[id] = lag
 	var groggy := boss_.gr / boss_.gr_max if boss_.gr_max > 0 else 0.0
-	BmkHudDesign.draw_boss(self,kind,label if not label.is_empty() else "도살자 고라스",
+	BmkHudDesign.draw_boss(self,kind,label if not label.is_empty() else BmkCopy.text("BOSS_1"),
 		boss_.hp / boss_.max_hp,lag / boss_.max_hp,groggy,tag,phase_two)
+
+func enemy_name(actor: BmkActorState) -> String:
+	var name_ := BmkCopy.text("ENEMY_" + actor.species)
+	if actor is BmkLegacyActor:
+		var stage := (game.session as BmkWaveSimulation).stage_index + 1
+		return "%s %s" % [BmkCopy.text("FACTION_%d" % stage),name_]
+	return name_
 
 func draw_source_enemy(actor: BmkActorState) -> void:
 	var at := Vector2(780,18)
 	BmkHudDesign.compact_image(self,"enemy_name_plate",at,true)
 	BmkHudDesign.compact_image(self,"enemy_health_frame",at + Vector2(72,1),true)
 	BmkHudDesign.compact_fill(self,"enemy_health_fill",at + Vector2(78,5),actor.hp / actor.max_hp,true)
-	BmkHudDesign.compact_text(self,str((actor as BmkLegacyActor).stats.get("name","")) if actor is BmkLegacyActor else actor.species.to_upper(),at + Vector2(5,10),62)
+	BmkHudDesign.compact_text(self,enemy_name(actor),at + Vector2(5,10),62)
 	return
 	if enemy_atlas == null: enemy_atlas = load("res://port_assets/images/enemy_ui_source__92e4bd2e3ff9.png") as Texture2D
 	var scale_: float = 290.0 / 1815.0
@@ -164,4 +170,4 @@ func draw_source_enemy(actor: BmkActorState) -> void:
 	draw_rect(Rect2(start,Vector2(1168,63) * scale_),Color("21090e"))
 	var fill: float = 1168 * clampf(actor.hp / actor.max_hp,0,1)
 	if fill > 0: draw_texture_rect_region(enemy_atlas,Rect2(start,Vector2(fill,63) * scale_),Rect2(760,332,800,63))
-	draw_string(korean_font,origin + Vector2(140,36),str((actor as BmkLegacyActor).stats.get("name","")) if actor is BmkLegacyActor else actor.species.to_upper(),HORIZONTAL_ALIGNMENT_CENTER,120,12,Color("ffe5dd"))
+	draw_string(korean_font,origin + Vector2(140,36),enemy_name(actor),HORIZONTAL_ALIGNMENT_CENTER,120,12,Color("ffe5dd"))

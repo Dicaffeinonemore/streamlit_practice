@@ -3,8 +3,8 @@
 const UX = (() => {
   const defaults = { KeyA: 'KeyA', KeyD: 'KeyD', KeyW: 'KeyW', KeyS: 'KeyS', Space: 'Space',
     KeyJ: 'KeyJ', ShiftLeft: 'ShiftLeft', KeyK: 'KeyK', KeyI: 'KeyI', KeyU: 'KeyU', KeyH: 'KeyH', KeyO: 'KeyO', KeyP: 'KeyP', KeyL: 'KeyL' };
-  const labels = { KeyA: '왼쪽', KeyD: '오른쪽', KeyW: '위', KeyS: '아래', Space: '점프', KeyJ: '공격',
-    ShiftLeft: '대시', KeyK: '필살기', KeyI: '뇌격', KeyU: '견제 찌르기', KeyH: '내려찍기', KeyO: '회전 베기', KeyP: '점프 강하', KeyL: '붉은 파동' };
+  const t = (...args) => TitleMenu.text(...args);
+  const localize = (...args) => TitleMenu.localize(...args);
   // 키 배치 프리셋. 값 = 동작 → 실제 키. 동작 이름(KeyJ=공격 등)은 게임 내부 식별자일 뿐 실제 키와 무관하다.
   const PRESETS = {
     arcade: { KeyA: 'ArrowLeft', KeyD: 'ArrowRight', KeyW: 'ArrowUp', KeyS: 'ArrowDown', Space: 'KeyX', KeyJ: 'KeyZ',
@@ -12,11 +12,11 @@ const UX = (() => {
     wasd: { KeyA: 'KeyA', KeyD: 'KeyD', KeyW: 'KeyW', KeyS: 'KeyS', Space: 'KeyK', KeyJ: 'KeyJ',
       ShiftLeft: 'ShiftLeft', KeyK: 'Space', KeyI: 'KeyL', KeyU: 'KeyU', KeyH: 'KeyI', KeyO: 'KeyO', KeyP: 'KeyP', KeyL: 'KeyH' },
   };
-  const PRESET_INFO = {
-    arcade: { name: '1 · 오락실 아케이드', short: '방향키 + Z X C · A S D', desc: '오른손 방향키로 이동, 왼손으로 Z 공격 · X 점프 · C 필살기. A S D / Q W E에 뇌격과 전투 기술, Shift 대시. 고전 벨트스크롤에 익숙하다면 추천.' },
-    wasd: { name: '2 · PC 액션 (WASD)', short: 'WASD + J K L', desc: '왼손 WASD로 이동, 오른손 J 공격 · K 점프 · L 뇌격. U I O P H에 전투 기술, Space 필살기 · Shift 대시. 방향키·Z/X/V·Ctrl도 보조로 쓸 수 있습니다.' },
-    custom: { name: '3 · 사용자 설정', short: '원하는 대로', desc: '모든 동작의 키를 직접 정합니다. 동작을 고른 뒤 새 키를 누르거나 키보드 그림의 키를 클릭하세요. 비어 있는 방향키·Z/X/V·Ctrl은 보조 조작으로 동작합니다.' },
-  };
+  const PRESET_INFO = Object.fromEntries(['arcade', 'wasd', 'custom'].map(id => [id, {
+    get name() { return t('PRESET_' + id); },
+    get short() { return t('SUB_' + id); },
+    get desc() { return t('DESC_' + id); }
+  }]));
   const DEFAULT_PRESET = 'arcade';
   // 보조 조작: WASD·사용자 설정에서 다른 동작에 쓰이지 않는 키만 해당 동작으로 바뀐다.
   const ALIAS = { ArrowLeft: 'KeyA', ArrowRight: 'KeyD', ArrowUp: 'KeyW', ArrowDown: 'KeyS', ControlLeft: 'Space', ControlRight: 'Space', KeyZ: 'KeyJ', KeyX: 'KeyK', KeyV: 'KeyI' };
@@ -95,7 +95,7 @@ const UX = (() => {
     if (id === 'custom') {
       if (!options.customBindings) options.customBindings = { ...options.bindings };   // 지금 쓰던 배치에서 시작
     } else if (!Object.hasOwn(PRESETS, id)) return;
-    capture = null; options.keyPreset = id;
+    capture = null; setBindingMessage(() => ''); options.keyPreset = id;
     options.bindings = { ...(id === 'custom' ? options.customBindings : PRESETS[id]) };
     write('settings', options); bindingButtons();
   }
@@ -115,7 +115,7 @@ const UX = (() => {
     KeyU: '찌르기', KeyH: '내려 찍기', KeyO: '회전 베기', KeyP: '점프 강하', KeyL: '붉은 파동' };
   const SHORT_VIESA = { KeyJ: '화살', KeyH: '근접', KeyU: '연사', KeyL: '저격', KeyO: '지상 플립', KeyP: '공중 플립', KeyK: '흑월 난사' };
   const SYSTEM = { Escape: '일시 정지', Enter: '확인', KeyM: '소리' };
-  const shortName = a => (typeof playerControlCharacter !== 'undefined' && playerControlCharacter === 'viesa' && SHORT_VIESA[a]) || SHORT[a];
+  const shortName = a => localize((typeof playerControlCharacter !== 'undefined' && playerControlCharacter === 'viesa' && SHORT_VIESA[a]) || SHORT[a]);
   // box 안에 키보드를 그린다. opts.focus: 강조할 동작 목록, opts.onKey: 키 클릭 콜백
   function drawKeyboard(box, opts = {}) {
     if (!box) return;
@@ -134,14 +134,15 @@ const UX = (() => {
     for (const k of box.children) {
       const code = k.dataset.code, action = Object.keys(defaults).find(a => options.bindings[a] === code);
       const alias = !action && aliasFor(code), act = action || alias;
-      let kind = act ? KIND[act] : SYSTEM[code] ? 'system' : '', text = act ? shortName(act) : SYSTEM[code] || '';
+      let kind = act ? KIND[act] : SYSTEM[code] ? 'system' : '', text = act ? shortName(act) : localize(SYSTEM[code] || '');
       k.className = 'kb-key' + (kind ? ' kb-k kb-' + kind : '') + (alias ? ' kb-alias' : '') +
         (focus && !(act && focus.has(act)) ? ' kb-dim' : '') + (act && pressed.has(act) ? ' kb-on' : '');
       k.lastChild.textContent = text;
-      k.title = text ? `${k.firstChild.textContent}: ${text}${alias ? ' (보조)' : ''}` : '';
+      const keyTitle = text ? k.firstChild.textContent + ': ' + text : '';
+      k.title = alias ? t('WEB_KEY_ALTERNATE', keyTitle) : keyTitle;
       if (action && (!focus || focus.has(action))) parts.push(`${keyName(code)} ${shortName(action)}`);
     }
-    box.setAttribute('aria-label', '키보드 배치: ' + parts.join(', '));
+    box.setAttribute('aria-label', t('WEB_KEY_LAYOUT', parts.join(', ')));
   }
   function checkpoint() {
     const c = read('checkpoint');
@@ -168,8 +169,8 @@ const UX = (() => {
     const btn = document.getElementById('btnContinue'); if (!btn) return;
     const c = checkpoint(), r = records();
     btn.disabled = !c;
-    document.getElementById('recordSummary').textContent = r.bestScore ? `최고 점수 ${r.bestScore.toLocaleString()} · ` + r.stages.map((s, i) => s ? `${i + 1}: ${s.rank}` : '').filter(Boolean).join(' / ') : '첫 클리어 기록에 도전하세요';
-    document.getElementById('saveStatus').textContent = available ? '' : '이 브라우저에서는 저장할 수 없습니다. 현재 게임은 계속할 수 있습니다.';
+    document.getElementById('recordSummary').textContent = r.bestScore ? t('WEB_RECORD', r.bestScore.toLocaleString(TitleMenu.locale)) + ' · ' + r.stages.map((s, i) => s ? `${i + 1}: ${s.rank}` : '').filter(Boolean).join(' / ') : t('WEB_RECORD_EMPTY');
+    document.getElementById('saveStatus').textContent = available ? '' : t('WEB_SAVE_FAILED');
   }
   function applySettings() {
     fitCanvas();
@@ -179,21 +180,23 @@ const UX = (() => {
     document.body.classList.toggle('touch', options.touch);
     if (typeof MOBILE_FULLSCREEN !== 'undefined') MOBILE_FULLSCREEN.sync();
   }
+  const actionLabel = action => playerActionLabel(action, t('ACTION_' + action));
+  let bindingMessage = () => '';
+  function setBindingMessage(renderMessage) {
+    bindingMessage = renderMessage;
+    document.getElementById('bindingStatus').textContent = bindingMessage();
+  }
   function assignKey(code) {
-    const status = document.getElementById('bindingStatus');
-    if (!validKey(code)) { status.textContent = '영문·숫자·방향키·Space·Shift 키를 사용하세요. M은 소리 켜기/끄기에 사용됩니다.'; return; }
+    if (!validKey(code)) { setBindingMessage(() => t('KEYS_INVALID')); return; }
     // 다른 동작이 쓰던 키를 고르면 거절하지 않고 두 동작의 키를 서로 맞바꾼다.
     const other = Object.keys(defaults).find(k => k !== capture && options.bindings[k] === code);
     const previous = options.bindings[capture];
     if (other) options.bindings[other] = previous;
     options.bindings[capture] = code; options.customBindings = { ...options.bindings };
-    let swapped = '';
-    if (other) {
-      const name = playerActionLabel(other, labels[other]), last = name.charCodeAt(name.length - 1);
-      const josa = last >= 0xAC00 && last <= 0xD7A3 && (last - 0xAC00) % 28 ? '과' : '와';   // 받침 있으면 '과'
-      swapped = `${name}${josa} 키를 서로 바꿨습니다 (${name}: ${keyName(previous)}). `;
-    }
-    capture = null; write('settings', options); bindingButtons(); status.textContent = swapped + '저장했습니다.';
+    capture = null; write('settings', options); bindingButtons();
+    setBindingMessage(() => other
+      ? t('KEYS_SWAP', actionLabel(other), keyName(previous)) + ' ' + t('KEYS_SAVED')
+      : t('KEYS_SAVED'));
   }
   function bindingButtons() {
     const box = document.getElementById('bindings'); box.replaceChildren();
@@ -209,13 +212,13 @@ const UX = (() => {
     const paint = (focus = null) => drawKeyboard(keyboard, { focus: capture ? [capture] : focus, onKey: code => { if (capture) assignKey(code); } });
     for (const action of Object.keys(defaults)) {
       const row = document.createElement('div'); row.className = 'setting-row kb-row kb-' + KIND[action];
-      const actionName=playerActionLabel(action,labels[action]);
+      const actionName = actionLabel(action);
       const label = document.createElement('span'); label.textContent = actionName;
       const button = document.createElement('button'); button.className = 'btn small-btn secondary';
-      button.textContent = keyName(options.bindings[action]); button.setAttribute('aria-label', actionName + ' 키 변경');
+      button.textContent = keyName(options.bindings[action]); button.setAttribute('aria-label', t('WEB_KEY_CHANGE', actionName));
       button.disabled = !custom; button.classList.toggle('capturing', capture === action);
-      if (!custom) button.title = '3 · 사용자 설정에서 바꿀 수 있습니다';
-      button.onclick = () => { capture = action; bindingButtons(); document.getElementById('bindingStatus').textContent = actionName + ': 새 키를 누르거나 키보드 그림에서 고르세요 (ESC 취소)'; };
+      if (!custom) button.title = t('WEB_KEY_HINT');
+      button.onclick = () => { capture = action; bindingButtons(); setBindingMessage(() => t('KEYS_CHOOSE', actionLabel(action))); };
       row.onmouseenter = () => { if (!capture) paint([action]); };
       row.onmouseleave = () => { if (!capture) paint(); };
       row.append(label, button); box.append(row);
@@ -233,8 +236,7 @@ const UX = (() => {
   addEventListener('keydown', e => {
     if (!capture) return;
     e.preventDefault(); e.stopImmediatePropagation();
-    const status = document.getElementById('bindingStatus');
-    if (e.code === 'Escape') { capture = null; bindingButtons(); status.textContent = '변경을 취소했습니다.'; return; }
+    if (e.code === 'Escape') { capture = null; bindingButtons(); setBindingMessage(() => t('KEYS_CANCEL')); return; }
     if (e.ctrlKey || e.altKey || e.metaKey) return;
     assignKey(e.code);
   }, true);
@@ -283,8 +285,8 @@ const UX = (() => {
       el.classList.toggle('t-hidden', it.hide); el.classList.toggle('t-selected', editing && el === selected);
     }
     const name = document.getElementById('touchEditName'), hide = document.getElementById('touchEditHide');
-    name.textContent = selected ? selected.getAttribute('aria-label') : '키를 끌어서 옮기세요';
-    hide.textContent = selected && itemOf(touchId(selected)).hide ? '보이기' : '숨기기';
+    name.textContent = selected ? selected.getAttribute('aria-label') : t('WEB_TOUCH_DRAG');
+    hide.textContent = selected && itemOf(touchId(selected)).hide ? t('WEB_SHOW') : t('WEB_HIDE');
     for (const b of document.querySelectorAll('#touchEditBar [data-need]')) b.disabled = !selected;
   }
   function keepOnScreen(el, it) {               // 화면 밖으로 끌려나가지 않게 오프셋을 되돌린다
@@ -352,7 +354,7 @@ const UX = (() => {
     document.querySelectorAll('[data-preset]').forEach(b => { b.onclick = () => setPreset(b.dataset.preset); });
     document.querySelectorAll('[data-copy]').forEach(b => {
       b.onclick = () => { capture = null; options.customBindings = { ...PRESETS[b.dataset.copy] }; setPreset('custom');
-        document.getElementById('bindingStatus').textContent = PRESET_INFO[b.dataset.copy].name + ' 배치를 복사했습니다.'; };
+        setBindingMessage(() => t('KEYS_COPIED', PRESET_INFO[b.dataset.copy].name)); };
     });
     document.querySelectorAll('[data-control]').forEach(b => {
       b.onpointerdown = e => {
@@ -385,19 +387,27 @@ const UX = (() => {
     syncSliders(); applyTouchLayout();
     // 보스전 BGM: 내 mp3 > 게임 기본 mp3 > 합성 BGM. 5명의 보스가 같은 곡을 쓴다.
     const bgmFile = document.getElementById('bossBgmFile'), bgmStatus = document.getElementById('bossBgmStatus');
-    const showBgm = message => {
+    let bgmMessage = '';
+    const showBgm = () => {
       const i = AUDIO.bossInfo();
-      bgmStatus.textContent = message || (i.source === 'custom' ? `내 파일: ${i.name}${i.stored ? '' : ' (저장 불가 · 이번 접속에만 적용)'}`
-        : i.source === 'default' ? '게임 기본 mp3' : i.loading ? '기본 곡 불러오는 중…' : '기본 합성 BGM');
+      bgmStatus.textContent = bgmMessage ? localize(bgmMessage)
+        : i.source === 'custom' ? t(i.stored ? 'WEB_BGM_FILE' : 'WEB_BGM_SESSION', i.name)
+        : t(i.source === 'default' ? 'WEB_BGM_DEFAULT' : i.loading ? 'WEB_BGM_LOADING' : 'WEB_BGM_SYNTH');
       document.getElementById('btnBossBgmClear').disabled = i.source !== 'custom';
     };
     document.getElementById('btnBossBgm').onclick = () => bgmFile.click();
     bgmFile.onchange = async () => {
       const file = bgmFile.files[0]; bgmFile.value = ''; if (!file) return;
-      showBgm('불러오는 중…'); const r = await AUDIO.setBossFile(file); showBgm(r.ok ? '' : r.message);
+      bgmMessage = '불러오는 중…'; showBgm();
+      const r = await AUDIO.setBossFile(file); bgmMessage = r.ok ? '' : r.message; showBgm();
     };
-    document.getElementById('btnBossBgmClear').onclick = async () => { await AUDIO.clearBossFile(); showBgm(); };
-    AUDIO.onBossInfo(() => showBgm()); showBgm();
+    document.getElementById('btnBossBgmClear').onclick = async () => { await AUDIO.clearBossFile(); bgmMessage = ''; showBgm(); };
+    AUDIO.onBossInfo(showBgm); showBgm();
+    document.addEventListener('bmk-language-change', () => {
+      bindingButtons(); refreshTitle(); applyTouchLayout(); showBgm();
+      document.getElementById('bindingStatus').textContent = bindingMessage();
+      if (typeof MOBILE_FULLSCREEN !== 'undefined') MOBILE_FULLSCREEN.sync();
+    });
     applySettings(); bindingButtons(); refreshTitle();
   }
   return { menuLanguage: () => read('menuLanguage') === 'ko' ? 'ko' : 'en',

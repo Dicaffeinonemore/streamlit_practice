@@ -34,7 +34,7 @@ static func draw_player(hud: BmkGameHud, p: BmkActorState) -> void:
 	if p.buff > 0:
 		hud.draw_rect(Rect2(at.call(110.0, 510.0), Vector2(180, 7) * scale_), Color("132813"))
 		hud.draw_rect(Rect2(at.call(110.0, 510.0), Vector2(180 * clampf(p.buff / 900.0, 0.0, 1.0), 7) * scale_), Color("b7ec89"))
-	hud.text(Vector2(6, 14), "SCORE %d" % p.score, Color("ffe1a0"), 11)
+	hud.text(Vector2(6, 14), BmkCopy.text("HUD_SCORE") % p.score, Color("ffe1a0"), 11)
 
 ## The five vine-framed icons (atlas 932 + i*140, 635, 148 x 260) with a dark key plate.
 static func draw_skills(hud: BmkGameHud, p: BmkActorState, s: BmkSimulation) -> void:

@@ -26,6 +26,7 @@ func _ready() -> void:
 	BmkPlatform.install_web_fonts()
 	BmkPlatform.watch_window(get_tree().root)
 	preferences = BmkSettings.read()
+	BmkCopy.set_language(preferences.menu_language)
 	super._ready()
 	if preferences.preset == "custom": physical.configure_custom(preferences.bindings)
 	else: physical.configure(preferences.preset)
@@ -69,7 +70,6 @@ func _ready() -> void:
 	pause_button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	pause_button.position = BmkHudDesign.PAUSE.position
 	pause_button.size = BmkHudDesign.PAUSE.size
-	pause_button.tooltip_text = "일시정지"
 	pause_button.visible = false
 	pause_button.pressed.connect(func() -> void:
 		open_pause())
@@ -82,12 +82,11 @@ func _ready() -> void:
 	practice_buttons.size = Vector2(960,34)
 	practice_buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	practice_buttons.visible = false
-	for spec: Array in [["실전 시작",practice_go],["조작 안내",practice_help]]:
+	for callback: Callable in [practice_go,practice_help]:
 		var b: Button = Button.new()
-		b.text = spec[0]
 		b.focus_mode = Control.FOCUS_NONE
 		b.add_theme_font_size_override("font_size",15)
-		b.pressed.connect(spec[1])
+		b.pressed.connect(callback)
 		practice_buttons.add_child(b)
 	pause_layer.add_child(practice_buttons)
 	# game-ui.js touch controls, above the menu so the layout editor can cover it.
@@ -207,7 +206,7 @@ func start_new(character: String = "barel") -> void:
 	entry.hp = int(session.player.hp)
 	var error: Error = save_store.save_checkpoint(entry)
 	if error != OK:
-		menu.message.text = "저장하지 못했습니다: %s" % error_string(error)
+		menu.message.text = BmkCopy.text("SAVE_ERROR") % error_string(error)
 		return
 	story_entry = entry
 	menu.visible = false
@@ -216,10 +215,10 @@ func start_new(character: String = "barel") -> void:
 func restore_checkpoint() -> void:
 	var entry: BmkCheckpoint = save_store.checkpoint()
 	if entry == null:
-		menu.message.text = "사용할 수 있는 저장 기록이 없습니다."
+		menu.message.text = BmkCopy.text("NO_SAVE")
 		return
 	if entry.stage > 4:
-		menu.message.text = "이 스테이지는 아직 준비 중입니다."
+		menu.message.text = BmkCopy.text("STAGE_UNAVAILABLE")
 		return
 	game_mode = "story"
 	load_story_entry(entry)
@@ -248,7 +247,7 @@ func load_story_entry(entry: BmkCheckpoint) -> void:
 func continue_next_stage() -> void:
 	var entry: BmkCheckpoint = save_store.checkpoint()
 	if entry == null or entry.stage > 4:
-		menu.message.text = "다음 스테이지는 아직 준비 중입니다."
+		menu.message.text = BmkCopy.text("NEXT_UNAVAILABLE")
 		return
 	game_mode = "story"
 	load_story_entry(entry)
@@ -302,6 +301,10 @@ func retry_current() -> void:
 	elif story_entry != null: load_story_entry(story_entry)
 
 func apply_preferences() -> void:
+	BmkCopy.set_language(preferences.menu_language)
+	pause_button.tooltip_text = BmkCopy.text("PAUSE_TITLE")
+	(practice_buttons.get_child(0) as Button).text = BmkCopy.text("PRACTICE_GO")
+	(practice_buttons.get_child(1) as Button).text = BmkCopy.text("PAUSE_HELP")
 	if preferences.preset == "custom": physical.configure_custom(preferences.bindings)
 	else: physical.configure(preferences.preset)
 	audio.set_levels(preferences.music_volume, preferences.sfx_volume)
@@ -342,10 +345,10 @@ func _physics_process(delta: float) -> void:
 		recorded = true
 		var seconds: int = s.js_round(s.stat_ticks / 60.0)
 		var rank: String = BmkRankCalculator.calculate(seconds,s.stat_damage,s.stat_deaths,s.chain_max)
-		var report: String = "랭크 %s   시간 %d:%02d\n최대 연속 공격 %d   누적 피해 %d   사망 %d\n점수 %d" % [rank,seconds / 60,seconds % 60,s.chain_max,s.stat_damage,s.stat_deaths,s.player.score]
+		var report: String = BmkCopy.text("STATS_REPORT") % [rank,seconds / 60,seconds % 60,s.chain_max,s.stat_damage,s.stat_deaths,s.player.score]
 		if game_mode == "story":
 			var error: Error = save_store.record(stage_index,s.player.score,rank,seconds)
-			if error != OK: report += "\n기록 저장에 실패했습니다."
+			if error != OK: report += "\n" + BmkCopy.text("RECORD_FAILED")
 			# The final stage clears the checkpoint: UX.saveCheckpoint(null).
 			var entry: BmkCheckpoint = BmkCheckpoint.new() if stage_index + 1 < 5 else null
 			if entry != null:
@@ -357,7 +360,7 @@ func _physics_process(delta: float) -> void:
 				entry.sp = int(s.player.sp)
 				entry.mg = int(s.player.mg)
 				entry.buff = int(s.player.buff)
-			if save_store.save_checkpoint(entry) != OK: report += "\n이어하기 저장에 실패했습니다."
+			if save_store.save_checkpoint(entry) != OK: report += "\n" + BmkCopy.text("CHECKPOINT_FAILED")
 		pause_game(true)
 		if game_mode == "story" and stage_index >= 4: menu.show_ending(report)
 		else: menu.show_result(report,game_mode == "challenge",stage_index,game_mode == "story" and stage_index < 4)
@@ -409,8 +412,8 @@ func show_game_over() -> void:
 	clock.paused = true
 	physical.clear(session)
 	if touch != null: touch.clear_touch()
-	var stage: Dictionary = (bank.catalogs["STAGES"] as Array)[clampi(stage_index,0,4)]
-	menu.show_game_over("%s %s — 점수 %d" % [stage["name"],stage["title"],int(session.player.score)],game_mode == "challenge")
+	var number := clampi(stage_index,0,4) + 1
+	menu.show_game_over(BmkCopy.text("STAGE_SCORE") % [number,BmkCopy.text("STAGE_TITLE_%d" % number),int(session.player.score)],game_mode == "challenge")
 
 ## Phase 13: Android's back button (application/config/quit_on_go_back is off). On the title it
 ## leaves the app; everywhere else it is Esc, so it pauses, goes back a menu or ends layout editing.
