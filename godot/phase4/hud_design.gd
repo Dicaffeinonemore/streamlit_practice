@@ -69,7 +69,7 @@ static func draw_frame(hud: CanvasItem, name: String, frame: int, size_: Vector2
 	hud.draw_texture_rect_region(compact_texture(name),Rect2(at,size_),src)
 
 static func draw_player(hud: CanvasItem, p: BmkActorState, stage: int, hp_lag: float) -> void:
-	compact_image(hud,"player_panel",Vector2(12,12))
+	# No backing panel (game.js drawCompactPlayer): each plate, frame and slot keeps its own background.
 	var pulse := int(Time.get_ticks_msec() / 180.0) % 2
 	if p.buff > 0: draw_frame(hud,"buff_glow",pulse,Vector2(52,52),Vector2(11,11))
 	var portrait_box := Rect2(19,19,36,36)

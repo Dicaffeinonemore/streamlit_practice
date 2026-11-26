@@ -23,12 +23,12 @@ function compactText(text,x,y,maxWidth) {
   ctx.strokeText(String(text),x,y,maxWidth); ctx.fillText(String(text),x,y,maxWidth);
 }
 function drawCompactPlayer(p) {
-  if (!compactReady('player_panel','portrait_frame','name_plate','life_icon','player_bar_frame',
+  if (!compactReady('portrait_frame','name_plate','life_icon','player_bar_frame',
     'hp_track','hp_fill','hp_lag_fill','sp_track','sp_fill','score_plate','scroll_slot','scroll_icon',
     'scroll_icon_empty','buff_glow')) return false;
   ctx.save();
   ctx.imageSmoothingEnabled = false;
-  compactImage('player_panel',12,12);
+  // No backing panel: each plate, frame and slot keeps its own background.
   if (p.buff > 0) hudFrame('buff_glow',Math.floor(tick / 11) % 2,52,52,11,11);
   ctx.fillStyle = '#2a0a10';
   ctx.fillRect(19,19,36,36);
