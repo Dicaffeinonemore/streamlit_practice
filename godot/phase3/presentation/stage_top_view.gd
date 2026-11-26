@@ -1,16 +1,21 @@
 class_name BmkStageTopView
 extends BmkFullStageView
 
+## true: only the fence / front scaffolds (above the characters). false: only the effects (below the player).
+var foreground: bool = false
+
 func _draw() -> void:
 	if session == null: return
 	var s: BmkStageSimulation = session as BmkStageSimulation
-	if (section as BmkFullStage).background.get("fg") != null:
-		var bg: Dictionary = (section as BmkFullStage).background
-		var texture: Texture2D = bank.source_image(str(bg["fg"]))
-		var k: float = float(bg["scale"])
-		draw_texture_rect(texture,Rect2(Vector2(0,340 - float(bg["floorY"]) * k),texture.get_size() * k),false)
-	for x: float in (section as BmkFullStage).scaffolds:
-		draw_scaffold(x,true)
+	if foreground:
+		if (section as BmkFullStage).background.get("fg") != null:
+			var bg: Dictionary = (section as BmkFullStage).background
+			var texture: Texture2D = bank.source_image(str(bg["fg"]))
+			var k: float = float(bg["scale"])
+			draw_texture_rect(texture,Rect2(Vector2(0,340 - float(bg["floorY"]) * k),texture.get_size() * k),false)
+		for x: float in (section as BmkFullStage).scaffolds:
+			draw_scaffold(x,true)
+		return
 	for z: BmkFireHazard in s.fire_hazards:
 		if z.type == "molotov": draw_asset(bank.animation("stage1_fx.bottle_spin"),int(floor(z.age / s.MS / 3)),Vector2(z.x,z.y - z.h))
 	var e: BmkStageActor = s.gorath.boss(s)

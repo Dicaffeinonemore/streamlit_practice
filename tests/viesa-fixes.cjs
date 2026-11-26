@@ -16,9 +16,9 @@ module.exports=async({evaluate,call,errors,root})=>{
   })()`);
   assert.equal(Object.keys(samples).length,3);
   assert(Object.values(samples).every(seconds=>seconds>0),'All skill MP3s decode');
-  await evaluate(`toTitle();$('btnStart').click();selectCharacter('viesa');drawCharacterPreview()`);
-  const selection=await evaluate(`(()=>{const im=$('viesaSelectPortrait');return {animated:im.tagName==='CANVAS',visible:im.getContext('2d').getImageData(0,0,im.width,im.height).data.some((n,i)=>i%4===3&&n>0)};})()`);
-  assert(selection.animated&&selection.visible,'Selector draws the animated full-body sprite');
+  await evaluate(`toTitle();$('btnStart').click();selectCharacter('viesa');$('characterViesa').querySelector('img').decode()`);
+  const selection=await evaluate(`$('characterViesa').querySelector('img').naturalWidth > 0`);
+  assert(selection,'Selector loads the supplied Viesa portrait');
   fs.writeFileSync(path.join(out,'selection.png'),Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
   const result=await evaluate(`(()=>{
     const check=(ok,message)=>{if(!ok)throw Error(message);};
@@ -197,5 +197,5 @@ module.exports=async({evaluate,call,errors,root})=>{
   })()`);
   fs.writeFileSync(path.join(out,'lightning-scroll.png'),Buffer.from(scrollPreview,'base64'));
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({selection,...result,errors},null,2));
-  console.log('PASS Viesa combat fixes, hurt/death size, ultimate size and phases, full-body selection');
+  console.log('PASS Viesa combat fixes, hurt/death size, ultimate size and phases, selection portrait');
 };

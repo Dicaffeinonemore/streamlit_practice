@@ -1,0 +1,175 @@
+@font-face { font-family: 'Nanum Myeongjo'; src: url('assets/character-select/fonts/NanumMyeongjo-ExtraBold.woff2') format('woff2'); font-weight: 700 900; font-display: swap; }
+@font-face { font-family: 'Noto Sans KR'; src: url('assets/character-select/fonts/NotoSansKR.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Cinzel'; src: url('assets/character-select/fonts/Cinzel.woff2') format('woff2'); font-weight: 400 900; font-display: swap; }
+
+#characterSelect {
+  --bg: #0b0808;
+  --panel: #1a1212;
+  --panel-2: #140e0e;
+  --line: #3a2a22;
+  --line-2: #6b5640;
+  --red: #e8434b;
+  --red-fill: #d8323b;
+  --red-deep: #8e1a20;
+  --gold: #c9a876;
+  --text: #ede3d3;
+  --muted: #b9aa98;
+  --muted-2: #a8998a;
+  --slant: clamp(7px, 1.875cqw, 32px);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --expand-ms: 420ms;
+}
+
+#characterSelect { background: var(--bg); }
+#characterSelect .select-content {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 1.875cqw 3.75cqw 1.4063cqw;
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+#characterSelect .select-content * { box-sizing: border-box; }
+
+/* 상단 */
+#characterSelect .top { display: flex; align-items: baseline; justify-content: space-between; height: 5cqw; border-bottom: 1px solid var(--line); }
+#characterSelect .top-title { display: flex; align-items: baseline; gap: 1.4063cqw; }
+#characterSelect .top h2 { margin: 0; font-family: 'Nanum Myeongjo', serif; font-weight: 800; font-size: 2.3438cqw; letter-spacing: 0.1em; }
+#characterSelect .brand { font-family: 'Cinzel', serif; font-size: 1.0156cqw; letter-spacing: 0.3em; color: var(--gold); }
+#characterSelect .unlock-count { font-size: 1.0156cqw; color: var(--muted-2); }
+
+/* 카드 줄 */
+#characterSelect .cards { display: flex; gap: 1.0938cqw; flex: 1 1 auto; min-height: 0; margin-top: 1.875cqw; }
+
+#characterSelect .card {
+  --pad: 2px;
+  position: relative; flex: 1 1 0; min-width: 0; padding: 0; border: 0; cursor: pointer;
+  background: var(--line);
+  clip-path: polygon(var(--slant) 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
+  transition: flex-grow var(--expand-ms) var(--ease), background-color 240ms;
+  font: inherit; color: inherit; text-align: left;
+  outline: none;
+}
+#characterSelect .card[aria-pressed="true"] { flex-grow: 3.2; background: var(--red); }
+#characterSelect .card:not([aria-pressed="true"]):hover { background: var(--line-2); }
+#characterSelect .card:focus-visible:not([aria-pressed="true"]) { background: var(--gold); }
+#characterSelect .card.is-locked { background: var(--line); }
+#characterSelect .card.is-locked[aria-pressed="true"] { background: var(--line-2); }
+
+#characterSelect .card-clip {
+  position: absolute; inset: var(--pad); overflow: hidden;
+  background: var(--panel);
+  clip-path: polygon(calc(var(--slant) - 1px) 0, 100% 0, calc(100% - var(--slant) + 1px) 100%, 0 100%);
+}
+#characterSelect .card.is-locked .card-clip { background: var(--panel-2); }
+
+#characterSelect .card-art {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  object-position: var(--focus-collapsed);
+  filter: grayscale(0.6) brightness(0.5);
+  transition: filter 400ms var(--ease), object-position var(--expand-ms) var(--ease), transform 600ms var(--ease);
+  transform: scale(1.04);
+}
+#characterSelect .card[aria-pressed="true"] .card-art { filter: none; object-position: var(--focus-expanded); transform: scale(1); }
+#characterSelect .card:not([aria-pressed="true"]):hover .card-art { filter: grayscale(0.4) brightness(0.68); }
+
+#characterSelect .card-shade {
+  position: absolute; inset: 0; opacity: 0; transition: opacity 300ms;
+  background: linear-gradient(180deg, rgba(11,8,8,0) 35%, rgba(11,8,8,0.97) 78%);
+}
+#characterSelect .card[aria-pressed="true"] .card-shade { opacity: 1; }
+
+/* 접힌 상태 */
+#characterSelect .card-collapsed { position: absolute; inset: 0; transition: opacity 160ms; }
+#characterSelect .card[aria-pressed="true"] .card-collapsed { opacity: 0; }
+#characterSelect .v-name {
+  position: absolute; top: 2.1875cqw; right: 2.8125cqw;
+  font-family: 'Nanum Myeongjo', serif; font-weight: 800; font-size: 2.6563cqw; line-height: 1.15; text-align: center;
+  text-shadow: 0 2px 0.625cqw rgba(0,0,0,0.6);
+}
+#characterSelect .c-meta { position: absolute; left: 2.3438cqw; bottom: 2.1875cqw; display: flex; flex-direction: column; gap: 4px; }
+#characterSelect .c-numeral { font-family: 'Cinzel', serif; font-size: 1.7188cqw; color: var(--gold); }
+#characterSelect .c-class { font-size: 1.0156cqw; color: var(--muted); }
+
+/* 펼친 상태 */
+#characterSelect .card-expanded {
+  position: absolute; left: 3.4375cqw; right: 4.375cqw; bottom: 2.5cqw;
+  display: flex; flex-direction: column; gap: 0.4688cqw;
+  opacity: 0; transform: translateY(0.9375cqw);
+  transition: opacity 200ms, transform 200ms;
+}
+#characterSelect .card[aria-pressed="true"] .card-expanded { opacity: 1; transform: none; transition: opacity 320ms 160ms, transform 420ms 160ms var(--ease); }
+#characterSelect .e-kicker { font-family: 'Cinzel', serif; font-size: 1.0156cqw; letter-spacing: 0.2em; color: var(--red); }
+#characterSelect .e-title { display: flex; align-items: baseline; gap: 1.25cqw; white-space: nowrap; }
+#characterSelect .e-name { font-family: 'Nanum Myeongjo', serif; font-weight: 800; font-size: 5cqw; line-height: 1; }
+#characterSelect .e-role { font-size: 1.0938cqw; color: var(--muted); }
+#characterSelect .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.875cqw; margin-top: 1.4063cqw; }
+#characterSelect .stat { display: flex; flex-direction: column; gap: 0.625cqw; }
+#characterSelect .stat-head { display: flex; justify-content: space-between; font-size: 1.0156cqw; white-space: nowrap; gap: 0.625cqw; }
+#characterSelect .stat-label { color: var(--muted); }
+#characterSelect .stat-value { font-weight: 700; }
+#characterSelect .stat-track { height: 4px; background: rgba(237,227,211,0.14); }
+#characterSelect .stat-fill { display: block; height: 100%; width: 0; background: var(--red-fill); transition: width 160ms; }
+#characterSelect .stat-fill.is-difficulty { background: var(--gold); }
+#characterSelect .card[aria-pressed="true"] .stat-fill { width: var(--pct); transition: width 640ms var(--ease) var(--delay, 0ms); }
+
+/* 잠긴 카드 */
+#characterSelect .card-locked { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.7813cqw; }
+#characterSelect .l-mark { font-family: 'Cinzel', serif; font-size: 5cqw; line-height: 1; color: var(--line-2); transition: font-size var(--expand-ms) var(--ease), color 300ms; }
+#characterSelect .card[aria-pressed="true"] .l-mark { font-size: 9.375cqw; color: var(--muted-2); }
+#characterSelect .l-hint { font-size: 1.0156cqw; color: var(--muted-2); }
+#characterSelect .l-numeral { position: absolute; left: 2.3438cqw; bottom: 2.1875cqw; font-family: 'Cinzel', serif; font-size: 1.7188cqw; color: var(--line-2); }
+
+/* 하단 */
+#characterSelect .bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 1.7188cqw; }
+#characterSelect .hints { font-size: 1.0156cqw; color: var(--muted-2); letter-spacing: 0.06em; }
+#characterSelect .select-actions { display: flex; gap: 0.9375cqw; }
+#characterSelect .select-button { height: 3.75cqw; padding: 0 1.875cqw; font-family: 'Nanum Myeongjo', serif; font-weight: 800; font-size: 1.3281cqw; color: var(--text); cursor: pointer; transition: background-color 160ms, border-color 160ms, opacity 160ms; }
+#characterSelect .select-button-ghost { background: transparent; border: 1px solid var(--line-2); }
+#characterSelect .select-button-ghost:hover { border-color: var(--gold); }
+#characterSelect .select-button-primary { padding: 0 2.8125cqw; background: var(--red-deep); border: 1px solid var(--gold); font-size: 1.4063cqw; letter-spacing: 0.08em; }
+#characterSelect .select-button-primary:hover { background: #a8232a; }
+#characterSelect .select-button:disabled { opacity: 0.45; cursor: not-allowed; background: #2a1c1a; }
+#characterSelect .select-button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* Announce locked slots without leaving the game menu. */
+#characterSelect .toast { position: absolute; left: 50%; top: 8.125cqw; transform: translateX(-50%); padding: 0.7813cqw 1.4063cqw; background: var(--panel); border: 1px solid var(--line-2); font-size: 1.25cqw; color: var(--text); opacity: 0; pointer-events: none; transition: opacity 200ms; z-index: 1; }
+#characterSelect .toast.is-visible { opacity: 1; }
+#characterSelect .v-name { white-space: pre-line; }
+#characterSelect[lang="en"] .v-name { writing-mode: vertical-rl; }
+#characterSelect .stat-head { gap: 0.5cqw; }
+#characterSelect .stats { gap: 1.25cqw; }
+
+#characterSelect .top { flex: none; }
+#characterSelect .top h2 { color: var(--text); }
+#characterSelect .card { touch-action: manipulation; }
+#characterSelect .select-button { height: max(28px, 3.75cqw); }
+#characterSelect .e-kicker { font-family: 'Cinzel', 'Noto Sans KR', sans-serif; }
+#characterSelect .c-meta, #characterSelect .v-name { text-shadow: 0 1px 5px #000; }
+#characterSelect .l-hint { text-align: center; }
+@container (max-width: 600px) {
+  #characterSelect .top h2 { font-size: max(12px, 2.7cqw); }
+  #characterSelect .brand, #characterSelect .unlock-count { font-size: max(8px, 1.05cqw); }
+  #characterSelect .e-name { font-size: max(17px, 5cqw); }
+  #characterSelect .select-button { font-size: max(11px, 1.5cqw); }
+  #characterSelect .hints { display: none; }
+  #characterSelect .bottom { justify-content: flex-end; }
+  #characterSelect .toast { font-size: max(10px, 1.25cqw); }
+}
+@media (max-width: 700px) and (orientation: portrait) {
+  #characterSelect .select-content { height: min(100%, 125cqw); }
+  #characterSelect .top { height: 30px; }
+  #characterSelect .cards { margin-top: 12px; }
+  #characterSelect .card-expanded { left: 12px; right: 16px; bottom: 14px; gap: 4px; }
+  #characterSelect .e-title { flex-direction: column; gap: 3px; }
+  #characterSelect .e-kicker, #characterSelect .e-role, #characterSelect .stat-head { font-size: max(9px, 1.05cqw); }
+  #characterSelect .stats { grid-template-columns: 1fr; gap: 5px; margin-top: 6px; }
+  #characterSelect .stat { gap: 2px; }
+  #characterSelect .c-class, #characterSelect .l-hint { font-size: max(8px, 1cqw); }
+  #characterSelect .select-button { height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #characterSelect * { transition: none !important; }
+}

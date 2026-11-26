@@ -287,50 +287,49 @@ function newPlayer(score = 0, characterId = selectedCharacterId) {
 // ---------------------------------------------------------------- 화면(HTML 오버레이) 전환
 const screens = ['title', 'titleInfo', 'characterSelect', 'tutorial', 'pause', 'clear', 'continue', 'over', 'ending', 'settings', 'challenge', 'challengeResult'];
 const CHARACTER_ROSTER = {
-  barel: { name: '바렐', job: '흑기사', description:'대검으로 전장을 가르는 흑기사', available: true },
-  viesa: { name: '비에사', job: '궁수', description:'흑월에 마을을 잃은 마지막 사냥꾼. 거리를 지배하는 궁수.', available: true }
+  barel: { available: true },
+  viesa: { available: true }
 };
 let selectedCharacterId = 'barel';
 let characterSelectBossStage = null;
+let selectedCharacterCard = 'barel';
+const characterCards = CharacterSelectView.cards;
 function selectCharacter(id, focus = false) {
-  const hero = CHARACTER_ROSTER[id]; if (!hero) return;
-  selectedCharacterId = id;
-  document.querySelectorAll('[data-character]').forEach(button => {
-    button.setAttribute('aria-pressed', String(button.dataset.character === id));
-    if (focus && button.dataset.character === id) button.focus();
-  });
-  const tr = TitleMenu.localize;
-  $('btnCharacterBack').textContent = TitleMenu.text(characterSelectBossStage === null ? 'MENU_BACK' : 'PAUSE_BOSSES');
-  $('characterSelectionStatus').textContent = `${tr(hero.name)} · ${tr(hero.job)} — ${tr(hero.description)}`;
-  const k = a => UX.keyName(UX.options.bindings[a]);
-  $('characterSelectionKeys').textContent = id === 'viesa'
-    ? TitleMenu.text('VIESA_CONTROLS', ...['KeyJ','KeyH','KeyU','KeyL','KeyO','KeyP','KeyK'].map(k))
-    : TitleMenu.text('BAREL_CONTROLS', ...['KeyJ','KeyU','KeyH','KeyO','KeyP','KeyL','KeyK','KeyI'].map(k));
-  $('btnCharacterConfirm').disabled = !hero.available;
-  $('btnCharacterConfirm').textContent = hero.available ? TitleMenu.text('START_HERO', tr(hero.name)) : tr('곧 추가');
-}
-function drawCharacterPreview() {
-  const preview=$('viesaSelectPortrait'), pc=preview.getContext('2d');
-  const frames=VIESA_ART.clips.idle, pose=frames[Math.floor(tick/6)%frames.length];
-  const sheet=VIESA_SHEETS[pose.sheet];
-  if(sheet.naturalWidth){
-    // Fit the whole clip once so breathing never changes scale or floor height.
-    const left=Math.max(...frames.map(f=>f.anchor[0])),right=Math.max(...frames.map(f=>f.atlas[2]-f.anchor[0]));
-    const top=Math.max(...frames.map(f=>f.anchor[1])),bottom=Math.max(...frames.map(f=>f.atlas[3]-f.anchor[1]));
-    const scale=Math.min(270/(left+right),225/(top+bottom));
-    const [x,y,w,h]=pose.atlas,[ax,ay]=pose.anchor;
-    pc.clearRect(0,0,preview.width,preview.height);pc.imageSmoothingEnabled=false;
-    pc.drawImage(sheet,x,y,w,h,(preview.width+(left-right)*scale)/2-ax*scale,preview.height-8-(bottom+ay)*scale,w*scale,h*scale);
+  const active = characterCards.find(card => card.dataset.character === id);
+  if (!active) return;
+  selectedCharacterCard = id;
+  const hero = CHARACTER_ROSTER[id];
+  if (hero?.available) selectedCharacterId = id;
+  for (const card of characterCards) {
+    card.setAttribute('aria-pressed', String(card === active));
+    card.tabIndex = card === active ? 0 : -1;
   }
-  drawBarelIdlePreview($('barelSelectPreview'),tick*MS);
+  if (focus) active.focus();
+  CharacterSelectView.clearNotice();
+  $('btnCharacterBack').textContent = TitleMenu.text(characterSelectBossStage === null ? 'MENU_BACK' : 'PAUSE_BOSSES');
+  $('btnCharacterConfirm').disabled = !hero?.available;
+  $('btnCharacterConfirm').textContent = hero?.available
+    ? TitleMenu.text('SELECT_START', TitleMenu.text('HERO_' + id))
+    : TitleMenu.text('SELECT_LOCKED');
 }
-function openCharacterSelect(challengeStage = null) {
+function moveCharacterSelection(step) {
+  const index = characterCards.findIndex(card => card.dataset.character === selectedCharacterCard);
+  const next = characterCards[(index + step + characterCards.length) % characterCards.length];
+  selectCharacter(next.dataset.character, true);
+  sfx('click');
+}
+function openCharacterSelect(challengeStage = null, initial = 'barel') {
   characterSelectBossStage = Number.isInteger(challengeStage) ? challengeStage : null;
   clearInput();practice = false;scene = 'characterSelect';showScreen('characterSelect');
-  selectCharacter('barel', true);drawCharacterPreview();sfx('click');
+  characterPad.ready = false;
+  selectCharacter(initial, true);
+  sfx('click');
 }
 function confirmCharacter() {
-  if (!CHARACTER_ROSTER[selectedCharacterId]?.available) return;
+  if (!CHARACTER_ROSTER[selectedCharacterCard]?.available) {
+    CharacterSelectView.showLockedNotice();
+    return;
+  }
   if (characterSelectBossStage !== null) { beginBossChallenge(characterSelectBossStage);return; }
   toTutorial('characterSelect');$('btnGo').focus();
 }
@@ -338,19 +337,53 @@ function backFromCharacterSelect() {
   if (characterSelectBossStage !== null) { openBossChallenge();return; }
   toTitle();$('btnStart').focus();
 }
-document.querySelectorAll('[data-character]').forEach(button => {
-  button.onclick = () => { selectCharacter(button.dataset.character);sfx('click'); };
-});
+for (const card of characterCards) {
+  card.onclick = () => {
+    if (card.dataset.character === selectedCharacterCard) confirmCharacter();
+    else { selectCharacter(card.dataset.character, true);sfx('click'); }
+  };
+}
 $('characterSelect').addEventListener('keydown', e => {
-  if (e.code === 'Enter' && e.target.closest('.character-card')) {
-    e.preventDefault();e.stopPropagation();confirmCharacter();return;
-  }
-  if (!['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code)) return;
-  e.preventDefault();e.stopPropagation();
-  selectCharacter(['ArrowLeft','KeyA'].includes(e.code) ? 'barel' : 'viesa', true);sfx('click');
+  if (e.altKey || e.metaKey || e.ctrlKey) return;
+  if (['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(e.code)) {
+    moveCharacterSelection(['ArrowLeft', 'KeyA'].includes(e.code) ? -1 : 1);
+  } else if (['Enter', 'Space'].includes(e.code) && e.target.closest('.character-card')) {
+    if (!e.repeat) confirmCharacter();
+  } else if (['Escape', 'Backspace'].includes(e.code)) {
+    if (!e.repeat) backFromCharacterSelect();
+  } else return;
+  e.preventDefault();
+  e.stopPropagation();
 });
 $('btnCharacterConfirm').onclick = confirmCharacter;
 $('btnCharacterBack').onclick = backFromCharacterSelect;
+
+const characterPad = { ready: false, direction: 0, nextRepeat: 0, accept: false, cancel: false };
+function pollCharacterPad(now) {
+  let pad;
+  try {
+    pad = Array.from(navigator.getGamepads?.() ?? []).find(p => p?.mapping === 'standard');
+  } catch {
+    // Some embeds disable gamepads through Permissions Policy.
+    return;
+  }
+  const left = pad?.buttons[14]?.pressed || pad?.axes[0] < -0.5;
+  const right = pad?.buttons[15]?.pressed || pad?.axes[0] > 0.5;
+  const direction = left ? -1 : right ? 1 : 0;
+  const accept = Boolean(pad?.buttons[0]?.pressed);
+  const cancel = Boolean(pad?.buttons[1]?.pressed);
+  if (!characterPad.ready) {
+    Object.assign(characterPad, { ready: true, direction, nextRepeat: now + 380, accept, cancel });
+    return;
+  }
+  if (direction && (characterPad.direction !== direction || now >= characterPad.nextRepeat)) {
+    moveCharacterSelection(direction);
+    characterPad.nextRepeat = now + (characterPad.direction === direction ? 160 : 380);
+  }
+  if (cancel && !characterPad.cancel) backFromCharacterSelect();
+  else if (accept && !characterPad.accept) confirmCharacter();
+  Object.assign(characterPad, { direction, accept, cancel });
+}
 function showScreen(id) {
   if (id !== 'tutorial') demoStop();               // 시범 플레이를 끝내고 보관한 게임 상태로 되돌린다
   $('btnOverBosses').hidden = !bossChallenge;
@@ -549,7 +582,7 @@ $('btnInfoBack').onclick = toTitle;
 $('btnTitleSettings').onclick = () => openSettings('title');
 $('btnPauseSettings').onclick = () => openSettings('pause');
 $('btnPauseHelp').onclick = () => toTutorial('pause');
-$('btnHelpBack').onclick = () => { if (helpFrom === 'characterSelect') openCharacterSelect(); else { scene = 'pause'; showScreen('pause'); clearInput(); } };
+$('btnHelpBack').onclick = () => { if (helpFrom === 'characterSelect') openCharacterSelect(null, selectedCharacterId); else { scene = 'pause'; showScreen('pause'); clearInput(); } };
 $('btnSettingsBack').onclick = closeSettings;
 document.querySelectorAll('.skillbtn').forEach(b => {
   b.addEventListener('pointerdown', e => {
@@ -579,7 +612,7 @@ function onKeyOnce(code) {
     else if (scene === 'characterSelect') backFromCharacterSelect();
     else if (scene === 'challengeResult') openBossChallenge();
     else if (scene === 'settings') { if (UX.touchEditing) UX.endTouchEdit(); else if ($('settings').querySelector('.settings-panel').dataset.page !== 'main') settingsPage('main'); else closeSettings(); }
-    else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else if (helpFrom === 'characterSelect') openCharacterSelect(); else toTitle(); }
+    else if (scene === 'tutorial') { if (helpFrom === 'pause') { scene = 'pause'; showScreen('pause'); } else if (helpFrom === 'characterSelect') openCharacterSelect(null, selectedCharacterId); else toTitle(); }
   }
 }
 
@@ -3165,34 +3198,43 @@ function render() {
     items.forEach(i => list.push({ y: i.y, f: () => drawItem(i) }));
     enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemyFeel(e) }));   // 히트스톱 중 맞은 적 떨림
     sovereignDrawList(list);
-    hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, f: () => drawZoneEruption(z) }); });
+    // 이펙트는 어떤 캐릭터보다도 앞에 보이지 않는다: 플레이어보다 뒤(y 작음)에 선 캐릭터 → 모든 이펙트 → 플레이어 → 앞에 선 캐릭터
+    hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, fx: true, f: () => drawZoneEruption(z) }); });
     ghosts.forEach(g => { if (sp < 0 || g.id !== 'player') list.push({ y: g.y - 0.5, f: () => drawGhost(g) }); });
-    if (sp < 0) list.push({ y: player.y, f: drawPlayer });
-    list.sort((a, b) => a.y - b.y).forEach(l => l.f());
-    if (sp >= 0) {                                 // 흑월참: 배경과 적을 어둡게
-      const k = sp < 200 ? 1 - 0.65 * (sp / 200) : (sp > 1900 ? 0.35 + 0.65 * ((sp - 1900) / 200) : 0.35);
-      ctx.fillStyle = `rgba(16,2,8,${(1 - k).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
-      ghosts.forEach(g => { if (g.id === 'player') drawGhost(g); });
-      drawPlayer();
-    }
-    if (sectionBG) drawStage1Front();             // 투기장 울타리 전경: 캐릭터보다 나중
-
+    list.sort((a, b) => a.y - b.y);
+    const back = list.filter(l => l.fx || l.y <= player.y), front = list.filter(l => !l.fx && l.y > player.y);
+    back.forEach(l => l.f());
     if (player.st === 'cast' && !player.castFired) {   // 뇌격 직전: 화면이 푸르게 어두워진다
       ctx.fillStyle = `rgba(10,16,48,${(0.32 * Math.min(1, player.t * MS / 300)).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
     }
-    for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
-    fxTop.L.clear(); drawTopFx(fxTop.L); presentFx(fxTop);
-    drawStage1TopSprites();                       // 날아가는 화염병
-    for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
-    enemies.forEach(drawEnemyOverlay);
+    const drawFx = () => {
+      for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
+      fxTop.L.clear(); drawTopFx(fxTop.L); presentFx(fxTop);
+      drawStage1TopSprites();                     // 날아가는 화염병
+      for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
+      drawGorathHazards();
+      drawGorath2Top();                           // 고라스: 떨어지는 고기, 사슬·갈고리
+      drawMorgraHazards();
+      drawAurelionHazards();
+      drawVargulHazards(false);
+      drawSovereignTop();
+      drawViesaProjectiles();
+    };
+    if (sp >= 0) {                                 // 흑월참: 배경과 적을 어둡게
+      front.forEach(l => l.f());
+      const k = sp < 200 ? 1 - 0.65 * (sp / 200) : (sp > 1900 ? 0.35 + 0.65 * ((sp - 1900) / 200) : 0.35);
+      ctx.fillStyle = `rgba(16,2,8,${(1 - k).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
+      drawFx();
+      ghosts.forEach(g => { if (g.id === 'player') drawGhost(g); });
+      drawPlayer();
+    } else {
+      drawFx();
+      drawPlayer();
+      front.forEach(l => l.f());
+    }
+    if (sectionBG) drawStage1Front();             // 투기장 울타리 전경: 캐릭터보다 나중
+    enemies.forEach(drawEnemyOverlay);            // 기절 별 · 공격 예고 ! 는 UI라 맨 위
     drawHitboxDebug();                            // ?hitbox=1 / F9
-    drawGorathHazards();
-    drawGorath2Top();                             // 고라스: 떨어지는 고기, 사슬·갈고리
-    drawMorgraHazards();
-    drawAurelionHazards();
-    drawVargulHazards(false);
-    drawSovereignTop();
-    drawViesaProjectiles();
     drawGorathGrab();
     drawStage1Grab();
     for (const t of texts) outlineText(String(t.txt), t.x - camX, t.y, t.col, `bold ${Math.round(16 * (t.scale || 1))}px sans-serif`);
@@ -3319,7 +3361,7 @@ function loop(t) {
   if (scene === 'title' || scene === 'titleInfo' || scene === 'characterSelect' || scene === 'challenge' || (scene === 'tutorial' && !DEMO.on && helpFrom !== 'pause') || (scene === 'settings' && settingsFrom === 'title')) { ctx.clearRect(0, 0, W, H); renderIdle(); }
   else if (scene === 'opening') drawOpening();
   else render();
-  if (scene === 'characterSelect') drawCharacterPreview();
+  if (scene === 'characterSelect') pollCharacterPad(t);
   if (scene === 'tutorial') demoPresent();
   if (scene === 'challenge') drawBarelIdlePreview($('barelChallengePreview'),tick*MS);
   $('playPause').hidden = !['play', 'intro', 'bossintro'].includes(scene);
@@ -3332,7 +3374,7 @@ function loop(t) {
 document.addEventListener('bmk-language-change', () => {
   renderRevision++;
   syncPlayerCharacterUI(playerControlCharacter);
-  selectCharacter(selectedCharacterId);
+  selectCharacter(selectedCharacterCard);
   $('pauseReason').textContent = TitleMenu.localize(pauseReason);
   $('btnHelpBack').textContent = TitleMenu.localize(helpFrom === 'characterSelect' ? '캐릭터 선택' : '돌아가기');
   if (DEMO.on) { demoList(); demoCaption(); demoPlayButton(); }
@@ -3342,6 +3384,7 @@ document.addEventListener('bmk-language-change', () => {
 });
 UX.mount();
 demoMount();
+TitleMenu.ready.then(() => selectCharacter(selectedCharacterCard));
 fitCanvas();
 GameAssets.prepareStage(0);
 loopRequest = requestAnimationFrame(t => { last = t; loop(t); });

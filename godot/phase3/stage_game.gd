@@ -5,6 +5,8 @@ var start_section: int = 0
 var phase_debug: int = 1
 var ult_debug: bool = false
 var top_view: BmkStageTopView
+## Arena fence and front scaffolds: drawn after the characters (game.js drawStage1Front()).
+var top_front: BmkStageTopView
 var item_views: Dictionary[BmkWorldItem, BmkItemView] = {}
 ## game.js selectedCharacterId; restart() builds the matching player.
 var character_id: String = "barel"
@@ -49,11 +51,16 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	top_view = BmkStageTopView.new()
 	top_view.bank = bank
-	top_view.z_index = 3
+	top_view.z_index = EFFECT_Z
 	world.add_child(top_view)
+	top_front = BmkStageTopView.new()
+	top_front.bank = bank
+	top_front.foreground = true
+	top_front.z_index = 5
+	world.add_child(top_front)
 	viesa_view = BmkViesaView.new()
 	viesa_view.bank = bank
-	viesa_view.z_index = 3
+	viesa_view.z_index = EFFECT_Z
 	world.add_child(viesa_view)
 	viesa_dim = ViesaDim.new()
 	world.add_child(viesa_dim)
@@ -68,7 +75,7 @@ func _ready() -> void:
 	world.move_child(morgra_ground,viesa_dim.get_index() + 1)
 	morgra_view = BmkMorgraView.new()
 	morgra_view.bank = bank
-	morgra_view.z_index = 3
+	morgra_view.z_index = EFFECT_Z
 	world.add_child(morgra_view)
 	legacy_presenter = BmkLegacyPresenter.new(bank)
 	aurelion_back = BmkAurelionView.new()
@@ -92,15 +99,15 @@ func _ready() -> void:
 	world.move_child(rift_view,sovereign_ground.get_index() + 1)
 	sovereign_view = BmkSovereignView.new()
 	sovereign_view.bank = bank
-	sovereign_view.z_index = 3
+	sovereign_view.z_index = EFFECT_Z
 	world.add_child(sovereign_view)
 	vargul_view = BmkVargulView.new()
 	vargul_view.bank = bank
-	vargul_view.z_index = 3
+	vargul_view.z_index = EFFECT_Z
 	world.add_child(vargul_view)
 	aurelion_view = BmkAurelionView.new()
 	aurelion_view.bank = bank
-	aurelion_view.z_index = 3
+	aurelion_view.z_index = EFFECT_Z
 	world.add_child(aurelion_view)
 	viesa_sigil = BmkViesaView.make_sigil()
 	player_view.add_child(viesa_sigil)
@@ -164,10 +171,11 @@ func present() -> void:
 	super.present()
 	var s: BmkStageSimulation = session as BmkStageSimulation
 	(street_view as BmkFullStageView).background_id = str(s.sections.section["bg"])
-	if top_view != null:
-		top_view.session = s
-		top_view.section = s.sections
-		top_view.queue_redraw()
+	for view: BmkStageTopView in [top_view,top_front]:
+		if view == null: continue
+		view.session = s
+		view.section = s.sections
+		view.queue_redraw()
 	var keep: Dictionary[BmkWorldItem, bool] = {}
 	for item: BmkWorldItem in s.barrels + s.items:
 		keep[item] = true
@@ -186,6 +194,7 @@ func present() -> void:
 	if wave != null and wave.stage1_view: wave = null
 	street_view.visible = wave == null
 	if top_view != null: top_view.visible = wave == null
+	if top_front != null: top_front.visible = wave == null
 	if wave_backdrop != null:
 		wave_backdrop.visible = wave != null
 		wave_backdrop.wave = wave
@@ -220,6 +229,11 @@ func present() -> void:
 		BmkViesaView.present_sigil(viesa_sigil,s,bank)
 		# paintViesa(): drawLit brightens the whole body while flashing, including hurt.
 		if s.player.is_viesa() and s.player.flash > 0 and show_flash: player_view.body.modulate = Color(1.8,1.8,1.8,player_view.body.modulate.a)
+	# Items, Sovereign fists and rift eruptions joined the actor layer above.
+	layer_actors()
+
+func is_effect_node(node: Node2D) -> bool:
+	return node is BmkRiftView.Eruption
 
 ## Stage 2 soldiers use the named stage art; Morgra uses her own clips (hover lift included).
 func present_enemy(view: BmkActorView, e: BmkActorState) -> void:

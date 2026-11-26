@@ -65,7 +65,7 @@ func run() -> void:
 	check(root.get_texture().get_image().save_png(output_dir + "/phase4_title.png") == OK,"Capture title")
 	await click_button(game.menu.title_image.caption("New Game"))
 	check(game.menu.mode == "characters","Mouse opens character selection")
-	await click_button("바렐로 시작")
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_barel"))
 	# Phase 12: the character opens the tutorial; 게임 시작 plays the opening, skipped here.
 	check(game.menu.mode == "tutorial" and game.demo.on,"The character opens the tutorial")
 	game.menu.tutorial.start_button.pressed.emit()

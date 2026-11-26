@@ -18,6 +18,9 @@ const embedded = scripts.reduce((s, name) => s.replace(`<script src="${name}"></
   return `<script>\n${source}\n</script>`;
 }), embeddedSource);
 const allowed = new Set(['index.html', 'mobile-lab.html', 'mobile-lab.css', 'mobile-lab.js', ...scripts]);
+allowed.add('character-select.css');
+for (const file of ['barel.jpg', 'viesa.jpg']) allowed.add('godot/phase4/character_select/img/' + file);
+for (const file of ['Cinzel.woff2', 'NanumMyeongjo-ExtraBold.woff2', 'NotoSansKR.woff2']) allowed.add('assets/character-select/fonts/' + file);
 for (const name of ['menu.csv', 'menu.webp', 'selection.png', 'lettering.png']) allowed.add('godot/phase4/title_art/' + name);
 for (const name of JSON.parse(fs.readFileSync(path.join(root, 'data/runtime-assets.json'), 'utf8'))) allowed.add(name);
 for(const name of ['assets/aseprite/barel-walk-dot-10/barel-walk-dot-10.animation.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.json','assets/aseprite/exports/barel-walk-dot-10/barel-walk-dot-10.png'])allowed.add(name);
@@ -43,7 +46,8 @@ const server = http.createServer((req, res) => {
   if(name==='assets/bgm/boss.mp3'&&fs.existsSync(bgmPath)){res.setHeader('Content-Type','audio/mpeg');res.end(fs.readFileSync(bgmPath));return;}
   if(name==='production.html'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(embedded.replace('<script>globalThis.VARGUL_DEBUG_OVERRIDE=true</script>',''));return;}
   if (name !== 'embedded.html' && !allowed.has(name)) { res.writeHead(404).end(); return; }
-  res.setHeader('Content-Type', name.endsWith('.css') ? 'text/css' : name.endsWith('.js') ? 'text/javascript; charset=utf-8' : name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8');
+  const types = { '.css': 'text/css', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2' };
+  res.setHeader('Content-Type', types[path.extname(name)] || 'text/html; charset=utf-8');
   res.end(name === 'embedded.html' ? embedded : (name==='index.html'?html:fs.readFileSync(path.join(root, name))));
 });
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'bmk-test-'));

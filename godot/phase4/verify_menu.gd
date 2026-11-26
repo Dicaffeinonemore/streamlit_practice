@@ -10,6 +10,12 @@ func check(condition: bool, label: String) -> void:
 	checks += 1
 	if not condition: failures.append(label)
 
+func menu_key(code: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.pressed = true
+	root.push_input(event)
+
 func run() -> void:
 	game = load("res://phase4/game.tscn").instantiate() as BmkMenuGame
 	root.add_child(game)
@@ -28,6 +34,21 @@ func run() -> void:
 	check(game.menu.title_image.choices.size() == 6 and game.menu.title_image.choices[2].text == "보스 도전","Boss Challenge is the third title choice")
 	game.menu.title_choice("MENU_CHALLENGE")
 	check(game.menu.mode == "challenge","Title opens the boss list")
+	game.menu.title_choice("New Game")
+	check(game.menu.has_node("CharacterSelect"),"New Game shows the supplied character selector")
+	var selector := game.menu.character_selector
+	check(selector.cards.size() == 4 and selector.cards[0].active,"Four cards open with Barel expanded")
+	menu_key(KEY_RIGHT)
+	menu_key(KEY_RIGHT)
+	menu_key(KEY_ENTER)
+	check(selector.start_button.disabled and game.menu.mode == "characters","An unrevealed card cannot start the game")
+	menu_key(KEY_LEFT)
+	menu_key(KEY_ENTER)
+	check(game.menu.mode == "tutorial" and game.demo.character == "viesa","Viesa launches her tutorial")
+	game.menu.tutorial_back()
+	check(selector.visible and selector.cards[1].active,"Coming back from the tutorial keeps the chosen card")
+	selector.back()
+	check(game.menu.mode == "title" and not selector.visible,"Back returns to the title")
 	game.menu.show_title()
 	game.menu.title_choice("Options")
 	var option_labels: Array = []
@@ -64,6 +85,14 @@ func run() -> void:
 	check(game.session.player.score == 0 and game.game_mode == "story" and not game.clock.paused,"Retry uses current stage entry")
 	game.start_challenge()
 	check(game.game_mode == "challenge" and game.start_section == 4 and game.session.player.sp == 100 and game.session.player.mg == 3,"Challenge starts unlocked Gorath arena")
+	game.menu.show_challenges()
+	game.menu.show_characters(true)
+	selector.back()
+	check(game.menu.mode == "challenge","Back returns to the boss list")
+	game.menu.show_characters(true)
+	selector.select(1)
+	selector.confirm()
+	check(game.game_mode == "challenge" and game.session.player.character_id == "viesa","Boss challenge launches with the chosen hero")
 	game.menu.show_controls()
 	var editor := game.menu.key_settings
 	check(editor.assignments["KeyA"].disabled, "Built-in layouts are locked")

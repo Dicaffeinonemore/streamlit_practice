@@ -47,6 +47,7 @@ def collect_assets(html: str, scripts: list[str]) -> set[str]:
     wanted.add("assets/bgm/boss.mp3")
     for script in scripts:
         wanted.update(re.findall(r"""(godot/phase4/title_art/[\w.-]+)""", script))
+        wanted.update(re.findall(r"""(godot/phase4/character_select/img/[\w.-]+\.jpg)""", script))
     for text in [html, *scripts]:
         for match in ASSET_LITERAL.finditer(text):
             path = norm(match.group(1))
@@ -166,6 +167,16 @@ def build(out: Path) -> None:
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     # 형제 파일이 필요한 개발용 링크는 단일 파일에서 깨지므로 제거한다.
     html = re.sub(r'<a id="mobileLabLink"[^>]*>.*?</a>', '', html, flags=re.S)
+    selector_link = '<link rel="stylesheet" href="character-select.css">'
+    if selector_link in html:
+        styles = (ROOT / "character-select.css").read_text(encoding="utf-8")
+
+        def inline_font(match: re.Match) -> str:
+            data = base64.b64encode((ROOT / match.group()).read_bytes()).decode("ascii")
+            return f"data:font/woff2;base64,{data}"
+
+        styles = re.sub(r"assets/character-select/fonts/[\w.-]+\.woff2", inline_font, styles)
+        html = html.replace(selector_link, f"<style>\n{styles}\n</style>")
 
     names = [m.group(2) for m in SCRIPT_TAG.finditer(html)]
     codes = {}

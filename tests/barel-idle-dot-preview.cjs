@@ -1,13 +1,11 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 module.exports=async({evaluate,call,root,out})=>{
  const results=[];
- for(const kind of ['challenge','characterSelect']){
+ for(const kind of ['challenge']){
   const result=await evaluate(`(async()=>{
    UX.record(0,100,'S',30);BarelIdle.setMode('aseprite10');openBossChallenge();
-   if(${JSON.stringify(kind)}==='characterSelect')document.querySelector('#challengeList button').click();
-   if(scene!==${JSON.stringify(kind)})throw Error('Boss selection navigation');
-   if(scene==='characterSelect'&&characterSelectBossStage!==0)throw Error('Boss stage selection lost');
-   const canvas=$(scene==='challenge'?'barelChallengePreview':'barelSelectPreview'),c=canvas.getContext('2d');
+   if(scene!=='challenge')throw Error('Boss selection navigation');
+   const canvas=$('barelChallengePreview'),c=canvas.getContext('2d');
    const native=c.drawImage,seen={},sources=[];let prev=-1,wraps=0;
    c.drawImage=function(image,...args){
     if(image.src?.includes('barel-idle-stationary-10.png')){const index=Math.floor(args[0]/448);seen[index]=true;if(prev===9&&index===0)wraps++;prev=index;}

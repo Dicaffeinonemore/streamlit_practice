@@ -100,7 +100,7 @@ func run() -> void:
 
 	# ---- Title -> character select -> tutorial (characterSelect origin)
 	await click_button(game.menu.title_image.caption("New Game"))
-	await click_button("바렐로 시작")
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_barel"))
 	await process_frame
 	check(game.menu.mode == "tutorial" and t.visible,"Picking a character opens the tutorial")
 	check(game.demo.on and game.demo.character == "barel","The Barel demonstration runs")
@@ -161,7 +161,8 @@ func run() -> void:
 	check(game.demo_port.render_target_update_mode == SubViewport.UPDATE_DISABLED,"The demo view stops rendering")
 
 	# ---- Viesa tutorial -> 직접 연습
-	await click_button("비에사로 시작")
+	await key(KEY_RIGHT)
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_viesa"))
 	check(game.demo.on and game.demo.character == "viesa" and t.chips.get_child_count() == 12,"The Viesa demonstration runs")
 	check((t.chips.get_child(2) as BmkTutorialScreen.Chip).title.text == "화살","Viesa's step list")
 	game.demo.choose(2)
@@ -192,7 +193,8 @@ func run() -> void:
 	game.pause_game(true)
 	game.menu.show_title()
 	await click_button(game.menu.title_image.caption("New Game"))
-	await click_button("비에사로 시작")
+	await key(KEY_RIGHT)
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_viesa"))
 	var before_files: String = files()
 	tick(120)
 	# Arrow keys (arcade movement) light caps but do not move focus off 게임 시작.
@@ -214,7 +216,7 @@ func run() -> void:
 	game.pause_game(true)
 	game.menu.show_title()
 	await click_button(game.menu.title_image.caption("New Game"))
-	await click_button("바렐로 시작")
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_barel"))
 	await click_button("게임 시작",t)
 	check(game.menu.mode == "opening","게임 시작 opens the opening")
 	# Step the opening by hand only (its own _physics_process would add real-time ticks), from 0.

@@ -2,12 +2,13 @@
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 module.exports=async({evaluate,call,errors,root})=>{
   const out=path.join(root,'artifacts/character-select');fs.mkdirSync(out,{recursive:true});
-  await evaluate('requestAnimationFrame=()=>0;AUDIO.enable(false);Promise.all([BAREL_ATLAS.decode(),VIESA_READY])');
+  await evaluate("AUDIO.enable(false);Promise.all([TitleMenu.ready, ...Array.from(document.querySelectorAll('#characterCards img'), image => image.decode())])");
   const result=await evaluate(`(()=>{
     const check=(v,m)=>{if(!v)throw Error(m);};
     toTitle();const saves=JSON.stringify({...localStorage});$('btnStart').click();
     check(scene==='characterSelect'&&$('characterSelect').classList.contains('show'),'New game opens selector');
     check(selectedCharacterId==='barel'&&!$('btnCharacterConfirm').disabled,'Barel is playable by default');
+    check(document.querySelectorAll('#characterSelect .character-card').length===4,'The two supplied locked slots are shown');
     $('characterViesa').click();
     check(scene==='characterSelect'&&selectedCharacterId==='viesa'&&!$('btnCharacterConfirm').disabled,'Viesa is now playable');
     confirmCharacter();check(scene==='tutorial','Viesa selection leads to tutorial');$('btnHelpBack').click();
@@ -20,18 +21,15 @@ module.exports=async({evaluate,call,errors,root})=>{
     selectCharacter('barel');onKeyOnce('Enter');check(scene==='tutorial','Enter confirms playable hero');
     onKeyOnce('Enter');check(scene==='opening','Confirmed hero follows existing opening');
     onKeyOnce('Escape');check(scene==='intro'&&player.hp===100&&player.lives===3,'Barel starts normally');
-    toTitle();openCharacterSelect();drawCharacterPreview();
-    const canvas=$('barelSelectPreview'),data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
-    check(data.some((n,i)=>i%4===3&&n>0),'Real player preview is drawn');
-    const preview=$('viesaSelectPortrait'),savedTick=tick;
-    tick=0;drawCharacterPreview();const first=preview.toDataURL();
-    check(preview.getContext('2d').getImageData(0,0,preview.width,preview.height).data.some((n,i)=>i%4===3&&n>0),'Viesa idle preview is drawn');
-    tick=6;drawCharacterPreview();check(preview.toDataURL()!==first,'Viesa idle advances to the next frame');
-    tick=VIESA_ART.clips.idle.length*6;drawCharacterPreview();check(preview.toDataURL()===first,'Viesa idle loops seamlessly');
-    tick=savedTick;
+    toTitle();openCharacterSelect();
+    const locked=document.querySelector('#characterSelect .is-locked');
+    locked.click();
+    check($('btnCharacterConfirm').disabled&&locked.getAttribute('aria-pressed')==='true','Locked slots are inspectable but cannot start');
+    locked.click();
+    check(scene==='characterSelect'&&$('characterSelectionStatus').textContent,'Confirming a locked slot explains why it cannot start');
     // Opening a menu must not create or overwrite a checkpoint.
     const checkpoint=UX.checkpoint();openCharacterSelect();check(JSON.stringify(UX.checkpoint())===JSON.stringify(checkpoint),'Menu preserves checkpoint');
-    return {flow:true,archerPlayable:true,preview:true,checkpointPreserved:true};
+    return {flow:true,archerPlayable:true,lockedSlots:true,checkpointPreserved:true};
   })()`);
   // Actual focused-button arrow events use the selector handler, not combat input.
   await call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowRight',code:'ArrowRight',windowsVirtualKeyCode:39});
@@ -47,17 +45,20 @@ module.exports=async({evaluate,call,errors,root})=>{
   result.layouts=[];
   for(const [width,height] of [[1280,720],[960,540],[844,390],[390,844]]){
     await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
-    await evaluate('openCharacterSelect();drawCharacterPreview()');
+    await evaluate("openCharacterSelect();document.fonts.ready");
+    await evaluate("new Promise(resolve => setTimeout(resolve, 950))");
     // Resolve layout after resizing before measuring and capturing.
-    const bounds=await evaluate(`(()=>{const r=id=>{const b=$(id).getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom};};return {screen:r('characterSelect'),left:r('characterBarel'),right:r('characterViesa'),confirm:r('btnCharacterConfirm'),status:r('characterSelectionStatus')};})()`);
-    assert(bounds.left.right<bounds.right.left,'Two slots remain side by side');
-    for(const id of ['left','right','confirm','status']){const b=bounds[id];assert(b.left>=0&&b.right<=width+1&&b.top>=0&&b.bottom<=height+1,'Fits viewport: '+id+' '+width);}
+    const bounds=await evaluate(`(()=>{const r=node=>{const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width};};return {cards:characterCards.map(r),confirm:r($('btnCharacterConfirm'))};})()`);
+    assert(bounds.cards[0].width > bounds.cards[1].width * 2.9,'Selected hero card expands');
+    for (const b of [...bounds.cards, bounds.confirm]) {
+      assert(b.left>=0&&b.right<=width+1&&b.top>=0&&b.bottom<=height+1,'Fits viewport: '+width);
+    }
     result.layouts.push({width,height,bounds});
-    assert(await evaluate(`(()=>{const im=$('viesaSelectPortrait').getBoundingClientRect(),name=$('characterViesa').querySelector('.character-name').getBoundingClientRect();return im.bottom<=name.top;})()`),'Full-body portrait stays above the character name');
     const shot=await call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(out,`select-${width}.png`),Buffer.from(shot.data,'base64'));
   }
-  await evaluate(`selectCharacter('viesa')`);
+  await evaluate(`$('menuLanguage').value = 'ko'; $('menuLanguage').onchange(); selectCharacter('viesa');new Promise(resolve => setTimeout(resolve, 950))`);
+  assert.equal(await evaluate("$('btnCharacterConfirm').textContent"), '비에사로 여정 시작');
   const shot=await call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(out,'viesa-selected.png'),Buffer.from(shot.data,'base64'));
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({...result,errors},null,2));
-  console.log('PASS two playable character choices, keyboard, original opening, preview and four viewport layouts');
+  console.log('PASS playable and locked cards, keyboard, original opening, portrait assets and four viewport layouts');
 };

@@ -45,7 +45,9 @@ var paused_challenge := false
 var paused_character := "barel"
 var pause_reason := "PAUSE_REASON"
 const TitleMenu := preload("res://phase4/title_art/title_menu.gd")
+const CharacterSelectScene := preload("res://phase4/character_select/scenes/character_select.tscn")
 var title_image: TitleMenu
+var character_selector: BmkCharacterSelect
 var title_backing: ColorRect
 var backdrop: ColorRect
 var scroll: ScrollContainer
@@ -123,7 +125,7 @@ func clear_buttons() -> void:
 
 func apply_layout() -> void:
 	var art_title: bool = mode == "title"
-	var overlay: bool = mode in ["tutorial","opening"]
+	var overlay: bool = mode in ["tutorial","opening","characters"]
 	var web := mode in ["settings","pause"]
 	title_backing.visible = title_image.visible
 	title_image.controls.visible = art_title
@@ -131,6 +133,8 @@ func apply_layout() -> void:
 	backdrop.visible = not art_title and not overlay and mode != "settings"
 	backdrop.color.a = 0.28 if mode == "pause" else 0.72
 	panel.visible = not overlay and not art_title and not web
+	if character_selector != null and mode != "characters":
+		character_selector.hide()
 	# showScreen(id !== 'tutorial') -> demoStop()
 	if tutorial != null and tutorial.visible and mode != "tutorial":
 		tutorial.visible = false
@@ -222,40 +226,38 @@ func show_title_info(heading: String, body: String) -> void:
 	(buttons.get_child(-1) as Button).grab_focus()
 
 ## game.js openCharacterSelect(challengeStage): story start, or the character for a boss challenge.
-func show_characters(challenge: bool = false) -> void:
+func show_characters(challenge: bool = false, initial: String = "barel") -> void:
 	mode = "characters"
 	character_challenge = challenge
+	title_image.hide()
 	if audio != null: audio.play("click")
 	clear_buttons()
-	title.text = BmkCopy.text("CHARACTERS")
+	if character_selector != null and character_selector.locale != Copy.locale:
+		remove_child(character_selector)
+		character_selector.queue_free()
+		character_selector = null
+	if character_selector == null:
+		character_selector = CharacterSelectScene.instantiate() as BmkCharacterSelect
+		character_selector.character_confirmed.connect(confirm_character)
+		character_selector.back_requested.connect(back_from_characters)
+		character_selector.selection_moved.connect(func() -> void:
+			if audio != null: audio.play("click"))
+		add_child(character_selector)
+	character_selector.open(initial, Copy.text("PAUSE_BOSSES" if challenge else "MENU_BACK"))
+
+func confirm_character(id: String) -> void:
+	if mode != "characters": return
 	var roster: Dictionary = BmkViesaData.shared().source["CHARACTERS"]
-	var lines: PackedStringArray = []
-	for id: String in ["barel","viesa"]:
-		lines.append("%s · %s — %s" % [Copy.text("HERO_" + id),Copy.text("HERO_JOB_" + id),Copy.text("HERO_DESC_" + id)])
-	message.text = "
-".join(lines)
-	# Character cards: Barel's idle pose and Viesa's selection portrait (index.html #characterSelect).
-	var cards: HBoxContainer = HBoxContainer.new()
-	cards.alignment = BoxContainer.ALIGNMENT_CENTER
-	cards.add_theme_constant_override("separation",60)
-	var barel_idle: BmkAnimationAsset = load("res://port_assets/resources/barel_rika.sheet.idle.tres") as BmkAnimationAsset
-	for texture: Texture2D in [barel_idle.sprite_frames.get_frame_texture(&"source",0),load("res://port_assets/images/viesa_art.selection_portrait__420d43302e16.png") as Texture2D]:
-		var card: TextureRect = TextureRect.new()
-		card.texture = texture
-		card.custom_minimum_size = Vector2(120,150)
-		card.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		card.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		card.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-		cards.add_child(card)
-	buttons.add_child(cards)
-	for id: String in ["barel","viesa"]:
-		var hero: Dictionary = roster[id]
-		var pick: Callable = func() -> void:
-			selected_character = id
-			if character_challenge: challenge_game.emit(id)
-			else: show_tutorial("characterSelect")
-		add_button(BmkCopy.text("PLAY_AS") % Copy.text("HERO_" + id) if bool(hero["available"]) else BmkCopy.text("COMING_SOON"),pick,not bool(hero["available"]))
-	add_button(BmkCopy.text("PAUSE_BOSSES") if challenge else BmkCopy.text("BACK"),show_challenges if challenge else show_title)
+	if not bool(roster.get(id, {}).get("available", false)): return
+	selected_character = id
+	if character_challenge:
+		challenge_game.emit(id)
+	else:
+		show_tutorial("characterSelect")
+
+func back_from_characters() -> void:
+	if character_challenge: show_challenges()
+	else: show_title()
 
 func show_challenges() -> void:
 	mode = "challenge"
@@ -388,7 +390,7 @@ func show_tutorial(origin: String) -> void:
 func tutorial_back() -> void:
 	match tutorial.origin:
 		"pause": show_pause()
-		"characterSelect": show_characters(false)
+		"characterSelect": show_characters(false, selected_character)
 		_: show_title()
 
 ## release.js startOpening(): AUDIO.silence(), then 18 s of opening panels.

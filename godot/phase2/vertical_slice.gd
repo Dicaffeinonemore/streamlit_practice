@@ -22,6 +22,9 @@ var visual_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var show_shake: bool = true
 var show_flash: bool = true
 var show_danger_zones: bool = true
+## Effects never cover a character: actors behind the player < effects < player and actors in front of it.
+const EFFECT_Z: int = 3
+const FRONT_Z: int = 4
 
 func _ready() -> void:
 	get_window().content_scale_size = Vector2i(960,540)
@@ -45,11 +48,11 @@ func _ready() -> void:
 	special_dim.z_index = 1
 	world.add_child(special_dim)
 	effects = BmkEffectView.new()
-	effects.z_index = 3
+	effects.z_index = EFFECT_Z
 	effects.bank = bank
 	world.add_child(effects)
 	debug_view = BmkDebugView.new()
-	debug_view.z_index = 4
+	debug_view.z_index = 6
 	debug_view.visible = "--hitbox=1" in OS.get_cmdline_user_args()
 	world.add_child(debug_view)
 	var layer: CanvasLayer = CanvasLayer.new()
@@ -101,7 +104,6 @@ func present() -> void:
 		world.position += Vector2(visual_rng.randf_range(-1,1),visual_rng.randf_range(-1,1)) * session.shake * 0.6
 	var pose: Array = player_pose()
 	player_view.present(session,session.player,pose[0] as BmkAnimationAsset,int(pose[1]),true)
-	player_view.z_index = 2 if session.player.st == "special" else 0
 	var alive: Dictionary[int, bool] = {}
 	for e: BmkActorState in session.enemies:
 		alive[e.id] = true
@@ -116,11 +118,27 @@ func present() -> void:
 			enemy_views.erase(id)
 	# Canvas stable sorting puts the source player after enemies at equal depth.
 	actors.move_child(player_view,actors.get_child_count() - 1)
+	layer_actors()
 	street_view.queue_redraw()
 	effects.queue_redraw()
 	special_dim.queue_redraw()
 	debug_view.queue_redraw()
 	hud.queue_redraw()
+
+## game.js render(): actors with y <= player.y, then every effect, then the player, then actors in front.
+## During the special the actors in front stay under the dim (z 1) like the rest of the scene.
+func layer_actors() -> void:
+	var p: BmkActorState = session.player
+	var special: bool = p.st == "special"
+	player_view.z_index = FRONT_Z
+	for child: Node in actors.get_children():
+		if child == player_view or child is not Node2D: continue
+		var node: Node2D = child as Node2D
+		node.z_index = FRONT_Z if not special and not is_effect_node(node) and node.position.y > p.y else 0
+
+## Effect nodes sorted inside the actor layer always stay behind the player.
+func is_effect_node(_node: Node2D) -> bool:
+	return false
 
 func pause_game(value: bool) -> void:
 	clock.paused = value
