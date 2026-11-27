@@ -3,6 +3,18 @@ extends Node2D
 var session: BmkSimulation
 var bank: BmkAssetBank
 var impacts: Array[Dictionary] = []
+## game.js fxDepth(): BEHIND keeps effects on lanes behind the player (drawn under it), IN_FRONT keeps
+## effects on the player's lane or in front of it (drawn over it). ALL_LANES draws every effect.
+const ALL_LANES: int = 0
+const BEHIND: int = 1
+const IN_FRONT: int = 2
+var band: int = ALL_LANES
+## The IN_FRONT copy reads the hit sparks of the view that owns them (signals feed only that one).
+var primary: BmkEffectView
+
+static func lane_ok(band_: int, s: BmkSimulation, y: float) -> bool:
+	if band_ == ALL_LANES or s == null: return true
+	return (band_ == BEHIND) == (y < s.player.y)
 
 func _ready() -> void:
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
@@ -41,6 +53,8 @@ func _draw() -> void:
 	var t: float = p.t * session.MS
 	# game.js drawPlayer(): drawViesaPlayer() returns first, so Barel's body effects never draw for Viesa.
 	if p.is_viesa(): p = null
+	# The player's own move effects sit on its lane: they draw over the body.
+	if p != null and not lane_ok(band,session,p.y): p = null
 	if p == null: pass
 	elif p.st == "atk":
 		var row: int = 0 if p.atk == "air" else int(p.atk.substr(1)) - 1
@@ -72,8 +86,10 @@ func _draw() -> void:
 		var size_value: Vector2 = Vector2(270,240) if t < 620 else (Vector2(300,220) if t < 1260 else Vector2(330,270))
 		barel_effect(id,u,Vector2(p.x + p.face * (0 if t < 620 else (80 if t < 1260 else 50)),p.y + size_value.y * 0.3),size_value,p.face)
 	for z: BmkProjectileState in session.hazards:
+		if not lane_ok(band,session,z.y): continue
 		barel_effect("wave",fmod(z.age,360.0) / 360.0,Vector2(z.x,z.y - z.height + 60),Vector2(180,150),z.direction)
-	for item: Dictionary in impacts:
+	for item: Dictionary in (primary.impacts if primary != null else impacts):
+		if not lane_ok(band,session,float(item["y"])): continue
 		var age: float = float(item["age"])
 		var at: Vector2 = Vector2(float(item["x"]),float(item["y"]) - float(item["height"]))
 		var color: Color = Color(1,0.8,0.65,1.0 - age / 10.0)

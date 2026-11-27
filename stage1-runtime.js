@@ -924,13 +924,13 @@ function drawStage1TopSprites() {
   if (!stage1On() || !s1Fx('bottle_spin')) return;
   const fuseH = s1Fx('fuse') ? STAGE1_FX.bottle_spin.h * STAGE1_FX.bottle_spin.scale * .35 : 0;
   for (const z of hazards) {
-    if (z.type !== 'molotov') continue;
+    if (z.type !== 'molotov' || !fxDepth(z.y)) continue;
     const t = Math.floor(z.age / MS), x = z.x, y = z.y - z.h, flip = z.tx < z.x0;
     drawFx('bottle_spin', Math.floor(t / 3), x, y, { flip });
     if (fuseH) drawFx('fuse', Math.floor(t / 6), x, y - fuseH);
   }
   if (s1Fx('fuse') && !S1_ENEMY_IMG.molotov?.naturalWidth) for (const e of enemies) {   // 새 그림은 손의 병에 이미 불이 있다
-    if (!e.molotov || e.st !== 'wind' || e.pat !== 'throw') continue;
+    if (!e.molotov || e.st !== 'wind' || e.pat !== 'throw' || !fxDepth(e.y)) continue;
     drawFx('fuse', Math.floor(tick / 6), e.x - e.face * 12, e.y - e.z - 70, { mul: .8 });
   }
 }
@@ -965,14 +965,14 @@ function drawStage1Ground(L) {
 function drawStage1Top(L) {
   if (s1Fx('bottle_spin')) return;                 // 스프라이트는 drawStage1TopSprites 가 그린다 (이건 임시 도형)
   for (const z of hazards) {
-    if (z.type !== 'molotov') continue;
+    if (z.type !== 'molotov' || !fxDepth(z.y)) continue;
     const x = Math.round(fxX(z.x)), y = Math.round(fxY(z.y, z.h)), fl = tick % 4 < 2 ? 1 : 2;
     L.rect(x - 1, y - 2, 3, 5, '#2e4a2e'); L.put(x, y - 1, '#6a9a6a'); L.rect(x, y - 4, 1, 2, '#c8b890');
     L.disc(x, y - 6, fl, '#ff9a2a', .9); L.put(x, y - 7, '#fff0a0');
     L.put(x - Math.sign(z.tx - z.x0) * 3, y - 5, '#ff7a1a', .5);
   }
   for (const e of enemies) {
-    if (!e.molotov || e.st !== 'wind' || e.pat !== 'throw') continue;
+    if (!e.molotov || e.st !== 'wind' || e.pat !== 'throw' || !fxDepth(e.y)) continue;
     const x = Math.round(fxX(e.x - e.face * 12)), y = Math.round(fxY(e.y, e.z + 76)), fl = tick % 4 < 2 ? 1 : 2;
     L.disc(x, y, fl + 1, '#ff7a1a', .55); L.put(x, y, '#fff0a0');
   }

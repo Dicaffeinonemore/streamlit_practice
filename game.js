@@ -2786,6 +2786,7 @@ function drawGroundFx(L) {
 }
 function drawTopFx(L) {
   for (const z of hazards) {
+    if (!fxDepth(z.y)) continue;
     const x = fxX(z.x);
     if (z.type === 'orb') orb(L, x, fxY(z.y, z.h), z.vx, z.vy - z.vh, z.age, z.pal);
     else if (z.type === 'wave') goldWave(L, x, fxY(z.y, z.h), z.dir, z.colors);
@@ -2832,8 +2833,8 @@ function drawTopFx(L) {
       for (let k = 0; k < 3; k++) L.arc(x - z.dir * k * 4, y, 11, (z.dir > 0 ? -58 : 122) * RAD, (z.dir > 0 ? 58 : 238) * RAD, k ? '#7f98d8' : '#ffffff', 2, 1 - k * 0.25);
     }
   }
-  const p = player;
-  if (p.st === 'skill' && !(NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth && namedPlayerFrame())) {
+  const p = player, own = fxDepth(p.y);              // 플레이어 자신의 기술 이펙트
+  if (own && p.st === 'skill' && !(NAMED_ATLAS.complete && NAMED_ATLAS.naturalWidth && namedPlayerFrame())) {
     const t = p.t * MS, px = fxX(p.x), py = fxY(p.y, p.z + 54), f = p.face;
     if (p.skill === 'thrust' && t >= 170 && t < 470) {
       const a = 1 - (t - 170) / 300;
@@ -2850,21 +2851,21 @@ function drawTopFx(L) {
       L.arc(px + f * 20, fxY(p.y, 4), r + 4, Math.PI, Math.PI * 2, '#ff6b78', 1, Math.max(0, .8 - age / 420));
     }
   }
-  if (p.st === 'cast') {                            // 시전: 검 끝에 빛이 모이고 발밑에 고리
+  if (own && p.st === 'cast') {                     // 시전: 검 끝에 빛이 모이고 발밑에 고리
     const u = p.castFired ? 1 : Math.min(1, p.t * MS / MAGIC.fire), tx = fxX(p.tipX), ty = fxY(p.y, p.tipH);
     L.disc(Math.round(tx), Math.round(ty), Math.round(2 + u * 3), '#9cc3ff', 0.35);
     for (let i = 0; i < 6; i++) { const an = tick * MS * 0.012 + i * 1.047, r = (1 - u) * 14 + 3; L.put(tx + Math.cos(an) * r, ty + Math.sin(an) * r * 0.6, i % 2 ? '#ffffff' : '#9cc3ff'); }
     L.arc(fxX(p.x), fxY(p.y) - 1, Math.round(6 + u * 12), 0, 6.283, '#9cc3ff', 1, 0.5 * (1 - u * 0.5));
   }
-  for (const b of bolts) drawBolt(L, b);
+  for (const b of bolts) if (fxDepth(b.y)) drawBolt(L, b);
   drawStage1Top(L);
   for (const e of enemies) {                       // 보스 격파: 겹겹이 퍼지는 빛 고리
-    if (!e.boss || e.st !== 'dead') continue;
+    if (!e.boss || e.st !== 'dead' || !fxDepth(e.y)) continue;
     const t = e.t * MS;
     for (let k = 0; k < 3; k++) { const ag = t - k * 170; if (ag > 0 && ag < 750) L.arc(fxX(e.x), fxY(e.y, 68), ag * 0.1, 0, 6.283, k === 1 ? '#ffe27a' : '#ffffff', k ? 1 : 2, (1 - ag / 750) * 0.9); }
   }
-  for (const a of impacts) impactFx(L, fxX(a.x), fxY(a.y, a.z), a.age, a.kind, a.dir, a.seed);
-  for (const s of bursts) sparkBurst(L, fxX(s.x), fxY(s.y, s.z), s.age, s.seed, s.cols);
+  for (const a of impacts) if (fxDepth(a.y)) impactFx(L, fxX(a.x), fxY(a.y, a.z), a.age, a.kind, a.dir, a.seed);
+  for (const s of bursts) if (fxDepth(s.y)) sparkBurst(L, fxX(s.x), fxY(s.y, s.z), s.age, s.seed, s.cols);
 }
 // 번개 한 줄기: 화면 위에서 땅까지 지그재그 (50ms 마다 모양이 바뀜) + 바닥 섬광
 function drawBolt(L, b) {
@@ -3170,9 +3171,12 @@ function drawVignette() {
   ctx.fillStyle = vignette; rect(0, 0, W, H);
 }
 
+// 이펙트 깊이 구간: 'back' = 플레이어보다 뒤쪽 줄(바닥 y 가 작음), 'front' = 같은 줄이거나 앞쪽 줄, null = 전부
+let fxBand = null;
+function fxDepth(y) { return fxBand === null || (fxBand === 'back') === (y < player.y); }
 function render() {
   const theme = stage ? stage.theme : 'stage1';
-  flashGain = 1;
+  flashGain = 1; fxBand = null;
   ctx.save();
   if (UX.options.shake && shake > 0.5 && scene !== 'pause' && scene !== 'settings') ctx.translate(rand(-shake, shake) * 0.6, rand(-shake, shake) * 0.6);
   const sectionBG = stage1BackdropReady();         // 1스테이지 구간 배경은 바닥까지 한 장이다
@@ -3198,20 +3202,18 @@ function render() {
     items.forEach(i => list.push({ y: i.y, f: () => drawItem(i) }));
     enemies.forEach(e => list.push({ y: e.y, f: () => drawEnemyFeel(e) }));   // 히트스톱 중 맞은 적 떨림
     sovereignDrawList(list);
-    // 이펙트는 어떤 캐릭터보다도 앞에 보이지 않는다: 플레이어보다 뒤(y 작음)에 선 캐릭터 → 모든 이펙트 → 플레이어 → 앞에 선 캐릭터
-    hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, fx: true, f: () => drawZoneEruption(z) }); });
+    hazards.forEach(z => { if (zoneEruptionVisible(z)) list.push({ y: z.y, f: () => drawZoneEruption(z) }); });
     ghosts.forEach(g => { if (sp < 0 || g.id !== 'player') list.push({ y: g.y - 0.5, f: () => drawGhost(g) }); });
     list.sort((a, b) => a.y - b.y);
-    const back = list.filter(l => l.fx || l.y <= player.y), front = list.filter(l => !l.fx && l.y > player.y);
-    back.forEach(l => l.f());
-    if (player.st === 'cast' && !player.castFired) {   // 뇌격 직전: 화면이 푸르게 어두워진다
-      ctx.fillStyle = `rgba(10,16,48,${(0.32 * Math.min(1, player.t * MS / 300)).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
-    }
-    const drawFx = () => {
-      for (const q of parts) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
+    // 깊이(바닥 y) 순서: 뒤쪽 줄 캐릭터 → 뒤쪽 줄 이펙트 → 플레이어 → 앞쪽 줄 캐릭터 → 같은 줄·앞쪽 줄 이펙트
+    // (이펙트가 플레이어보다 뒤쪽 줄이면 플레이어에 가려지고, 같은 줄이거나 앞쪽이면 플레이어를 덮는다)
+    const back = list.filter(l => l.y <= player.y), front = list.filter(l => l.y > player.y);
+    const drawFx = band => {
+      fxBand = band;
+      for (const q of parts) if (fxDepth(q.y)) { ctx.fillStyle = q.col; rect(q.x - camX - 2, q.y - q.z - 2, 4, 4); }
       fxTop.L.clear(); drawTopFx(fxTop.L); presentFx(fxTop);
       drawStage1TopSprites();                     // 날아가는 화염병
-      for(const z of hazards)if(z.type==='pwave' && z.red) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
+      for(const z of hazards)if(z.type==='pwave' && z.red && fxDepth(z.y)) { if(BAREL_ATLAS.naturalWidth)barelEffect('wave',(z.age%360)/360,z.x,z.y-z.h+60,180,150,z.dir);else drawNamedWave(z); }
       drawGorathHazards();
       drawGorath2Top();                           // 고라스: 떨어지는 고기, 사슬·갈고리
       drawMorgraHazards();
@@ -3219,20 +3221,26 @@ function render() {
       drawVargulHazards(false);
       drawSovereignTop();
       drawViesaProjectiles();
+      fxBand = null;
     };
     if (sp >= 0) {                                 // 흑월참: 배경과 적을 어둡게
-      front.forEach(l => l.f());
+      back.forEach(l => l.f()); front.forEach(l => l.f());
       const k = sp < 200 ? 1 - 0.65 * (sp / 200) : (sp > 1900 ? 0.35 + 0.65 * ((sp - 1900) / 200) : 0.35);
       ctx.fillStyle = `rgba(16,2,8,${(1 - k).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
-      drawFx();
+      drawFx('back');
       ghosts.forEach(g => { if (g.id === 'player') drawGhost(g); });
       drawPlayer();
     } else {
-      drawFx();
+      back.forEach(l => l.f());
+      drawFx('back');
       drawPlayer();
       front.forEach(l => l.f());
     }
     if (sectionBG) drawStage1Front();             // 투기장 울타리 전경: 캐릭터보다 나중
+    if (player.st === 'cast' && !player.castFired) {   // 뇌격 직전: 화면이 푸르게 어두워진다
+      ctx.fillStyle = `rgba(10,16,48,${(0.32 * Math.min(1, player.t * MS / 300)).toFixed(3)})`; rect(-40, OY - 40, VW + 80, VH + 80);
+    }
+    drawFx('front');
     enemies.forEach(drawEnemyOverlay);            // 기절 별 · 공격 예고 ! 는 UI라 맨 위
     drawHitboxDebug();                            // ?hitbox=1 / F9
     drawGorathGrab();

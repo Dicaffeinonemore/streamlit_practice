@@ -16,6 +16,7 @@ var ground: bool = false
 var normal: Layer
 var additive: Layer
 var fist_nodes: Dictionary = {}
+var band: int = BmkEffectView.ALL_LANES
 static var glow_textures: Dictionary = {}
 static var filter_shader: Shader
 
@@ -144,7 +145,7 @@ func paint_additive(c: CanvasItem) -> void:
 		for j: BmkSovereignState.Job in sd.jobs:
 			if j.id == "ultimate": cannon(c,j,true)
 		for j: BmkSovereignState.Job in sd.jobs:
-			if j.id != "beam" or j.stage != "fire": continue
+			if j.id != "beam" or j.stage != "fire" or not BmkEffectView.lane_ok(band,s,float(j.lane)): continue
 			# helm_beam: drawings 1-3 open, 4-8 loop, 9-10 close.
 			var fire: int = int(R["beam"]["fire"][j.p2])
 			var st: int = j.st
@@ -155,6 +156,7 @@ func paint_additive(c: CanvasItem) -> void:
 			fx(c,"helm_beam",0,x0,y,length,52,1.0,e.face,index)
 			break
 		for f: BmkSovereignState.Fx in sd.fx:
+			if not BmkEffectView.lane_ok(band,s,f.y): continue
 			var u: float = float(f.age) / f.life
 			fx(c,f.id,u,f.x,f.y - f.h,f.w,f.hgt,1 - u * 0.4,f.face)
 
@@ -176,6 +178,7 @@ func cannon(c: CanvasItem, job: BmkSovereignState.Job, laser_pass: bool) -> void
 	var laser: Texture2D = bank.source_image(LASER_SOURCE)
 	var k: float = float(C["handScale"])
 	for h: BmkSovereignState.Hand in job.hands:
+		if not BmkEffectView.lane_ok(band,s,h.y): continue
 		var age: float = h.age_ms
 		var shot: float = age - fire_at
 		var length: float = s.cam_x + s.view_width - h.x if h.dir > 0 else h.x - s.cam_x

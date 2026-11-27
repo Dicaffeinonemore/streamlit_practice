@@ -133,7 +133,7 @@ function drawViesaChargePips(p,level){
 }
 function drawViesaProjectiles(){
   for(const z of hazards){
-    if(z.type!=='viesa_arrow'||z.dead)continue;
+    if(z.type!=='viesa_arrow'||z.dead||!fxDepth(z.y))continue;
     const grow=1+.15*(z.charge||0),length=VIESA_ART.worldHeight*.45*(z.snipe?grow:1),height=z.snipe?18*grow:12;
     if(z.fading){drawViesaFx('arrow_fade',Math.floor(z.fadeAge/3),z.x,z.y,z.h,length,height,z.dir,1-z.fadeAge/15);continue;}
     if(z.snipe)drawViesaFx('snipe_arrow',Math.floor(z.age/MS/2)%4,z.x,z.y,z.h,length,height,z.dir);
@@ -144,10 +144,12 @@ function drawViesaProjectiles(){
     }
   }
   for(const f of viesaEffects){
+    if(!fxDepth(f.y))continue;
     const index=Math.floor(f.age/f.life*(VIESA_ART.clips['fx_'+f.name]?.length||1));
     drawViesaFx(f.name,index,f.x,f.y,f.h,f.width||44,f.height||44,f.face,1-f.age/f.life*.65);
   }
   for(const z of viesaUltObjects){
+    if(!fxDepth(z.y))continue;
     const size=VIESA_ART.worldHeight*(z.kind==='giant'?1.5:z.kind==='volley'?.8:.35);
     ctx.save();ctx.translate(z.x-camX,z.y-z.h);ctx.rotate(Math.atan2((z.ty-z.th)-(z.sy-z.sh),z.tx-z.sx)-(z.face<0?Math.PI:0));ctx.translate(-(z.x-camX),-(z.y-z.h));
     drawViesaFx(z.kind==='giant'?'giant_arrow':z.kind==='volley'?'volley':'phantom_arrow',z.kind==='phantom'?z.variant:Math.floor(z.age/2)%4,z.x,z.y,z.h,size,z.kind==='volley'?35:size*.25,z.face);

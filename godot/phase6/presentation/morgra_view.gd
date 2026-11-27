@@ -6,6 +6,7 @@ const MS: float = 1000.0 / 60.0
 var session: BmkWaveSimulation
 var bank: BmkAssetBank
 var moon_sheet: Texture2D
+var band: int = BmkEffectView.ALL_LANES
 
 static func paint(canvas: CanvasItem, asset: BmkAnimationAsset, index: int, x: float, y: float, face: int, alpha: float = 1.0) -> void:
 	if asset == null: return
@@ -27,7 +28,7 @@ func _draw() -> void:
 	if session == null: return
 	var s: BmkWaveSimulation = session
 	for z: BmkLegacyHazard in s.legacy_hazards:
-		if z.dead: continue
+		if z.dead or not BmkEffectView.lane_ok(band,s,z.y): continue
 		if z.type == "arrow":
 			var tip: Vector2 = Vector2(z.x,z.y - z.h)
 			draw_line(tip - Vector2(z.dir * 18,0),tip,Color("5a3a24"),2)
@@ -49,13 +50,14 @@ func _draw() -> void:
 		paint(self,fx_asset(id),floori(f / (z.life / n)) if z.visual else floori(f / 5) % n,z.x,z.y - z.h,z.face)
 	for e: BmkActorState in s.enemies:
 		var b: BmkLegacyActor = e as BmkLegacyActor
-		if b.st == "stun":
+		# Stun stars are an overlay (drawEnemyOverlay): only the copy above the player draws them.
+		if b.st == "stun" and band != BmkEffectView.BEHIND:
 			# drawEnemyOverlay(): four stars circling above a stunned enemy.
 			var top: float = b.y - b.z - float(b.stats.get("h",b.d.height))
 			for i: int in range(4):
 				var a: float = s.tick * 0.12 + i * PI / 2
 				draw_circle(Vector2(b.x + cos(a) * 34,top + 8 + sin(a) * 9),5,Color("ffe14d"))
-		if b.type != "boss2": continue
+		if b.type != "boss2" or not BmkEffectView.lane_ok(band,s,b.y): continue
 		if b.st == "intro": draw_intro(b)
 		if b.st == "reviving" and b.t >= 217 and b.t < 241: paint(self,fx_asset("teleport_burst"),floori((b.t - 217) / 6.0),b.x,b.y,1)
 

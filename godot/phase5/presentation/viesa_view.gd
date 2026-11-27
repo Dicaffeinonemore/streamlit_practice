@@ -7,6 +7,7 @@ var bank: BmkAssetBank
 var art: BmkViesaData
 var normal: Layer
 var additive: Layer
+var band: int = BmkEffectView.ALL_LANES
 
 class Layer:
 	extends Node2D
@@ -63,7 +64,7 @@ func present(s: BmkStageSimulation) -> void:
 func draw_player_overlay(s: BmkStageSimulation) -> void:
 	var p: BmkActorState = s.player
 	var a: BmkViesaAction = p.viesa_action
-	if p.st != "skill" or a == null: return
+	if p.st != "skill" or a == null or not BmkEffectView.lane_ok(band,s,p.y): return
 	var controller: BmkViesaController = s.player_controller as BmkViesaController
 	var pose: Array = controller.pose(s)
 	var tip: Variant = art.tip(str(pose[0]), int(pose[1]))
@@ -78,7 +79,7 @@ func draw_player_overlay(s: BmkStageSimulation) -> void:
 func draw_projectiles(s: BmkStageSimulation) -> void:
 	var length: float = art.world_height() * 0.45
 	for z: BmkViesaWorld.Arrow in s.viesa.arrows:
-		if z.dead: continue
+		if z.dead or not BmkEffectView.lane_ok(band,s,z.y): continue
 		var grow: float = 1.0 + 0.15 * z.charge
 		var height: float = 18.0 * grow if z.snipe else 12.0
 		var arrow_length: float = length * grow if z.snipe else length
@@ -93,9 +94,11 @@ func draw_projectiles(s: BmkStageSimulation) -> void:
 			fx("arrow_trail", floori(z.age / s.MS / 2.0) % 3, trail.x, trail.y, 0, length, 14, z.dir, 0.8, angle)
 			fx("arrow", 0, z.x, z.y, z.h, length, 10, z.dir, 1.0, angle)
 	for f: BmkViesaWorld.Effect in s.viesa.effects:
+		if not BmkEffectView.lane_ok(band,s,f.y): continue
 		var count: int = art.clip_length("fx_" + f.name)
 		fx(f.name, floori(float(f.age) / f.life * maxi(1, count)), f.x, f.y, f.h, f.width, f.height, f.face, 1.0 - float(f.age) / f.life * 0.65)
 	for z: BmkViesaWorld.UltObject in s.viesa.ult:
+		if not BmkEffectView.lane_ok(band,s,z.y): continue
 		var size: float = art.world_height() * (1.5 if z.kind == "giant" else (0.8 if z.kind == "volley" else 0.35))
 		var angle: float = atan2((z.ty - z.th) - (z.sy - z.sh), z.tx - z.sx) - (PI if z.face < 0 else 0.0)
 		var name_: String = "giant_arrow" if z.kind == "giant" else ("volley" if z.kind == "volley" else "phantom_arrow")

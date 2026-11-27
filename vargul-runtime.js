@@ -674,6 +674,7 @@ function drawVargulBoxes(e){
 function drawVargulHazards(ground=false){
   for(const z of hazards){
     if(z.type!=='vargul'||z.dead)continue;
+    if(!ground&&!fxDepth(z.y))continue;
     const t=Math.max(0,z.age/MS),floor=['sword','cross','ultimate'].includes(z.kind),waiting=z.kind==='ice_wave'||floor&&!z.boom&&z.stage!=='impact';
     // The hovering sword is drawn above actors while its red mark stays on the ground pass.
     if(!ground&&z.kind==='sword'&&!z.boom)paintVargulSwordFall(z,t);

@@ -859,6 +859,7 @@ function sovDrawCannon(job){
   const C=SOV_R.ultimate,fireAt=C.fadeMs+C.telegraphMs+C.chargedMs,laserMs=20000/C.laserFps;
   const [hand,laser]=SOV_CANNON_IMAGES;
   for(const h of job.hands){
+    if(!fxDepth(h.y))continue;
     const age=h.ageMs,shot=age-fireAt,sx=h.x-camX,len=h.dir>0?VW-sx:sx;
     const fade=age<C.fadeMs?age/C.fadeMs:shot>laserMs?Math.max(0,1-(shot-laserMs)/C.fadeMs):1;
     if(age>=C.fadeMs&&shot<0){
@@ -900,7 +901,7 @@ function drawSovereignTop(){
     if(!isSovereign(e)||!e.sov)continue;
     const s=e.sov,beam=s.jobs.find(j=>j.id==='beam'&&j.stage==='fire');
     for(const job of s.jobs)if(job.id==='ultimate')sovDrawCannon(job);
-    if(beam){
+    if(beam&&fxDepth(beam.lane)){
       // helm_beam: drawings 1-3 open, 4-8 loop, 9-10 close.
       const fire=SOV_R.beam.fire[beam.p2],st=beam.st,index=st<6?Math.floor(st/2):fire-st<=4?8+Math.min(1,Math.floor((4-(fire-st))/2)):3+Math.floor(st/3)%5;
       const x0=e.x+e.face*14,y=beam.lane-sovHelmHeight(e),len=e.face>0?camX+VW+20-x0:x0-camX+20;
@@ -914,6 +915,7 @@ function drawSovereignTop(){
       ctx.restore();
     }
     for(const f of s.fx){
+      if(!fxDepth(f.y))continue;
       const u=f.age/f.life,y=f.y-f.h+(f.ground?0:0);
       sovFxDraw(f.id,u,f.x,y,f.w,f.hgt,{alpha:1-u*.4,face:f.face});
     }

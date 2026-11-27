@@ -1,8 +1,12 @@
 class_name BmkStageTopView
 extends BmkFullStageView
 
-## true: only the fence / front scaffolds (above the characters). false: only the effects (below the player).
+## true: the fence / front scaffolds first (above the characters), then this band's effects.
 var foreground: bool = false
+var band: int = BmkEffectView.ALL_LANES
+
+func lane(y: float) -> bool:
+	return BmkEffectView.lane_ok(band,session,y)
 
 func _draw() -> void:
 	if session == null: return
@@ -15,13 +19,12 @@ func _draw() -> void:
 			draw_texture_rect(texture,Rect2(Vector2(0,340 - float(bg["floorY"]) * k),texture.get_size() * k),false)
 		for x: float in (section as BmkFullStage).scaffolds:
 			draw_scaffold(x,true)
-		return
 	for z: BmkFireHazard in s.fire_hazards:
-		if z.type == "molotov": draw_asset(bank.animation("stage1_fx.bottle_spin"),int(floor(z.age / s.MS / 3)),Vector2(z.x,z.y - z.h))
+		if z.type == "molotov" and lane(z.y): draw_asset(bank.animation("stage1_fx.bottle_spin"),int(floor(z.age / s.MS / 3)),Vector2(z.x,z.y - z.h))
 	var e: BmkStageActor = s.gorath.boss(s)
 	if e == null: return
 	for m: BmkMeatState in e.g2.meats:
-		if m.t >= 72: continue
+		if m.t >= 72 or not lane(m.y): continue
 		var frame: Dictionary = m.frame()
 		if bool(frame.get("sky",false)):
 			var u: float = float(frame["u"])
@@ -30,6 +33,7 @@ func _draw() -> void:
 	var hook: BmkGorathHook = e.g2.hook
 	if hook == null or hook.hidden: return
 	if hook.ult:
+		if not lane(e.y): return
 		var frames: Array = s.stage_data.source["G2A"]["clips"][e.g2.clip]["frames"]
 		var point: Array = (frames[clampi(e.g2.fi,0,frames.size() - 1)] as Dictionary).get("chain",[])
 		if point.is_empty(): return
@@ -38,7 +42,7 @@ func _draw() -> void:
 		var length: float = minf(640,(from.y - 116) / -axis.y if axis.y < -0.05 else 640) * clampf(hook.u,0,1)
 		chain(from,from + axis * length)
 		if hook.u < 1: hook_sprite(from + axis * length,axis.angle())
-	else:
+	elif lane(hook.y):
 		var hand_: PackedFloat64Array = s.gorath.actions.hand(s,e)
 		chain(Vector2(hand_[0],e.y - hand_[1]),Vector2(hook.x,hook.y - hook.h))
 		hook_sprite(Vector2(hook.x,hook.y - hook.h),0 if hook.dir > 0 else PI)

@@ -13,7 +13,7 @@ func _ready() -> void:
 	alert = Label.new()
 	alert.position = Vector2(-35,-140)
 	# The "!" warning is UI (game.js drawEnemyOverlay): it stays above every effect.
-	alert.z_index = 6
+	alert.z_index = 8
 	alert.size = Vector2(70,40)
 	alert.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	alert.add_theme_color_override("font_outline_color",Color.BLACK)

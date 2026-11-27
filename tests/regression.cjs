@@ -197,7 +197,7 @@ async function scoreChecks() {
   check(wins.size === 2, 'Victory and ending are distinct');
   for (const s of [0, 4]) {
     startStage(s); waveIdx = stage.waves.length; camLock = false; enemies = []; clearT = 0; scene = 'play';
-    if (stage.sections) { enterSection(STAGE1_SECTIONS.length - 1); S1.ev = S1.sec.events.length; camLock = false; }   // 1스테이지: 마지막 구간의 보스까지 끝난 상태
+    if (stage.sections) { enterSection(STAGE1_SECTIONS.length - 1); S1.ev = S1.sec.events.length; camLock = false; enemies = []; }   // 1스테이지: 마지막 구간의 보스까지 끝난 상태 (구간 진입 때 미리 세운 고라스도 치운다)
     update();
     const m = AUDIO.currentMusic();
     check(clearT > 0 && m?.victory === (s === 4 ? 'ending' : 'victory'), 'Clearing a stage starts the victory score');
@@ -314,7 +314,7 @@ function combatChecks() {
       enemies[0].hp===enemies[0].max-24 && enemies[1].hp===enemies[1].max-24 && enemies[2].hp===enemies[2].max && enemies[3].hp===enemies[3].max && hazards.length===0);
   }
   reset(); hitStop = 3;
-  dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyJ' })); loop(last + MS * 1.1);
+  dispatchEvent(new KeyboardEvent('keydown', { code: UX.options.bindings.KeyJ })); loop(last + MS * 1.1);   // 기본 프리셋(arcade)에서 공격은 Z
   check('Input survives hit stop', pressed.KeyJ > 0 && player.st === 'free');
   for (let i = 0; i < 6; i++) loop(last + MS * 1.1);
   check('Buffered attack executes', player.st === 'atk' && !pressed.KeyJ);
@@ -603,8 +603,9 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     assert.equal(await evaluate("NAMED_SPRITES.sources.gorath_motion.filename"),'1스테이지 보스 고라스 모션.png');
     assert.equal(await evaluate("NAMED_SPRITES.sources.player.filename"),'다크 기사 전투 스프라이트 시트.png');
     assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(1);const b=mkEnemy('boss2',400,420);if(namedEnemyRole(b)!==null)return false;b.p2shown=true;return namedEnemyRole(b)==='boss2p2' && namedEnemyRole(mkEnemy('boss5',400,420))==='boss5'})()`),true);
+    // The Gorath remake (boss1) is drawn by gorath-remake-runtime.js; only boss1_old uses the named sheet.
     for(const stage of [0,1,2,3,4]) {
-      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;const b=mkEnemy(STAGES[${stage}].boss,430,420);b.p2shown=true;enemies=[b];for(const st of ['chase','hurt','dead']){b.st=st;b.t=10;if(!namedEnemyFrame(b))return false;render();}b.st='pat';for(const pat of Object.keys(b.d.pats)){b.pat=pat;b.pt=800;render()}return true})()`),true);
+      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${stage});scene='play';player.inv=0;const b=mkEnemy(STAGES[${stage}].boss,430,420);b.p2shown=true;enemies=[b];const named=b.type!=='boss1';for(const st of ['chase','hurt','dead']){b.st=st;b.t=10;if(named&&!namedEnemyFrame(b))return false;render();}b.st='pat';for(const pat of Object.keys(b.d.pats)){b.pat=pat;b.pt=800;render()}return true})()`),true);
       await screenshot('named-boss-'+(stage+1));
     }
     assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(0);scene='play';player.inv=0;for(const id of Object.keys(SKILLS)){player.st='skill';player.skill=id;for(const t of [0,12,20,30,36]){player.t=t;if(!['player_base','player_moves'].includes(namedPlayerFrame().source))return false;render()}}player.st='free';return namedPlayerFrame()===namedClip('player','idle') && namedPlayerFrame().source==='player_base'})()`),true);
@@ -620,7 +621,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('toTitle(); document.getElementById("namedTitleImage").decode()');
     await evaluate('TitleMenu.ready');
     assert.deepEqual(await evaluate("Array.from(document.querySelectorAll('.title-choice'), b => b.textContent)"),
-      ['New Game', 'Continue', 'Options', 'Credits', 'Exit']);
+      ['New Game', 'Continue', 'Boss Challenge', 'Options', 'Credits', 'Exit']);
     for(const [width,height] of [[1920,1080],[844,390],[390,844]]) {
       await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
       assert.equal(await evaluate(`(()=>{const r=$('wrap').getBoundingClientRect();return ['btnStart','btnContinue','btnTitleSettings','btnCredits','btnExit'].every(id=>{const b=$(id).getBoundingClientRect();return b.top>=r.top&&b.bottom<=r.bottom&&b.left>=r.left&&b.right<=r.right})})()`),true,'Named title controls fit');
@@ -665,7 +666,8 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     })()`),{behind:{fist:true,body:false},front:{fist:true,body:true}},'Sovereign back fist takes damage');
     console.log('PASS Sovereign back fist is hittable and only shields the body from its own side');
     for (const n of [0,2,3,4]) {
-      assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];const v=isVargul(b),sv=isSovereign(b);b.hp=b.type==='boss3'||v||sv?b.max*.05:b.max*.51;damageEnemy(b,b.max*.1,false);const duration=v?288:sv?SOVEREIGN_RULES.kneelDown+SOVEREIGN_RULES.awaken:isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);if(b.hp!==hp)return false;for(let t=0;t<duration;t++)updEnemy(b);return b.hp===(v?2500:sv?SOVEREIGN_RULES.hp[1]:hp)&&!b.invuln&&b.st===(v||sv?'chase':'rec')&&b.z===0})()`),true,'Safe phase transition');
+      // The Gorath remake (stage 1) enters phase two through its own transform pattern at 0 HP.
+      if (n !== 0) assert.equal(await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];const v=isVargul(b),sv=isSovereign(b);b.hp=b.type==='boss3'||v||sv?b.max*.05:b.max*.51;damageEnemy(b,b.max*.1,false);const duration=v?288:sv?SOVEREIGN_RULES.kneelDown+SOVEREIGN_RULES.awaken:isAurelion(b)?242:72;if(b.phaseT!==duration||!b.invuln)return false;const hp=b.hp;damageEnemy(b,10,false);if(b.hp!==hp)return false;for(let t=0;t<duration;t++)updEnemy(b);return b.hp===(v?2500:sv?SOVEREIGN_RULES.hp[1]:hp)&&!b.invuln&&b.st===(v||sv?'chase':'rec')&&b.z===0})()`),true,'Safe phase transition');
       const key = await evaluate(`(()=>{player=newPlayer();startStage(${n});scene='play';const b=mkEnemy(STAGES[${n}].boss,430,420);enemies=[b];b.hp=b.max*.4;b.p2shown=true;render();return releaseBackdropKey()})()`);
       assert.equal(key,[3,4].includes(n)?'phase'+(n+1):'boss'+(n+1));
     }
@@ -689,7 +691,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     results.forEach(name => console.log('PASS ' + name));
     await ready(base); assert.deepEqual(await evaluate('({stage:UX.checkpoint().stage,score:UX.checkpoint().score})'), { stage: 1, score: 2345 });
     console.log('PASS Checkpoint persists across page reload');
-    await evaluate(`(()=>{const bindings={...UX.options.bindings};delete bindings.KeyL;bindings.KeyJ='KeyL';localStorage.setItem('bmk_settings',JSON.stringify({...UX.options,bindings}))})()`);
+    await evaluate(`(()=>{const bindings={...UX.options.bindings};delete bindings.KeyL;bindings.KeyJ='KeyL';const {keyPreset,customBindings,...legacy}=UX.options;localStorage.setItem('bmk_settings',JSON.stringify({...legacy,bindings}))})()`);   // 프리셋 도입 전 저장: keyPreset 없이 키 목록만
     await ready(base);
     assert.equal(await evaluate("UX.options.bindings.KeyJ==='KeyL' && UX.options.bindings.KeyL==='KeyB' && new Set(Object.values(UX.options.bindings)).size===14"),true);
     console.log('PASS Legacy bindings preserve remaps and allocate an unused red-wave key');
@@ -784,7 +786,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
       AUDIO.stop(0);AUDIO.enable(false);return out;})()`);
     assert.equal(bgm.bad.ok, false);
     assert.equal(bgm.good.ok && bgm.good.saved, true, JSON.stringify(bgm));
-    assert.equal(bgm.status, '내 파일: my-boss.mp3');
+    assert.equal(bgm.status, await evaluate("TitleMenu.text('WEB_BGM_FILE','my-boss.mp3')"));   // 메뉴 언어(기본 영어)를 따른다
     assert.deepEqual([bgm.playing.file, bgm.playing.name, bgm.playing.boss], [true, 'my-boss.mp3', true]);
     assert.equal(bgm.after.file, fs.existsSync(bgmPath), 'clearing custom BGM restores the available built-in file or synth');
     assert.equal(bgm.info.source, fs.existsSync(bgmPath)?'default':'synth');
@@ -1046,7 +1048,7 @@ const timeout = setTimeout(() => { console.error('Browser test timed out'); brow
     await evaluate('toTitle();AUDIO.enable(false)');
     await evaluate('(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=()=>{throw new DOMException("blocked", "SecurityError")};try{beginGame();scene="play";render();}finally{Storage.prototype.setItem=original}})()');
     assert.equal(await evaluate('scene'), 'play');
-    assert.equal(await evaluate('$("saveStatus").textContent.includes("저장할 수 없습니다")'), true);
+    assert.equal(await evaluate('$("saveStatus").textContent === TitleMenu.text("WEB_SAVE_FAILED")'), true);
     console.log('PASS Storage restrictions leave game playable with clear status');
     assert.equal(await evaluate(`(()=>{
       player=newPlayer();startStage(0);scene='play';enemies=[];hazards=[];parts=[];bolts=[];ghosts=[];startSpecial();

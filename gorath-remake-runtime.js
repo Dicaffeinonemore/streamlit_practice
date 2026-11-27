@@ -659,7 +659,7 @@ function drawGorath2Top() {
   const e = g2Boss(), g = e?.g2;
   if (g) {
     for (const m of g.meats) {
-      if (m.t >= G2.meatLand) continue;
+      if (m.t >= G2.meatLand || !fxDepth(m.y)) continue;
       const fr = g2MeatFrame(m);
       if (fr.sky) {                                // 하늘에서 내려오는 고기: 시트 1번 칸을 화면 위 밖에서 등가속으로, 살짝 회전
         const u = fr.u, drop = (m.y - OY + 30) * (1 - u * u);
@@ -667,7 +667,7 @@ function drawGorath2Top() {
       } else paintG2(m.kind, fr.fi, m.x, m.y, 1, fr.alpha);
     }
     const k = g.hook;
-    if (k?.ult) {                                  // 궁극기: 시트의 사슬이 칸 밖으로 나가는 곳부터 같은 방향으로 화면 위쪽 끝까지
+    if (k?.ult) { if (fxDepth(e.y)) {                                  // 궁극기: 시트의 사슬이 칸 밖으로 나가는 곳부터 같은 방향으로 화면 위쪽 끝까지
       const ch = g2FrameOf(g.clip, g.fi)?.chain;
       if (ch) {
         const x0 = e.x + e.face * ch[0], y0 = e.y - ch[1], a = ch[2] * RAD, ux = e.face * Math.cos(a), uy = -Math.sin(a);
@@ -675,12 +675,12 @@ function drawGorath2Top() {
         len = Math.min(len, VW) * clamp(k.u, 0, 1);
         if (len > 2) { g2Chain(x0, y0, x0 + ux * len, y0 + uy * len); if (k.u < 1) g2HookSprite(x0 + ux * len, y0 + uy * len, Math.atan2(uy, ux)); }
       }
-    } else if (k && !k.hidden) {
+    } } else if (k && !k.hidden && fxDepth(k.y)) {
       const [hx, hh] = g2Hand(e, g), y1 = k.y - k.h;
       g2Chain(hx, e.y - hh, k.x, y1); g2HookSprite(k.x, y1, k.dir > 0 ? 0 : Math.PI);
     }
     const glow = g.clip === 'intro_smash' && g.fi === 1 ? g2EyeGlow() : 0;
-    if (glow > 0 && G2M.introEyes) {               // 응시: 투구 눈 위치에 붉은 빛(작은 원형 가산 합성)
+    if (glow > 0 && G2M.introEyes && fxDepth(e.y)) {               // 응시: 투구 눈 위치에 붉은 빛(작은 원형 가산 합성)
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       for (const [dx, h] of G2M.introEyes) {
         const x = e.x + e.face * dx - camX, y = e.y - h, gr = ctx.createRadialGradient(x, y, 0, x, y, 6);
@@ -690,7 +690,7 @@ function drawGorath2Top() {
       ctx.restore();
     }
   }
-  for (const q of G2FX) { ctx.globalAlpha = Math.min(1, (q.life - q.t) / 6); ctx.fillStyle = q.col; rect(q.x - camX - q.size / 2, q.y - q.h - q.size / 2, q.size, q.size); }
+  for (const q of G2FX) { if (!fxDepth(q.y)) continue; ctx.globalAlpha = Math.min(1, (q.life - q.t) / 6); ctx.fillStyle = q.col; rect(q.x - camX - q.size / 2, q.y - q.h - q.size / 2, q.size, q.size); }
   ctx.globalAlpha = 1;
 }
 // 화면 좌표: 인트로의 위아래 검은 띠, 이름 카드, 기술 이름, 하얀 섬광

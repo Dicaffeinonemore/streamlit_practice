@@ -7,6 +7,7 @@ const MS: float = 1000.0 / 60.0
 var session: BmkWaveSimulation
 var bank: BmkAssetBank
 var back: bool = false
+var band: int = BmkEffectView.ALL_LANES
 
 func _ready() -> void:
 	var material_: CanvasItemMaterial = CanvasItemMaterial.new()
@@ -37,11 +38,11 @@ func _draw() -> void:
 		if e.type != "boss3" or not halo_visible(e): continue
 		if back:
 			if e.p2shown: paint(fx_asset("gold_aura"),floori(session.tick / 5.0) % 4,e.x,e.y,e.face,0.55)
-		else: paint(fx_asset("royal_halo"),floori(session.tick / 6.0) % 4,e.x,e.y - e.z - 215 * k,e.face,1.0)
+		elif BmkEffectView.lane_ok(band,session,e.y): paint(fx_asset("royal_halo"),floori(session.tick / 6.0) % 4,e.x,e.y - e.z - 215 * k,e.face,1.0)
 	if back: return
 	var art: Dictionary = session.wave_data.source["AURELION"]
 	for z: BmkLegacyHazard in session.legacy_hazards:
-		if z.type != "aurelion" or z.dead: continue
+		if z.type != "aurelion" or z.dead or not BmkEffectView.lane_ok(band,session,z.y): continue
 		var f: float = z.age / MS - z.delay
 		if f < 0: continue
 		var def: Dictionary = art["projectiles"].get(z.kind,{})

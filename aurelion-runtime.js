@@ -326,7 +326,7 @@ function updateAurelionHazard(z) {
   return true;
 }
 function drawAurelionHazards() {
-  for(const z of hazards)if(z.type==='aurelion'&&!z.dead) {
+  for(const z of hazards)if(z.type==='aurelion'&&!z.dead&&fxDepth(z.y)) {
     const f=z.age/MS-(z.delay||0);if(f<0)continue;
     const def=AURELION_ART.projectiles[z.kind],fx=AURELION_ART.effects[z.fx];
     const step=def.frame_duration||fx.frame_duration;

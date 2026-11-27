@@ -5,8 +5,15 @@ var start_section: int = 0
 var phase_debug: int = 1
 var ult_debug: bool = false
 var top_view: BmkStageTopView
-## Arena fence and front scaffolds: drawn after the characters (game.js drawStage1Front()).
+## Arena fence and front scaffolds: drawn after the characters (game.js drawStage1Front()),
+## followed by the Stage 1 effects on the player's lane or in front of it.
 var top_front: BmkStageTopView
+## Copies of the effect views for lanes on or in front of the player (game.js drawFx('front')).
+var viesa_front: BmkViesaView
+var morgra_front: BmkMorgraView
+var aurelion_front: BmkAurelionView
+var vargul_front: BmkVargulView
+var sovereign_front: BmkSovereignView
 var item_views: Dictionary[BmkWorldItem, BmkItemView] = {}
 ## game.js selectedCharacterId; restart() builds the matching player.
 var character_id: String = "barel"
@@ -52,16 +59,24 @@ func _ready() -> void:
 	top_view = BmkStageTopView.new()
 	top_view.bank = bank
 	top_view.z_index = EFFECT_Z
+	top_view.band = BmkEffectView.BEHIND
 	world.add_child(top_view)
 	top_front = BmkStageTopView.new()
 	top_front.bank = bank
 	top_front.foreground = true
+	top_front.band = BmkEffectView.IN_FRONT
 	top_front.z_index = 5
 	world.add_child(top_front)
 	viesa_view = BmkViesaView.new()
 	viesa_view.bank = bank
 	viesa_view.z_index = EFFECT_Z
+	viesa_view.band = BmkEffectView.BEHIND
 	world.add_child(viesa_view)
+	viesa_front = BmkViesaView.new()
+	viesa_front.bank = bank
+	viesa_front.z_index = FRONT_EFFECT_Z
+	viesa_front.band = BmkEffectView.IN_FRONT
+	world.add_child(viesa_front)
 	viesa_dim = ViesaDim.new()
 	world.add_child(viesa_dim)
 	world.move_child(viesa_dim,street_view.get_index() + 1)
@@ -76,7 +91,13 @@ func _ready() -> void:
 	morgra_view = BmkMorgraView.new()
 	morgra_view.bank = bank
 	morgra_view.z_index = EFFECT_Z
+	morgra_view.band = BmkEffectView.BEHIND
 	world.add_child(morgra_view)
+	morgra_front = BmkMorgraView.new()
+	morgra_front.bank = bank
+	morgra_front.z_index = FRONT_EFFECT_Z
+	morgra_front.band = BmkEffectView.IN_FRONT
+	world.add_child(morgra_front)
 	legacy_presenter = BmkLegacyPresenter.new(bank)
 	aurelion_back = BmkAurelionView.new()
 	aurelion_back.bank = bank
@@ -100,15 +121,34 @@ func _ready() -> void:
 	sovereign_view = BmkSovereignView.new()
 	sovereign_view.bank = bank
 	sovereign_view.z_index = EFFECT_Z
+	sovereign_view.band = BmkEffectView.BEHIND
 	world.add_child(sovereign_view)
+	sovereign_front = BmkSovereignView.new()
+	sovereign_front.bank = bank
+	sovereign_front.z_index = FRONT_EFFECT_Z
+	sovereign_front.band = BmkEffectView.IN_FRONT
+	world.add_child(sovereign_front)
 	vargul_view = BmkVargulView.new()
 	vargul_view.bank = bank
 	vargul_view.z_index = EFFECT_Z
+	vargul_view.band = BmkEffectView.BEHIND
 	world.add_child(vargul_view)
+	vargul_front = BmkVargulView.new()
+	vargul_front.bank = bank
+	vargul_front.z_index = FRONT_EFFECT_Z
+	vargul_front.band = BmkEffectView.IN_FRONT
+	vargul_front.cross_views = vargul_view.cross_views   # one camera snapshot per cross eruption
+	world.add_child(vargul_front)
 	aurelion_view = BmkAurelionView.new()
 	aurelion_view.bank = bank
 	aurelion_view.z_index = EFFECT_Z
+	aurelion_view.band = BmkEffectView.BEHIND
 	world.add_child(aurelion_view)
+	aurelion_front = BmkAurelionView.new()
+	aurelion_front.bank = bank
+	aurelion_front.z_index = FRONT_EFFECT_Z
+	aurelion_front.band = BmkEffectView.IN_FRONT
+	world.add_child(aurelion_front)
 	viesa_sigil = BmkViesaView.make_sigil()
 	player_view.add_child(viesa_sigil)
 	player_view.move_child(viesa_sigil,0)
@@ -203,18 +243,19 @@ func present() -> void:
 		morgra_ground.visible = wave != null
 		morgra_ground.session = wave
 		morgra_ground.refresh()
-		morgra_view.visible = wave != null
-		morgra_view.session = wave
-		morgra_view.queue_redraw()
-		for view: BmkAurelionView in [aurelion_back,aurelion_view]:
+		for view: BmkMorgraView in [morgra_view,morgra_front]:
 			view.visible = wave != null
 			view.session = wave
 			view.queue_redraw()
-		for view: BmkVargulView in [vargul_ground,vargul_view]:
+		for view: BmkAurelionView in [aurelion_back,aurelion_view,aurelion_front]:
+			view.visible = wave != null
+			view.session = wave
+			view.queue_redraw()
+		for view: BmkVargulView in [vargul_ground,vargul_view,vargul_front]:
 			view.visible = wave != null
 			view.session = wave
 			view.refresh()
-		for view: BmkSovereignView in [sovereign_ground,sovereign_view]:
+		for view: BmkSovereignView in [sovereign_ground,sovereign_view,sovereign_front]:
 			view.visible = wave != null
 			view.session = wave
 			view.refresh()
@@ -224,6 +265,7 @@ func present() -> void:
 		rift_view.sync(actors)
 	if viesa_view != null:
 		viesa_view.present(s)
+		viesa_front.present(s)
 		viesa_dim.session = s
 		viesa_dim.queue_redraw()
 		BmkViesaView.present_sigil(viesa_sigil,s,bank)
@@ -231,9 +273,6 @@ func present() -> void:
 		if s.player.is_viesa() and s.player.flash > 0 and show_flash: player_view.body.modulate = Color(1.8,1.8,1.8,player_view.body.modulate.a)
 	# Items, Sovereign fists and rift eruptions joined the actor layer above.
 	layer_actors()
-
-func is_effect_node(node: Node2D) -> bool:
-	return node is BmkRiftView.Eruption
 
 ## Stage 2 soldiers use the named stage art; Morgra uses her own clips (hover lift included).
 func present_enemy(view: BmkActorView, e: BmkActorState) -> void:

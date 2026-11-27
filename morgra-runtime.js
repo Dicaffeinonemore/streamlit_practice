@@ -214,6 +214,7 @@ function drawMorgraHazards(ground=false) {
   for(const z of hazards) {
     if(z.type!=='morgra'||z.dead)continue;
     if(ground!==(z.kind==='moon_field'))continue;
+    if(!ground&&!fxDepth(z.y))continue;
     const f=z.age/MS;
     if(z.kind==='moon_field') {
       drawJudgmentField(z);

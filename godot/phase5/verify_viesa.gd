@@ -11,6 +11,17 @@ func check(value: bool, label: String) -> void:
 	checks += 1
 	if not value: failures.append(label)
 
+## Card selector (phase4/character_select): focus the hero's card, then press its start button.
+func pick_hero(id: String) -> void:
+	var selector: BmkCharacterSelect = game.menu.character_selector
+	if selector == null or not selector.is_visible_in_tree():
+		failures.append("Character selector not open for " + id)
+		return
+	for card: BmkSelectCard in selector.cards:
+		if card.data["id"] == id: selector.select(card.index)
+	await process_frame
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_" + id))
+
 func click_button(label: String) -> void:
 	for child: Node in game.menu.find_children("*","Button",true,false):
 		if (child as Button).is_visible_in_tree() and ((child as Button).text == label or (child as Button).get_meta("captions", []).has(label)):
@@ -120,7 +131,7 @@ func run() -> void:
 	await click_button(game.menu.title_image.caption("New Game"))
 	check(game.menu.mode == "characters","Mouse opens character selection")
 	await capture("phase5_select")
-	await click_button("비에사로 시작")
+	await pick_hero("viesa")
 	# Phase 12: the character opens the tutorial; 게임 시작 plays the opening, skipped here.
 	check(game.menu.mode == "tutorial" and game.demo.on,"The character opens the tutorial")
 	game.menu.tutorial.start_button.pressed.emit()
@@ -240,7 +251,7 @@ func run() -> void:
 	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 1 / 도살자 고라스")
 	check(game.menu.mode == "characters" and game.menu.character_challenge,"Challenge opens character selection")
-	await click_button("비에사로 시작")
+	await pick_hero("viesa")
 	check(game.game_mode == "challenge" and session().player.is_viesa() and session().player.sp == 100,"Viesa boss challenge")
 	await ticks(120)
 	await capture("phase5_viesa_boss")

@@ -11,6 +11,7 @@ var normal: Layer
 var additive: Layer
 static var melee_frames: Dictionary = {}
 var cross_views: Dictionary = {}
+var band: int = BmkEffectView.ALL_LANES
 
 class Layer:
 	extends Node2D
@@ -145,7 +146,7 @@ func paint_normal(c: CanvasItem) -> void:
 			c.draw_rect(Rect2(z.x - float(d["column"]),s.ground_top,float(d["column"]) * 2,s.ground_bottom - s.ground_top),Color(0.96,0.24,0.31,alpha))
 		return
 	for z: BmkLegacyHazard in s.legacy_hazards:
-		if z.type != "vargul" or z.dead or z.kind != "orb": continue
+		if z.type != "vargul" or z.dead or z.kind != "orb" or not BmkEffectView.lane_ok(band,s,z.y): continue
 		var size: float = 42.0
 		var x: float = z.x
 		var y: float = z.y - z.h - size / 2 - 7
@@ -153,7 +154,7 @@ func paint_normal(c: CanvasItem) -> void:
 		c.draw_rect(Rect2(x - bar / 2,y,bar,4),Color("182532"))
 		c.draw_rect(Rect2(x - bar / 2 + 1,y + 1,(bar - 2) * clampf(z.hp / maxf(1,z.max_hp),0,1),2),Color("89dcff"))
 	for z: BmkLegacyHazard in s.legacy_hazards:
-		if z.type == "vargul" and not z.dead and z.kind == "cross" and z.boom: cross_eruption(c,z,maxf(0,z.age / MS) - z.wait)
+		if z.type == "vargul" and not z.dead and z.kind == "cross" and z.boom and BmkEffectView.lane_ok(band,s,z.y): cross_eruption(c,z,maxf(0,z.age / MS) - z.wait)
 
 func paint_additive(c: CanvasItem) -> void:
 	if session == null or session.vargul == null: return
@@ -165,6 +166,7 @@ func paint_additive(c: CanvasItem) -> void:
 		var floor_: bool = z.kind in ["sword","cross","ultimate"]
 		var waiting: bool = z.kind == "ice_wave" or floor_ and not z.boom and z.stage != "impact"
 		if ground != waiting: continue
+		if not ground and not BmkEffectView.lane_ok(band,s,z.y): continue
 		match z.kind:
 			"fx":
 				var h: float = z.height if z.height != 0 else 80.0

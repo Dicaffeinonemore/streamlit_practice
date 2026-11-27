@@ -73,7 +73,7 @@ function drawGorath(e) {
 function drawGorathHazards() {
   if(!GORATH_ATLAS.naturalWidth)return;
   for(const z of hazards) {
-    if(z.dead||z.owner?.type!=='boss1_old')continue;
+    if(z.dead||z.owner?.type!=='boss1_old'||!fxDepth(z.y))continue;
     if(z.type==='hook') {
       const o=z.owner,x=o.x+o.face*28,y=o.y-62,dx=z.x-x,dy=z.y-z.h-y;
       const f=gorathFrame('chain_tile'),[sx,sy,sw,sh]=f.atlas,k=GORATH_ART.scale,w=sw*k,h=sh*k,len=Math.hypot(dx,dy);

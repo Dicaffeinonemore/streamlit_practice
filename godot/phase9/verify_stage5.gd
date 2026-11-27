@@ -11,6 +11,17 @@ func check(value: bool, label: String) -> void:
 	checks += 1
 	if not value: failures.append(label)
 
+## Card selector (phase4/character_select): focus the hero's card, then press its start button.
+func pick_hero(id: String) -> void:
+	var selector: BmkCharacterSelect = game.menu.character_selector
+	if selector == null or not selector.is_visible_in_tree():
+		failures.append("Character selector not open for " + id)
+		return
+	for card: BmkSelectCard in selector.cards:
+		if card.data["id"] == id: selector.select(card.index)
+	await process_frame
+	await click_button(BmkCopy.text("SELECT_START") % BmkCopy.text("HERO_" + id))
+
 func click_button(label: String) -> void:
 	await process_frame
 	for child: Node in game.menu.find_children("*","Button",true,false):
@@ -169,7 +180,7 @@ func run() -> void:
 	await click_button(game.menu.title_image.caption("MENU_CHALLENGE"))
 	await click_button("스테이지 5 / 흑월의 군주, 소버린")
 	check(game.menu.mode == "characters" and game.menu.challenge_stage == 4,"Sovereign challenge opens character selection")
-	await click_button("바렐로 시작")
+	await pick_hero("barel")
 	check(game.game_mode == "challenge" and wave() != null and wave().stage_index == 4 and wave().mode == "bossintro" and wave().player.sp == 100 and wave().cam_x == 3640,"Sovereign challenge starts in his arena")
 	await compare_with_source()
 	for path: String in [game.save_store.checkpoint_path,game.save_store.records_path,game.preferences.storage_path]:

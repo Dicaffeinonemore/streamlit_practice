@@ -12,6 +12,7 @@ var actors: Node2D
 var player_view: BmkActorView
 var enemy_views: Dictionary[int, BmkActorView] = {}
 var effects: BmkEffectView
+var effects_front: BmkEffectView
 var special_dim: BmkSpecialDim
 var debug_view: BmkDebugView
 var hud: BmkGameHud
@@ -22,9 +23,11 @@ var visual_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var show_shake: bool = true
 var show_flash: bool = true
 var show_danger_zones: bool = true
-## Effects never cover a character: actors behind the player < effects < player and actors in front of it.
+## Depth by ground y (game.js render()): actors behind the player < effects on lanes behind it (EFFECT_Z)
+## < the player and actors in front (FRONT_Z) < arena fence (5) < effects on its lane or in front (FRONT_EFFECT_Z).
 const EFFECT_Z: int = 3
 const FRONT_Z: int = 4
+const FRONT_EFFECT_Z: int = 6
 
 func _ready() -> void:
 	get_window().content_scale_size = Vector2i(960,540)
@@ -50,9 +53,16 @@ func _ready() -> void:
 	effects = BmkEffectView.new()
 	effects.z_index = EFFECT_Z
 	effects.bank = bank
+	effects.band = BmkEffectView.BEHIND
 	world.add_child(effects)
+	effects_front = BmkEffectView.new()
+	effects_front.z_index = FRONT_EFFECT_Z
+	effects_front.bank = bank
+	effects_front.band = BmkEffectView.IN_FRONT
+	effects_front.primary = effects
+	world.add_child(effects_front)
 	debug_view = BmkDebugView.new()
-	debug_view.z_index = 6
+	debug_view.z_index = 7
 	debug_view.visible = "--hitbox=1" in OS.get_cmdline_user_args()
 	world.add_child(debug_view)
 	var layer: CanvasLayer = CanvasLayer.new()
@@ -121,12 +131,14 @@ func present() -> void:
 	layer_actors()
 	street_view.queue_redraw()
 	effects.queue_redraw()
+	effects_front.session = effects.session
+	effects_front.queue_redraw()
 	special_dim.queue_redraw()
 	debug_view.queue_redraw()
 	hud.queue_redraw()
 
-## game.js render(): actors with y <= player.y, then every effect, then the player, then actors in front.
-## During the special the actors in front stay under the dim (z 1) like the rest of the scene.
+## game.js render(): actors with y <= player.y, then the effects behind the player, then the player and
+## the actors in front of it. During the special the actors in front stay under the dim (z 1).
 func layer_actors() -> void:
 	var p: BmkActorState = session.player
 	var special: bool = p.st == "special"
@@ -134,11 +146,7 @@ func layer_actors() -> void:
 	for child: Node in actors.get_children():
 		if child == player_view or child is not Node2D: continue
 		var node: Node2D = child as Node2D
-		node.z_index = FRONT_Z if not special and not is_effect_node(node) and node.position.y > p.y else 0
-
-## Effect nodes sorted inside the actor layer always stay behind the player.
-func is_effect_node(_node: Node2D) -> bool:
-	return false
+		node.z_index = FRONT_Z if not special and node.position.y > p.y else 0
 
 func pause_game(value: bool) -> void:
 	clock.paused = value
